@@ -1,0 +1,558 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="仿造某位dalao的学习路线写的周报(其实和日报没差还更详细)">
+  <meta name="author" content="Yogdzewa">
+  <meta name="keywords" content="">
+  
+  <title>Sky_Learning_Daily - Yogdzewa</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":1280126539,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>nuts-and-bolts</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/image/edit2.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Sky_Learning_Daily">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-06-07 10:00" pubdate>
+        2021年6月7日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.3k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      18
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Sky_Learning_Daily</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：3 分钟前
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h3 id="第0周-6-7-6-13"><a href="#第0周-6-7-6-13" class="headerlink" title="第0周:6/7-6/13"></a>第0周:6/7-6/13</h3><ul>
+<li>11: 为了ida成功把kali2020.3整莫得了, 不想去研究怎么复原了, 直接重装了个kali2021.2, 以后一定弄<strong>快照</strong>.</li>
+<li>12: 弄明白了cachelab的食用方法, 直接ctrlcv代码理解了下, 但是看起来还是有很多可以改进的地方, 暂时看不进去了. <ul>
+<li>typora装的时候apt-key出问题, 其实还能用几年, 更modern的解决办法<a target="_blank" rel="noopener" href="https://suay.site/?p=526">在这</a>(还没看).</li>
+<li>问题列表还是Markdown靠谱, 思维导图线太多了, 用不上结构的优势, 除了笔记还是用md吧.</li>
+</ul>
+</li>
+<li>13: 今天计划看看那啥buuoj的题目: 没看懂从哪开始, 还在wiki中<ul>
+<li>typora linux版命令行启动好像有点问题</li>
+<li>啥玩意儿啊, 根本不知道怎么开始做ctf题目-&gt;搞懂了ssh连接到靶机, 结果做到第二题发现是web, 请求学不到家干脆放弃了.</li>
+<li>看了点讲座的内网穿透, 有丶意思, 可惜我没有这种需求</li>
+</ul>
+</li>
+</ul>
+<h3 id="第一周-6-14-6-20"><a href="#第一周-6-14-6-20" class="headerlink" title="第一周:6/14-6/20"></a>第一周:6/14-6/20</h3><ul>
+<li>啥也没干, 复习周</li>
+</ul>
+<h3 id="第二周-6-21-6-27"><a href="#第二周-6-21-6-27" class="headerlink" title="第二周:6/21-6/27"></a>第二周:6/21-6/27</h3><p>……………..</p>
+<h3 id="第一周-7-10-7-11"><a href="#第一周-7-10-7-11" class="headerlink" title="第一周:7/10-7/11"></a>第一周:7/10-7/11</h3><ul>
+<li><strong>10,11: 直接盲选了一手系统安全, 要开始学逆向之类的东西了.</strong> <ul>
+<li>看了看洛神的攻防世界的题解, 看了第一道题我就下载了pwntools ida peda这三个工具, 用了下checksec看看文件的类型, 再试了试nc命令连接到服务器, 运行一下就得到了flag</li>
+<li>第二题是关于格式化字符串漏洞的, 看了老半天, 洛神直接写个很明显, 真不知道他写这个的时候是什么水平, 我还啥都不会呢. 哦对, 我看到一半他居然写了个python, 还是用的pwntools的接口, 人傻了, 明天入门python去, 然后再看看pwntools的python写法</li>
+</ul>
+</li>
+</ul>
+<h3 id="第二周-7-12-7-18"><a href="#第二周-7-12-7-18" class="headerlink" title="第二周:7/12-7/18"></a>第二周:7/12-7/18</h3><ul>
+<li><p><strong>12:这周不做CG了, 开始研究CTF</strong>.</p>
+<ul>
+<li>今天先入门个python先.</li>
+</ul>
+</li>
+<li><p><strong>13: 今天打算学习pwntools的用法</strong>.</p>
+<ul>
+<li>python看到了package,  看过了import, 各种基本类型的用法, 类还没看.</li>
+<li><a target="_blank" rel="noopener" href="https://pwntools.readthedocs.io/en/latest/tubes/sockets.html#module-pwnlib.tubes.remote"><code>pwnlib.tubes</code></a>, 这里有很多东西, 可以直接网页打开然后去搜函数, unpack()和pack()的作用是将数字打包成可输入的字符串</li>
+<li>vscode装python还是挺简单的</li>
+<li><code>%&lt; number&gt;$x</code> 是直接存放到第number个位置的参数，同样可以用在%n，%d等等。<br>但是需要注意64位程序，前6个参数是存在寄存器中的，从第7个参数开始才会出现在栈中，所以栈中从格式化串开始的第一个，应该是%7 $n.</li>
+<li>在%10n是啥以及为啥要加‘AAAA’这些问题上卡了半天</li>
+</ul>
+</li>
+<li><p><strong>14: IDA东西好多, 也看了看pwntools的文档, 特么也太多了</strong>.(level2整完了, 明天看看文档告别硬编码!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!(先会看再说))</p>
+<ul>
+<li><p><code>var_4 = dword ptr -4；</code>  这是解释代码，可解释成var_4 是 esp - 4处的空间;<br><code>var_0 = dword ptr 8;</code>      var_0 是 esp +8处的空间；</p>
+<p><img src="https://i.loli.net/2021/07/19/LtySjIVDrhfwlk7.png" srcset="/img/loading.gif" lazyload></p>
+</li>
+<li><p><code>/bin/bash</code>是个好东西, 如果能调用这个可以直接跳转到命令行模式, <code>interactive()</code>打开后就能发命令了</p>
+<p><img src="https://i.loli.net/2021/07/19/TrCMBZjQpANFYhK.png" srcset="/img/loading.gif" lazyload></p>
+</li>
+<li><p>将悬浮窗口复位: reset the desktop (md变成悬浮窗口就变不回去了??????????)</p>
+<ul>
+<li>芜湖, <strong>savedesktop</strong>还挺好用, 设置了一个我现在水平够用的default</li>
+</ul>
+</li>
+<li><p>shift+F12: <u>strings window</u>.(还有f6,shift+f6,alt+f3)</p>
+</li>
+<li><p>汇编语言<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43229030/article/details/106799580#15_comment_field_166">伪指令</a>.   a db 17 dup(?)的<a target="_blank" rel="noopener" href="https://zhidao.baidu.com/question/2198876873686806628.html">含义</a>.</p>
+</li>
+<li><p>奇怪的信息: </p>
+<img src="https://i.loli.net/2021/07/19/pYrMl7BxPmhfzUs.png" srcset="/img/loading.gif" lazyload style="zoom: 50%;" /></li>
+<li><p>python: next()函数和search()的返回是一个可迭代的类型</p>
+</li>
+<li><p><em><strong><u>在32位程序运行中，函数参数直接压入栈中</u></strong></em>,(还能这样???????????????????????????????????)</p>
+<p>调用函数时栈的结构为:调用函数地址-&gt;函数的返回地址-&gt;参数n-&gt;参数n-1-&gt;…-&gt;参数1</p>
+</li>
+</ul>
+</li>
+<li><p><strong>15: 上午还是IDA的使用, 下午再看文档. 下午也没看,</strong> .</p>
+<ul>
+<li>return __readfsqword(0x28u) ^ v4; 这个是金丝雀值canary的检测</li>
+<li><u><em>重启大法好</em></u>.(好个屁, 还是没解决)</li>
+<li>千万别把文件名称命名为模块名称, 不然会出错.</li>
+<li>sendlineafter的 <strong>“\n”</strong>一定要看清楚了再加</li>
+<li>函数栈帧的构建过程, <strong>会把ebp推到栈上</strong>.</li>
+<li>看看Jump菜单里的快捷键!</li>
+<li>刚进入函数时, 栈顶是返回地址!</li>
+</ul>
+</li>
+<li><p><strong>16: 今天不知道能做多少, 早上姑且整完了adworld的writeup, 下午晚上看情况, 开始buuoj</strong>,.</p>
+<ul>
+<li><p>看了剩下的tutorial, 一些看不懂, 有用到再说吧</p>
+</li>
+<li><p>RWX权限: r代表读权限，w代表写权限，x代表执行权限</p>
+<p>相关的<a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-comm-chmod.html">chmod命令</a>.</p>
+</li>
+<li><p>retn与堆栈平衡.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>17: 今天在动车上姑且做到了第七题, 并且下载好了LibcSearcher库, 明天开始拿下第七题</strong>.</p>
+<ul>
+<li>看懂了python2和python3中的字符串的<a target="_blank" rel="noopener" href="https://blog.csdn.net/sinat_38682860/article/details/91046433">区别</a>(复习了<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/23374078">Unicode和UTF-8</a>), python3 加上的就是这两种类型<strong>不能混用</strong>.</li>
+<li>整明白了eip寄存器和堆栈平衡的东西, 明天再写篇文档顺便整理整理越来越多的md文件.</li>
+</ul>
+</li>
+<li><p><strong>18:整了个blog, hexo+Github</strong>.</p>
+</li>
+</ul>
+<h3 id="第三周-7-19-7-25"><a href="#第三周-7-19-7-25" class="headerlink" title="第三周: 7/19-7/25"></a>第三周: 7/19-7/25</h3><ul>
+<li><strong>19: 终于弄完了github上的blog, 以后就这样发东西了</strong>.</li>
+<li><strong>20: 继续做题BUUOJ</strong>.</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/schedule/">schedule</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021-07/pwn-ctf-pwn1/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">pwn题:格式化输出字符串漏洞</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021-05/Learning-CSAPP-Lab/">
+                        <span class="hidden-mobile">CSAPP_Lab</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+    <!-- cnzz Analytics Icon -->
+    <span id="cnzz_stat_icon_1280126539" style="display: none"></span>
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <!-- cnzz Analytics -->
+    <script defer src="//s4.cnzz.com/z_stat.php?id=1280126539&show=pic"
+            type="text/javascript"></script>
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
