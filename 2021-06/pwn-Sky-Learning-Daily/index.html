@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.3k 字
+      1.6k 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      18
+      22
        分钟
     </span>
   
@@ -229,7 +229,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：6 分钟前
+                  本文最后更新于：17 分钟前
                 
               </p>
             
@@ -296,6 +296,7 @@
 <li><p>python: next()函数和search()的返回是一个可迭代的类型</p>
 </li>
 <li><p><em><strong><u>在32位程序运行中，函数参数直接压入栈中</u></strong></em>,(还能这样???????????????????????????????????)</p>
+<p>(64位汇编传参，当参数少于7个时， 参数<strong>从左到右</strong>放入寄存器: rdi, rsi, rdx, rcx, r8, r9。 当参数为7个以上时，<br>前 6 个与前面一样， 但后面的依次**”从右向左”**放入栈中，即和32位汇编一样。)</p>
 <p>调用函数时栈的结构为:调用函数地址-&gt;函数的返回地址-&gt;参数n-&gt;参数n-1-&gt;…-&gt;参数1</p>
 </li>
 </ul>
@@ -337,7 +338,17 @@
 </ul>
 </li>
 <li><strong>20: 白天看python的语法, 看到了formatted_string, 晚上继续做题BUUOJ看LibcSearcher</strong>.<ul>
-<li><strong><a target="_blank" rel="noopener" href="https://yogdzewa.github.io/2021-07/pwn-ROPgadgetDoc/">ROPgadgetDoc</a> or <a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45556441/article/details/114631043">another</a></strong>.</li>
+<li><p><strong><a target="_blank" rel="noopener" href="https://yogdzewa.github.io/2021-07/pwn-ROPgadgetDoc/">ROPgadgetDoc</a> or <a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45556441/article/details/114631043">another</a></strong>.</p>
+</li>
+<li><p>**hide的文章可以通过网址访问</p>
+</li>
+<li><p>LibcSearcher用法.(就是某位国人写的小工具, 至于为啥是str_bin_sh我还不知道…….)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> *<br><span class="hljs-comment">#第二个参数，为已泄露的实际地址,或最后12位(比如：d90)，int类型</span><br>obj = LibcSearcher(<span class="hljs-string">&quot;fgets&quot;</span>, <span class="hljs-number">0X7ff39014bd90</span>)<br>obj.dump(<span class="hljs-string">&quot;system&quot;</span>)        <span class="hljs-comment">#system 偏移</span><br>obj.dump(<span class="hljs-string">&quot;str_bin_sh&quot;</span>)    <span class="hljs-comment">#/bin/sh 偏移</span><br>obj.dump(<span class="hljs-string">&quot;__libc_start_main_ret&quot;</span>)    <br><br></code></pre></td></tr></table></figure></li>
+<li><p>pwn查找字符串的<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43921239/article/details/105318835">方法</a>.(指查找程序中的字符串|查找 libc 中的字符串之类的)</p>
+</li>
+<li><p><code>payload = b&#39;b&#39;*0x58 + p64(rdipop_addr) + p64(got_addr) + p64(plt_addr) + p64(main_addr)</code></p>
+<p>GOT顾名思义它只是一张表, 第一次链接后存放着函数的起始地址, plt表中使用 jmp *GOT[4], 即GOT表元素的引用, 第三个pack不能改为got_addr!!!!!!!!!!!!!</p>
+</li>
 </ul>
 </li>
 </ul>
