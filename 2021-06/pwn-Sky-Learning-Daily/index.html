@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.6k 字
+      1.7k 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      22
+      23
        分钟
     </span>
   
@@ -229,7 +229,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：18 分钟前
+                  本文最后更新于：9 小时前
                 
               </p>
             
@@ -268,10 +268,13 @@
 <li><p><strong>13: 今天打算学习pwntools的用法</strong>.</p>
 <ul>
 <li>python看到了package,  看过了import, 各种基本类型的用法, 类还没看.</li>
-<li><a target="_blank" rel="noopener" href="https://pwntools.readthedocs.io/en/latest/tubes/sockets.html#module-pwnlib.tubes.remote"><code>pwnlib.tubes</code></a>, 这里有很多东西, 可以直接网页打开然后去搜函数, unpack()和pack()的作用是将数字打包成可输入的字符串</li>
+<li><a target="_blank" rel="noopener" href="https://pwntools.readthedocs.io/en/latest/tubes/sockets.html#module-pwnlib.tubes.remote">pwnlib.tubes</a>, 这里有很多东西, 可以直接网页打开然后去搜函数, unpack()和pack()的作用是将数字打包成可输入的字符串</li>
 <li>vscode装python还是挺简单的</li>
-<li><code>%&lt; number&gt;$x</code> 是直接存放到第number个位置的参数，同样可以用在%n，%d等等。<br>但是需要注意64位程序，前6个参数是存在寄存器中的，从第7个参数开始才会出现在栈中，所以栈中从格式化串开始的第一个，应该是%7 $n.</li>
-<li>在%10n是啥以及为啥要加‘AAAA’这些问题上卡了半天</li>
+<li><code>%&lt; number&gt;$x</code> 是直接存放到第number个位置的参数，同样可以用在%n，%d等等。<br>但是需要注意64位程序，前6个参数是存在寄存器中的，从第7个参数开始才会出现在栈中，所以栈中从格式化串开始的第一个，应该是%7 $n.<ul>
+<li>在%10n是啥以及为啥要加‘AAAA’这些问题上卡了半天. <a target="_blank" rel="noopener" href="https://bbs.pediy.com/thread-253638.htm">[0]</a>.</li>
+<li><strong>除了%n,还有%hn，%hhn，%lln，分别为写入目标空间2字节，1字节，8字节。</strong> 注意是<strong>对应参数（这个参数是指针）</strong>的对应的地址开始起几个字节。<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43394612/article/details/84900668">[0]</a>.</li>
+</ul>
+</li>
 </ul>
 </li>
 <li><p><strong>14: IDA东西好多, 也看了看pwntools的文档, 特么也太多了</strong>.(level2整完了, 明天看看文档告别硬编码!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!(先会看再说))</p>
@@ -319,7 +322,7 @@
 <li><p>RWX权限: r代表读权限，w代表写权限，x代表执行权限</p>
 <p>相关的<a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-comm-chmod.html">chmod命令</a>.</p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43655282/article/details/105334313">retn</a>与堆栈平衡.</p>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43655282/article/details/105334313">retn</a>与<em>堆栈平衡</em> (适用于<strong>Ubuntu18</strong>及以上的版本).</p>
 </li>
 </ul>
 </li>
@@ -338,19 +341,20 @@
 </ul>
 </li>
 <li><strong>20: 白天看python的语法, 看到了formatted_string, 晚上继续做题BUUOJ看LibcSearcher</strong>.<ul>
-<li><p><strong><a target="_blank" rel="noopener" href="https://yogdzewa.github.io/2021-07/pwn-ROPgadgetDoc/">ROPgadgetDoc</a> or <a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45556441/article/details/114631043">another</a></strong>.</p>
+<li><strong><a target="_blank" rel="noopener" href="https://yogdzewa.github.io/2021-07/pwn-ROPgadgetDoc/">ROPgadgetDoc</a> or <a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45556441/article/details/114631043">anotherIntroduce</a></strong>.</li>
+<li>**hide的文章可以通过网址访问</li>
+<li>pwn查找字符串的<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43921239/article/details/105318835">方法</a>.(指查找程序中的字符串|查找 libc 中的字符串之类的)</li>
+</ul>
 </li>
-<li><p>**hide的文章可以通过网址访问</p>
-</li>
-<li><p>LibcSearcher用法.(就是某位国人写的小工具, 至于为啥是str_bin_sh我还不知道…….)</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> *<br><span class="hljs-comment">#第二个参数，为已泄露的实际地址,或最后12位(比如：d90)，int类型</span><br>obj = LibcSearcher(<span class="hljs-string">&quot;fgets&quot;</span>, <span class="hljs-number">0X7ff39014bd90</span>)<br>obj.dump(<span class="hljs-string">&quot;system&quot;</span>)        <span class="hljs-comment">#system 偏移</span><br>obj.dump(<span class="hljs-string">&quot;str_bin_sh&quot;</span>)    <span class="hljs-comment">#/bin/sh 偏移</span><br>obj.dump(<span class="hljs-string">&quot;__libc_start_main_ret&quot;</span>)    <br><br></code></pre></td></tr></table></figure></li>
-<li><p>pwn查找字符串的<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43921239/article/details/105318835">方法</a>.(指查找程序中的字符串|查找 libc 中的字符串之类的)</p>
-</li>
-<li><p><code>payload = b&#39;b&#39;*0x58 + p64(rdipop_addr) + p64(got_addr) + p64(plt_addr) + p64(main_addr)</code></p>
-<p>GOT顾名思义它只是一张表, 第一次链接后存放着函数的起始地址, plt表中使用 jmp *GOT[4], 即GOT表元素的引用, 第三个pack不能改为got_addr!!!!!!!!!!!!!</p>
+<li><strong>21: 继续OJ</strong>.<ul>
+<li>虚拟机里vim的复制粘贴好像有点特别</li>
+<li>今天才做了两道题pwn+babyrop, 我觉得需要反思下到底哪里慢了<ul>
+<li>主要还是想自己摸索, 结果好多东西看别人的学得更快, <strong>又叒叕</strong>复习了一遍%n是修改<strong>指针</strong>指向的值(源自CGfsb), c语言函数有点不太熟悉(strlen就是, 没反应过来是以’\0’为止的, 以及strncmp返回值和第三个参数即长度为0时两个字符串相等), 今天看文档也用了不少时间(fmtstr_payload, flat, pack等), 总的说来学得还算不少, 不过感觉还是有点慢(｀⌒´メ)</li>
+</ul>
 </li>
 </ul>
 </li>
+<li><h2 id="22-继续"><a href="#22-继续" class="headerlink" title="22: 继续."></a><strong>22: 继续</strong>.</h2></li>
 </ul>
 
             </div>
