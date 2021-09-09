@@ -190,7 +190,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      316 字
+      556 字
     </span>
   
 
@@ -200,7 +200,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      9
+      15
        分钟
     </span>
   
@@ -247,30 +247,56 @@
               </p>
             
             <div class="markdown-body">
-              <ul>
-<li>code example</li>
-</ul>
-<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">use</span> rand::Rng;<br><span class="hljs-keyword">use</span> std::cmp::Ordering;<br><span class="hljs-keyword">use</span> std::io;<br><br><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() &#123;<br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;Guess the number!&quot;</span>);<br><br>    <span class="hljs-keyword">let</span> secret_number = rand::thread_rng().gen_range(<span class="hljs-number">1</span>..<span class="hljs-number">101</span>);<br><br>    <span class="hljs-keyword">loop</span> &#123;<br>        <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;Please input your guess.&quot;</span>);<br>        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> guess = <span class="hljs-built_in">String</span>::new();<br>        io::stdin()<br>            .read_line(&amp;<span class="hljs-keyword">mut</span> guess)<br>            .expect(<span class="hljs-string">&quot;Failed to read line&quot;</span>);<br>        <span class="hljs-keyword">let</span> guess: <span class="hljs-built_in">u32</span> = <span class="hljs-keyword">match</span> guess.trim().parse() &#123;<br>            <span class="hljs-literal">Ok</span>(num) =&gt; num,<br>            <span class="hljs-literal">Err</span>(_) =&gt; <span class="hljs-keyword">continue</span>,<br>        &#125;;<br><br>        <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;You guessed: &#123;&#125;&quot;</span>, guess);<br><br>        <span class="hljs-keyword">match</span> guess.cmp(&amp;secret_number) &#123;<br>            Ordering::Less =&gt; <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;Too small!&quot;</span>),<br>            Ordering::Greater =&gt; <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;Too big!&quot;</span>),<br>            Ordering::Equal =&gt; &#123;<br>                <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;You win!&quot;</span>);<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>        &#125;<br>        <br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+              <h2 id="code-example"><a href="#code-example" class="headerlink" title="code example"></a>code example</h2><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">use</span> rand::Rng;<br><span class="hljs-keyword">use</span> std::cmp::Ordering;<br><span class="hljs-keyword">use</span> std::io;<br><br><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() &#123;<br>    <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;Guess the number!&quot;</span>);<br><br>    <span class="hljs-keyword">let</span> secret_number = rand::thread_rng().gen_range(<span class="hljs-number">1</span>..<span class="hljs-number">101</span>);<br><br>    <span class="hljs-keyword">loop</span> &#123;<br>        <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;Please input your guess.&quot;</span>);<br>        <span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> guess = <span class="hljs-built_in">String</span>::new();<br>        io::stdin()<br>            .read_line(&amp;<span class="hljs-keyword">mut</span> guess)<br>            .expect(<span class="hljs-string">&quot;Failed to read line&quot;</span>);<br>        <span class="hljs-keyword">let</span> guess: <span class="hljs-built_in">u32</span> = <span class="hljs-keyword">match</span> guess.trim().parse() &#123;<br>            <span class="hljs-literal">Ok</span>(num) =&gt; num,<br>            <span class="hljs-literal">Err</span>(_) =&gt; <span class="hljs-keyword">continue</span>,<br>        &#125;;<br><br>        <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;You guessed: &#123;&#125;&quot;</span>, guess);<br><br>        <span class="hljs-keyword">match</span> guess.cmp(&amp;secret_number) &#123;<br>            Ordering::Less =&gt; <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;Too small!&quot;</span>),<br>            Ordering::Greater =&gt; <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;Too big!&quot;</span>),<br>            Ordering::Equal =&gt; &#123;<br>                <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;You win!&quot;</span>);<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>        &#125;<br>        <br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <ul>
 <li><code>cargo doc --open</code> doc is stored in the folder.</li>
 <li>something special in enumeration waiting for me to be explored </li>
 <li>Rust <strong>doesn’t care where you define your functions, only that they’re defined somewhere.</strong>  </li>
 <li>Statements do not return values. Therefore, you can’t assign a <code>let</code> statement to another variable, and can’t use x=y=6 to have both x and y have the value 6</li>
+<li>Rust will do check of every <strong>array indexing operation</strong>, thus will run slowly</li>
 </ul>
-<p>###about return statement</p>
+<p>##about return statement</p>
 <ul>
 <li>Block is expression, expressions do not include ending semicolons. Most functions return the last <strong>expression</strong> implicitly. Assigning a block of statements to a variable will get an empty tuple, expressed by “()”.</li>
 </ul>
-<h3 id="if-expressions"><a href="#if-expressions" class="headerlink" title="if expressions"></a>if <strong><code>expressions</code></strong></h3><ul>
+<h2 id="if-expressions"><a href="#if-expressions" class="headerlink" title="if expressions"></a>if <strong><code>expressions</code></strong></h2><ul>
 <li>no parentheses in <code>return</code> and <code>if</code> keyword, Blocks of code associated with the conditions in <code>if</code> expressions are sometimes called <em><strong>arms</strong></em> </li>
 <li>Rust will not automatically try to convert non-Boolean types to a Boolean, do not use integer as the condition of <code>if</code>, instead using an integer greater or less than or equal to an certain number. </li>
 <li>if else if else if …… may be changed to <code>match</code>  </li>
 <li><code>let number = if condition &#123; 5 &#125; else &#123; 6 &#125;;</code> don’t use different types in each arms.</li>
 </ul>
-<h3 id="Repeating"><a href="#Repeating" class="headerlink" title="Repeating"></a>Repeating</h3><ul>
+<h2 id="Repeating"><a href="#Repeating" class="headerlink" title="Repeating"></a>Repeating</h2><ul>
 <li><strong><code>loop</code></strong>(use <code>break</code> and <code>^C</code> to terminate)  , <code>while</code>, and <code>for</code> </li>
-<li></li>
+<li><code>break</code> can <strong>take a value</strong> as the return of the <code>loop</code> </li>
+<li>use <code>for element in a.iter()</code> to speed up array indexing </li>
+<li><code>for</code> : <code>for number in (1..4).rev()</code> </li>
+</ul>
+<h2 id="ownership"><a href="#ownership" class="headerlink" title="ownership"></a>ownership</h2><blockquote>
+<p>Ownership is Rust’s most unique feature, and it enables Rust to make memory safety guarantees without needing a garbage collector.    </p>
+<p>Memory Management: Memory is managed through a system of ownership with a set of rules that the compiler checks at <strong>compile time</strong>, won’t slow down your program.</p>
+</blockquote>
+<h3 id="ownership-rules"><a href="#ownership-rules" class="headerlink" title="ownership rules:"></a>ownership rules:</h3><ul>
+<li>Each value in Rust has a variable that’s called its <em>owner</em>.<ul>
+<li><p><strong>immutable</strong> string literals and the <strong>changeable</strong> String type </p>
+</li>
+<li><p>create a <code>String</code> from a string literal using the <code>from</code> function: <code>let s = String::from(&quot;hello&quot;);</code> </p>
+</li>
+<li><p>Rust takes a different path from those languages having GC: the memory is automatically returned once the variable that owns it goes out of scope.</p>
+</li>
+<li><p>Rust calls a special function for us. This function is called <a target="_blank" rel="noopener" href="https://doc.rust-lang.org/std/ops/trait.Drop.html#tymethod.drop"><code>drop</code></a>, and it’s where the author of <code>String</code> can put the code to return the memory. Rust calls <code>drop</code> automatically at the closing curly bracket.</p>
+</li>
+<li><p>the following code will lead to a move instead of a shallow or deep copy</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs rust"><span class="hljs-keyword">let</span> s1 = <span class="hljs-built_in">String</span>::from(<span class="hljs-string">&quot;hello&quot;</span>);<br><span class="hljs-keyword">let</span> s2 = s1;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>sdf </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>There can only be one owner at a time.</li>
+<li>When the owner goes out of scope, the value will be dropped.</li>
 </ul>
 
             </div>
