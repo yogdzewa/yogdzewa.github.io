@@ -202,7 +202,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      3.5k 字
+      3.9k 字
     </span>
   
 
@@ -212,7 +212,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      58
+      68
        分钟
     </span>
   
@@ -254,7 +254,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2 天前
+                  不可视境界线最后变动于：1 小时前
                 
               </p>
             
@@ -435,148 +435,13 @@
 </li>
 <li><p><strong>fd_nextsize， bk_nextsize</strong>是largebins的指针</p>
 </li>
-<li><pre><code class="c">#define MIN_CHUNK_SIZE (offsetof(struct malloc_chunk, fd_nextsize)) 
-</code></pre>
-<p>至少包含bk指针, largebins的特有指针可以不要</p>
+<li><p>```c<br>#define MIN_CHUNK_SIZE (offsetof(struct malloc_chunk, fd_nextsize)) </p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br></pre></td><td class="code"><pre><code class="hljs awk"><br>    至少包含bk指针, largebins的特有指针可以不要<br><br>  - 奇了怪了, 看了半天才看出来fastbins里的链表头指针数组的数量是`maxsize`的字节数, 所以才有`fastbin_index(chunksize(victim))`这种用字节数定位下标的算法, 好像真的没有一句明白的话说明这玩意儿, 绝了, 看了半天源码才看出来........<br><br>    还是乖乖看源码吧........<br><br>- **<span class="hljs-number">30</span>:看懂了fastbinattack**<br><br>  - nextchunck是指高地址的那一个<br>  - **malloc_consolidate** 函数可以将 fastbin 中所有能和其它 chunk 合并的 chunk 合并在一起。<br><br>- <span class="hljs-number">31</span>: <br><br>  - [gdb-peda](https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/longld/</span>peda) <br><br><span class="hljs-comment">### 第五周: 8/2-8/8</span><br><br>- **<span class="hljs-number">8</span>/<span class="hljs-number">2</span> <span class="hljs-number">3</span>: 做题** <br>  - [pwndbg和Pwngdb](https:<span class="hljs-regexp">//</span>blog.csdn.net<span class="hljs-regexp">/weixin_43092232/</span>article<span class="hljs-regexp">/details/</span><span class="hljs-number">105648769</span>) <br>  - 关于gdb.attach(p)的[几句话](https:<span class="hljs-regexp">//</span>www.jianshu.com<span class="hljs-regexp">/p/</span>fc91ff8319e6) <br>  - 查询各版本libc.so文件的main_arena_offset的[小工具](https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/coldwave96/</span>libcoffset) <br>  - **而且recv是从缓冲区获取数据, 必须把前面的都取出来才能够recv(<span class="hljs-number">4</span>)** <br>  <br>- **<span class="hljs-number">8</span>/<span class="hljs-number">4</span>,<span class="hljs-number">5</span>: 做题** <br>  <br>  - 系统调用号在<span class="hljs-number">32</span>位和<span class="hljs-number">64</span>位系统是不一样的. [查询表](https:<span class="hljs-regexp">//gi</span>antbranch.blog.csdn.net<span class="hljs-regexp">/article/</span>details/<span class="hljs-number">78777938</span>) <br>  - 关于libc_csu的内容在[CTF_WiKi](https:<span class="hljs-regexp">//</span>ctf-wiki.org<span class="hljs-regexp">/pwn/</span>linux<span class="hljs-regexp">/user-mode/</span>stackoverflow<span class="hljs-regexp">/x86/m</span>edium-rop/<span class="hljs-comment">#_1)中</span><br>  -  additionally **recursively dereferencing** all pointers.&lt;img src=<span class="hljs-string">&quot;https://i.loli.net/2021/08/04/GAxeO2D67LfbKPw.png&quot;</span> alt=<span class="hljs-string">&quot;image-20210804234240069&quot;</span> style=<span class="hljs-string">&quot;zoom:80%;&quot;</span> /&gt;<br>  - flat和pack只对数字生效, 对不足四字节或八字节的数据请自行填充完整<br>  - gdb.attach用法 `io = gdb.debug(<span class="hljs-string">&#x27;./hello&#x27;</span>, [gdb_scrip])` 注意要写路径<br>  - 已放弃gdb.attach(), 实在搞不明白怎么用<br>  <br>- **<span class="hljs-number">8</span>/<span class="hljs-number">6</span>: 学习** <br><br>  - gdb中**默认关闭随机化**, 使用show disable-randomization或set disable-randomization off关闭“**禁止随机化**”<br><br>    [关于ASLR和PIE详细内容](https:<span class="hljs-regexp">//</span>www.dazhuanlan.com<span class="hljs-regexp">/ourlaputa/</span>topics/<span class="hljs-number">975254</span>), 前者是Linux系统特有打乱所有的东西, 后者是编译器加上的保护措施, PIE会打乱bss text data加载基址, 不过这是一个固定值, 当我们打开了Linux的ASLR <span class="hljs-number">2</span>才能够真正的**随机**.<br><br>  - 整理writeup<br><br>- **<span class="hljs-number">8</span>/<span class="hljs-number">7</span>:继续 ** <br><br>  - 看完了堆的全部基础内容, 还剩下各种利用方法没看<br>  - 了解了一波**SROP**, 尝试写了一题(其实是某题的第二种方法)<br>  - BUUOJ好几道都是做过的或者很相似的题目, 相当于复习了也比较基础<br><br>- **<span class="hljs-number">8</span>/<span class="hljs-number">8</span>:继续** <br>  <br>  - 看了看栈转移和asm(shellcraft), 以及[Typora的图表文档](https:<span class="hljs-regexp">//</span>support.typora.io<span class="hljs-regexp">/Draw-Diagrams-With-Markdown/</span>) [[flowchart github]](https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/adrai/</span>flowchart.js) [[mermaid]](https:<span class="hljs-regexp">//m</span>ermaid-js.github.io<span class="hljs-regexp">/mermaid/</span><span class="hljs-comment">#/flowchart) </span><br>  - 学习unsorted bin attack, `main_arena` 是一个 `struct malloc_state` 类型的全局变量<br>  - [heap exploitation: how2heap](https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/shellphish/</span>how2heap) <br><br><span class="hljs-comment">### 第六周: 8/9 - 8/15</span><br><br>- **<span class="hljs-number">8</span>/<span class="hljs-number">9</span>:今天看GNU C Library源码(关于heap)** <br>  - [glibc源码下载&amp;在线阅读地址合集](https:<span class="hljs-regexp">//</span>blog.csdn.net<span class="hljs-regexp">/weixin_43833642/</span>article<span class="hljs-regexp">/details/</span><span class="hljs-number">104681190</span>) <br>  - 写点heap源码的笔记<br>  <br>- **<span class="hljs-number">8</span>/<span class="hljs-number">10</span>,<span class="hljs-number">11</span>,<span class="hljs-number">12</span>:继续源码**<br>  <br>  - [Typora不支持最新Mermaid语法的解决办法](https:<span class="hljs-regexp">//</span>qzy.im<span class="hljs-regexp">/blog/</span><span class="hljs-number">2020</span><span class="hljs-regexp">/05/</span>typora-integrate-the-latest-version-of-mermaid/) <br>  - 学了下mermaid的用法(或许将来能用到), 还有app.diagram.net的画图<br>  - 按住ctrl用鼠标点击多个地方可以同时编辑<br>  - 华庭的glibc解析中chunk size链表即为largebin的fd_nextsize和bk_nextsize<br>  - \&lt;span id=<span class="hljs-string">&quot;jump&quot;</span>&gt;跳转到的地方\&lt;/span&gt;    跳转本页锚点的方法<br>  <br>- **<span class="hljs-number">8</span>/<span class="hljs-number">13</span>:搞定malloc.c中除了多线程的所有源码** <br>  - emmmmm我是不是要补补多线程的东西, 总不能一直都不知道吧, 明天我去问问还能拖到什么时候学(bushi)<br>  <br>- **<span class="hljs-number">8</span>/<span class="hljs-number">14</span>-<span class="hljs-number">15</span>:写各种bin attack的分析文, 写完打算入坑ucore Lab1** <br><br>  - [makdown数学公式](https:<span class="hljs-regexp">//</span>blog.csdn.net<span class="hljs-regexp">/Katherine_hsr/</span>article<span class="hljs-regexp">/details/</span><span class="hljs-number">79179622</span>) <br>  - [修改theme](https:<span class="hljs-regexp">//</span>blog.csdn.net<span class="hljs-regexp">/xiaojin21cen/</span>article<span class="hljs-regexp">/details/</span><span class="hljs-number">90292315</span>) <br><br><span class="hljs-comment">### 第七,八周: 8/16-8/29</span><br><br>- **bin attack &amp; easyheap** <br>  - 出现了glibc版本问题, 需要再将源码分析和最新版本`<span class="hljs-number">2.34</span>`比对一下 <br>  - 直接执行.so文件来查看glibc版本<br>  - [Gittalk插件](https:<span class="hljs-regexp">//</span>www.cnblogs.com<span class="hljs-regexp">/qisi007/</span>p/<span class="hljs-number">13731562</span>.html) <br>- **补完了CSAPP上signal的部分, 不得不说内容真的是太多了**<br><br><span class="hljs-comment">### 第九周: 8/30-9/5</span><br><br>- **志愿者+shellab** <br>  - getopt()	strchr()<br>  - **Ctrl+z** 发送的是 **SIGTSTP** <br>  - Kali 上unsigned long int长<span class="hljs-number">8</span>字节, 我在windows上用g++是<span class="hljs-number">4</span>字节和int一样长<br>  - architecturelab还没做, 都不知道要不要弄了, 书上好多还没看又得要几天<br>  - 继续CSAPP, 怎么还没看完啊.......<br>  - ***重大教训***, 在Z-Library上找到了csapp的英文非扫描版, 终于不用在笔记排版上浪费那么多的时间了<br>  - <span class="hljs-number">8</span>/<span class="hljs-number">5</span> 看到了处理器体系结构第三节<br><br><span class="hljs-comment">### 第十周: 9/6-9/12</span><br><br>- **CSAPP** <br>  - process architecture看了一天半看不下去了, 还有剩下的Network &amp; Concurrent Programming以后再找机会看吧<br>- **Rust** <br>  - 看了五天的Rust Official Document, 相当于是应了肖老师的建议, 不过看了一大半之后还能继续做什么还没有思考, 不过大概率不去做网页组的事情了<br>  - 妄图和肖哥比确实是一种自不量力的行为, 我要好好反思一下自己要走的路<br>- **BUUOJ** <br>  - 做个几题意思一下<br><br><span class="hljs-comment">### 第十一周: 9/13-9/19</span><br><br>- **又看了一下[checksec](http:<span class="hljs-regexp">//</span>www.voidcn.com<span class="hljs-regexp">/article/</span>p-yxixqubd-bmr.html)的保护机制** <br>- 准备了一手CCF CSP, 虽然没学算法的大家都是一个水平<br>- 做个两题<br><br><span class="hljs-comment">### 第十二周: 9/20-9/26</span><br><br>- IDA pro book感觉挺有用的, 抽个时间看看<br>- 上面这本书中的一部分的博客: [名称与命名](https:<span class="hljs-regexp">//</span>blog.csdn.net<span class="hljs-regexp">/andiao1218/</span>article<span class="hljs-regexp">/details/</span><span class="hljs-number">101192650</span>), 讲如何更改函数或变量名称<br>- vim[查找与替换](https:<span class="hljs-regexp">//</span>blog.csdn.net<span class="hljs-regexp">/cbaln0/</span>article<span class="hljs-regexp">/details/</span><span class="hljs-number">87979056</span>) <br>- 面试V&amp;N的pwn方向, 和当时的肖学长差不多水平, 但是现在的面试比较严格, 叫我再学两个月, 我现在退坑pwn去走一遍肖学长的learn list补补基础(编译原理和操作系统)<br>- 太忙了, 搞综测, 又没周末, 实验又多, 下周再学吧<br><br><span class="hljs-comment">## 操作系统+编译原理</span><br><br><span class="hljs-comment">### 第十三周: 9/27-10/7(国庆全算进去吧)</span><br><br>- **<span class="hljs-number">10</span>/<span class="hljs-number">1</span>-<span class="hljs-number">2</span> : 编译原理**<br><br>  - 刚开始编译原理，操作系统的话看看有无必要同时进行<br>  - 编译原理概念过多, 暂缓几天, 现在先看操作系统<br>  - 同时看看CSAPP的并行部分(tmd怎么还没看完, 笔记不做了就画个线好了)<br><br>- **<span class="hljs-number">10</span>/<span class="hljs-number">3</span> : 操作系统** <br><br>  - 在弄ucore环境, 加入了新的vim[命令](https:<span class="hljs-regexp">//</span>chyyuu.gitbooks.io<span class="hljs-regexp">/ucore_os_docs/</span>content<span class="hljs-regexp">/lab0/</span>lab0_2_2_3_1_softwares.html), 包括[这个](https:<span class="hljs-regexp">//</span>www.cnblogs.com<span class="hljs-regexp">/marsggbo/</span>p/<span class="hljs-number">12152374</span>.html).<br><br>  - [ucore实验参考书](https:<span class="hljs-regexp">//</span>chyyuu.gitbooks.io<span class="hljs-regexp">/ucore_os_docs/</span>content/) <br><br>  - GCC内联汇编<br><br>    - [基本内联汇编](https:<span class="hljs-regexp">//</span>chyyuu.gitbooks.io<span class="hljs-regexp">/ucore_os_docs/</span>content<span class="hljs-regexp">/lab0/</span>lab0_2_3_1_3_gcc_inline_asm.html) <br><br>      - `<span class="hljs-string">&quot;asm&quot;</span> 和 <span class="hljs-string">&quot;__asm__&quot;</span>`, 如有多行每一行都要加上 `<span class="hljs-string">&quot;\n\t&quot;</span>`, <br><br>        实际上gcc在处理汇编时，是要把asm(...)的内容<span class="hljs-string">&quot;打印&quot;</span>到汇编文件中，所以**格式控制字符**是必要的。<br><br>    - [扩展内联汇编](https:<span class="hljs-regexp">//</span>chyyuu.gitbooks.io<span class="hljs-regexp">/ucore_os_docs/</span>content<span class="hljs-regexp">/lab0/</span>lab0_2_3_1_4_extend_gcc_asm.html) 详见网站 好复杂, 用时再看<br><br>      - ```c<br>        asm [volatile] ( Assembler Template<br>           : Output Operands<br>           [ : Input Operands<br>           [ : Clobbers ] ] )<br></code></pre></td></tr></table></figure></li>
+<li><p><a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/lab0/lab0_2_3_3_gdb.html">gdb基本命令以及窗口命令</a> </p>
 </li>
-<li><p>奇了怪了, 看了半天才看出来fastbins里的链表头指针数组的数量是<code>maxsize</code>的字节数, 所以才有<code>fastbin_index(chunksize(victim))</code>这种用字节数定位下标的算法, 好像真的没有一句明白的话说明这玩意儿, 绝了, 看了半天源码才看出来……..</p>
-<p>还是乖乖看源码吧……..</p>
-</li>
-</ul>
-</li>
-<li><p><strong>30:看懂了fastbinattack</strong></p>
-<ul>
-<li>nextchunck是指高地址的那一个</li>
-<li><strong>malloc_consolidate</strong> 函数可以将 fastbin 中所有能和其它 chunk 合并的 chunk 合并在一起。</li>
-</ul>
-</li>
-<li><p>31: </p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/longld/peda">gdb-peda</a> </li>
-</ul>
-</li>
-</ul>
-<h3 id="第五周-8-2-8-8"><a href="#第五周-8-2-8-8" class="headerlink" title="第五周: 8/2-8/8"></a>第五周: 8/2-8/8</h3><ul>
-<li><p><strong>8/2 3: 做题</strong> </p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43092232/article/details/105648769">pwndbg和Pwngdb</a> </li>
-<li>关于gdb.attach(p)的<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/fc91ff8319e6">几句话</a> </li>
-<li>查询各版本libc.so文件的main_arena_offset的<a target="_blank" rel="noopener" href="https://github.com/coldwave96/libcoffset">小工具</a> </li>
-<li><strong>而且recv是从缓冲区获取数据, 必须把前面的都取出来才能够recv(4)</strong> </li>
-</ul>
-</li>
-<li><p><strong>8/4,5: 做题</strong> </p>
-<ul>
-<li>系统调用号在32位和64位系统是不一样的. <a target="_blank" rel="noopener" href="https://giantbranch.blog.csdn.net/article/details/78777938">查询表</a> </li>
-<li>关于libc_csu的内容在<a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/user-mode/stackoverflow/x86/medium-rop/#_1">CTF_WiKi</a>中</li>
-<li> additionally <strong>recursively dereferencing</strong> all pointers.<img src="https://i.loli.net/2021/08/04/GAxeO2D67LfbKPw.png" srcset="/img/loading.gif" lazyload alt="image-20210804234240069" style="zoom:80%;" /></li>
-<li>flat和pack只对数字生效, 对不足四字节或八字节的数据请自行填充完整</li>
-<li>gdb.attach用法 <code>io = gdb.debug(&#39;./hello&#39;, [gdb_scrip])</code> 注意要写路径</li>
-<li>已放弃gdb.attach(), 实在搞不明白怎么用</li>
-</ul>
-</li>
-<li><p><strong>8/6: 学习</strong> </p>
-<ul>
-<li><p>gdb中<strong>默认关闭随机化</strong>, 使用show disable-randomization或set disable-randomization off关闭“<strong>禁止随机化</strong>”</p>
-<p><a target="_blank" rel="noopener" href="https://www.dazhuanlan.com/ourlaputa/topics/975254">关于ASLR和PIE详细内容</a>, 前者是Linux系统特有打乱所有的东西, 后者是编译器加上的保护措施, PIE会打乱bss text data加载基址, 不过这是一个固定值, 当我们打开了Linux的ASLR 2才能够真正的<strong>随机</strong>.</p>
-</li>
-<li><p>整理writeup</p>
-</li>
-</ul>
-</li>
-<li><p>**8/7:继续 ** </p>
-<ul>
-<li>看完了堆的全部基础内容, 还剩下各种利用方法没看</li>
-<li>了解了一波<strong>SROP</strong>, 尝试写了一题(其实是某题的第二种方法)</li>
-<li>BUUOJ好几道都是做过的或者很相似的题目, 相当于复习了也比较基础</li>
-</ul>
-</li>
-<li><p><strong>8/8:继续</strong> </p>
-<ul>
-<li>看了看栈转移和asm(shellcraft), 以及<a target="_blank" rel="noopener" href="https://support.typora.io/Draw-Diagrams-With-Markdown/">Typora的图表文档</a> <a target="_blank" rel="noopener" href="https://github.com/adrai/flowchart.js">[flowchart github]</a> <a target="_blank" rel="noopener" href="https://mermaid-js.github.io/mermaid/#/flowchart">[mermaid]</a> </li>
-<li>学习unsorted bin attack, <code>main_arena</code> 是一个 <code>struct malloc_state</code> 类型的全局变量</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/shellphish/how2heap">heap exploitation: how2heap</a> </li>
-</ul>
-</li>
-</ul>
-<h3 id="第六周-8-9-8-15"><a href="#第六周-8-9-8-15" class="headerlink" title="第六周: 8/9 - 8/15"></a>第六周: 8/9 - 8/15</h3><ul>
-<li><p><strong>8/9:今天看GNU C Library源码(关于heap)</strong> </p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43833642/article/details/104681190">glibc源码下载&amp;在线阅读地址合集</a> </li>
-<li>写点heap源码的笔记</li>
-</ul>
-</li>
-<li><p><strong>8/10,11,12:继续源码</strong></p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://qzy.im/blog/2020/05/typora-integrate-the-latest-version-of-mermaid/">Typora不支持最新Mermaid语法的解决办法</a> </li>
-<li>学了下mermaid的用法(或许将来能用到), 还有app.diagram.net的画图</li>
-<li>按住ctrl用鼠标点击多个地方可以同时编辑</li>
-<li>华庭的glibc解析中chunk size链表即为largebin的fd_nextsize和bk_nextsize</li>
-<li>&lt;span id=”jump”&gt;跳转到的地方&lt;/span&gt;    跳转本页锚点的方法</li>
-</ul>
-</li>
-<li><p><strong>8/13:搞定malloc.c中除了多线程的所有源码</strong> </p>
-<ul>
-<li>emmmmm我是不是要补补多线程的东西, 总不能一直都不知道吧, 明天我去问问还能拖到什么时候学(bushi)</li>
-</ul>
-</li>
-<li><p><strong>8/14-15:写各种bin attack的分析文, 写完打算入坑ucore Lab1</strong> </p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Katherine_hsr/article/details/79179622">makdown数学公式</a> </li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/xiaojin21cen/article/details/90292315">修改theme</a> </li>
-</ul>
-</li>
-</ul>
-<h3 id="第七-八周-8-16-8-29"><a href="#第七-八周-8-16-8-29" class="headerlink" title="第七,八周: 8/16-8/29"></a>第七,八周: 8/16-8/29</h3><ul>
-<li><strong>bin attack &amp; easyheap</strong> <ul>
-<li>出现了glibc版本问题, 需要再将源码分析和最新版本<code>2.34</code>比对一下 </li>
-<li>直接执行.so文件来查看glibc版本</li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/qisi007/p/13731562.html">Gittalk插件</a> </li>
-</ul>
-</li>
-<li><strong>补完了CSAPP上signal的部分, 不得不说内容真的是太多了</strong></li>
-</ul>
-<h3 id="第九周-8-30-9-5"><a href="#第九周-8-30-9-5" class="headerlink" title="第九周: 8/30-9/5"></a>第九周: 8/30-9/5</h3><ul>
-<li><strong>志愿者+shellab</strong> <ul>
-<li>getopt()    strchr()</li>
-<li><strong>Ctrl+z</strong> 发送的是 <strong>SIGTSTP</strong> </li>
-<li>Kali 上unsigned long int长8字节, 我在windows上用g++是4字节和int一样长</li>
-<li>architecturelab还没做, 都不知道要不要弄了, 书上好多还没看又得要几天</li>
-<li>继续CSAPP, 怎么还没看完啊…….</li>
-<li><em><strong>重大教训</strong></em>, 在Z-Library上找到了csapp的英文非扫描版, 终于不用在笔记排版上浪费那么多的时间了</li>
-<li>8/5 看到了处理器体系结构第三节</li>
-</ul>
-</li>
-</ul>
-<h3 id="第十周-9-6-9-12"><a href="#第十周-9-6-9-12" class="headerlink" title="第十周: 9/6-9/12"></a>第十周: 9/6-9/12</h3><ul>
-<li><strong>CSAPP</strong> <ul>
-<li>process architecture看了一天半看不下去了, 还有剩下的Network &amp; Concurrent Programming以后再找机会看吧</li>
-</ul>
-</li>
-<li><strong>Rust</strong> <ul>
-<li>看了五天的Rust Official Document, 相当于是应了肖老师的建议, 不过看了一大半之后还能继续做什么还没有思考, 不过大概率不去做网页组的事情了</li>
-<li>妄图和肖哥比确实是一种自不量力的行为, 我要好好反思一下自己要走的路</li>
-</ul>
-</li>
-<li><strong>BUUOJ</strong> <ul>
-<li>做个几题意思一下</li>
-</ul>
-</li>
-</ul>
-<h3 id="第十一周-9-13-9-19"><a href="#第十一周-9-13-9-19" class="headerlink" title="第十一周: 9/13-9/19"></a>第十一周: 9/13-9/19</h3><ul>
-<li><strong>又看了一下<a target="_blank" rel="noopener" href="http://www.voidcn.com/article/p-yxixqubd-bmr.html">checksec</a>的保护机制</strong> </li>
-<li>准备了一手CCF CSP, 虽然没学算法的大家都是一个水平</li>
-<li>当天晚上做个两题</li>
-</ul>
-<h3 id="第十二周-9-20-9-26"><a href="#第十二周-9-20-9-26" class="headerlink" title="第十二周: 9/20-9/26"></a>第十二周: 9/20-9/26</h3><ul>
-<li>IDA pro book感觉挺有用的, 抽个时间看看</li>
-<li>上面这本书中的一部分的博客: <a target="_blank" rel="noopener" href="https://blog.csdn.net/andiao1218/article/details/101192650">名称与命名</a>, 讲如何更改函数或变量名称</li>
-<li>vim<a target="_blank" rel="noopener" href="https://blog.csdn.net/cbaln0/article/details/87979056">查找与替换</a> </li>
-<li>面试V&amp;N的pwn方向, 和当时的肖学长差不多水平, 但是现在的面试比较严格, 叫我再学两个月, 我现在退坑pwn去走一遍肖政杭的learn list补补基础(编译原理和操作系统)</li>
-<li>太忙了, 搞综测, 又没周末, 实验又多, 下周再学吧</li>
-</ul>
-<h3 id="第十三周-9-27-10-7-国庆全算进去吧"><a href="#第十三周-9-27-10-7-国庆全算进去吧" class="headerlink" title="第十三周: 9/27-10/7(国庆全算进去吧)"></a>第十三周: 9/27-10/7(国庆全算进去吧)</h3><ul>
 <li></li>
+</ul>
+</li>
 </ul>
 
             </div>
@@ -641,7 +506,7 @@
         var options = Object.assign(
           {"clientID":"312db7ebbc085de5d28d","clientSecret":"85ea3cefd13c73a6d85c1813adfde4f1550bfbda","repo":"yogdzewa.github.io","owner":"yogdzewa","admin":["yogdzewa"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":true,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: '027048b3020743b3b8562a97a99d0b2f'
+            id: '26a29260a8a3e5c08d39e2b26a23aea5'
           }
         )
         var gitalk = new Gitalk(options);
