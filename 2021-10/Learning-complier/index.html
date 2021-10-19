@@ -202,7 +202,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      14 字
+      290 字
     </span>
   
 
@@ -212,7 +212,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1
+      4
        分钟
     </span>
   
@@ -254,15 +254,45 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：4 天前
+                  不可视境界线最后变动于：6 天前
                 
               </p>
             
             <div class="markdown-body">
               <h2 id="0-预备知识"><a href="#0-预备知识" class="headerlink" title="0. 预备知识"></a>0. 预备知识</h2><ul>
-<li><h2 id="COOL语言"><a href="#COOL语言" class="headerlink" title="COOL语言"></a>COOL语言</h2></li>
+<li>COOL语言<ul>
+<li>只能说是比较复杂, manuals和源码分析详见相关文档</li>
 </ul>
-<h2 id="1-lexer-词法分析"><a href="#1-lexer-词法分析" class="headerlink" title="1. lexer - 词法分析"></a>1. lexer - 词法分析</h2>
+</li>
+<li>编译原理<ul>
+<li>词法分析-&gt;语法分析-&gt;语义分析</li>
+<li><img src="https://i.loli.net/2021/10/13/TB5tzC2vSxGUskV.png" srcset="/img/loading.gif" lazyload alt="image-20211013100444035" style="zoom:67%;" /> </li>
+<li><strong>词法分析</strong> <ul>
+<li>从左向右逐行扫描源程序的字符，识别出各个单词，确定单词的类型。将识别出的单词转换成统一的机内表示——词法单元(<strong>token</strong>)形式</li>
+</ul>
+</li>
+<li><strong>语法分析</strong> <ul>
+<li>语法分析器(parser)从词法分析器输出的token序列中识别出各类短语，并构造语法分析树(<strong>parse tree</strong>)</li>
+</ul>
+</li>
+<li>**语义分析 ** <ul>
+<li>收集标识符的属性信息&amp;&amp;语义检查</li>
+</ul>
+</li>
+<li><strong>中间代码</strong> <ul>
+<li>三地址码 (Three-address Code)<pre><code>三地址码由类似于汇编语言的指令序列组成，每个指令最多有三个操作数(operand)
+</code></pre>
+</li>
+<li>语法结构树/语法树 (Syntax Trees)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="1-lexer-词法分析"><a href="#1-lexer-词法分析" class="headerlink" title="1. lexer - 词法分析"></a>1. lexer - 词法分析</h2><ul>
+<li>这一实验看上去就是逐字分析然后根据flex的语法返回token就完事了, 但要知道的是flex的内部原理仍然是有穷自动机finite automate, 具体概念可以看看课程PDF, flex的代码分析可见 <a target="_blank" rel="noopener" href="https://github.com/pcy190/CompilerAnalysis/blob/master/flex_analysis.md">这里</a> </li>
+</ul>
+
             </div>
             <hr>
             <div>

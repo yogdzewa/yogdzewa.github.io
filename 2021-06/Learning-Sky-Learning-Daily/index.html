@@ -202,7 +202,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      4.3k 字
+      4.7k 字
     </span>
   
 
@@ -212,7 +212,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      74
+      80
        分钟
     </span>
   
@@ -254,7 +254,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2 小时前
+                  不可视境界线最后变动于：几秒前
                 
               </p>
             
@@ -449,7 +449,7 @@
 <li>安装好PA环境, 开始cs143第一个实验</li>
 <li>(看了学校的课程:数据库系统)</li>
 <li>软件安装问题<ul>
-<li>芔, 根本没装好, 为了在kali上做实验整了半天flex安装, 一直给我提示缺少GNU m4, 我寻思哪里都没见过这东西啊, 找了半天m4也装了半天, 结果发现直接apt install就行了, m4的版本不重要, 重要的是flex低版本的源码级安装(也不知道    有没用, 先装了再说)</li>
+<li>芔, 根本没装好, 为了在kali上做实验整了半天flex安装, 一直给我提示缺少GNU m4, 我寻思哪里都没见过这东西啊, 找了半天m4也装了半天, 结果发现直接apt install就行了, m4的版本不重要, 重要的是flex低版本的源码级安装(也不知道    有没用, 先装了再说)(<strong>后来还是用了apt install flex</strong>)</li>
 <li>文章里说的<code>./configure &amp;&amp; make &amp;&amp; sudo make install</code>就是在相应文件夹下执行就可以了</li>
 <li>apt自动管理软件的依赖问题, 各种命令直接搜索即可</li>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/EasonJim/p/7144017.html">Ubuntu通过apt-get安装指定版本和查询指定软件有多少个版本</a> </li>
@@ -472,8 +472,40 @@
 </ul>
 </li>
 <li><p><strong>10/7-10 : 还是看文档</strong> </p>
-<p>- </p>
+<ul>
+<li><p>课程看了两天, 实验相关只花了一下午看</p>
 </li>
+<li><p><strong>#line 命令(还是没懂)</strong> </p>
+<ol>
+<li>#line 行号</li>
+</ol>
+<p>其中行号必须是1~32 767之间的整数，此指示导致程序后面的行被编号为n,n+1,n+2,…</p>
+<ol start="2">
+<li>#line 行号 “文件名”</li>
+</ol>
+<p>其中行号和文件名说明来源的行号和文件名，指示后面的行会被认为是来自文件，行号由n开始。</p>
+<p>​    #line指示一种作用是改变__LINE__,__FILE__宏的值。但是大多数编译器不支持#line。#line 主要用于那些产生C代码作为输出的程序，程序员并不常用#line。</p>
+</li>
+<li><p><strong>看了这么多天文档终于会写代码了, 好感动(╥╯^╰╥)</strong> </p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="第十三周-10-11-10-17"><a href="#第十三周-10-11-10-17" class="headerlink" title="第十三周: 10/11-10/17"></a>第十三周: 10/11-10/17</h3><ul>
+<li><p>终于整完了cool.flex, 开始看parse部分</p>
+</li>
+<li><p>flex的源码分析抽空看一看, 只写cool.flex还是忽略了一些细节</p>
+</li>
+<li><p>救命啊, 这编译原理也太猛了, 概念多得离谱, 词法+语法分析是能够一周完成的任务吗???</p>
+<p><del>不过还能学下去就是了, 如果是实验的话应该会省略掉一些细节, 毕竟课程还是啥都讲, 从劣到优全都介绍一遍</del></p>
+<p>已经学不下去了</p>
+</li>
+<li><p>学傻了, cool文档哪里看的过来啊</p>
+</li>
+</ul>
+<h3 id="第十四周-10-18-10-24"><a href="#第十四周-10-18-10-24" class="headerlink" title="第十四周: 10/18-10/24"></a>第十四周: 10/18-10/24</h3><ul>
+<li>我以为我看完文档了, 结果又看到产生式里面给我来一个<code>error &#39;;&#39;</code>人又蒙了, 一看Bison文档在第六章, 我就差这个没看呢, 不过后面的章节应该不是很重要了, 就算做我看完了吧:cry: </li>
+<li></li>
 </ul>
 
             </div>
