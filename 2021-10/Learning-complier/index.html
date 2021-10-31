@@ -202,7 +202,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      290 字
+      985 字
     </span>
   
 
@@ -212,7 +212,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      4
+      20
        分钟
     </span>
   
@@ -254,17 +254,18 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：6 天前
+                  不可视境界线最后变动于：几秒前
                 
               </p>
             
             <div class="markdown-body">
-              <h2 id="0-预备知识"><a href="#0-预备知识" class="headerlink" title="0. 预备知识"></a>0. 预备知识</h2><ul>
-<li>COOL语言<ul>
+              <h1 id="COMPLIER-CS143"><a href="#COMPLIER-CS143" class="headerlink" title="COMPLIER-CS143"></a>COMPLIER-CS143</h1><h2 id="0-预备知识"><a href="#0-预备知识" class="headerlink" title="0. 预备知识"></a>0. 预备知识</h2><h3 id="COOL语言"><a href="#COOL语言" class="headerlink" title="COOL语言"></a>COOL语言</h3><ul>
 <li>只能说是比较复杂, manuals和源码分析详见相关文档</li>
+<li>比较典型的是继承树结构</li>
 </ul>
-</li>
-<li>编译原理<ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c++">          &#123; -&gt; [String]<br>          &#123; -&gt; [Int]<br>[OBJECT] =&#123; -&gt; [IO]     -&gt; [B]<br>          &#123; -&gt; [Bool]<br>          &#123; -&gt; [A]<br></code></pre></td></tr></table></figure>
+
+<h3 id="编译原理"><a href="#编译原理" class="headerlink" title="编译原理"></a>编译原理</h3><ul>
 <li>词法分析-&gt;语法分析-&gt;语义分析</li>
 <li><img src="https://i.loli.net/2021/10/13/TB5tzC2vSxGUskV.png" srcset="/img/loading.gif" lazyload alt="image-20211013100444035" style="zoom:67%;" /> </li>
 <li><strong>词法分析</strong> <ul>
@@ -287,11 +288,163 @@
 </ul>
 </li>
 </ul>
+<h3 id="CS143实验文件结构"><a href="#CS143实验文件结构" class="headerlink" title="CS143实验文件结构"></a>CS143实验文件结构</h3><h4 id="list-h"><a href="#list-h" class="headerlink" title="list.h:"></a>list.h:</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">List</span> &#123;</span><br><span class="hljs-keyword">private</span>:<br>    <span class="hljs-comment">//可以看到这个list的head是一个元素T, 而另一个是指向List&lt;T&gt;类的指针</span><br>	T *head;<br>    List&lt;T&gt;* tail;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="tree-h-cool-tree-h"><a href="#tree-h-cool-tree-h" class="headerlink" title="tree.h+cool-tree.h:"></a>tree.h+cool-tree.h:</h4><ul>
+<li>All APS nodes are derived from tree_node.</li>
+<li>Lists of APS objects are implemented by the “list_node” template.</li>
+</ul>
+<pre><code class=" mermaid">classDiagram
+class tree_node&#123;
+    int line_number
+    
+    tree_node()
+    virtual tree_node *copy() = 0
+    virtual void dump(ostream&amp; stream, int n) = 0
+    int get_line_number()
+    tree_node *set(tree_node *)
+&#125;
+class list_node&#123;
+	实现了三个
+	返回下标的迭代器
+&#125;
+class single_list_node
+tree_node --|&gt; list_node
+list_node --|&gt; append_node
+list_node --|&gt; single_list_node
+list_node --|&gt; nil_node
+single_list_node : 这三个实现了取出第n个node
+
+class Class__class&#123;
+    virtual get_name()
+    virtual get_parent()
+    virtual get_features()
+    virtual get_filename()
+    virtual dump_with_types(ostream&amp;,int)
+&#125;
+Class__class : define simple_phylum_Class_
+
+class class__class&#123;
+   Symbol name;
+   Symbol parent;
+   Features features;
+   Symbol filename;
+&#125;
+Class__class --|&gt; class__class
+tree_node --|&gt; Class__class
+tree_node --|&gt; Feature_class
+class Feature_class&#123;
+	virtual tc(EnvironmentP)
+	virtual add_to_table(EnvironmentP)
+&#125;
+class method_class&#123;
+    Symbol name;
+    Formals formals;
+    Symbol return_type;
+    Expression expr;
+    get_return_type()
+    get_formals()
+    ...
+&#125;
+class attr_class&#123;
+   Symbol name;
+   Symbol type_decl;
+   Expression init;
+&#125;
+Feature_class --|&gt; method_class
+Feature_class --|&gt; attr_class
+tree_node --|&gt; and_so_on
+
+</code></pre>
+
+<h4 id="stringtable"><a href="#stringtable" class="headerlink" title="stringtable:"></a>stringtable:</h4><pre><code class=" mermaid">classDiagram
+direction RL
+class Entry&#123;
+   Symbol name;
+   Symbol type_decl;
+   Expression init;
+&#125;
+Entry --|&gt; StringEntry
+Entry --|&gt; IntEntry
+Entry --|&gt; IdEntry
+class StringTable~Elem~&#123;
+   List~Elem~ *tbl;
+   int index;
+&#125;
+StringTable .. Entry
+</code></pre>
+
+<h4 id="symtab"><a href="#symtab" class="headerlink" title="symtab:"></a>symtab:</h4><pre><code class=" mermaid">classDiagram
+class SymtabEntry&#123;
+    SYM id;    // the key field
+    DAT *info;
+    get_id()
+    get_info()
+&#125;
+
+class SymbolTable~SYM, DAT~&#123;
+    SymtabEntry~SYM, DAT~=ScopeEntry;
+    List~ScopeEntry~=Scope;
+    List~Scope~=ScopeList;
+private:
+    ScopeList *tbl;
+&#125;
+SymtabEntry -- SymbolTable
+</code></pre>
+
+
+
+<h2 id="1-lexer-词法分析"><a href="#1-lexer-词法分析" class="headerlink" title="1. lexer - 词法分析"></a>1. lexer - 词法分析</h2><ul>
+<li><p>这一实验看上去就是逐字分析然后根据flex的语法返回token就完事了, 但要知道的是flex的内部原理仍然是有穷自动机finite automate, 具体概念可以看看课程PDF, flex的代码分析可见 <a target="_blank" rel="noopener" href="https://github.com/pcy190/CompilerAnalysis/blob/master/flex_analysis.md">这里</a> </p>
+</li>
+<li><p>文件关系:</p>
+<ul>
+<li>lexertest.cc是main函数所在文件, 我们写完cool.flex后flex使用此文件和众多依赖文件编译成lexer(executable)</li>
+<li>cool-lex.cc即为flex自动生成的词法扫描自动机</li>
+</ul>
 </li>
 </ul>
-<h2 id="1-lexer-词法分析"><a href="#1-lexer-词法分析" class="headerlink" title="1. lexer - 词法分析"></a>1. lexer - 词法分析</h2><ul>
-<li>这一实验看上去就是逐字分析然后根据flex的语法返回token就完事了, 但要知道的是flex的内部原理仍然是有穷自动机finite automate, 具体概念可以看看课程PDF, flex的代码分析可见 <a target="_blank" rel="noopener" href="https://github.com/pcy190/CompilerAnalysis/blob/master/flex_analysis.md">这里</a> </li>
+<h2 id="2-parser-语法分析"><a href="#2-parser-语法分析" class="headerlink" title="2.parser - 语法分析"></a>2.parser - 语法分析</h2><ul>
+<li>此阶段主要任务是构建AST树</li>
+<li>文件关系:<ul>
+<li>parser-phase.cc是main函数所在文件, 调用cool_yyparse函数</li>
+<li>把词法分析编译出的lexer文件放进此PA的文件夹中完成词法分析</li>
+<li>cool.y为我们要编写的bison文件, cool-parse.cc为bison自动生成的源文件, parser为可执行文件</li>
 </ul>
+</li>
+</ul>
+<h2 id="3-semantic-语义分析"><a href="#3-semantic-语义分析" class="headerlink" title="3.semantic - 语义分析"></a>3.semantic - 语义分析</h2><ul>
+<li><p>对AST树进行类型检查, 排除所有可能的错误</p>
+</li>
+<li></li>
+<li><p>semant.h结构</p>
+</li>
+</ul>
+<pre><code class=" mermaid">classDiagram
+class InheritanceNode
+class ClassTable
+class__class --|&gt; InheritanceNode
+SymbolTable~Symbol, InheritanceNode~ --|&gt; ClassTable
+class Environment&#123;
+    SymbolTable~Symbol, method_class~ method_table;
+    SymbolTable~Symbol, Entry~  var_table;
+    ClassTableP class_table;
+    Class_      self_class;
+    环境检查函数...
+&#125;
+InheritanceNode : 该class的信息和environment
+class ClassTable &#123; 文件中所有class检查完之后进
+入ClassTable的构造函数,&#125;
+</code></pre>
+
+
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Environment</span>&#123;</span><br> <span class="hljs-keyword">private</span>:<br>    SymbolTable&lt;Symbol, method_class&gt; method_table;<br>    SymbolTable&lt;Symbol, Entry&gt;  var_table;<br>    ClassTableP class_table;<br>    Class_      self_class;<br><br>  <span class="hljs-keyword">public</span>:<br>    <span class="hljs-built_in">Environment</span>(ClassTableP ct, InheritanceNodeP sc);<br>    <span class="hljs-built_in">Environment</span>(SymbolTable&lt;Symbol, method_class&gt; mt,<br>		SymbolTable&lt;Symbol, Entry&gt;  vt,<br>		ClassTableP ct,<br>		InheritanceNodeP sc);<br>    <span class="hljs-function">EnvironmentP <span class="hljs-title">clone_Environment</span><span class="hljs-params">(InheritanceNodeP n)</span></span>;<br><br><br>    <span class="hljs-comment">// class table operations</span><br>    <span class="hljs-comment">//</span><br>    <span class="hljs-comment">// Standard ways to report errors.</span><br>    <span class="hljs-comment">//</span><br>    <span class="hljs-function">ostream&amp; <span class="hljs-title">semant_error</span><span class="hljs-params">()</span></span>;<br>    <span class="hljs-function">ostream&amp; <span class="hljs-title">semant_error</span><span class="hljs-params">(tree_node *t)</span></span>;<br>    <br>    <span class="hljs-function">InheritanceNodeP <span class="hljs-title">lookup_class</span><span class="hljs-params">(Symbol s)</span></span>;<br><br>    <span class="hljs-comment">// method table operations </span><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">method_add</span><span class="hljs-params">(Symbol s, method_class *m)</span></span>;<br>    <span class="hljs-function">method_class *<span class="hljs-title">method_lookup</span><span class="hljs-params">(Symbol s)</span></span>;<br>    <span class="hljs-function">method_class *<span class="hljs-title">method_probe</span><span class="hljs-params">(Symbol s)</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">method_enterscope</span><span class="hljs-params">()</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">method_exitscope</span><span class="hljs-params">()</span></span>;<br><br>    <span class="hljs-comment">// attribute table operationsv</span><br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">var_add</span><span class="hljs-params">(Symbol s, Symbol typ)</span></span>;<br>    <span class="hljs-function">Symbol <span class="hljs-title">var_lookup</span><span class="hljs-params">(Symbol s)</span></span>;<br>    <span class="hljs-function">Symbol <span class="hljs-title">var_probe</span><span class="hljs-params">(Symbol s)</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">var_enterscope</span><span class="hljs-params">()</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">var_exitscope</span><span class="hljs-params">()</span></span>;<br><br>    <span class="hljs-comment">// type operations</span><br>    <span class="hljs-function">Symbol <span class="hljs-title">get_self_type</span><span class="hljs-params">()</span></span>;<br>    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">type_leq</span><span class="hljs-params">(Symbol subtype, Symbol supertype)</span></span>;<br>    <span class="hljs-function">Symbol <span class="hljs-title">type_lub</span><span class="hljs-params">(Symbol t1, Symbol t2)</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
 
             </div>
             <hr>

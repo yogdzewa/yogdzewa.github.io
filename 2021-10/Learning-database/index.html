@@ -14,11 +14,11 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="搭环境要人命">
+  <meta name="description" content="来一把sql">
   <meta name="author" content="Yogdzewa">
   <meta name="keywords" content="">
   
-  <title>折腾出来的问题(linux) - Yogdzewa</title>
+  <title>database_system - Yogdzewa</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -175,7 +175,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="折腾出来的问题(linux)">
+            <span class="h2" id="subtitle" title="database_system">
               
             </span>
 
@@ -190,8 +190,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-05-06 10:00" pubdate>
-        2021年5月6日 上午
+      <time datetime="2021-10-21 10:00" pubdate>
+        2021年10月21日 上午
       </time>
     </span>
   
@@ -202,7 +202,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      663 字
+      546 字
     </span>
   
 
@@ -212,7 +212,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      10
+      9
        分钟
     </span>
   
@@ -250,56 +250,63 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">折腾出来的问题(linux)</h1>
+            <h1 style="display: none">database_system</h1>
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2 个月前
+                  不可视境界线最后变动于：3 天前
                 
               </p>
             
             <div class="markdown-body">
-              <h2 id="Kali的问题-linux命令"><a href="#Kali的问题-linux命令" class="headerlink" title="Kali的问题(linux命令):"></a>Kali的问题(linux<a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-command-manual.html">命令</a>):</h2><ul>
-<li>虚拟机的安装(又装了一遍)</li>
-<li>VMtools的安装(为什么网上会有这么多的<a target="_blank" rel="noopener" href="https://blog.csdn.net/love20165104027/article/details/83377758">方法</a>.</li>
-<li>中文输入法Ibus的<a target="_blank" rel="noopener" href="https://www.cnblogs.com/donghao0924/p/13503595.html">安装(</a>两行命令解决的事情有些教程搞得几十行,就离谱)</li>
-<li>vim插件(彻底的失败) 不过在vim设置文件里设置了几个<a target="_blank" rel="noopener" href="https://blog.csdn.net/lovewebeye/article/details/79960675">常用的</a>.</li>
-<li>密码问题, root初始密码忘记, root下passwd指令.   默认账号kali kali</li>
-<li>vim在share文件夹里</li>
-<li>中文输入法出现[Invalid-UTF-8 code], 改成半角中文即可</li>
-<li>make btest出错, 修改Makefile为生成64位可执行文件<a target="_blank" rel="noopener" href="https://blog.csdn.net/mazamu/article/details/107021054">[0]</a>.</li>
-<li>LInux中可执行文件和后缀名无关, 和文件的属性有关(????</li>
-<li>bitset是一个类模板</li>
-<li>GDB以及gcc的<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/74897601">使用</a>(详见零碎知识)</li>
-<li>kali如何运行可执行文件: ./bomb</li>
-<li>set nohlsearch(no highlight search)</li>
-<li>中文输入法下输入命令:w按下回车vim会卡死, <strong>输入逗号也能卡死?????</strong></li>
-<li>kali装Chrome:他有sandbox机制, 无法在root用户下运行<a target="_blank" rel="noopener" href="https://www.cnblogs.com/smart-zihan/p/13440084.html">[1]</a>.</li>
-<li>kali使用vpn:  <strong>失败</strong>.</li>
-<li>kill占了端口的进程<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42108437/article/details/106072810">[0]</a>.</li>
-<li>虚拟机卡死时查找log文件里的pid, 在任务管理器里停止</li>
-<li>查看磁盘使用情况<a target="_blank" rel="noopener" href="https://www.cnblogs.com/flyingeagle/articles/9219106.html">[0]</a>.</li>
-<li>Typora的安装<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_33694648/article/details/104403618">问题</a>.</li>
-<li>.tar文件相关<a target="_blank" rel="noopener" href="https://zhidao.baidu.com/question/873537413743808372.html">问题</a>.</li>
-<li>root用户安装了vmtool, 切换到lbjyye后需要重新安装(?)</li>
-<li>修改命令行终端字体大小: ~/.config/qterminal.org/qterminal.ini 里的fontsize或fontfamily并将其改为只读文件(<strong>新版完全没这个问题</strong>)</li>
-<li>要显示隐藏文件夹直接到工具栏上的视图里去找</li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Cappuccino_jay/article/details/105474581">延长</a>锁屏时间</li>
-<li>终端补全只要方向键</li>
-<li>关机命令 init 0</li>
-<li>chorme里<a target="_blank" rel="noopener" href="https://jingyan.baidu.com/article/75ab0bcb8547fed6864db2f8.html">添加</a>搜索引擎</li>
-<li>vim无法打开文件, <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38238114/article/details/78524043">改为</a>下载GVIM</li>
-<li>啥玩意儿啊, kali2021干吗搞没了图形界面clash弄半天也没成<a target="_blank" rel="noopener" href="https://dcrelay.me/#/knowledge">[0]</a></li>
-<li>main函数的两个参数: 一个是命令参数的个数, 另一个是命令参数数组,argv[0]是程序本身的文件名</li>
-<li>快照管理其中的保留是防止自动保存的快照被删除</li>
-<li>**Typora里使用中文状态下的Ctrl+A, 文件直接丢失!!!!**太特么蠢了.</li>
-<li>/usr/share/vim/vim82/colors/有vim的主题<ul>
-<li>industry 全黑,  evening 还行, koel 超级黑的背景, morning 灰白很不错, murpy又是黑的字体细点,  peachpuff 桃色背景, shine 亮瞎狗眼 颜色太浅, slate 字体太紧, zellner 平平无奇的白底, 剩下的不用考虑</li>
+              <p>这篇主要是记录一下用过的语句, 毕竟文档是在太多只能用到了再去记下来</p>
+<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><ul>
+<li>alter语句<ul>
+<li>这个吧直接查文档就行</li>
 </ul>
 </li>
-<li>了解了链接引用和脚注是个<a target="_blank" rel="noopener" href="https://www.cnblogs.com/hnrainll/p/3514637.html">啥</a>.</li>
-<li>Operation inconsistent with current state。VM报错, 只要以管理员身份运行就可以了</li>
-<li>Linux中的Chrome无法自动升级,干脆就不升级了, 命令加一个<code>--disable-background-networking</code> </li>
+<li>DATE DATETIME ……<ul>
+<li>三种形式: 有引号有分隔符 | 有引号无分隔符 | 纯数字</li>
+<li>STR_TO_DATE()就如字面意思</li>
+</ul>
+</li>
+<li>PRIMARY KEY()定义联合主键, <strong>联合主键就是由1个以上的字段构成的唯一标识.</strong> </li>
+<li>查看表的约束和其他信息<ul>
+<li>select * from information_schema.table_constraints; 查询所有表的约束</li>
+<li>show create tabel [table_name]</li>
+</ul>
+</li>
+<li>mysql清屏: <code>system cls</code> 只在cmd powershell 和 Cmd Client中起作用</li>
+<li>WITH关键字生成一个临时表</li>
+<li>GROUP BY后面的HAVING字句如果按照SQL的标准只能引用GROUP BY中的字段名称, 但是MySQL(较新版)做了一个拓展: HAVING字句中可以包含<strong>聚集函数</strong>、<strong>SELECT</strong>中的字段名称、<strong>外层子查询中的字段名</strong> </li>
+<li>MySQL不支持<strong>EXCEPT</strong>和<strong>INTERCECT</strong> </li>
+<li>内置函数: IFNULL()</li>
+<li>WITH CLAUSE</li>
+<li>HAVING 字句在投影运算之前</li>
+<li>MySQL变量不需要事先定义, 如果不需要用了直接<code>set @n = null</code> </li>
+<li>自然连接时后加进来的表的外键如果在待连接表之中, 则选择条件应为所有外键值对都相等</li>
+<li>NATURAL JOIN 不能乱用, 它见到相同的字段名称就拿去匹配, 会出现意料之外的Empty Set<ul>
+<li>破案了, 每张表的字段名称最好特别一点, 不要只是name这种通用名称, 最好是EmpName之类的</li>
+</ul>
+</li>
+<li>COALESCE() 返回第一个非空值</li>
+<li>VALUES statement(?</li>
+<li>IF() and compound statement syntax</li>
+<li></li>
+</ul>
+<h2 id="报错信息"><a href="#报错信息" class="headerlink" title="报错信息"></a>报错信息</h2><ul>
+<li>1822 - Failed to add the foreign key constraint. Missing index for constraint ‘booking_ibfk_3’ in the referenced table ‘guest’<ul>
+<li>原因：表A如果没有设置主键，那么表A里面的字段是不能作为表B的外键的。</li>
+</ul>
+</li>
+<li>3813 - Column check constraint ‘customer_details_chk_2’ references other column<ul>
+<li>硬搬书上的什么<code>check(value in(‘sldfkj’, ‘ksdjf’))</code>导致错误, 应该把value改成字段名称</li>
+</ul>
+</li>
+<li>1248 - Every derived table must have its own alias<ul>
+<li>用进行嵌套查询的时候，子查询执行出来的的结果是需要作为一个派生表来给上一级进行查询使用的，所以子查询的结果必须要有一个别名</li>
+</ul>
+</li>
 </ul>
 
             </div>
@@ -307,11 +314,18 @@
             <div>
               <div class="post-metas mb-3">
                 
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/CS/">CS</a>
+                    
+                  </div>
+                
                 
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
+                      <a class="hover-with-bg" href="/tags/database/">database</a>
                     
                   </div>
                 
@@ -323,29 +337,6 @@
                   
                 </p>
               
-              
-                <div class="post-prevnext">
-                  <article class="post-prev col-6">
-                    
-                    
-                      <a href="/2021-05/Learning-CSAPP-Lab/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">CSAPP_Lab</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/2021-05/%E5%B0%91%E7%94%A8%E7%9A%84-%E6%97%A5%E6%9C%AC%E8%AA%9E/">
-                        <span class="hidden-mobile">日本語</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
               
             </div>
 
@@ -364,7 +355,7 @@
         var options = Object.assign(
           {"clientID":"312db7ebbc085de5d28d","clientSecret":"85ea3cefd13c73a6d85c1813adfde4f1550bfbda","repo":"yogdzewa.github.io","owner":"yogdzewa","admin":["yogdzewa"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":true,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: '67e64fad43096ba3261fc4ffb42a4cac'
+            id: '5754f6137ac66f90d9871c789cf60edc'
           }
         )
         var gitalk = new Gitalk(options);
