@@ -254,7 +254,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2 分钟前
+                  不可视境界线最后变动于：6 分钟前
                 
               </p>
             
@@ -433,16 +433,14 @@
 </li>
 <li><p>fastbin是单链表, 所以元素的用户数据段前八字节有数据, 且是fd</p>
 </li>
-<li><p><strong>fd_nextsize， bk_nextsize</strong>是largebins的指针</p>
+<li><p><strong>fd_nextsize， bk_nextsize</strong>是largebins的指针<code>#define MIN_CHUNK_SIZE (offsetof(struct malloc_chunk, fd_nextsize))</code></p>
 </li>
-</ul>
+<li><p>至少包含bk指针, largebins的特有指针可以不要</p>
 </li>
-</ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta"># <span class="hljs-meta-keyword">define</span> MIN_CHUNK_SIZE (offsetof(struct malloc_chunk, fd_nextsize)) </span><br></code></pre></td></tr></table></figure>
-<p>​            至少包含bk指针, largebins的特有指针可以不要</p>
-<ul>
 <li><p>奇了怪了, 看了半天才看出来fastbins里的链表头指针数组的数量是<code>maxsize</code>的字节数, 所以才有<code>fastbin_index(chunksize(victim))</code>这种用字节数定位下标的算法, 好像真的没有一句明白的话说明这玩意儿, 绝了, 看了半天源码才看出来……..</p>
 <p>还是乖乖看源码吧……..</p>
+</li>
+</ul>
 </li>
 <li><p><strong>30:看懂了fastbinattack</strong></p>
 <ul>
