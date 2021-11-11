@@ -212,7 +212,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      46
+      43
        分钟
     </span>
   
@@ -254,7 +254,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2 小时前
+                  不可视境界线最后变动于：35 分钟前
                 
               </p>
             
@@ -349,32 +349,21 @@
 <h3 id="5-硬件访问"><a href="#5-硬件访问" class="headerlink" title="5.硬件访问"></a>5.<a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/lab1/lab1_3_2_3_dist_accessing.html">硬件访问</a></h3><h3 id="6-中断与异常"><a href="#6-中断与异常" class="headerlink" title="6.中断与异常"></a>6.中断与异常</h3><h2 id="几个练习"><a href="#几个练习" class="headerlink" title="几个练习"></a>几个练习</h2><h3 id="练习一"><a href="#练习一" class="headerlink" title="练习一"></a>练习一</h3><blockquote>
 <p>理解通过make生成执行文件的过程</p>
 </blockquote>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs python">+ cc kern/init/init.c<br>+ cc kern/libs/readline.c<br>+ cc kern/libs/stdio.c<br>+ cc kern/debug/kdebug.c<br>+ cc kern/debug/kmonitor.c<br>+ cc kern/debug/panic.c<br>+ cc kern/driver/clock.c<br>+ cc kern/driver/console.c<br>+ cc kern/driver/intr.c<br>+ cc kern/driver/picirq.c<br>+ cc kern/trap/trap.c<br>+ cc kern/trap/trapentry.S<br>+ cc kern/trap/vectors.S<br>+ cc kern/mm/pmm.c<br>+ cc libs/printfmt.c<br>+ cc libs/string.c<br>+ ld <span class="hljs-built_in">bin</span>/kernel<br>+ cc boot/bootasm.S<br>+ cc boot/bootmain.c<br>+ cc tools/sign.c<br>+ ld <span class="hljs-built_in">bin</span>/bootblock<br><br><span class="hljs-comment"># some records</span><br><span class="hljs-string">&#x27;obj/bootblock.out&#x27;</span> size: <span class="hljs-number">492</span> <span class="hljs-built_in">bytes</span><br>build <span class="hljs-number">512</span> <span class="hljs-built_in">bytes</span> boot sector: <span class="hljs-string">&#x27;bin/bootblock&#x27;</span> success!<br><span class="hljs-number">10000</span>+<span class="hljs-number">0</span> records <span class="hljs-keyword">in</span><br><span class="hljs-number">10000</span>+<span class="hljs-number">0</span> records out<br><span class="hljs-number">5120000</span> <span class="hljs-built_in">bytes</span> (<span class="hljs-number">5.1</span> MB, <span class="hljs-number">4.9</span> MiB) copied, <span class="hljs-number">0.0311469</span> s, <span class="hljs-number">164</span> MB/s<br><span class="hljs-number">1</span>+<span class="hljs-number">0</span> records <span class="hljs-keyword">in</span><br><span class="hljs-number">1</span>+<span class="hljs-number">0</span> records out<br><span class="hljs-number">512</span> <span class="hljs-built_in">bytes</span> copied, <span class="hljs-number">9.8999e-05</span> s, <span class="hljs-number">5.2</span> MB/s<br><span class="hljs-number">146</span>+<span class="hljs-number">1</span> records <span class="hljs-keyword">in</span><br><span class="hljs-number">146</span>+<span class="hljs-number">1</span> records out<br><span class="hljs-number">74808</span> <span class="hljs-built_in">bytes</span> (<span class="hljs-number">75</span> kB, <span class="hljs-number">73</span> KiB) copied, <span class="hljs-number">0.000541691</span> s, <span class="hljs-number">138</span> MB/s<br></code></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<ul>
+<li><p>操作系统镜像文件ucore.img是如何一步一步生成的？(需要比较详细地解释Makefile中每一条相关命令和命令参数的含义，以及说明命令导致的结果)</p>
+<ul>
+<li>Makefile掌握不够的话根本看不懂在写什么</li>
+</ul>
+</li>
+<li><p>一个被系统认为是符合规范的硬盘主引导扇区的特征是什么？</p>
+<ul>
+<li>最后两个字节是0x55,0xAA</li>
+</ul>
+</li>
+</ul>
+<h3 id="练习二"><a href="#练习二" class="headerlink" title="练习二"></a>练习二</h3><blockquote>
+<p>使用qemu执行并调试lab1中的软件</p>
+</blockquote>
 <p>学堂在线</p>
 <ul>
 <li>花很大一部分的时间去阅读代码</li>
