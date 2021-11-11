@@ -254,7 +254,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2 个月前
+                  不可视境界线最后变动于：1 天前
                 
               </p>
             
@@ -271,7 +271,7 @@
 <h3 id="phase-3"><a href="#phase-3" class="headerlink" title="phase 3"></a>phase 3</h3><p>touch3函数里调用了hexmatch(cookie, sval), sval是char*类型且为touch3的第一个变量, 作用是比较字符串sval和cookie是否相同, 所以在调用touch3之前需要将%rdi设置为cookie的字符串形式, 即ASCII码值, 程序的大致运行过程如下:</p>
 <ol>
 <li><p>test=&gt;getbuf, 40字节的栈空间存放攻击代码, 内容为: 设置%rdi, 将touch3地址推到栈上, ret. 溢出的8字节为getbuf返回地址, 改写为攻击代码的首地址.</p>
-<img src="https://txc.gtimg.com/data/293750/2021/0719/afaadcb0e4f822d9c3f9a27ca83b01bf.png" srcset="/img/loading.gif" lazyload alt="img" style="zoom:67%;" /></li>
+<img src="../../image/CSAPP_Lab/afaadcb0e4f822d9c3f9a27ca83b01bf.png" srcset="/img/loading.gif" lazyload alt="img" style="zoom:67%;" /></li>
 <li><p>首地址获取方法: 用gdb调试设置断点到getbuf, 找到%rsp减去40后的值, 即为攻击代码地址</p>
 </li>
 <li><p>设置%rdi还要注意hexmatch的随机函数, 所以将输入的字符串存到getbuf返回地址的上方test代码段里, 与攻击代码距离40+8(返回地址)字节, 将该地址mov到%rdi里. 由于一次性使用程序, 不用关心test里的数据被改变</p>
@@ -283,7 +283,7 @@
 
 <p>由于找不到直接pop %rdi的代码, 所以转向pop到其他寄存器然后mov到%rdi中, 这时候可以发现addval_219和addval_273中的58 90 c3, 48 89 c7 c3, 即pop %rax, mov %rax, %rdi(真tm就是直接找啊).</p>
 <p>然后在buf里填充40字节空字符, 溢出的8字节定位到219, 从栈上pop出cookie, ret(0xc3)指令从栈上弹出一个地址即273的地址, 执行完mov后再ret, 最终跳转到touch2.</p>
-<img src="https://p.qlogo.cn/zc_icon/0/e704802709d9ee3488bda1438861a0c716266897078366/0.png" srcset="/img/loading.gif" lazyload style="zoom:60%;" />
+<img src="../../image/CSAPP_Lab/0.png" srcset="/img/loading.gif" lazyload style="zoom:60%;" />
 
 <p>exploit code:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs assembly">00 00 00 00 00 00 00 00<br>00 00 00 00 00 00 00 00<br>00 00 00 00 00 00 00 00<br>00 00 00 00 00 00 00 00<br>00 00 00 00 00 00 00 00 ==&gt;40字节<br>ab 19 40 00 00 00 00 00<br>fa 97 b9 59 00 00 00 00<br>a2 19 40 00 00 00 00 00<br>ec 17 40 00 00 00 00 00<br></code></pre></td></tr></table></figure>

@@ -254,7 +254,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：1 个月前
+                  不可视境界线最后变动于：1 天前
                 
               </p>
             
@@ -287,7 +287,7 @@
 <blockquote>
 <p>例： bins[2]为unsorted bin链的fd成员，bin[3]为其bk成员, bin[0]为其presize, bin[1]为其size</p>
 </blockquote>
-<img src="https://i.loli.net/2021/08/11/sbzY4vrhU2wZypm.png" srcset="/img/loading.gif" lazyload style="zoom: 33%;" /> </li>
+<img src="../../image/glibc_malloc_srcCode/sbzY4vrhU2wZypm.png" srcset="/img/loading.gif" lazyload style="zoom: 33%;" /> </li>
 </ul>
 <h3 id="unlink：从bins中取出chunk"><a href="#unlink：从bins中取出chunk" class="headerlink" title="unlink：从bins中取出chunk"></a>unlink：从bins中取出chunk</h3><ul>
 <li>2.25中unlink为宏定义, 2.26为unlink_chunk函数, 仅仅多了一个检查<ul>
@@ -341,7 +341,7 @@
 <li><p>large bin结构:</p>
 </li>
 </ul>
-<p><img src="https://i.loli.net/2021/08/10/KHlB5YwzDnq1pmZ.png" srcset="/img/loading.gif" lazyload alt="large-bin"> </p>
+<p><img src="../../image/glibc_malloc_srcCode/KHlB5YwzDnq1pmZ.png" srcset="/img/loading.gif" lazyload alt="large-bin"> </p>
 </li>
 </ul>
 <h3 id="Top"><a href="#Top" class="headerlink" title="Top"></a>Top</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/*</span><br><span class="hljs-comment">   Top</span><br><span class="hljs-comment">    The top-most available chunk (i.e., the one bordering the end of</span><br><span class="hljs-comment">    available memory) is treated specially. It is never included in</span><br><span class="hljs-comment">    any bin, is used only if no other chunk is available, and is</span><br><span class="hljs-comment">    released back to the system if it is very large (see</span><br><span class="hljs-comment">    M_TRIM_THRESHOLD).  Because top initially</span><br><span class="hljs-comment">    points to its own bin with initial zero size, thus forcing</span><br><span class="hljs-comment">    extension on the first malloc request, we avoid having any special</span><br><span class="hljs-comment">    code in malloc to check whether it even exists yet. But we still</span><br><span class="hljs-comment">    need to do so when getting memory from system, so we make</span><br><span class="hljs-comment">    initial_top treat the bin as a legal but unusable chunk during the</span><br><span class="hljs-comment">    interval between initialization and the first call to</span><br><span class="hljs-comment">    sysmalloc. (This is somewhat delicate, since it relies on</span><br><span class="hljs-comment">    the 2 preceding words to be zero during this interval as well.)</span><br><span class="hljs-comment"> */</span><br><span class="hljs-comment">/* Conveniently, the unsorted bin can be used as dummy top on first call */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> initial_top(M)              (unsorted_chunks (M))</span><br></code></pre></td></tr></table></figure>
@@ -711,7 +711,7 @@ b--&gt;|32 &amp; != 16|largebin_index_32
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs markdown">➜  unsorted<span class="hljs-emphasis">_bin_</span>attack git:(master) ✗ gcc unsorted<span class="hljs-emphasis">_bin_</span>attack.c -o unsorted<span class="hljs-emphasis">_bin_</span>attack<br>➜  unsorted<span class="hljs-emphasis">_bin_</span>attack git:(master) ✗ ./unsorted<span class="hljs-emphasis">_bin_</span>attack<br>This file demonstrates unsorted bin attack by write a large unsigned long value into stack<br>In practice, unsorted bin attack is generally prepared for further attacks, such as <span class="hljs-emphasis">*rewriting the global variable global_max_fast*</span> in libc for further fastbin attack<br><br>Let&#x27;s first look at the target we want to rewrite on stack:<br>0x7ffe0d232518: 0<br><br>Now, we allocate first normal chunk on the heap at: 0x1fce010<br>And allocate another normal chunk in order to avoid consolidating the top chunk withthe first one during the free()<br><br>We free the first chunk now and it will be inserted in the unsorted bin with its bk pointer point to 0x7f1c705ffb78<br>Now emulating a vulnerability that can overwrite the victim-&gt;bk pointer<br>And we write it with the target address-16 (in 32-bits machine, it should be target address-8):0x7ffe0d232508<br><br>Let&#x27;s malloc again to get the chunk we just free. During this time, target should has already been rewrite:<br>0x7ffe0d232518: 0x7f1c705ffb78<br></code></pre></td></tr></table></figure>
 
 <p>这里我们可以使用一个图来描述一下具体发生的流程以及背后的原理。</p>
-<p><img src="https://ctf-wiki.org/pwn/linux/user-mode/heap/ptmalloc2/figure/unsorted_bin_attack_order.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="../../image/glibc_malloc_srcCode/unsorted_bin_attack_order.png" srcset="/img/loading.gif" lazyload alt="img"></p>
 <p><strong>初始状态时</strong> </p>
 <p>unsorted bin 的 fd 和 bk 均指向 unsorted bin 本身。</p>
 <p><strong>执行 free(p)</strong> </p>
