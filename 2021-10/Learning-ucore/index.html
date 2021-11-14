@@ -202,7 +202,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      5.1k 字
+      5.4k 字
     </span>
   
 
@@ -212,7 +212,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      91
+      98
        分钟
     </span>
   
@@ -254,7 +254,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：7 小时前
+                  不可视境界线最后变动于：几秒前
                 
               </p>
             
@@ -589,6 +589,24 @@
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">void</span></span><br><span class="hljs-function"><span class="hljs-title">bootmain</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span> </span>&#123;<br>    <span class="hljs-comment">// 首先读取ELF的头部</span><br>    <span class="hljs-built_in">readseg</span>((<span class="hljs-keyword">uintptr_t</span>)ELFHDR, SECTSIZE * <span class="hljs-number">8</span>, <span class="hljs-number">0</span>);<br><br>    <span class="hljs-comment">// 通过储存在头部的幻数判断是否是合法的ELF文件</span><br>    <span class="hljs-keyword">if</span> (ELFHDR-&gt;e_magic != ELF_MAGIC) &#123;<br>        <span class="hljs-keyword">goto</span> bad;<br>    &#125;<br><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proghdr</span> *<span class="hljs-title">ph</span>, *<span class="hljs-title">eph</span>;</span><br><br>    <span class="hljs-comment">// ELF头部有描述ELF文件应加载到内存什么位置的描述表，</span><br>    <span class="hljs-comment">// 先将描述表的头地址存在ph</span><br>    ph = (struct proghdr *)((<span class="hljs-keyword">uintptr_t</span>)ELFHDR + ELFHDR-&gt;e_phoff);<br>    eph = ph + ELFHDR-&gt;e_phnum;<br><br>    <span class="hljs-comment">// 按照描述表将ELF文件中数据载入内存</span><br>    <span class="hljs-keyword">for</span> (; ph &lt; eph; ph ++) &#123;<br>        <span class="hljs-built_in">readseg</span>(ph-&gt;p_va &amp; <span class="hljs-number">0xFFFFFF</span>, ph-&gt;p_memsz, ph-&gt;p_offset);<br>    &#125;<br>    <span class="hljs-comment">// ELF文件0x1000位置后面的0xd1ec比特被载入内存0x00100000</span><br>    <span class="hljs-comment">// ELF文件0xf000位置后面的0x1d20比特被载入内存0x0010e000</span><br><br>    <span class="hljs-comment">// 根据ELF头部储存的入口信息，找到内核的入口</span><br>    ((<span class="hljs-built_in"><span class="hljs-keyword">void</span></span> (*)(<span class="hljs-keyword">void</span>))(ELFHDR-&gt;e_entry &amp; <span class="hljs-number">0xFFFFFF</span>))();<br><br>bad:<br>    <span class="hljs-built_in">outw</span>(<span class="hljs-number">0x8A00</span>, <span class="hljs-number">0x8A00</span>);<br>    <span class="hljs-built_in">outw</span>(<span class="hljs-number">0x8A00</span>, <span class="hljs-number">0x8E00</span>);<br>    <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <h3 id="练习五"><a href="#练习五" class="headerlink" title="练习五"></a>练习五</h3><blockquote>
+<p>实现函数调用堆栈跟踪函数</p>
+</blockquote>
+<p>ss:ebp指向的堆栈位置储存着caller的ebp，以此为线索可以得到所有使用堆栈的函数ebp。<br>ss:ebp+4指向caller调用时的eip，ss:ebp+8等是（可能的）参数。</p>
+<p>输出中，堆栈最深一层为</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs dns">ebp:<span class="hljs-number">0</span>x00007bf8 eip:<span class="hljs-number">0x00007d68</span> args:<span class="hljs-number">0x00000000</span> <span class="hljs-number">0x00000000</span> <span class="hljs-number">0x00000000</span> <span class="hljs-number">0</span>x00007c4f<br>    &lt;unknow&gt;: -- <span class="hljs-number">0x00007d67</span> --<br></code></pre></td></tr></table></figure>
+
+<p>其对应的是第一个使用堆栈的函数，bootmain.c中的bootmain。<br>bootloader设置的堆栈从0x7c00开始，使用”call bootmain”转入bootmain函数。<br>call指令压栈，所以bootmain中ebp为0x7bf8。</p>
+<p><strong>print_stackframe:</strong> </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">uint32_t</span> eip, ebp;<br>eip = read_eip();<br>ebp = read_ebp();<br><span class="hljs-keyword">int</span> i, j;<br><span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; ebp != <span class="hljs-number">0</span> &amp;&amp; i &lt; STACKFRAME_DEPTH; i++)<br>&#123;<br>    cprintf(<span class="hljs-string">&quot;ebp:0x%08x eip:0x%08x args:&quot;</span>, ebp, eip);<br>    <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">4</span>; j++)<br>    &#123;<br>        cprintf(<span class="hljs-string">&quot;0x%08x &quot;</span>, ((<span class="hljs-keyword">uint32_t</span> *)ebp + <span class="hljs-number">2</span>)[j]);<br>    &#125;<br>    cprintf(<span class="hljs-string">&quot;\n&quot;</span>);<br>    print_debuginfo(eip - <span class="hljs-number">1</span>);<br>    eip = ((<span class="hljs-keyword">uint32_t</span> *)ebp)[<span class="hljs-number">1</span>];<br>    ebp = ((<span class="hljs-keyword">uint32_t</span> *)ebp)[<span class="hljs-number">0</span>];<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>需要注意的问题:</p>
+<ul>
+<li><p>gdb命令通过文件加载debuginfo, 包括源代码和函数位置, 一般我们直接使用gdb <em>filepath</em> -q直接进入调试界面, 而本实验先启动qemu(使用.img镜像文件), 然后gdb通过remote连接到qemu中, Makefile中指定的gdbinit文件可以指定一些初始命令.</p>
+<p>这样, gdb没有任何debuginfo, 全靠远程端口给出信息, 所以我们可以在init文件中添加file命令加载符号信息</p>
+</li>
+</ul>
+<h3 id="练习六"><a href="#练习六" class="headerlink" title="练习六"></a>练习六</h3><blockquote>
+<p>完善中断初始化和处理</p>
 </blockquote>
 <p>学堂在线</p>
 <ul>
