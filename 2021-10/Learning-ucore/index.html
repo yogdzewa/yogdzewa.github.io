@@ -202,7 +202,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      3.7k 字
+      5.1k 字
     </span>
   
 
@@ -212,7 +212,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      67
+      91
        分钟
     </span>
   
@@ -254,7 +254,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：10 小时前
+                  不可视境界线最后变动于：1 小时前
                 
               </p>
             
@@ -346,7 +346,54 @@
     线性地址--&gt;End
 </code></pre>
 
-<h3 id="5-硬件访问"><a href="#5-硬件访问" class="headerlink" title="5.硬件访问"></a>5.<a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/lab1/lab1_3_2_3_dist_accessing.html">硬件访问</a></h3><h3 id="6-中断与异常"><a href="#6-中断与异常" class="headerlink" title="6.中断与异常"></a>6.中断与异常</h3><h2 id="几个练习"><a href="#几个练习" class="headerlink" title="几个练习"></a>几个练习</h2><h3 id="练习一"><a href="#练习一" class="headerlink" title="练习一"></a>练习一</h3><blockquote>
+<h3 id="5-硬件访问"><a href="#5-硬件访问" class="headerlink" title="5.硬件访问"></a>5.<a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/lab1/lab1_3_2_3_dist_accessing.html">硬件访问</a></h3><p>bootloader让CPU进入保护模式后，下一步的工作就是从硬盘上加载并运行OS。考虑到实现的简单性，bootloader的访问硬盘都是LBA模式的PIO（Program IO）方式，即所有的IO操作是通过CPU访问硬盘的IO地址寄存器完成。</p>
+<p>一般主板有2个IDE通道，每个通道可以接2个IDE硬盘。访问第一个硬盘的扇区可设置IO地址寄存器0x1f0-0x1f7实现的，具体参数见下表。一般第一个IDE通道通过访问IO地址0x1f0-0x1f7来实现，第二个IDE通道通过访问0x170-0x17f实现。每个通道的主从盘的选择通过第6个IO偏移地址寄存器来设置。</p>
+<p>表一 磁盘IO地址和对应功能</p>
+<p>第6位：为1=LBA模式；0 = CHS模式 第7位和第5位必须为1</p>
+<table>
+<thead>
+<tr>
+<th>IO地址</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x1f0</td>
+<td>读数据，当0x1f7不为忙状态时，可以读。</td>
+</tr>
+<tr>
+<td>0x1f2</td>
+<td>要读写的扇区数，每次读写前，你需要表明你要读写几个扇区。最小是1个扇区</td>
+</tr>
+<tr>
+<td>0x1f3</td>
+<td>如果是LBA模式，就是LBA参数的0-7位</td>
+</tr>
+<tr>
+<td>0x1f4</td>
+<td>如果是LBA模式，就是LBA参数的8-15位</td>
+</tr>
+<tr>
+<td>0x1f5</td>
+<td>如果是LBA模式，就是LBA参数的16-23位</td>
+</tr>
+<tr>
+<td>0x1f6</td>
+<td>第0~3位：如果是LBA模式就是24-27位 第4位：为0主盘；为1从盘</td>
+</tr>
+<tr>
+<td>0x1f7</td>
+<td>状态和命令寄存器。操作时先给命令，再读取，如果不是忙状态就从0x1f0端口读数据</td>
+</tr>
+</tbody></table>
+<p>当前 硬盘数据是储存到硬盘扇区中，一个扇区大小为512字节。读一个扇区的流程（可参看boot/bootmain.c中的readsect函数实现）大致如下：</p>
+<ol>
+<li>等待磁盘准备好</li>
+<li>发出读取扇区的命令</li>
+<li>等待磁盘准备好</li>
+<li>把磁盘扇区数据读到指定内存</li>
+</ol>
+<h3 id="6-中断与异常"><a href="#6-中断与异常" class="headerlink" title="6.中断与异常"></a>6.中断与异常</h3><h2 id="几个练习"><a href="#几个练习" class="headerlink" title="几个练习"></a>几个练习</h2><h3 id="练习一"><a href="#练习一" class="headerlink" title="练习一"></a>练习一</h3><blockquote>
 <p>理解通过make生成执行文件的过程</p>
 </blockquote>
 <ul>
@@ -484,8 +531,65 @@
 <p>分析bootloader加载ELF格式的OS的过程。</p>
 </blockquote>
 <ul>
-<li></li>
+<li>IDE: Integrated Drive Electronics，它的本意是指把控制器与盘体集成在一起的硬盘驱动器，IDE是表示硬盘的传输接口。</li>
 </ul>
+<p>bootloader让CPU进入保护模式后，下一步的工作就是从硬盘上加载并运行OS。考虑到实现的简单性，bootloader的访问硬盘都是LBA模式的PIO（Program IO）方式，即所有的IO操作是通过CPU访问硬盘的IO地址寄存器完成。</p>
+<p>一般主板有2个IDE通道，每个通道可以接2个IDE硬盘。访问第一个硬盘的扇区可设置IO地址寄存器0x1f0-0x1f7实现的，具体参数见下表。一般第一个IDE通道通过访问IO地址0x1f0-0x1f7来实现，第二个IDE通道通过访问0x170-0x17f实现。每个通道的主从盘的选择通过第6个IO偏移地址寄存器来设置。</p>
+<table>
+<thead>
+<tr>
+<th>IO地址</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x1f0</td>
+<td>读数据，当0x1f7不为忙状态时，可以读。</td>
+</tr>
+<tr>
+<td>0x1f2</td>
+<td>要读写的扇区数，每次读写前，你需要表明你要读写几个扇区。最小是1个扇区</td>
+</tr>
+<tr>
+<td>0x1f3</td>
+<td>如果是LBA模式，就是LBA参数的0-7位</td>
+</tr>
+<tr>
+<td>0x1f4</td>
+<td>如果是LBA模式，就是LBA参数的8-15位</td>
+</tr>
+<tr>
+<td>0x1f5</td>
+<td>如果是LBA模式，就是LBA参数的16-23位</td>
+</tr>
+<tr>
+<td>0x1f6</td>
+<td>第0~3位：如果是LBA模式就是24-27位 第4位：为0主盘；为1从盘</td>
+</tr>
+<tr>
+<td>0x1f7</td>
+<td>状态和命令寄存器。操作时先给命令，再读取，如果不是忙状态就从0x1f0端口读数据</td>
+</tr>
+</tbody></table>
+<p>当前 硬盘数据是储存到硬盘扇区中，一个扇区大小为512字节。读一个扇区的流程（可参看boot/bootmain.c中的readsect函数实现）大致如下：</p>
+<ol>
+<li>等待磁盘准备好</li>
+<li>发出读取扇区的命令</li>
+<li>等待磁盘准备好</li>
+<li>把磁盘扇区数据读到指定内存</li>
+</ol>
+<p><strong>分析bootloader加载ELF格式的OS的过程。</strong> </p>
+<p>首先看readsect函数，<br><code>readsect</code>从设备的第secno扇区读取数据到dst位置</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span></span><br><span class="hljs-function"><span class="hljs-title">readsect</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *dst, <span class="hljs-keyword">uint32_t</span> secno)</span> </span>&#123;<br>    <span class="hljs-built_in">waitdisk</span>();<br><br>    <span class="hljs-built_in">outb</span>(<span class="hljs-number">0x1F2</span>, <span class="hljs-number">1</span>);                         <span class="hljs-comment">// 设置读取扇区的数目为1</span><br>    <span class="hljs-built_in">outb</span>(<span class="hljs-number">0x1F3</span>, secno &amp; <span class="hljs-number">0xFF</span>);<br>    <span class="hljs-built_in">outb</span>(<span class="hljs-number">0x1F4</span>, (secno &gt;&gt; <span class="hljs-number">8</span>) &amp; <span class="hljs-number">0xFF</span>);<br>    <span class="hljs-built_in">outb</span>(<span class="hljs-number">0x1F5</span>, (secno &gt;&gt; <span class="hljs-number">16</span>) &amp; <span class="hljs-number">0xFF</span>);<br>    <span class="hljs-built_in">outb</span>(<span class="hljs-number">0x1F6</span>, ((secno &gt;&gt; <span class="hljs-number">24</span>) &amp; <span class="hljs-number">0xF</span>) | <span class="hljs-number">0xE0</span>);<br>        <span class="hljs-comment">// 上面四条指令联合制定了扇区号</span><br>        <span class="hljs-comment">// 在这4个字节线联合构成的32位参数中</span><br>        <span class="hljs-comment">//   29-31位强制设为1</span><br>        <span class="hljs-comment">//   28位(=0)表示访问&quot;Disk 0&quot;</span><br>        <span class="hljs-comment">//   0-27位是28位的偏移量</span><br>    <span class="hljs-built_in">outb</span>(<span class="hljs-number">0x1F7</span>, <span class="hljs-number">0x20</span>);                      <span class="hljs-comment">// 0x20命令，读取扇区</span><br><br>    <span class="hljs-built_in">waitdisk</span>();<br><br>    <span class="hljs-built_in">insl</span>(<span class="hljs-number">0x1F0</span>, dst, SECTSIZE / <span class="hljs-number">4</span>);         <span class="hljs-comment">// 读取到dst位置，</span><br>                                            <span class="hljs-comment">// 幻数4因为这里以DW为单位</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>readseg简单包装了readsect，可以从设备读取任意长度的内容。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span></span><br><span class="hljs-function"><span class="hljs-title">readseg</span><span class="hljs-params">(<span class="hljs-keyword">uintptr_t</span> va, <span class="hljs-keyword">uint32_t</span> count, <span class="hljs-keyword">uint32_t</span> offset)</span> </span>&#123;<br>    <span class="hljs-keyword">uintptr_t</span> end_va = va + count;<br><br>    va -= offset % SECTSIZE;<br><br>    <span class="hljs-keyword">uint32_t</span> secno = (offset / SECTSIZE) + <span class="hljs-number">1</span>; <br>    <span class="hljs-comment">// 加1因为0扇区被引导占用</span><br>    <span class="hljs-comment">// ELF文件从1扇区开始</span><br><br>    <span class="hljs-keyword">for</span> (; va &lt; end_va; va += SECTSIZE, secno ++) &#123;<br>        <span class="hljs-built_in">readsect</span>((<span class="hljs-keyword">void</span> *)va, secno);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在bootmain函数中，</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">void</span></span><br><span class="hljs-function"><span class="hljs-title">bootmain</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span> </span>&#123;<br>    <span class="hljs-comment">// 首先读取ELF的头部</span><br>    <span class="hljs-built_in">readseg</span>((<span class="hljs-keyword">uintptr_t</span>)ELFHDR, SECTSIZE * <span class="hljs-number">8</span>, <span class="hljs-number">0</span>);<br><br>    <span class="hljs-comment">// 通过储存在头部的幻数判断是否是合法的ELF文件</span><br>    <span class="hljs-keyword">if</span> (ELFHDR-&gt;e_magic != ELF_MAGIC) &#123;<br>        <span class="hljs-keyword">goto</span> bad;<br>    &#125;<br><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proghdr</span> *<span class="hljs-title">ph</span>, *<span class="hljs-title">eph</span>;</span><br><br>    <span class="hljs-comment">// ELF头部有描述ELF文件应加载到内存什么位置的描述表，</span><br>    <span class="hljs-comment">// 先将描述表的头地址存在ph</span><br>    ph = (struct proghdr *)((<span class="hljs-keyword">uintptr_t</span>)ELFHDR + ELFHDR-&gt;e_phoff);<br>    eph = ph + ELFHDR-&gt;e_phnum;<br><br>    <span class="hljs-comment">// 按照描述表将ELF文件中数据载入内存</span><br>    <span class="hljs-keyword">for</span> (; ph &lt; eph; ph ++) &#123;<br>        <span class="hljs-built_in">readseg</span>(ph-&gt;p_va &amp; <span class="hljs-number">0xFFFFFF</span>, ph-&gt;p_memsz, ph-&gt;p_offset);<br>    &#125;<br>    <span class="hljs-comment">// ELF文件0x1000位置后面的0xd1ec比特被载入内存0x00100000</span><br>    <span class="hljs-comment">// ELF文件0xf000位置后面的0x1d20比特被载入内存0x0010e000</span><br><br>    <span class="hljs-comment">// 根据ELF头部储存的入口信息，找到内核的入口</span><br>    ((<span class="hljs-built_in"><span class="hljs-keyword">void</span></span> (*)(<span class="hljs-keyword">void</span>))(ELFHDR-&gt;e_entry &amp; <span class="hljs-number">0xFFFFFF</span>))();<br><br>bad:<br>    <span class="hljs-built_in">outw</span>(<span class="hljs-number">0x8A00</span>, <span class="hljs-number">0x8A00</span>);<br>    <span class="hljs-built_in">outw</span>(<span class="hljs-number">0x8A00</span>, <span class="hljs-number">0x8E00</span>);<br>    <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="练习五"><a href="#练习五" class="headerlink" title="练习五"></a>练习五</h3><blockquote>
+</blockquote>
 <p>学堂在线</p>
 <ul>
 <li>花很大一部分的时间去阅读代码</li>
