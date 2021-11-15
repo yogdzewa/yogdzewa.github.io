@@ -254,12 +254,14 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：8 小时前
+                  不可视境界线最后变动于：几秒前
                 
               </p>
             
             <div class="markdown-body">
-              <h1 id="Lab1"><a href="#Lab1" class="headerlink" title="Lab1"></a>Lab1</h1><h2 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h2><h3 id="1-BIOS启动顺序"><a href="#1-BIOS启动顺序" class="headerlink" title="1.BIOS启动顺序"></a>1.BIOS启动顺序</h3><ul>
+              <img src="/image/ucore/image-20211110102048633.png" srcset="/img/loading.gif" lazyload alt="image-20211110102048633"  />
+
+<h1 id="Lab1"><a href="#Lab1" class="headerlink" title="Lab1"></a>Lab1</h1><h2 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h2><h3 id="1-BIOS启动顺序"><a href="#1-BIOS启动顺序" class="headerlink" title="1.BIOS启动顺序"></a>1.BIOS启动顺序</h3><ul>
 <li>CPU加电后代码段寄存器初始化为<strong>CS = F000H, EIP = 0000FFF0H</strong>, 然后再计算 Base+IP = FFFF0000H + 0000FFF0H = FFFFFFF0H 得到BIOS的<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/EPROM">EPROM</a>(Erasable Programmable Read Only Memory)所在地, 这个地址的第一条指令是一个<strong>长跳转指令</strong>(这样CS和EIP都会更新)到BIOS代码中执行</li>
 <li>BIOS做完计算机硬件自检和初始化后，会选择一个启动设备（例如软盘、硬盘、光盘等），并且读取该设备的第一扇区(即主引导扇区或启动扇区)到内存一个特定的地址0x7c00处，然后CPU控制权会转移到那个地址继续执行。至此BIOS的初始化工作做完了，进一步的工作交给了ucore的bootloader。</li>
 </ul>
