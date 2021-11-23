@@ -202,7 +202,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      10.6k 字
+      13.8k 字
     </span>
   
 
@@ -212,7 +212,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      186
+      242
        分钟
     </span>
   
@@ -254,7 +254,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：1 小时前
+                  不可视境界线最后变动于：4 分钟前
                 
               </p>
             
@@ -341,7 +341,7 @@
 <p><strong>PRIVILEGE CHECK:</strong> </p>
 <p><img src="https://i.loli.net/2021/11/16/JGd27NnTwFDipOe.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
 <h3 id="4-地址空间"><a href="#4-地址空间" class="headerlink" title="4.地址空间"></a>4.地址空间</h3><pre><code class=" mermaid">flowchart LR
-    逻辑地址--&gt;|分段地址转换|线性地址
+    逻辑地址或虚拟地址--&gt;|分段地址转换|线性地址
     线性地址--&gt;|分页地址转换|物理地址
     线性地址--&gt;End
 </code></pre>
@@ -401,7 +401,7 @@
 <li>把在程序中使用<em>请求系统服务</em> 的系统调用而引发的事件，称作<strong>陷入中断</strong>(trap interrupt)，也称<strong>软中断</strong>(soft interrupt)，系统调用(system call)简称trap。在后续试验中会进一步讲解系统调用。</li>
 </ul>
 </li>
-<li><u>本实验只描述保护模式下的处理<strong>过程</strong></u>: 当CPU收到中断（通过<a target="_blank" rel="noopener" href="https://blog.csdn.net/longintchar/article/details/79439466">8259A</a>完成）或者异常的事件时，它会暂停执行当前的程序或任务，通过一定的机制跳转到负责处理这个信号的相关处理例程中，在完成对这个事件的处理后再跳回到刚才被打断的程序或任务中。中断向量和中断服务例程的对应关系主要是由IDT（中断描述符表）负责。操作系统在IDT中设置好各种中断向量对应的中断描述符，留待CPU在产生中断后查询对应中断服务例程的起始地址。</li>
+<li><u>本实验只描述保护模式下的处理<strong>过程</strong></u>: 当CPU收到中断（通过<a target="_blank" rel="noopener" href="https://blog.csdn.net/longintchar/article/details/79439466">8259A</a>完成）或者异常的事件时，它会暂停执行当前的程序或任务，通过一定的机制跳转到负责处理这个信号的相关处理例程中，在完成对这个事件的处理后再跳回到刚才被打断的程序或任务中。中断向量和中断服务例程的对应关系主要是由IDT（中断描述符表）负责。<u>操作系统在IDT中设置好各种中断向量对应的中断描述符</u>，留待CPU在产生中断后查询对应中断服务例程的起始地址。</li>
 </ul>
 <img src="https://i.loli.net/2021/11/16/5HxAC9w4XSiasbK.png" srcset="/img/loading.gif" lazyload  style="zoom: 60%;" />
 
@@ -723,7 +723,7 @@
 
 
 
-<h3 id="2-管理内存有关结构"><a href="#2-管理内存有关结构" class="headerlink" title="2.管理内存有关结构"></a>2.管理内存有关结构</h3><ul>
+<h3 id="2-管理物理-内存"><a href="#2-管理物理-内存" class="headerlink" title="2.管理物理 内存"></a>2.管理<em>物理</em> 内存</h3><ul>
 <li>每一个物理页的属性用结构Page来表示</li>
 </ul>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Page</span> &#123;</span><br>    <span class="hljs-keyword">int</span> ref;        <span class="hljs-comment">// page frame&#x27;s reference counter</span><br>    <span class="hljs-keyword">uint32_t</span> flags; <span class="hljs-comment">// array of flags that describe the status of the page frame</span><br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> property;<span class="hljs-comment">// the num of free *page*, used in first fit pm manager</span><br>    <span class="hljs-keyword">list_entry_t</span> page_link;<span class="hljs-comment">// free list link</span><br>&#125;;<br></code></pre></td></tr></table></figure>
@@ -745,19 +745,17 @@
 <ul>
 <li>管理空闲块</li>
 </ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* free_area_t - maintains a doubly linked list to record free (unused) pages */</span><br><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span><br>            <span class="hljs-keyword">list_entry_t</span> free_list;                                <span class="hljs-comment">// the list header</span><br>            <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> nr_free;                                 <span class="hljs-comment">// # of free pages in this free list</span><br>&#125; <span class="hljs-keyword">free_area_t</span>;<br></code></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* free_area_t - maintains a doubly linked list to record free (unused) pages */</span><br><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span><br>            <span class="hljs-keyword">list_entry_t</span> free_list;                                <span class="hljs-comment">// the list header</span><br>            <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> nr_free;                                 <span class="hljs-comment">// num of free pages in this free list</span><br>&#125; <span class="hljs-keyword">free_area_t</span>;<br></code></pre></td></tr></table></figure>
 
 <ul>
-<li>找出Page结构的存储位置以及空闲物理空间: page_init() 部分内容</li>
+<li>pmm_manager(): 一个函数指针列表, 用于引用管理内存的函数, 指向这个结构体的指针也是<code>pmm_manager</code><br>项目定义了一个<code>default_pmm_manager</code>, 每一个函数指向的具体函数定义在default_pmm_init.c中, 将此结构体地址赋值给<br>(pmm_manager *)pmm_manager, 可以更改为其他内存分配算法</li>
 </ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">extern</span> <span class="hljs-keyword">char</span> end[];<br><br>npage = maxpa / PGSIZE;<br>pages = (struct Page *)ROUNDUP((<span class="hljs-keyword">void</span> *)end, PGSIZE);<br><br><span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; npage; i ++) &#123;<br>	SetPageReserved(pages + i);	<br>&#125;<br><br><span class="hljs-keyword">uintptr_t</span> freemem = PADDR((<span class="hljs-keyword">uintptr_t</span>)pages + <span class="hljs-keyword">sizeof</span>(struct Page) * npage);<br><span class="hljs-comment">/*</span><br><span class="hljs-comment">*    SetPageReserved只需把物理地址对应的Page结构中的flags标志设置为PG_reserved ，表示这些</span><br><span class="hljs-comment">*	页已经被使用了，将来不能被用于分配。</span><br><span class="hljs-comment">*    而init_memmap函数则是把空闲物理页对应的Page结构中的flags和引用计数ref清零，并加到</span><br><span class="hljs-comment">*	free_area.free_list指向的双向列表中，为将来的空闲页管理做好初始化准备工作。</span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">pmm_manager</span> &#123;</span><br>            <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *name; 	<span class="hljs-comment">//物理内存页管理器的名字</span><br>            <span class="hljs-keyword">void</span> (*init)(<span class="hljs-keyword">void</span>); <span class="hljs-comment">//初始化内存管理器</span><br>            <span class="hljs-keyword">void</span> (*init_memmap)(struct Page *base, <span class="hljs-keyword">size_t</span> n); <span class="hljs-comment">//初始化管理空闲内存页的数据结构</span><br>            <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Page</span> *(*<span class="hljs-title">alloc_pages</span>)(<span class="hljs-title">size_t</span> <span class="hljs-title">n</span>);</span> <span class="hljs-comment">//分配n个物理内存页</span><br>            <span class="hljs-keyword">void</span> (*free_pages)(struct Page *base, <span class="hljs-keyword">size_t</span> n); <span class="hljs-comment">//释放n个物理内存页</span><br>            <span class="hljs-keyword">size_t</span> (*nr_free_pages)(<span class="hljs-keyword">void</span>); <span class="hljs-comment">//返回当前剩余的空闲页数</span><br>            <span class="hljs-keyword">void</span> (*check)(<span class="hljs-keyword">void</span>); <span class="hljs-comment">//用于检测分配/释放实现是否正确的辅助函数</span><br>&#125;;<br></code></pre></td></tr></table></figure>
 
 <ul>
-<li><p>pmm_manager(): 一个函数指针列表, 用于引用管理内存的函数, 指向这个结构体的指针也是<code>pmm_manager</code> </p>
-<p>项目定义了一个<code>default_pmm_manager</code>, 每一个函数指向的具体函数定义在default_pmm_init.c中, 将此结构体地址赋值给<br>(pmm_manager *)pmm_manager</p>
-</li>
+<li><code>kern_init()</code>中<code>pmm_init()</code>的==<code>page_init()</code>==部分内容</li>
 </ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">pmm_manager</span> &#123;</span><br>            <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *name; <span class="hljs-comment">//物理内存页管理器的名字</span><br>            <span class="hljs-keyword">void</span> (*init)(<span class="hljs-keyword">void</span>); <span class="hljs-comment">//初始化内存管理器</span><br>            <span class="hljs-keyword">void</span> (*init_memmap)(struct Page *base, <span class="hljs-keyword">size_t</span> n); <span class="hljs-comment">//初始化管理空闲内存页的数据结构</span><br>            <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Page</span> *(*<span class="hljs-title">alloc_pages</span>)(<span class="hljs-title">size_t</span> <span class="hljs-title">n</span>);</span> <span class="hljs-comment">//分配n个物理内存页</span><br>            <span class="hljs-keyword">void</span> (*free_pages)(struct Page *base, <span class="hljs-keyword">size_t</span> n); <span class="hljs-comment">//释放n个物理内存页</span><br>            <span class="hljs-keyword">size_t</span> (*nr_free_pages)(<span class="hljs-keyword">void</span>); <span class="hljs-comment">//返回当前剩余的空闲页数</span><br>            <span class="hljs-keyword">void</span> (*check)(<span class="hljs-keyword">void</span>); <span class="hljs-comment">//用于检测分配/释放实现是否正确的辅助函数</span><br>&#125;;<br></code></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// code above is traverse all memmap(e820map) to search the maxpa and print the memmap out</span><br><span class="hljs-keyword">extern</span> <span class="hljs-keyword">char</span> end[];<br><br><span class="hljs-comment">// calc the sum of pages</span><br>npage = maxpa / PGSIZE;<br><span class="hljs-comment">// </span><br>pages = (struct Page *)ROUNDUP((<span class="hljs-keyword">void</span> *)end, PGSIZE);<br><br><span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; npage; i ++) &#123;<br>	SetPageReserved(pages + i);	<br>&#125;<br><br><span class="hljs-keyword">uintptr_t</span> freemem = PADDR((<span class="hljs-keyword">uintptr_t</span>)pages + <span class="hljs-keyword">sizeof</span>(struct Page) * npage);<br><span class="hljs-comment">/*</span><br><span class="hljs-comment">*    SetPageReserved只需把物理地址对应的Page结构中的flags标志设置为PG_reserved ，表示这些</span><br><span class="hljs-comment">*	页已经被使用了，将来不能被用于分配。</span><br><span class="hljs-comment">*    而init_memmap函数则是把空闲物理页对应的Page结构中的flags和引用计数ref清零，并加到</span><br><span class="hljs-comment">*	free_area.free_list指向的双向列表中，为将来的空闲页管理做好初始化准备工作。</span><br><span class="hljs-comment">*/</span><br><span class="hljs-comment">// code below corrects free physical blocks&#x27; boundaries and initialized </span><br><span class="hljs-comment">// page(not page table), adding page to freelist.</span><br><span class="hljs-comment">// then, all physical pages&#x27; info are stored in base address (struct Page *)pages.</span><br><span class="hljs-comment">// page(s) can be accessed by `struct Page *pages;`, just like array.</span><br></code></pre></td></tr></table></figure>
 
 <h3 id="3-内存空间布局"><a href="#3-内存空间布局" class="headerlink" title="3.内存空间布局"></a>3.内存空间布局</h3><ul>
 <li><p>在uCore中，CPU先在bootasm.S（实模式）中通过调用BIOS中断，将物理内存的相关描述符写入特定位置<code>0x8000</code>，然后读入kernel至物理地址<code>0x10000</code>、虚拟地址<code>0xC0000000</code>。</p>
@@ -773,14 +771,14 @@
 </ul>
 <h3 id="4-分配算法实现"><a href="#4-分配算法实现" class="headerlink" title="4.分配算法实现"></a>4.分配算法实现</h3><blockquote>
 <p>在default_pmm.c中</p>
-<p>实现了最简单的first-fit</p>
+<p>实现了最简单的first-fit, 其他算法为challenge</p>
 </blockquote>
 <h3 id="5-段页式存储管理"><a href="#5-段页式存储管理" class="headerlink" title="5.段页式存储管理"></a>5.段页式存储管理</h3><h4 id="总体框架、分页机制图"><a href="#总体框架、分页机制图" class="headerlink" title="总体框架、分页机制图"></a>总体框架、分页机制图</h4><img src="https://i.loli.net/2021/11/20/Uvnt9ZJfP32FMbr.png" srcset="/img/loading.gif" lazyload alt="image-20211120231536312" style="zoom:67%;" />
 
 <p>Page Directory is 4Kbyte-alignd, 所以CR3给的32位地址其实低12位为0, 只要把32:12和Linear address的31:22拼成一个32位地址即可:</p>
-<img src="../../image/ucore/image-20211120233531488.png" srcset="/img/loading.gif" lazyload alt="image-20211120233531488" style="zoom:67%;" />
+<img src="https://i.loli.net/2021/11/23/YQoyfDqFVTZPs6C.png" srcset="/img/loading.gif" lazyload alt="image-20211120233531488" style="zoom:67%;" />
 
-<h4 id="虚拟页表结构"><a href="#虚拟页表结构" class="headerlink" title="虚拟页表结构"></a>虚拟页表结构</h4><p>每个页表项（PTE）都由一个32位整数来存储数据，其结构如下</p>
+<h4 id="虚拟页表和页目录表结构"><a href="#虚拟页表和页目录表结构" class="headerlink" title=" 虚拟页表和页目录表结构"></a><span id="vpt&pdt"> </span>虚拟页表和页目录表结构</h4><p>每个<strong>页表项</strong>（PTE）都由一个32位整数来存储数据，其结构如下</p>
 <figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">      31-12      9-11     8    7    6   5   4      3    2   1   0<br>+<span class="hljs-params">--------------</span>+<span class="hljs-params">-------</span>+<span class="hljs-params">-----</span>+<span class="hljs-params">----</span>+<span class="hljs-params">---</span>+<span class="hljs-params">---</span>+<span class="hljs-params">-----</span>+<span class="hljs-params">-----</span>+<span class="hljs-params">---</span>+<span class="hljs-params">---</span>+<span class="hljs-params">---</span>+<br>|     Offset   | Avail | MBZ | PS | D | A | PCD | PWT | U | W | P |<br>+<span class="hljs-params">--------------</span>+<span class="hljs-params">-------</span>+<span class="hljs-params">-----</span>+<span class="hljs-params">----</span>+<span class="hljs-params">---</span>+<span class="hljs-params">---</span>+<span class="hljs-params">-----</span>+<span class="hljs-params">-----</span>+<span class="hljs-params">---</span>+<span class="hljs-params">---</span>+<span class="hljs-params">---</span>+<br></code></pre></td></tr></table></figure>
 
 <ul>
@@ -794,19 +792,173 @@
 <li>7 - <strong>P</strong>age<strong>S</strong>ize: 表示该页的大小</li>
 <li>8 - <strong>M</strong>ust<strong>B</strong>e<strong>Z</strong>ero: 该位必须保留为0</li>
 <li>9-11 - <strong>Avail</strong>able: 第9-11这三位并没有被内核或中断所使用，可保留给OS使用。</li>
-<li>12-31 - Offset: 目标地址的高20位。</li>
+<li>12-31 - Offset: 目标<strong>物理</strong>地址的高20位。</li>
 </ul>
-<h3 id="A-链接脚本"><a href="#A-链接脚本" class="headerlink" title="A.链接脚本"></a>A.链接脚本</h3><ul>
+<p><strong>页目录表:</strong> </p>
+<p><img src="https://i.loli.net/2021/11/23/9B45OFTQWedfhw1.png" srcset="/img/loading.gif" lazyload alt="image-20211123104109784"></p>
+<table>
+<thead>
+<tr>
+<th>Bit Position(s)</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0(P)</td>
+<td>Present: must be 1 to reference a page table</td>
+</tr>
+<tr>
+<td>1(Rw)</td>
+<td>Read/write; if 0,writes may not be allowed to the 4-MByte region controlled by this entry (see Section 4.6)</td>
+</tr>
+<tr>
+<td>2(UrS)</td>
+<td>User/supervisor, if 0, user-mode accesses are not allowed to the 4-MByte region controlled by this entry (see Section 4.6)</td>
+</tr>
+<tr>
+<td>3(PWT)</td>
+<td>Page-level write-through; indirectly determines the memory type used to access the page table referenced by this entry (see Section 4.9)</td>
+</tr>
+<tr>
+<td>4(PCD)</td>
+<td>Page-level cache disable; indirectly determines the memory type used to access the page table referenced by this entry (see Section 4.9)</td>
+</tr>
+<tr>
+<td>5(A)</td>
+<td>Accessed; indicates whether this entry has been used for linear-address translation (see Section 4.8)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>lgnored</td>
+</tr>
+<tr>
+<td>7(PS)</td>
+<td>lf CR4.PSE= 1, must be 0 (otherwise, this entry maps a 4-MByte page; see Table 4-4); otherwise, ignored</td>
+</tr>
+<tr>
+<td>11:8</td>
+<td>lgnored</td>
+</tr>
+<tr>
+<td>31:12</td>
+<td><strong>Physical address</strong> of 4-KByte aligned page table referenced by this entry</td>
+</tr>
+</tbody></table>
+<h3 id="6-链接脚本"><a href="#6-链接脚本" class="headerlink" title="6.链接脚本"></a>6.链接脚本</h3><ul>
 <li>edata[]和 end[]这些变量是ld根据kernel.ld链接脚本生成的全局变量，表示相应段的起始地址或结束地址等，它们不在任何一个.S、.c或.h文件中定义。</li>
+<li><strong>逻辑地址或虚拟地址是可执行代码在编译的时候由链接器生成的</strong> </li>
 <li>ucore内核的链接地址==ucore内核的虚拟地址；boot loader加载ucore内核用到的加载地址==ucore内核的物理地址。</li>
 <li><a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/lab2/lab2_3_7_phymemlab_concepts.html">more…</a> </li>
 </ul>
+<h3 id="地址映射的四个阶段"><a href="#地址映射的四个阶段" class="headerlink" title="地址映射的四个阶段"></a>地址映射的四个阶段</h3><p>在lab2中，为了建立正确的地址映射关系，ld在链接阶段生成了ucore OS执行代码的虚拟地址，而bootloader与ucore OS协同工作，通过在运行时对地址映射的一系列“腾挪转移”，从计算机加电，启动段式管理机制，启动段页式管理机制，在段页式管理机制下运行这整个过程中，虚拟地址到物理地址的映射产生了多次变化，实现了最终的段页式映射关系：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">virt addr = linear addr = phy addr + <span class="hljs-number">0xC0000000</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="最开始-链接脚本"><a href="#最开始-链接脚本" class="headerlink" title="最开始: 链接脚本"></a>最开始: 链接脚本</h4><p>tools/kernel.ld文件在lab1和lab2中的区别。在lab1中：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs asm">ENTRY(kern_init)<br><br>SECTIONS &#123;<br>            /* Load the kernel at this address: &quot;.&quot; means the current address */<br>            . = 0x100000;<br><br>            .text : &#123;<br>                       *(.text .stub .text.* .gnu.linkonce.t.*)<br>            &#125;<br></code></pre></td></tr></table></figure>
+
+<p>这意味着在lab1中通过ld工具形成的ucore的起始虚拟地址从0x100000开始，注意：这个地址是虚拟地址。但由于lab1中建立的段地址映射关系为对等关系，所以ucore的物理地址也是从0x100000开始，而ucore的入口函数kern_init的起始地址。所以在lab1中虚拟地址、线性地址以及物理地址之间的映射关系如下：</p>
+<figure class="highlight nim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nim">lab1: virt <span class="hljs-keyword">addr</span> = linear <span class="hljs-keyword">addr</span> = phy <span class="hljs-keyword">addr</span><br></code></pre></td></tr></table></figure>
+
+<p>在lab2中：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs asm">ENTRY(kern_entry)<br><br>SECTIONS &#123;<br>            /* Load the kernel at this address: &quot;.&quot; means the current address */<br>            . = 0xC0100000;<br><br>            .text : &#123;<br>                        *(.text .stub .text.* .gnu.linkonce.t.*)<br>            &#125;<br></code></pre></td></tr></table></figure>
+
+<p>这意味着lab2中通过ld工具形成的ucore的起始虚拟地址从0xC0100000开始，注意：这个地址也是虚拟地址。入口函数为kern_entry函数（在kern/init/entry.S中）。这与lab1有很大差别。但其实在lab1和lab2中，bootloader把ucore都放在了起始物理地址为0x100000的物理内存空间。这实际上说明了ucore在lab1和lab2中采用的地址映射不同。lab2在不同阶段有不同的虚拟地址、线性地址以及物理地址之间的映射关系。</p>
+<p>也请注意，这个起始虚拟地址的变化其实并不会影响一般的跳转和函数调用，因为它们实际上是相对跳转。但是，对于绝对寻址的全局变量的引用，就需要用REALLOC宏进行一些运算来确保地址是正确的。</p>
+<h4 id="第一个阶段"><a href="#第一个阶段" class="headerlink" title="第一个阶段"></a>第一个阶段</h4><p>（开启保护模式，创建启动段表）是bootloader阶段，即从bootloader的start函数（在boot/bootasm.S中）到执行ucore kernel的kern_entry函数之前，其虚拟地址、线性地址以及物理地址之间的映射关系与lab1的一样，即：</p>
+<figure class="highlight nim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nim">lab2 stage <span class="hljs-number">1</span>: virt <span class="hljs-keyword">addr</span> = linear <span class="hljs-keyword">addr</span> = phy <span class="hljs-keyword">addr</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="第二个阶段"><a href="#第二个阶段" class="headerlink" title="第二个阶段"></a>第二个阶段</h4><p>（创建初始页目录表，开启分页模式）从kern_entry函数开始，到pmm_init函数被执行之前。</p>
+<p>编译好的ucore自带了一个**设置好的(就在entry.S里, 也不知道为什么要设置成两段映射)**页目录表和相应的页表，将0~4M的线性地址一一映射到物理地址。</p>
+<p>了解了一一映射的二级页表结构后，接下来就要使能分页机制了，这主要是通过几条汇编指令（在kern/init/entry.S中）实现的，主要做了两件事：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs asm"># load pa of boot pgdir<br>movl $REALLOC(__boot_pgdir), %eax<br>movl %eax, %cr3	# 1.把页目录表的起始地址存入CR3寄存器中；<br><br># enable paging<br>movl %cr0, %eax<br>orl $(CR0_PE | CR0_PG | CR0_AM | CR0_WP | CR0_NE | CR0_TS | CR0_EM | CR0_MP), %eax<br>andl $~(CR0_TS | CR0_EM), %eax<br>movl %eax, %cr0	# 2.把cr0中的CR0_PG标志位设置上。<br></code></pre></td></tr></table></figure>
+
+<p>执行完这几条指令后，计算机系统进入了分页模式！虚拟地址、线性地址以及物理地址之间的临时映射关系为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs asm">lab2 stage 2 before:<br>    virt addr = linear addr = phy addr # 线性地址在0~4MB之内三者的映射关系<br>    virt addr = linear addr = phy addr + 0xC0000000 # 线性地址在0xC0000000~0xC0000000+4MB之内三者的映射关系<br></code></pre></td></tr></table></figure>
+
+<p>可以看到，其实仅仅比第一个阶段增加了下面一行的0xC0000000偏移的映射，并且作用范围缩小到了0~4M。在下一个阶段, 会将作用范围继续扩充到0~KMEMSIZE。</p>
+<p>实际上这种映射限制了内核的大小。当内核大小超过预期的4MB （实际上是3M，因为内核从 0x100000开始编址）就可能导致打开分页之后内核crash，在某些试验中，也的确出现了这种情况。解决方法同样简单，就是正确填充更多的页目录项即可。</p>
+<p>此时的内核（EIP）还在0~4M的低虚拟地址区域运行，而在之后，这个区域的虚拟内存是要给用户程序使用的。为此，需要使用一个绝对跳转来使内核跳转到高虚拟地址（代码在kern/init/entry.S中）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs asm">    # update eip<br>    # now, eip = 0x1.....<br>    leal next, %eax<br>    # set eip = KERNBASE + 0x1.....<br>    jmp *%eax<br>next:<br></code></pre></td></tr></table></figure>
+
+<p>跳转完毕后，通过把boot_pgdir[0]对应的第一个页目录表项（0~4MB）清零来取消了临时的页映射关系：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs asm"># unmap va 0 ~ 4M, it&#x27;s temporary mapping<br>xorl %eax, %eax<br>movl %eax, __boot_pgdir<br></code></pre></td></tr></table></figure>
+
+<p>最终，离开这个阶段时，虚拟地址、线性地址以及物理地址之间的映射关系为：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">lab2</span> stage <span class="hljs-number">2</span>: virt addr = linear addr = phy addr + <span class="hljs-number">0</span>xC<span class="hljs-number">0000000</span> # 线性地址在<span class="hljs-number">0</span>~<span class="hljs-number">4</span>MB之内三者的映射关系<br></code></pre></td></tr></table></figure>
+
+<p>总结来看，这一阶段的目的就是更新映射关系的同时将运行中的内核（EIP）从低虚拟地址“迁移”到高虚拟地址，而不造成伤害。</p>
+<p>不过，这还不是我们期望的映射关系，因为它仅仅映射了0~4MB。对于段表而言，也缺少了运行ucore所需的用户态段描述符和TSS（段）描述符相应表项。</p>
+<h4 id="第三个阶段"><a href="#第三个阶段" class="headerlink" title="第三个阶段"></a>第三个阶段</h4><p>（完善段表和页表）从pmm_init函数被调用开始。pmm_init函数将页目录表项补充完成（从0~4M扩充到0~KMEMSIZE）。然后，更新了段映射机制，使用了一个新的段表。这个新段表除了包括内核态的代码段和数据段描述符，还包括用户态的代码段和数据段描述符以及TSS（段）的描述符。理论上可以在第一个阶段，即bootloader阶段就将段表设置完全，然后在此阶段继续使用，但这会导致内核的代码和bootloader的代码产生过多的耦合，于是就有了目前的设计。</p>
+<p>这时形成了我们期望的虚拟地址、线性地址以及物理地址之间的映射关系：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">lab2</span> stage <span class="hljs-number">3</span>: virt addr = linear addr = phy addr + <span class="hljs-number">0</span>xC<span class="hljs-number">0000000</span><br></code></pre></td></tr></table></figure>
+
+<p>段表相应表项和TSS也被设置妥当。</p>
+<h3 id="自映射机制"><a href="#自映射机制" class="headerlink" title="自映射机制"></a>自映射机制</h3><p>众所周知, 从物理地址空间中的每一个block分配page table之后(在default_init_memmap完成), 虚拟地址空间是一片连续的空间, 从0xC0000000开始, 到0x38000000结束, 并没有用完全部4GB的地址空间, 这只是一个设定, 可以根据情况进行改变.</p>
+<p>memlayout.h中定义了常量</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> KERNBASE 0xC0000000</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> KMEMSIZE 0x38000000 <span class="hljs-comment">// the maximum amount of physical memory</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> KERNTOP (KERNBASE + KMEMSIZE)</span><br></code></pre></td></tr></table></figure>
+
+<p>而每一个4KB页表中有1k个4B的pte, 每个pte指向物理空间中4KB的page, 整个page table指向了虚拟空间中4MB大小的pages. 如果我们把映射4GB空间的4MB页表放在4MB对齐的虚拟地址处, 那么可以想到有一个页表刚好映射他所在的4MB区域, 于是就充当了页目录表的功能.</p>
+<p>在页机制建立好后, 如果我们这时需要按虚拟地址的地址顺序显示整个页目录表和页表的内容，则要查找页目录表的页目录表项内容，根据页目录表项内容找到页表的物理地址**(pdt和pt为什么存放的是物理地址?)**，再转换成对应的虚地址，然后访问页表的虚地址，搜索整个页表的每个页目录项。这样过程比较繁琐。</p>
+<p>但是利用以上的方法, 通过连续扫描这特定的4MB虚拟地址空间，就很容易访问每个页目录表项和页表项内容。</p>
 <h2 id="练习3-2"><a href="#练习3-2" class="headerlink" title="练习3+2"></a>练习3+2</h2><h3 id="练习一-1"><a href="#练习一-1" class="headerlink" title="练习一"></a>练习一</h3><blockquote>
 <p>实现 first-fit 连续物理内存分配算法</p>
 </blockquote>
 <ul>
 <li>简单的修改了几个函数, 甚至不用全都改, 不过free函数我调试了好久</li>
 </ul>
+<h4 id="default-init-memmap"><a href="#default-init-memmap" class="headerlink" title="default_init_memmap"></a>default_init_memmap</h4><ul>
+<li><p>该函数将新页面插入链表时，没有按照地址顺序插入</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">list_add(&amp;free_list, &amp;(base-&gt;page_link));<br></code></pre></td></tr></table></figure></li>
+<li><p>故需要修改该行代码，使其按地址顺序插入至双向链表中。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">list_add_before(&amp;free_list, &amp;(base-&gt;page_link));<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="default-alloc-pages"><a href="#default-alloc-pages" class="headerlink" title="default_alloc_pages"></a>default_alloc_pages</h4><ul>
+<li><p>在原先的代码中，当获取到了一个大小足够大的页面地址时，程序会先将该页头从链表中断开，切割，并将剩余空间放回链表中。但将<em>剩余空间放回链表</em>时，并没有按照地址顺序插入链表。</p>
+<blockquote>
+<p>连续空闲页面中的第一个页称为页头，page header。</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">if</span> (page != <span class="hljs-literal">NULL</span>) &#123;<br>    list_del(&amp;(page-&gt;page_link));<br>    <span class="hljs-keyword">if</span> (page-&gt;property &gt; n) &#123;<br>        <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Page</span> *<span class="hljs-title">p</span> =</span> page + n;<br>        p-&gt;property = page-&gt;property - n;<br>        <span class="hljs-comment">// 注意这一步</span><br>        list_add(&amp;free_list, &amp;(p-&gt;page_link));<br>    &#125;<br>    nr_free -= n;<br>    ClearPageProperty(page);<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p>以下是修改后的代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">if</span> (page != <span class="hljs-literal">NULL</span>) &#123;<br>    <span class="hljs-keyword">if</span> (page-&gt;property &gt; n) &#123;<br>        <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Page</span> *<span class="hljs-title">p</span> =</span> page + n;<br>        p-&gt;property = page-&gt;property - n;<br>        SetPageProperty(p);<br>        <span class="hljs-comment">// 注意这一步add after</span><br>        list_add_after(&amp;(page-&gt;page_link), &amp;(p-&gt;page_link));<br>    &#125;<br>    list_del(&amp;(page-&gt;page_link));<br>    nr_free -= n;<br>    ClearPageProperty(page);<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="default-free-pages"><a href="#default-free-pages" class="headerlink" title="default_free_pages"></a>default_free_pages</h4><ul>
+<li><p>该函数默认会在函数末尾处，将待释放的页头插入至链表的第一个节点。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">list_add(&amp;free_list, &amp;(base-&gt;page_link));<br></code></pre></td></tr></table></figure></li>
+<li><p>所以我们需要修改这部分代码，使其按地址顺序插入至对应的链表结点处。</p>
+<p>可以在循环中记录比这个page地址小的free_page, 而且还要设置标记来表明是否有这么一个page, 具体参见源码</p>
+</li>
+</ul>
+<h3 id="练习二-1"><a href="#练习二-1" class="headerlink" title="练习二"></a>练习二</h3><blockquote>
+<p><strong>实现寻找虚拟地址对应的页表项</strong>.</p>
+</blockquote>
+<blockquote>
+<p>通过设置页表和对应的页表项，可建立虚拟内存地址和物理内存地址的对应关系。</p>
+<p>其中的<code>get_pte</code>函数是设置页表项环节中的一个重要步骤。此函数找到一个虚地址对应的二级页表项的内核虚地址，如果此二级页表项不存在，则分配一个包含此项的二级页表。</p>
+</blockquote>
+<p>以下为实现的代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">pte_t</span> * <span class="hljs-title">get_pte</span><span class="hljs-params">(<span class="hljs-keyword">pde_t</span> *pgdir, <span class="hljs-keyword">uintptr_t</span> la, <span class="hljs-keyword">bool</span> create)</span> </span>&#123;<br>    <span class="hljs-comment">// 获取传入的线性地址中所对应的页目录条目的物理地址</span><br>    <span class="hljs-keyword">pde_t</span> *pdep = PDX(la) + pgdir;<br>    <span class="hljs-comment">// 如果该条目不可用(not present)</span><br>    <span class="hljs-keyword">if</span> (!(*pdep &amp; PTE_P)) &#123;<br>        <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Page</span> *<span class="hljs-title">page</span>;</span><br>        <span class="hljs-comment">// 如果分配页面失败，或者不允许分配，则返回NULL</span><br>        <span class="hljs-keyword">if</span> (!create || (page = alloc_page()) == <span class="hljs-literal">NULL</span>)<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;<br>        <span class="hljs-comment">// 设置该物理页面的引用次数为1</span><br>        set_page_ref(page, <span class="hljs-number">1</span>);<br>        <span class="hljs-comment">// 获取当前物理页面所管理的物理地址</span><br>        <span class="hljs-keyword">uintptr_t</span> pa = page2pa(page);<br>        <span class="hljs-comment">// 清空该物理页面的数据。需要注意的是使用虚拟地址</span><br>        <span class="hljs-built_in">memset</span>(KADDR(pa), <span class="hljs-number">0</span>, PGSIZE);<br>        <span class="hljs-comment">// 将新分配的页面设置为当前缺失的页目录条目中</span><br>        <span class="hljs-comment">// 之后该页面就是其中的一个二级页面</span><br>        *pdep = pa | PTE_U | PTE_W | PTE_P;<br>    &#125;<br>    <span class="hljs-comment">// 返回在pgdir中对应于la的二级页表项, 注意是虚拟地址, 因为返回一个物理地址也没啥用, cpu操作不了</span><br>    <span class="hljs-keyword">pte_t</span> *ptep = (<span class="hljs-keyword">pte_t</span> *)KADDR(PDE_ADDR(*pdep)) + PTX(la);<br>    <span class="hljs-keyword">return</span> ptep; <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>请描述页目录项（Pag Director Entry）和页表（Page Table Entry）中每个组成部分的含义和以及对ucore而言的潜在用处。</p>
+<blockquote>
+<p>请查看<a href="#vpt&pdt">虚拟页表结构</a></p>
+</blockquote>
+</li>
+<li><p>如果ucore执行过程中访问内存，出现了页访问异常，请问硬件要做哪些事情？</p>
+<blockquote>
+<p>以下答案参考了其他blog，具体细节留待以后再来研究。</p>
+</blockquote>
+<ul>
+<li>将引发页访问异常的地址将被保存在cr2寄存器中</li>
+<li>设置错误代码</li>
+<li>引发Page Fault，将外存的数据换到内存中</li>
+<li>进行上下文切换，退出中断，返回到中断前的状态</li>
+</ul>
+</li>
+</ul>
+<h3 id="练习三-1"><a href="#练习三-1" class="headerlink" title="练习三"></a>练习三</h3><blockquote>
+<p>释放某虚地址所在的页并取消对应二级页表项的映射</p>
+</blockquote>
 <ul>
 <li>moocos的密码是空格</li>
 </ul>
