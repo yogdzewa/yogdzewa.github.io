@@ -254,7 +254,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：几秒前
+                  不可视境界线最后变动于：1 分钟前
                 
               </p>
             
@@ -808,11 +808,11 @@
 <td>Present: must be 1 to reference a page table</td>
 </tr>
 <tr>
-<td>1(Rw)</td>
+<td>1(R/W)</td>
 <td>Read/write; if 0,writes may not be allowed to the 4-MByte region controlled by this entry (see Section 4.6)</td>
 </tr>
 <tr>
-<td>2(UrS)</td>
+<td>2(U/S)</td>
 <td>User/supervisor, if 0, user-mode accesses are not allowed to the 4-MByte region controlled by this entry (see Section 4.6)</td>
 </tr>
 <tr>
@@ -974,7 +974,8 @@
 <li>为读取操作数或指令而访问主存。</li>
 </ol>
 <p>回答本文章中的一个问题: <strong>为什么页目录表和页表存储的是对应的物理地址而不是虚拟地址?</strong> </p>
-<p>原因也明了了, 这两个表就是MMU和内存合作完成虚拟地址到物理地址转换的基础, 而虚拟地址是在内核中使用的一个抽象连续空间的地址, 和MMU关系不大, 更不必往表项里存储虚拟地址, 何况这么做还会导致递归查找[^1] </p>
+<p>原因也明了了, 这两个表就是MMU和内存合作完成虚拟地址到物理地址转换的基础, 而虚拟地址是在内核中使用的一个抽象连续空间的地址, 和MMU关系不大, 更不必往表项里存储虚拟地址, 何况这么做还会导致递归查找<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="即原先查找页目录表的目的是想将某个线性地址转换为物理地址，但如果页目录表中存放的是二级页表的线性地址，则需要先查找该二级页表的物理地址，此时需要递归查找，这可能会出现永远也查找不到物理地址的情况。
+">[1]</span></a></sup> </p>
 <p class="note note-primary" style="font-style:italic;background-color:rgb(240,230,250)">如果希望虚拟地址与物理地址相等，则需要如何修改lab2，完成此事？ 鼓励通过编程来具体完成这个问题 </p>
 
 
@@ -1007,8 +1008,8 @@
 <ul>
 <li>moocos的密码是空格</li>
 </ul>
-<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:3" class="footnote-text"><span>即原先查找页目录表的目的是想将某个线性地址转换为物理地址，但如果页目录表中存放的是二级页表的<strong>线性</strong>地址，则需要先查找该二级页表的物理地址，此时需要递归查找，这可能会出现永远也查找不到物理地址的情况。
-<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>即原先查找页目录表的目的是想将某个线性地址转换为物理地址，但如果页目录表中存放的是二级页表的<strong>线性</strong>地址，则需要先查找该二级页表的物理地址，此时需要递归查找，这可能会出现永远也查找不到物理地址的情况。
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
             </div>
             <hr>
             <div>
