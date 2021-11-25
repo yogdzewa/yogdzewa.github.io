@@ -963,7 +963,7 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">if</span> (*ptep &amp; PTE_P) <span class="hljs-comment">//(1) check if this page table entry is present</span><br>&#123;<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Page</span> *<span class="hljs-title">page</span> =</span> pte2page(*ptep); <span class="hljs-comment">//(2) find corresponding page to pte</span><br><br>    <span class="hljs-keyword">if</span> (page_ref_dec(page) == <span class="hljs-number">0</span>) <span class="hljs-comment">//(3) decrease page reference</span><br>    &#123;<br>        free_page(page); <span class="hljs-comment">//(4) and free this page when page reference reachs 0</span><br>    &#125;<br>    *ptep = <span class="hljs-number">0</span>;                 <span class="hljs-comment">//(5) clear second page table entry</span><br>    tlb_invalidate(pgdir, la); <span class="hljs-comment">//(6) flush tlb</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>两个问题:</p>
-<p class="note note-primary">数据结构Page的全局变量（其实是一个数组）的每一项与页表中的页目录项和页表项有无对应关系？如果有，其对应关系是啥？</p>
+<p class="note note-primary"style="font-size:19px;font-style:italic;">数据结构Page的全局变量（其实是一个数组）的每一项与页表中的页目录项和页表项有无对应关系？如果有，其对应关系是啥？</p>
 
 <p>CPU如果要访问内存地址, 送出CPU的肯定是虚拟地址, 经过MMU的转换完成虚拟地址到物理地址的转换.</p>
 <p>在MMU中, 取出虚拟地址高10位和%cr3拼接成页目录表条目(pdte), 读取出内存中的页目录表(或者在MMU中的TLB)所存储的页表物理地址, 然后发送这个物理地址+虚拟地址中间十位到内存中访问到页表条目, 读出所在page的物理地址, 然后再和虚拟地址低12位拼接成物理地址到内存中访问. </p>
@@ -975,7 +975,7 @@
 </ol>
 <p>回答本文章中的一个问题: <strong>为什么页目录表和页表存储的是对应的物理地址而不是虚拟地址?</strong> </p>
 <p>原因也明了了, 这两个表就是MMU和内存合作完成虚拟地址到物理地址转换的基础, 而虚拟地址是在内核中使用的一个抽象连续空间的地址, 和MMU关系不大, 更不必往表项里存储虚拟地址, 何况这么做还会导致递归查找[^1] </p>
-<p class="note note-primary" style="background-color:rgb(234, 212, 255)">如果希望虚拟地址与物理地址相等，则需要如何修改lab2，完成此事？ 鼓励通过编程来具体完成这个问题 </p>
+<p class="note note-primary" style="font-size:19px;font-style:italic;">如果希望虚拟地址与物理地址相等，则需要如何修改lab2，完成此事？ 鼓励通过编程来具体完成这个问题 </p>
 
 
 
