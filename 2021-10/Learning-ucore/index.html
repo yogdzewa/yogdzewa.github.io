@@ -202,7 +202,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      13.8k 字
+      14.5k 字
     </span>
   
 
@@ -212,7 +212,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      242
+      253
        分钟
     </span>
   
@@ -254,7 +254,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：几秒前
+                  不可视境界线最后变动于：3 分钟前
                 
               </p>
             
@@ -733,7 +733,7 @@
 </ul>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* Flags describing the status of a page frame */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> PG_reserved                 0       <span class="hljs-comment">// the page descriptor is reserved for kernel or unusable</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> PG_property                 1       <span class="hljs-comment">// the member &#x27;property&#x27; is valid (free or not)</span></span><br></code></pre></td></tr></table></figure>
 
-<p>​    需要注意的是用到property成员变量的这个Page比较特殊，是这个连续内存空闲块地址<strong>最小的一页</strong>（即头一页， Head Page）,<br>​    用bit PG_property来enable</p>
+<p>​    需要注意的是用到property成员变量的这个Page比较特殊，是这个连续内存空闲块地址<strong>最小的一页</strong>（即头一页， Head Page）,<br>​    用bit PG_property来enable<br>​    <strong>为什么PG_ reserved是0??</strong> </p>
 <ul>
 <li>使用btl指令置位某一个bit:</li>
 </ul>
@@ -761,7 +761,7 @@
 <li><p>在uCore中，CPU先在bootasm.S（实模式）中通过调用BIOS中断，将物理内存的相关描述符写入特定位置<code>0x8000</code>，然后读入kernel至物理地址<code>0x10000</code>、虚拟地址<code>0xC0000000</code>。</p>
 </li>
 <li><p>而kernel在<code>page_init</code>函数中，读取物理内存地址<code>0x8000</code>处的内存，查找最大物理地址，并计算出所需的<strong>页面数</strong>。虚拟页表<code>VPT(Virtual Page Table)</code>的地址紧跟<code>kernel</code>，其地址为4k对齐。虚拟地址空间结构如下所示：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* *</span><br><span class="hljs-comment"> * Virtual memory map:                                          Permissions</span><br><span class="hljs-comment"> *                                                              kernel/user</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> *     4G -----------&gt; +---------------------------------+</span><br><span class="hljs-comment"> *                     |                                 |</span><br><span class="hljs-comment"> *                     |         Empty Memory (*)        |</span><br><span class="hljs-comment"> *                     |                                 |</span><br><span class="hljs-comment"> *                     +---------------------------------+ 0xFB000000</span><br><span class="hljs-comment"> *                     |   Cur. Page Table (Kern, RW)    | RW/-- PTSIZE</span><br><span class="hljs-comment"> *     VPT ----------&gt; +---------------------------------+ 0xFAC00000</span><br><span class="hljs-comment"> *                     |        Invalid Memory (*)       | --/--</span><br><span class="hljs-comment"> *     KERNTOP ------&gt; +---------------------------------+ 0xF8000000</span><br><span class="hljs-comment"> *                     |                                 |</span><br><span class="hljs-comment"> *                     |    Remapped Physical Memory     | RW/-- KMEMSIZE</span><br><span class="hljs-comment"> *                     |                                 |</span><br><span class="hljs-comment"> *     KERNBASE -----&gt; +---------------------------------+ 0xC0000000</span><br><span class="hljs-comment"> *                     |                                 |</span><br><span class="hljs-comment"> *                     |                                 |</span><br><span class="hljs-comment"> *                     |                                 |</span><br><span class="hljs-comment"> *                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="hljs-comment"> * (*) Note: The kernel ensures that &quot;Invalid Memory&quot; is *never* mapped.</span><br><span class="hljs-comment"> *     &quot;Empty Memory&quot; is normally unmapped, but user programs may map pages</span><br><span class="hljs-comment"> *     there if desired.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * */</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* *</span><br><span class="hljs-comment"> * Virtual memory map:                                          Permissions</span><br><span class="hljs-comment"> *                                                              kernel/user</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> *     4G -----------&gt; +---------------------------------+</span><br><span class="hljs-comment"> *                     |                                 |</span><br><span class="hljs-comment"> *                     |         Empty Memory (*)        |</span><br><span class="hljs-comment"> *                     |                                 |</span><br><span class="hljs-comment"> *                     +---------------------------------+ 0xFB000000</span><br><span class="hljs-comment"> *                     |   Cur. Page Table (Kern, RW)    | RW/-- PTSIZE</span><br><span class="hljs-comment"> *     VPT ----------&gt; +---------------------------------+ 0xFAC00000</span><br><span class="hljs-comment"> *                     |        Invalid Memory (*)       | --/--</span><br><span class="hljs-comment"> *     KERNTOP ------&gt; +---------------------------------+ 0xF8000000</span><br><span class="hljs-comment"> *                     |                                 |</span><br><span class="hljs-comment"> *                     |    Remapped Physical Memory     | RW/-- KMEMSIZE=896MB</span><br><span class="hljs-comment"> *                     |                                 |</span><br><span class="hljs-comment"> *     KERNBASE -----&gt; +---------------------------------+ 0xC0000000</span><br><span class="hljs-comment"> *                     |                                 |</span><br><span class="hljs-comment"> *                     |                                 |</span><br><span class="hljs-comment"> *                     |                                 |</span><br><span class="hljs-comment"> *                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="hljs-comment"> * (*) Note: The kernel ensures that &quot;Invalid Memory&quot; is *never* mapped.</span><br><span class="hljs-comment"> *     &quot;Empty Memory&quot; is normally unmapped, but user programs may map pages</span><br><span class="hljs-comment"> *     there if desired.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * */</span><br></code></pre></td></tr></table></figure>
 
 <p>完成<strong>物理内存页管理初始化工作</strong>后，其物理地址的分布空间如下</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs python">+----------------------+ &lt;- <span class="hljs-number">0xFFFFFFFF</span>(4GB)       ----------------------------  4GB<br>|  一些保留内存，例如用于|                                保留空间<br>|   32bit设备映射空间等  |<br>+----------------------+ &lt;- 实际物理内存空间结束地址 ----------------------------<br>|                      |<br>|                      |<br>|     用于分配的         |                                 可用的空间<br>|    空闲内存区域        |<br>|                      |<br>|                      |<br>|                      |<br>+----------------------+ &lt;- 空闲内存起始地址      ----------------------------  <br>|     VPT页表存放位置      |                                VPT页表存放的空间   (4MB左右)<br>+----------------------+ &lt;- bss段结束处           ----------------------------<br>|uCore的text、data、bss |                              uCore各段的空间<br>+----------------------+ &lt;- <span class="hljs-number">0x00100000</span>(1MB)       ---------------------------- 1MB<br>|       BIOS ROM       |<br>+----------------------+ &lt;- <span class="hljs-number">0x000F0000</span>(960KB)<br>|     16bit设备扩展ROM  |                             显存与其他ROM映射的空间<br>+----------------------+ &lt;- <span class="hljs-number">0x000C0000</span>(768KB)<br>|     CGA显存空间       |<br>+----------------------+ &lt;- <span class="hljs-number">0x000B8000</span>            ---------------------------- 736KB<br>|        空闲内存       |<br>+----------------------+ &lt;- <span class="hljs-number">0x00011000</span>(+4KB)          uCore header的内存空间<br>| uCore的ELF header数据 |<br>+----------------------+ &lt;-<span class="hljs-number">0x00010000</span>             ---------------------------- 64KB<br>|       空闲内存        |<br>+----------------------+ &lt;- 基于bootloader的大小          bootloader的<br>|      bootloader的   |                                    内存空间<br>|     text段和data段    |<br>+----------------------+ &lt;- <span class="hljs-number">0x00007C00</span>            ---------------------------- 31KB<br>|   bootloader和uCore  |<br>|      共用的堆栈       |                                 堆栈的内存空间<br>+----------------------+ &lt;- 基于栈的使用情况<br>|     低地址空闲空间    |<br>+----------------------+ &lt;-  <span class="hljs-number">0x00000000</span>           ---------------------------- 0KB<br></code></pre></td></tr></table></figure>
@@ -893,13 +893,14 @@
 <figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">lab2</span> stage <span class="hljs-number">3</span>: virt addr = linear addr = phy addr + <span class="hljs-number">0</span>xC<span class="hljs-number">0000000</span><br></code></pre></td></tr></table></figure>
 
 <p>段表相应表项和TSS也被设置妥当。</p>
-<h3 id="自映射机制"><a href="#自映射机制" class="headerlink" title="自映射机制"></a>自映射机制</h3><p>众所周知, 从物理地址空间中的每一个block分配page table之后(在default_init_memmap完成), 虚拟地址空间是一片连续的空间, 从0xC0000000开始, 到0x38000000结束, 并没有用完全部4GB的地址空间, 这只是一个设定, 可以根据情况进行改变.</p>
+<h3 id="自映射机制"><a href="#自映射机制" class="headerlink" title="自映射机制"></a>自映射机制</h3><p>众所周知, 从物理地址空间中的每一个block分配page table之后(在default_init_memmap完成), 虚拟地址空间是一片连续的空间, 从0xC0000000开始, 大小为0x38000000=896MB, 并没有用完全部4GB的地址空间, 这只是一个设定, 可以根据情况进行改变.</p>
 <p>memlayout.h中定义了常量</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> KERNBASE 0xC0000000</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> KMEMSIZE 0x38000000 <span class="hljs-comment">// the maximum amount of physical memory</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> KERNTOP (KERNBASE + KMEMSIZE)</span><br></code></pre></td></tr></table></figure>
 
 <p>而每一个4KB页表中有1k个4B的pte, 每个pte指向物理空间中4KB的page, 整个page table指向了虚拟空间中4MB大小的pages. 如果我们把映射4GB空间的4MB页表放在4MB对齐的虚拟地址处, 那么可以想到有一个页表刚好映射他所在的4MB区域, 于是就充当了页目录表的功能.</p>
 <p>在页机制建立好后, 如果我们这时需要按虚拟地址的地址顺序显示整个页目录表和页表的内容，则要查找页目录表的页目录表项内容，根据页目录表项内容找到页表的物理地址**(pdt和pt为什么存放的是物理地址?)**，再转换成对应的虚地址，然后访问页表的虚地址，搜索整个页表的每个页目录项。这样过程比较繁琐。</p>
 <p>但是利用以上的方法, 通过连续扫描这特定的4MB虚拟地址空间，就很容易访问每个页目录表项和页表项内容。</p>
+<p>在pmm.c中的函数<code>print_pgdir</code>就是基于ucore的页表自映射方式完成了对整个页目录表和页表的内容扫描和打印。</p>
 <h2 id="练习3-2"><a href="#练习3-2" class="headerlink" title="练习3+2"></a>练习3+2</h2><h3 id="练习一-1"><a href="#练习一-1" class="headerlink" title="练习一"></a>练习一</h3><blockquote>
 <p>实现 first-fit 连续物理内存分配算法</p>
 </blockquote>
@@ -959,10 +960,56 @@
 <h3 id="练习三-1"><a href="#练习三-1" class="headerlink" title="练习三"></a>练习三</h3><blockquote>
 <p>释放某虚地址所在的页并取消对应二级页表项的映射</p>
 </blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">if</span> (*ptep &amp; PTE_P) <span class="hljs-comment">//(1) check if this page table entry is present</span><br>&#123;<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Page</span> *<span class="hljs-title">page</span> =</span> pte2page(*ptep); <span class="hljs-comment">//(2) find corresponding page to pte</span><br><br>    <span class="hljs-keyword">if</span> (page_ref_dec(page) == <span class="hljs-number">0</span>) <span class="hljs-comment">//(3) decrease page reference</span><br>    &#123;<br>        free_page(page); <span class="hljs-comment">//(4) and free this page when page reference reachs 0</span><br>    &#125;<br>    *ptep = <span class="hljs-number">0</span>;                 <span class="hljs-comment">//(5) clear second page table entry</span><br>    tlb_invalidate(pgdir, la); <span class="hljs-comment">//(6) flush tlb</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>两个问题:</p>
+<p class="note note-primary">数据结构Page的全局变量（其实是一个数组）的每一项与页表中的页目录项和页表项有无对应关系？如果有，其对应关系是啥？</p>
+
+<p>CPU如果要访问内存地址, 送出CPU的肯定是虚拟地址, 经过MMU的转换完成虚拟地址到物理地址的转换.</p>
+<p>在MMU中, 取出虚拟地址高10位和%cr3拼接成页目录表条目(pdte), 读取出内存中的页目录表(或者在MMU中的TLB)所存储的页表物理地址, 然后发送这个物理地址+虚拟地址中间十位到内存中访问到页表条目, 读出所在page的物理地址, 然后再和虚拟地址低12位拼接成物理地址到内存中访问. </p>
+<p>如果没有TLB, 这中间会有多次访存:</p>
+<ol>
+<li>为读取目录项而访问主存。</li>
+<li>为读取页表项而访问主存。</li>
+<li>为读取操作数或指令而访问主存。</li>
+</ol>
+<p>回答本文章中的一个问题: <strong>为什么页目录表和页表存储的是对应的物理地址而不是虚拟地址?</strong> </p>
+<p>原因也明了了, 这两个表就是MMU和内存合作完成虚拟地址到物理地址转换的基础, 而虚拟地址是在内核中使用的一个抽象连续空间的地址, 和MMU关系不大, 更不必往表项里存储虚拟地址, 何况这么做还会导致递归查找<sup id="fnref:3" class="footnote-ref"><a href="#fn:3" rel="footnote"><span class="hint--top hint--rounded" aria-label="即原先查找页目录表的目的是想将某个线性地址转换为物理地址，但如果页目录表中存放的是二级页表的线性地址，则需要先查找该二级页表的物理地址，此时需要递归查找，这可能会出现永远也查找不到物理地址的情况。
+">[3]</span></a></sup> </p>
+<p class="note note-primary">如果希望虚拟地址与物理地址相等，则需要如何修改lab2，完成此事？ 鼓励通过编程来具体完成这个问题 </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <ul>
 <li>moocos的密码是空格</li>
 </ul>
-
+<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:3" class="footnote-text"><span>即原先查找页目录表的目的是想将某个线性地址转换为物理地址，但如果页目录表中存放的是二级页表的<strong>线性</strong>地址，则需要先查找该二级页表的物理地址，此时需要递归查找，这可能会出现永远也查找不到物理地址的情况。
+<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
             </div>
             <hr>
             <div>
