@@ -14,11 +14,11 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="">
+  <meta name="description" content="IDA整出来的汇编伪指令看不下去了!!">
   <meta name="author" content="Yogdzewa">
   <meta name="keywords" content="">
   
-  <title>他人箴言 - Yogdzewa</title>
+  <title>Assembly Language - Yogdzewa</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -175,7 +175,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="他人箴言">
+            <span class="h2" id="subtitle" title="Assembly Language">
               
             </span>
 
@@ -190,8 +190,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-05-01 10:07" pubdate>
-        2021年5月1日 上午
+      <time datetime="2021-08-09 10:07" pubdate>
+        2021年8月9日 上午
       </time>
     </span>
   
@@ -202,7 +202,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      830 字
+      1.4k 字
     </span>
   
 
@@ -212,7 +212,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      12
+      24
        分钟
     </span>
   
@@ -250,77 +250,247 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">他人箴言</h1>
+            <h1 style="display: none">Assembly Language</h1>
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：1 个月前
+                  不可视境界线最后变动于：几秒前
                 
               </p>
             
             <div class="markdown-body">
-              <p>肖老师的课疯狂给分, 只要认真就能学到更多</p>
-<p>这个世界上没有闭卷的时候解决的能力, </p>
-<h3 id="计算机科学"><a href="#计算机科学" class="headerlink" title="计算机科学"></a>计算机科学</h3><p>计算机科学不是培养程序员的学科,是我们要找工作所以需要学编程 :</p>
-<ol>
-<li>什么是计算</li>
-<li>-&gt;怎么造</li>
-<li>-&gt;怎样高效计算 programming(按一定顺序执行特定步骤, 不同于coding, 原本是一个数学概念)</li>
-<li>针对特定问题的计算方法(algorithm), 如数据结构等</li>
-<li>如何解决现实问题 application</li>
-</ol>
-<h5 id="信息文明"><a href="#信息文明" class="headerlink" title="信息文明"></a>信息文明</h5><p>许多现实问题都已经转化为计算问题(工业文明大部分都转化为发动机问题)</p>
-<h3 id="4-2"><a href="#4-2" class="headerlink" title="4+2"></a>4+2</h3><p>操作系统+计算机系统+编译原理+数据结构   +计算机网络+并行计算</p>
-<blockquote>
-<p>MIT和其他学校的区别: (29:00)MIT的上限很高, 基础未必有专精于讲课的老师好. 上课应该想的是学完之后有什么自己想问的地方</p>
-</blockquote>
-<h4 id="如何学习4-2"><a href="#如何学习4-2" class="headerlink" title="如何学习4+2"></a>如何学习4+2</h4><p>积极的态度 充足的时间 足够的驱动力</p>
-<blockquote>
-<p>选一个性价比最高的方法去挣分</p>
-</blockquote>
-<h2 id="上分吧少年"><a href="#上分吧少年" class="headerlink" title="上分吧少年"></a>上分吧少年</h2><ol>
-<li>学习编程是为了具备计算思维从而能利用信息时代的工具(代码)解决问题programming</li>
-<li>学习编码是为了能让程序运行的更快更稳定coding</li>
-</ol>
-<h4 id="各种段位-五等"><a href="#各种段位-五等" class="headerlink" title="各种段位: (五等)"></a>各种段位: (五等)</h4><p>20行 -&gt; 200行 -&gt; 2000行(找工作不愁) -&gt; 2 0000行(可以砍价要股份) -&gt; 20 0000行(基本不可能, 如Linux的编写)</p>
-<h4 id="代码能力成熟度-3等-普工"><a href="#代码能力成熟度-3等-普工" class="headerlink" title="代码能力成熟度:(3等)普工"></a>代码能力成熟度:(3等)普工</h4><ol>
-<li>当时能跑,明天起来就不记得了,不如重写</li>
-<li>有文档有注释, 但只有自己能看懂, 半年后回来还是要重写</li>
-<li>别人能搞懂, 别人能维护, 代码可靠, 能被重用, 能在此基础上做二次开发</li>
-</ol>
+              <h1 id="汇编语言伪指令-最要命的"><a href="#汇编语言伪指令-最要命的" class="headerlink" title="汇编语言伪指令(最要命的"></a>汇编语言伪指令(最要命的</h1><blockquote>
 <ul>
-<li>(51:00)黄金普工: 是毕业底线</li>
-<li>钻石匠师: 毕业三年可年入百万</li>
+<li>伪指令 (directive) 是嵌入源代码中的命令，由汇编器识别和执行。伪指令不在运行时执行，但是它们可以定义变量、宏和子程序；为内存段分配名称，执行许多其他与汇编器相关的日常任务。</li>
+<li>简单来说就是方便编程的指令</li>
 </ul>
-<blockquote>
-<p>最顶尖的技术都用在了游戏上</p>
 </blockquote>
-<h3 id="升级路线图"><a href="#升级路线图" class="headerlink" title="升级路线图"></a>升级路线图</h3><p>有图(58:00结束)</p>
-<blockquote>
-<p>能活下来尽可能卷</p>
-</blockquote>
-<blockquote>
-<p>当小说一样看教科书, (1:04:00) 前两个星期把所有教科书看完, </p>
-</blockquote>
-<blockquote>
-<p>反对考研: 考研相当于又一次高考</p>
-</blockquote>
-<blockquote>
-<p>1:13:00 换本教科书, 在于懂不懂计算机科学, 懂得科学的边界</p>
-</blockquote>
-<blockquote>
-<p>CLRS, 有什么问题是算法不好解决的, 有什么问题是算法好解决的, 解决的程度怎么样, 带这个些问题去像小说一样去看书</p>
-</blockquote>
-<h2 id="俱乐部聚餐"><a href="#俱乐部聚餐" class="headerlink" title="俱乐部聚餐"></a>俱乐部聚餐</h2><ul>
-<li>数电实验最后一个是把以前不相干的东西和在一块, 用的语言很<strong>古老</strong></li>
-<li>还是要提前学</li>
-<li>网页组可以去想项目, 安卓,微信小程序等等, 不过和我想去的信安差的有点多了, 还是要考虑一下平衡点</li>
-<li>如果进国家机关, 保密还是有点用的, 不过和信安的关系就少了</li>
-<li>打竞赛还是在大二的时候打, 毕竟如果是做一个程序或者项目的话, 做起来其实很浮躁, 但如果是CTF的话…不太清楚, 这个假期准备弄弄</li>
-<li>今天有人夸我了!超开心</li>
+<h2 id="基本"><a href="#基本" class="headerlink" title="基本:"></a>基本:</h2><ul>
+<li><code>.data     .code     .stack</code> 定义段(segment)</li>
+<li><code>.model flat,stdcall</code>它告诉汇编程序用的是哪一种存储模式</li>
+<li><code>.END</code>标记一个程序的结束</li>
 </ul>
+<h2 id="数据类型及伪指令"><a href="#数据类型及伪指令" class="headerlink" title="数据类型及伪指令"></a>数据类型及伪指令</h2><h3 id="数据定义"><a href="#数据定义" class="headerlink" title="数据定义"></a>数据定义</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>BYTE</td>
+<td>8 位无符号整数，B 代表字节</td>
+</tr>
+<tr>
+<td>SBYTE</td>
+<td>8 位有符号整数，S 代表有符号</td>
+</tr>
+<tr>
+<td>WORD</td>
+<td>16 位无符号整数</td>
+</tr>
+<tr>
+<td>SWORD</td>
+<td>16 位有符号整数</td>
+</tr>
+<tr>
+<td>DWORD</td>
+<td>32 位无符号整数，D 代表双（字）</td>
+</tr>
+<tr>
+<td>SDWORD</td>
+<td>32 位有符号整数，SD 代表有符号双（字）</td>
+</tr>
+<tr>
+<td>FWORD</td>
+<td>48 位整数（保护模式中的远指针）</td>
+</tr>
+<tr>
+<td>QWORD</td>
+<td>64 位整数，Q 代表四（字）</td>
+</tr>
+<tr>
+<td>TBYTE</td>
+<td>80 位（10 字节）整数，T 代表 10 字节</td>
+</tr>
+<tr>
+<td>REAL4</td>
+<td>32 位（4 字节）IEEE 短实数</td>
+</tr>
+<tr>
+<td>REAL8</td>
+<td>64 位（8 字节）IEEE 长实数</td>
+</tr>
+<tr>
+<td>REAL10</td>
+<td>80 位（10 字节）IEEE 扩展实数</td>
+</tr>
+</tbody></table>
+<p>还可以是传统数据定义伪指令，如下表所示。</p>
+<table>
+<thead>
+<tr>
+<th>伪指令</th>
+<th>用法</th>
+<th>伪指令</th>
+<th>用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DB</td>
+<td>8位整数</td>
+<td>DQ</td>
+<td>64 位整数或实数</td>
+</tr>
+<tr>
+<td>DW</td>
+<td>16 位整数</td>
+<td>DT</td>
+<td>定义 80 位（10 字节）整数</td>
+</tr>
+<tr>
+<td>DD</td>
+<td>32 位整数或实数</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>初始化语句</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">[name] directive initializer [,initializer]...<br></code></pre></td></tr></table></figure>
+
+<p>如果希望不对变量进行初始化（随机分配数值），可以用符号 ? 作为初始值, 所有数值都由汇编器来转成二进制数据</p>
 <ul>
-<li>有录音, 其他的金句估计我也忘不了</li>
+<li><p>BYTE and SBYTE</p>
+<ul>
+<li>多初始值定义数组</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs asm">list BYTE 10,20,30,40<br>#甚至可以:<br>list BYTE 10,20,30,40<br>     BYTE 50,60,70,80<br>     BYTE 81,82,83,84<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li> 定义字符串: 使用BYTE, </li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs asm">greeting1 BYTE &quot;Good afternoon&quot;,0<br>#也可以<br>greeting1 BYTE &quot;Welcome to the Encryption Demo program &quot;<br>          BYTE &quot;created by Kip Irvine.&quot;,0dh, 0ah<br>#还可以使用backslash分行<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>DUP 操作符: 使用一个整数表达式作为计数器，为多个数据项分配存储空间</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs asm"> BYTE 4 DUP ( &quot;STACK&quot; ) ; 20 个字节：<br>#第一个数字是BYTE的个数, 第二个数字由DUP计算得出, 单位是字节    <br>#提供了一种方便的方式来初始化数组:<br>array BYTE 5 DUP (?) ; 5 个数值，未初始化<br></code></pre></td></tr></table></figure></li>
+<li><p>WORD and SWORD, DWORD, SDWORD, QWORD, </p>
+<ul>
+<li>同BYTE和SBYTE</li>
+</ul>
+</li>
+<li><p>剩下还有浮点类型, BCD数据等等, 不看了</p>
+</li>
+</ul>
+<hr>
+<ul>
+<li><p><code>.DATA ?</code>伪指令声明未初始化数据。当定义大量未初始化数据时，.DATA ? 伪指令减少了编译程序的大小。</p>
+</li>
+<li><p>等号=伪指令, 相当于宏定义一个数据, 可多次重复定义</p>
+</li>
+<li><p>当前地址计数器:<strong><code>selfPtr DWORD $</code></strong> </p>
+</li>
+<li><p>让汇编器计算数组长度: </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs asm">list BYTE 10,20,30,40<br>ListSize = ($ - list) # 注意此时计算出来的是地址的差值, 所以单位是字节, 如果遇到WORD要注<br></code></pre></td></tr></table></figure></li>
+<li><p>EQU伪指令, 无法多次定义</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs asm">name EQU expression	#必须是整数表达式<br>name EQU symbol		#任意一个用EQU或=定义过的符号<br>name EQU &lt;text&gt;		#直接文本替换, 最像#define, 也可用来定义实数<br></code></pre></td></tr></table></figure></li>
+<li><p>TEXTEQU 文本宏伪指令, </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs asm">name TEXTEQU &lt;text&gt;			# 就是文本<br>name TEXTEQU textmacro		# 前面的文本宏<br>name TEXTEQU %constExpr		# 整数表达式<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="相关指令"><a href="#相关指令" class="headerlink" title="相关指令"></a>相关指令</h3><p>操作数有 3 种基本类型：</p>
+<ul>
+<li>立即数——用数字文本表达式</li>
+<li>寄存器操作数——使用 CPU 内已命名的寄存器</li>
+<li>内存操作数——引用内存位置</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>操作数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>reg8</td>
+<td>8 位通用寄存器：AH、AL、BH、BL、CH、CL、DH、DL</td>
+</tr>
+<tr>
+<td>reg16</td>
+<td>16 位通用寄存器：AX、BX、CX、DX、SI、DI、SP、BP</td>
+</tr>
+<tr>
+<td>reg32</td>
+<td>32 位通用寄存器：EAX、EEX、ECX、EDX、ESI、EDI、ESP、EBP</td>
+</tr>
+<tr>
+<td>reg</td>
+<td>通用寄存器</td>
+</tr>
+<tr>
+<td>sreg</td>
+<td>16 位段寄存器：CS、DS、SS、ES、FS、GS</td>
+</tr>
+<tr>
+<td>imm</td>
+<td>8 位、16 位或 32 位立即数</td>
+</tr>
+<tr>
+<td>imm8</td>
+<td>8 位立即数，字节型数值</td>
+</tr>
+<tr>
+<td>imm16</td>
+<td>16 位立即数，字类型数值</td>
+</tr>
+<tr>
+<td>imm32</td>
+<td>32 位立即数，双字型数值</td>
+</tr>
+<tr>
+<td>reg/mem8</td>
+<td>8 位操作数，可以是 8 位通用寄存器或内存字节</td>
+</tr>
+<tr>
+<td>reg/mem16</td>
+<td>16 位立即数，可以是 16 位通用寄存器或内存字</td>
+</tr>
+<tr>
+<td>reg/mem32</td>
+<td>32 位立即数，可以是 32 位通用寄存器或内存双字</td>
+</tr>
+<tr>
+<td>mem</td>
+<td>8位、16 位或 32 位内存操作数</td>
+</tr>
+</tbody></table>
+<hr>
+<p>4.9 <a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3514.html">OFFSET运算符</a> </p>
+<p>4.10 <a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3515.html">ALIGN伪指令</a> 1,2,4,8,16字节对齐</p>
+<p>4.11 <a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3516.html">PTR运算符</a> </p>
+<ul>
+<li><p><code>mov ax,WORD PTR myDouble</code>, 把一个DWORD的低两字节传入ax(因为是小端法存储, 而且可用偏移来传入<br>高两字节:<code>mov ax,WORD PTR [myDouble+2]</code>)</p>
+</li>
+<li><p>把两个小的移入大的: </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs asm">wordList WORD 5678h,1234h<br>mov eax, DWORD PTR wordList<br></code></pre></td></tr></table></figure></li>
+</ul>
+<p>4.12 <a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3517.html">TYPE运算符</a> 返回变量的大小</p>
+<p>4.13 <a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3518.html">LENGTHOF运算符 </a> 计算数组中元素的个数, 如果数组占据多行, 只计算第一行</p>
+<p>4.14 <a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3519.html">LABEL伪指令</a> 可以插入一个标号，并定义它的大小属性，但是不为这个标号分配存储空间<br>        <code>LongValue LABEL DWORD</code> 标识下一个地址开始的DWORD字节</p>
+<p>4.15 <a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3525.html">间接寻址</a> 特殊: <code>inc BYTE PTR [esi]</code> 要加指针的类型, 剩下的看网站</p>
+<p>4.16 <a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3528.html">JMP和LOOP指令</a> 这个loop集成了ECX以及其他一些指令, 要看的话详见网站</p>
+<h2 id="汇编语言过程"><a href="#汇编语言过程" class="headerlink" title="汇编语言过程"></a>汇编语言过程</h2><ul>
+<li><p>压栈出栈, push&amp;pop</p>
+</li>
+<li><p>PUSHFD 和 POPFD 指令: 压入和弹出EFLAGS寄存器</p>
+</li>
+<li><p>PUSHA (push all-16bits), PUSHAD (push all double-32bits),  POPAD 和 POPA</p>
+</li>
+<li><p><strong>PROC和ENDP ：定义一个过程</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs asm">main PROC<br>.<br>.<br>main ENDP<br></code></pre></td></tr></table></figure>
+
+<p>- </p>
+</li>
 </ul>
 
             </div>
@@ -331,10 +501,17 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/Once/">Once</a>
+                      <a class="hover-with-bg" href="/categories/programming-language/">programming_language</a>
                     
                   </div>
                 
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/programming-language/">programming_language</a>
+                    
+                  </div>
                 
               </div>
               
@@ -344,6 +521,29 @@
                   
                 </p>
               
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021-08/pwn-glibc-malloc-srcCode/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">glibc_malloc(2.27/28) & techniques</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021-07/pwn-BUUOJ-writeup/">
+                        <span class="hidden-mobile">BUUOJ_Writeup</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
               
             </div>
 
@@ -362,7 +562,7 @@
         var options = Object.assign(
           {"clientID":"312db7ebbc085de5d28d","clientSecret":"85ea3cefd13c73a6d85c1813adfde4f1550bfbda","repo":"yogdzewa.github.io","owner":"yogdzewa","admin":["yogdzewa"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":true,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: 'a1d8ad63f90b124a34005287c570a58c'
+            id: '42f9461693545a0498e3f64db0cbcf80'
           }
         )
         var gitalk = new Gitalk(options);
