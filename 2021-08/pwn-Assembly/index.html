@@ -202,7 +202,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.4k 字
+      1.5k 字
     </span>
   
 
@@ -212,7 +212,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      24
+      26
        分钟
     </span>
   
@@ -254,7 +254,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：几秒前
+                  不可视境界线最后变动于：6 天前
                 
               </p>
             
@@ -489,9 +489,43 @@
 <li><p><strong>PROC和ENDP ：定义一个过程</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs asm">main PROC<br>.<br>.<br>main ENDP<br></code></pre></td></tr></table></figure>
 
-<p>- </p>
+<ul>
+<li>标号只有过程中的有效, 不过也可以定义全局标号<code>Destination::</code>, 使用两个引号即可, 尽量少用</li>
+</ul>
+</li>
+<li><p>USES 运算符: 在PROC 伪指令一行后面指出当前过程要修改的寄存器, 汇编器在头尾自动生成push和pop指令, 只对汇编器有效</p>
+</li>
+<li><p>链接库跳过</p>
 </li>
 </ul>
+<h2 id="条件判断"><a href="#条件判断" class="headerlink" title="条件判断"></a>条件判断</h2><table>
+<thead>
+<tr>
+<th>操作</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AND</td>
+<td>源操作数和目的操作数进行逻辑与操作</td>
+</tr>
+<tr>
+<td>OR</td>
+<td>源操作数和目的操作数进行逻辑或操作</td>
+</tr>
+<tr>
+<td>XOR</td>
+<td>源操作数和目的操作数进行逻辑异或操作</td>
+</tr>
+<tr>
+<td>NOT</td>
+<td>对目标操作数进行逻辑非操作</td>
+</tr>
+<tr>
+<td>TEST</td>
+<td>源操作数和目的操作数进行逻辑与操作，并适当地设置 CPU 标志位</td>
+</tr>
+</tbody></table>
 
             </div>
             <hr>
