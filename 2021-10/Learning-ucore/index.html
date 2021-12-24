@@ -202,7 +202,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      15.1k 字
+      23.7k 字
     </span>
   
 
@@ -212,7 +212,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      264
+      414
        分钟
     </span>
   
@@ -254,7 +254,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：几秒前
+                  不可视境界线最后变动于：1 分钟前
                 
               </p>
             
@@ -320,7 +320,7 @@
 <h4 id="e-Segment-Descriptor"><a href="#e-Segment-Descriptor" class="headerlink" title="e.Segment Descriptor"></a>e.Segment Descriptor</h4><blockquote>
 <p><strong>来自IA-32文档 P2902/3-10 Vol. 3A</strong> </p>
 </blockquote>
-<img src="../../image/ucore/IxTJPGOZWVjz2BD-16373800575412.png" srcset="/img/loading.gif" lazyload alt="image-20211110230124631.png" style="zoom:80%;" />
+<img src="C:/Users/L/AppData/Roaming/image/ucore/IxTJPGOZWVjz2BD-16373800575412.png" srcset="/img/loading.gif" lazyload alt="image-20211110230124631.png" style="zoom:80%;" />
 
 <h4 id="f-Global-Descriptor-Tables"><a href="#f-Global-Descriptor-Tables" class="headerlink" title="f.Global Descriptor Tables"></a>f.Global Descriptor Tables</h4><blockquote>
 <p><strong>(IA-32 P2906/ 3-14 Vol. 3A)</strong>:</p>
@@ -328,13 +328,131 @@
 <p>全局描述符表的是一个保存多个段描述符的“数组”，其起始地址保存在全局描述符表寄存器GDTR中。GDTR长48位，其中高32位为基地址，低16位为段界限。由于GDT 不能有GDT本身之内的描述符进行描述定义，所以处理器采用GDTR为GDT这一特殊的系统段。注意，全局描述符表中第一个段描述符设定为空段描述符。GDTR中的段界限以字节为单位。对于含有N个描述符的描述符表的段界限通常可设为8*N-1。</p>
 <img src="https://i.loli.net/2021/11/15/t1iNrJbCeBzASFf.png" srcset="/img/loading.gif" lazyload alt="image-20211110230336834" style="zoom:67%;" />
 
-<h3 id="4-地址空间"><a href="#4-地址空间" class="headerlink" title="4.地址空间"></a>4.地址空间</h3><pre><code class=" mermaid">flowchart LR
+<h4 id="g-Privilege-Level"><a href="#g-Privilege-Level" class="headerlink" title="g.Privilege Level"></a>g.Privilege Level</h4><ul>
+<li>Current privilege level (<strong>CPL</strong>) — The CPL is the privilege level of the currently executing program or task. <u>It</u><br><u>is stored in bits 0 and 1 of the CS and SS segment registers.</u> Normally, the CPL is equal to the privilege level of<br>the code segment from which instructions are being fetched. The processor changes the CPL when program<br>control is transferred to a code segment with a different privilege level. </li>
+</ul>
+<blockquote>
+<p>The CPL is treated slightly differently when accessing <strong>conforming code segments</strong>. Conforming code segments can be accessed from any privilege level that is equal to or numerically greater (less privileged) than the DPL of the conforming code segment. Also, the CPL is not changed when the processor accesses a conforming code segment that has a different privilege level than the CPL.</p>
+</blockquote>
+<ul>
+<li>Descriptor privilege level (<strong>DPL</strong>) — The DPL is the privilege level of a segment or gate. It is stored in the DPL<br>field of the segment or gate descriptor for the segment or gate. </li>
+<li>Requested privilege level (<strong>RPL</strong>) — The RPL is an override privilege level that is assigned to segment<br>selectors. It is stored in bits 0 and 1 of the segment selector. The RPL can be used to ensure that privileged code<br>does not access a segment on behalf of an application program unless the program itself has access privileges for<br>that segment. See Section 5.10.4, “Checking Caller Access Privileges (ARPL Instruction),” for a detailed description of<br>the purpose and typical use of the RPL.</li>
+</ul>
+<p><strong>PRIVILEGE CHECK:</strong> </p>
+<p><img src="https://i.loli.net/2021/11/16/JGd27NnTwFDipOe.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="4-中断与异常"><a href="#4-中断与异常" class="headerlink" title="4.中断与异常"></a>4.中断与异常</h3><ul>
+<li>中断机制给操作系统提供了处理意外情况的能力，同时它也是实现进程/线程抢占式调度的一个重要基石。但中断的引入导致了对操作系统的理解更加困难。</li>
+<li>在操作系统中，有三种特殊的中断事件。<ul>
+<li>由CPU<em>外部设备引起的</em> 外部事件如I/O中断、时钟中断、控制台中断等是异步产生的（即产生的时刻不确定），与CPU的执行无关，我们称之为<strong>异步中断</strong>(asynchronous interrupt)也称外部中断,简称<strong>中断</strong>(interrupt)。</li>
+<li>而把在CPU执行指令期间检测到<em>不正常的或非法</em> 的条件(如除零错、地址访问越界)所引起的内部事件称作<strong>同步中断</strong>(synchronous interrupt)，也称内部中断，简称**异常(**exception)。</li>
+<li>把在程序中使用<em>请求系统服务</em> 的系统调用而引发的事件，称作<strong>陷入中断</strong>(trap interrupt)，也称<strong>软中断</strong>(soft interrupt)，系统调用(system call)简称trap。在后续试验中会进一步讲解系统调用。</li>
+</ul>
+</li>
+</ul>
+<img src="https://i.loli.net/2021/11/16/5HxAC9w4XSiasbK.png" srcset="/img/loading.gif" lazyload  style="zoom: 60%;" />
+
+<ul>
+<li><p><strong>Interrupt Descriptor Table</strong>:同GDT一样，IDT是一个8字节的描述符数组，但IDT的第一项可以包含一个描述符。CPU把中断（异常）号乘以8做为IDT的索引。IDT可以位于内存的任意位置，CPU通过IDT寄存器（IDTR）的内容来寻址IDT的起始地址。指令LIDT和SIDT用来操作IDTR。两条指令都有一个显示的操作数：一个6字节表示的内存地址(包含线性地址基址和界限)。</p>
+<p>在保护模式下，最多会存在256个Interrupt/Exception Vectors。</p>
+<p>范围[0，31]内的32个向量被异常Exception和NMI使用，但当前并非所有这32个向量都已经被使用，有几个当前没有被使用的，请不要擅自使用它们，它们被保留，以备将来可能增加新的Exception。</p>
+<p>范围[32，255]内的向量被保留给用户定义的Interrupts。Intel没有定义，也没有保留这些Interrupts。用户可以将它们用作外部I/O设备中断（8259A IRQ），或者系统调用（System Call 、Software Interrupts）等。</p>
+</li>
+<li><p><strong>IDT gate descriptors</strong>: Interrupts/Exceptions应该使用Interrupt Gate和Trap Gate，它们之间的唯一区别就是：当调用Interrupt Gate时，Interrupt会被CPU自动禁止；而调用Trap Gate时，CPU则不会去禁止或打开中断，而是保留它原来的样子。</p>
+<blockquote>
+<p>【补充】所谓“自动禁止”，指的是CPU跳转到interrupt gate里的地址时，在将EFLAGS保存到栈上之后，清除EFLAGS里的IF位，以避免重复触发中断。在中断处理例程里，操作系统可以将EFLAGS里的IF设上,从而允许嵌套中断。但是必须在此之前做好处理嵌套中断的必要准备，如保存必要的寄存器等。二在ucore中访问Trap Gate的目的是为了实现系统调用。用户进程在正常执行中是不能禁止中断的，而当它发出系统调用后，将通过Trap Gate完成了从用户态（ring 3）的用户进程进了核心态（ring 0）的OS kernel。如果在到达OS kernel后禁止EFLAGS里的IF位，第一没意义（因为不会出现嵌套系统调用的情况），第二还会导致某些中断得不到及时响应，所以调用Trap Gate时，CPU则不会去禁止中断。总之，interrupt gate和trap gate之间没有优先级之分，仅仅是CPU在处理中断时有不同的方法，供操作系统在实现时根据需要进行选择。</p>
+</blockquote>
+</li>
+<li><p>在IDT中，可以包含如下3种类型的Descriptor：</p>
+<ul>
+<li>Task-gate descriptor （这里没有使用）</li>
+<li>Interrupt-gate descriptor （中断方式用到）</li>
+<li>Trap-gate descriptor（系统调用用到）</li>
+</ul>
+</li>
+</ul>
+<img src="https://i.loli.net/2021/11/16/qbyzSN56w9eDHKX.png" srcset="/img/loading.gif" lazyload alt="image-20211116161700420" style="zoom:70%;" />
+
+<p>​    Interrrupt Gate and Trap Gate 和Call Gate非常相似, 不同的Gate用3bit的Type来表示:</p>
+<img src="https://s2.loli.net/2021/12/20/FOG4zJsyutojfen.png" srcset="/img/loading.gif" lazyload alt="image-20211209164600135" style="zoom:67%;" />
+
+
+
+
+
+<h4 id="由硬件完成的工作"><a href="#由硬件完成的工作" class="headerlink" title="由硬件完成的工作"></a>由硬件完成的工作</h4><ul>
+<li><p>硬件中断处理过程1（==起始==）：从CPU收到中断事件后，打断当前程序或任务的执行，根据某种机制跳转到中断服务例程去执行的过程。其具体流程如下：</p>
+<ul>
+<li>CPU在执行完当前程序的每一条指令后，都会去确认在执行刚才的指令过程中中断控制器（如：<a target="_blank" rel="noopener" href="https://blog.csdn.net/longintchar/article/details/79439466">8259A</a>）是否发送中断请求过来，如果有那么CPU就会在相应的时钟脉冲到来时从总线上读取中断请求对应的中断向量；</li>
+<li>CPU根据得到的中断向量（以此为索引）到IDT中找到该向量对应的中断描述符，中断描述符里保存着中断服务例程的段选择子；</li>
+<li>CPU使用IDT查到的中断服务例程的段选择子从**GDT(这几个表一定要去分开来, 现在这个是指寻址的段描述符表)**中取得相应的段描述符，段描述符里保存了中断服务例程的段基址和属性信息，此时CPU就得到了中断服务例程的起始地址</li>
+</ul>
+<p>以上三个过程示意图: <a href='#ipc' id='ipc_r'>link</a> </p>
+<ul>
+<li>CPU会根据CPL和中断服务例程的段描述符的DPL信息确认是否发生了特权级的转换。比如当前程序正运行在用户态，而中断程序是运行在内核态的，则意味着发生了特权级的转换，这时CPU会从当前程序的<strong>TSS</strong>信息（该信息在内存中的起始地址存在TR寄存器中）里取得该程序的内核栈地址，即包括内核态的ss和esp的值，<strong>并立即将系统当前使用的栈切换成新的内核栈。</strong>这个栈就是即将运行的中断服务程序要使用的栈。紧接着就将当前程序使用的用户态的ss和esp压到新的内核栈中保存起来；</li>
+<li>CPU需要开始保存当前被打断的程序的现场（即一些寄存器的值），以便于将来恢复被打断的程序继续执行。这需要利用内核栈来保存相关现场信息，即依次压入当前被打断程序使用的eflags，cs，eip，errorCode（如果是有错误码的异常）信息；</li>
+<li>CPU利用中断服务例程的段描述符将其第一条指令的地址加载到cs和eip寄存器中，开始执行中断服务例程。这意味着先前的程序被暂停执行，中断服务程序正式开始工作。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<ul>
+<li><p>硬件中断处理过程2（==结束==）：中断处理工作完成后需要通过iret（或iretd）指令恢复被打断的程序的执行。CPU执行IRET指令的具体过程如下：</p>
+<ul>
+<li>程序执行这条iret指令时，首先会从内核栈里弹出先前保存的被打断的程序的现场信息，即eflags，<code>cs</code>，eip重新开始执行；</li>
+<li>如果存在特权级转换（<code>CS(CPL)&gt;DPL</code>），则还需要从内核栈中弹出用户态栈的ss和esp，这样也意味着栈也被切换回原先使用的用户态的栈了；</li>
+<li>如果此次处理的是带有错误码（errorCode）的异常，CPU在恢复先前程序的现场时，并不会弹出errorCode。这一步需要通过软件完成，即要求相关的中断服务例程在调用iret返回之前添加出栈代码主动弹出errorCode。</li>
+</ul>
+</li>
+</ul>
+<p><a href='#ipc_r' id='ipc'><img src="https://i.loli.net/2021/11/16/hGLAjlTYVSWpk67.png" srcset="/img/loading.gif" lazyload alt="image-20211116161700420" style="zoom:70%;" /></a></p>
+<h4 id="特权级检查"><a href="#特权级检查" class="headerlink" title="特权级检查"></a>特权级检查</h4><ul>
+<li><p>中断处理得==特权级转换==是通过门描述符（gate descriptor）和相关指令来完成的。一个门描述符就是一个系统类型的段描述符，一共有4个子类型：</p>
+<ul>
+<li>调用门描述符（call-gate descriptor may reside in the GDT or in an LDT, but not in the interrupt descriptor table (IDT)），</li>
+<li>中断门描述符（interrupt-gate descriptor）</li>
+<li>陷阱门描述符（trap-gate descriptor）</li>
+<li>任务门描述符（task-gate descriptor）。</li>
+</ul>
+<p>Task gates are used for task switching and are discussed in Chapter 7, “Task Management”. Trap and interrupt<br>gates are special kinds of call gates used for calling exception and interrupt handlers。中断门描述符和陷阱门描述符几乎是一样的。</p>
+<ul>
+<li>中断发生时实施特权检查的过程如下图所示：</li>
+</ul>
+<img src="https://i.loli.net/2021/11/16/fqGtF4SHxWPCJhg.png" srcset="/img/loading.gif" lazyload alt="这里是图片描述" style="zoom:80%;" />
+
+<ul>
+<li>门中的DPL和段选择符一起控制着访问，同时，段选择符结合偏移量（Offset）指出了中断处理例程的入口点。内核一般在门描述符中填入内核代码段的段选择子。产生中断前后，CPU一定不会将运行控制从高特权环转向低特权环，特权级必须要么保持不变（当操作系统内核自己被中断的时候），或被提升（当用户态程序被中断的时候）。无论哪一种情况，CPL必须大于等于目的代码段的DPL。如果CPL发生了改变，一个堆栈切换操作（通过<strong>TSS</strong>完成）就会发生。如果中断是被用户态程序中的指令所触发的（比如软件执行INT n生产的中断），还会增加一个额外的检查：门的DPL必须具有与CPL相同或更低的特权。这就防止了用户代码随意触发中断。如果这些检查失败，会产生一个一般保护异常（general-protection exception）。</li>
+</ul>
+</li>
+</ul>
+<h4 id="ucore的实现流程"><a href="#ucore的实现流程" class="headerlink" title="ucore的实现流程"></a>ucore的实现流程</h4><ol>
+<li>首先中断有几种类型<ul>
+<li>使用int软中断, 中断号为<code>T_SWITCH_TOU</code>. 由于一开始ucore运行在内核, 所以内核到用户时会弹出栈上的ss和esp, 所以要在int指令前面加上两个push, 还要注意指令的字节长度匹配.</li>
+<li>使用int软中断, 中断号为<code>T_SWITCH_TOUK</code>. 这个时候从用户态到内核态, 要通过TR寄存器查找当前的内核栈地址, 立即切换然后压入用户态的ss和esp, 由于challenge里有说明不用返回, 所以int执行完后要释放这两个东西.</li>
+<li>其他情况就是时钟中断和键盘中断到目前为止都是内核-&gt;内核再跳回内核, 没有什么复杂之处.</li>
+</ul>
+</li>
+<li>cpu接收到中断号, 然后到IDT表里把中断号当做下标查找Interrupt Discriptor, 这个时候就找到了中断处理例程的入口地址.</li>
+<li>cpu依次压入eflags，cs，eip, errorCode(如果是有错误码的异常), 然后加载描述符中的地址, 进入中断处理例程.</li>
+<li>处理例程一开始就是两个pushl, 分别是errorCode和trapno), 再jmp到<code>__alltraps</code>把可能需要改变的寄存器值压到栈上<br>在栈上倒着构建一个trapframe</li>
+<li>接下来进入处理例程, 0-31中断号由Intel保留, ucore定义的用<code>IRQ_OFFSET + IRQ_xx</code><ul>
+<li>如果是时钟中断, inc一个全局变量tick, 没啥复杂的</li>
+<li>如果是特权级转换, 更改一下trapframe的cs, es, ds, fs即可</li>
+</ul>
+</li>
+<li>执行完毕后弹出由我们压入的寄存器值, 然后到了<code>__altraps</code>的<code>iret</code>指令,  由cpu弹出eip, cs, eflags</li>
+<li>判断特权级转换来决定是否弹出ss, esp, <strong>中断结束</strong> </li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* registers as pushed by pushal */</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">pushregs</span> &#123;</span><br>    <span class="hljs-keyword">uint32_t</span> reg_edi;<br>    <span class="hljs-keyword">uint32_t</span> reg_esi;<br>    <span class="hljs-keyword">uint32_t</span> reg_ebp;<br>    <span class="hljs-keyword">uint32_t</span> reg_oesp;          <span class="hljs-comment">/* Useless */</span><br>    <span class="hljs-keyword">uint32_t</span> reg_ebx;<br>    <span class="hljs-keyword">uint32_t</span> reg_edx;<br>    <span class="hljs-keyword">uint32_t</span> reg_ecx;<br>    <span class="hljs-keyword">uint32_t</span> reg_eax;<br>&#125;;<br><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">trapframe</span> &#123;</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">pushregs</span> <span class="hljs-title">tf_regs</span>;</span><br>    <span class="hljs-keyword">uint16_t</span> tf_gs;<br>    <span class="hljs-keyword">uint16_t</span> tf_padding0;<br>    <span class="hljs-keyword">uint16_t</span> tf_fs;<br>    <span class="hljs-keyword">uint16_t</span> tf_padding1;<br>    <span class="hljs-keyword">uint16_t</span> tf_es;<br>    <span class="hljs-keyword">uint16_t</span> tf_padding2;<br>    <span class="hljs-keyword">uint16_t</span> tf_ds;<br>    <span class="hljs-keyword">uint16_t</span> tf_padding3;<br>    <span class="hljs-keyword">uint32_t</span> tf_trapno;<br>    <span class="hljs-comment">/* below here defined by x86 hardware */</span><br>    <span class="hljs-keyword">uint32_t</span> tf_err;<br>    <span class="hljs-keyword">uintptr_t</span> tf_eip;<br>    <span class="hljs-keyword">uint16_t</span> tf_cs;<br>    <span class="hljs-keyword">uint16_t</span> tf_padding4;<br>    <span class="hljs-keyword">uint32_t</span> tf_eflags;<br>    <span class="hljs-comment">/* below here only when crossing rings, such as from user to kernel */</span><br>    <span class="hljs-keyword">uintptr_t</span> tf_esp;<br>    <span class="hljs-keyword">uint16_t</span> tf_ss;<br>    <span class="hljs-keyword">uint16_t</span> tf_padding5;<br>&#125; __attribute__((packed));<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs asm">#----------------------------vector.S<br>.globl vector120<br>vector120:<br>  pushl $0<br>  pushl $120<br>  jmp __alltraps<br>#----------------------------trapentry.S<br>#include &lt;memlayout.h&gt;<br><br># vectors.S sends all traps here.<br>.text<br>.globl __alltraps<br>__alltraps:<br>    # push registers to build a trap frame<br>    # therefore make the stack look like a struct trapframe<br>    pushl %ds<br>    pushl %es<br>    pushl %fs<br>    pushl %gs<br>    pushal<br><br>    # load GD_KDATA into %ds and %es to set up data segments for kernel<br>    movl $GD_KDATA, %eax<br>    movw %ax, %ds<br>    movw %ax, %es<br><br>    # push %esp to pass a pointer to the trapframe as an argument to trap()<br>    pushl %esp<br><br>    # call trap(tf), where tf=%esp<br>    call trap<br><br>    # pop the pushed stack pointer<br>    popl %esp<br><br>    # return falls through to trapret...<br>.globl __trapret<br>__trapret:<br>    # restore registers from stack<br>    popal<br><br>    # restore %ds, %es, %fs and %gs<br>    popl %gs<br>    popl %fs<br>    popl %es<br>    popl %ds<br><br>    # get rid of the trap number and error code<br>    addl $0x8, %esp<br>    iret<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-地址空间"><a href="#5-地址空间" class="headerlink" title="5.地址空间"></a>5.地址空间</h3><pre><code class=" mermaid">flowchart LR
     逻辑地址或虚拟地址--&gt;|分段地址转换|线性地址
     线性地址--&gt;|分页地址转换|物理地址
     线性地址--&gt;End
 </code></pre>
 
-<h3 id="5-硬件访问"><a href="#5-硬件访问" class="headerlink" title="5.硬件访问"></a>5.<a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/lab1/lab1_3_2_3_dist_accessing.html">硬件访问</a></h3><p>bootloader让CPU进入保护模式后，下一步的工作就是从硬盘上加载并运行OS。考虑到实现的简单性，bootloader的访问硬盘都是LBA模式的PIO（Program IO）方式，即所有的IO操作是通过CPU访问硬盘的IO地址寄存器完成。</p>
+<h3 id="6-硬件访问"><a href="#6-硬件访问" class="headerlink" title="6.硬件访问"></a>6.<a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/lab1/lab1_3_2_3_dist_accessing.html">硬件访问</a></h3><p>bootloader让CPU进入保护模式后，下一步的工作就是从硬盘上加载并运行OS。考虑到实现的简单性，bootloader的访问硬盘都是LBA模式的PIO（Program IO）方式，即所有的IO操作是通过CPU访问硬盘的IO地址寄存器完成。</p>
 <p>一般主板有2个IDE通道，每个通道可以接2个IDE硬盘。访问第一个硬盘的扇区可设置IO地址寄存器0x1f0-0x1f7实现的，具体参数见下表。一般第一个IDE通道通过访问IO地址0x1f0-0x1f7来实现，第二个IDE通道通过访问0x170-0x17f实现。每个通道的主从盘的选择通过第6个IO偏移地址寄存器来设置。</p>
 <p>表一 磁盘IO地址和对应功能</p>
 <p>第6位：为1=LBA模式；0 = CHS模式 第7位和第5位必须为1</p>
@@ -381,98 +499,16 @@
 <li>等待磁盘准备好</li>
 <li>把磁盘扇区数据读到指定内存</li>
 </ol>
-<h3 id="6-中断与异常"><a href="#6-中断与异常" class="headerlink" title="6.中断与异常"></a>6.中断与异常</h3><ul>
-<li>中断机制给操作系统提供了处理意外情况的能力，同时它也是实现进程/线程抢占式调度的一个重要基石。但中断的引入导致了对操作系统的理解更加困难。</li>
-</ul>
-<h4 id="三种特殊的中断事件"><a href="#三种特殊的中断事件" class="headerlink" title="三种特殊的中断事件"></a>三种特殊的中断事件</h4><ul>
-<li>由CPU<em>外部设备引起的</em> 外部事件如I/O中断、时钟中断、控制台中断等是异步产生的（即产生的时刻不确定），与CPU的执行无关，我们称之为<strong>异步中断</strong>(asynchronous interrupt)也称外部中断,简称<strong>中断</strong>(interrupt)。</li>
-<li>而把在CPU执行指令期间检测到<em>不正常的或非法</em> 的条件(如除零错、地址访问越界)所引起的内部事件称作<strong>同步中断</strong>(synchronous interrupt)，也称内部中断，简称**异常(**exception)。</li>
-<li>把在程序中使用<em>请求系统服务</em> 的系统调用而引发的事件，称作<strong>陷入中断</strong>(trap interrupt)，也称<strong>软中断</strong>(soft interrupt)，系统调用(system call)简称trap。在后续试验中会进一步讲解系统调用。</li>
-</ul>
-<h4 id="有关数据结构"><a href="#有关数据结构" class="headerlink" title="有关数据结构"></a>有关数据结构</h4><ul>
-<li><p><strong>Interrupt Descriptor Table</strong>:同GDT一样，IDTc是一个8字节的描述符数组，但IDT的第一项可以包含一个描述符。CPU把中断（异常）号乘以8做为IDT的索引。IDT可以位于内存的任意位置，CPU通过IDT寄存器（IDTR）的内容来寻址IDT的起始地址。指令LIDT和SIDT用来操作IDTR。两条指令都有一个显示的操作数：一个6字节表示的内存地址(包含线性地址基址和界限)。</p>
-<p>在保护模式下，最多会存在256个Interrupt/Exception Vectors。</p>
-<p>范围[0，31]内的32个向量被异常Exception和NMI使用，但当前并非所有这32个向量都已经被使用，有几个当前没有被使用的，请不要擅自使用它们，它们被保留，以备将来可能增加新的Exception。</p>
-<p>范围[32，255]内的向量被保留给用户定义的Interrupts。Intel没有定义，也没有保留这些Interrupts。用户可以将它们用作外部I/O设备中断（8259A IRQ），或者系统调用（System Call 、Software Interrupts）等。</p>
-</li>
-<li><p><strong>IDT gate descriptors</strong>: Interrupts/Exceptions应该使用Interrupt Gate和Trap Gate，它们之间的唯一区别就是：当调用Interrupt Gate时，Interrupt会被CPU自动禁止；而调用Trap Gate时，CPU则不会去禁止或打开中断，而是保留它原来的样子。</p>
-<blockquote>
-<p>【补充】所谓“自动禁止”，指的是CPU跳转到interrupt gate里的地址时，在将EFLAGS保存到栈上之后，清除EFLAGS里的IF位，以避免重复触发中断。在中断处理例程里，操作系统可以将EFLAGS里的IF设上,从而允许嵌套中断。但是必须在此之前做好处理嵌套中断的必要准备，如保存必要的寄存器等。二在ucore中访问Trap Gate的目的是为了实现系统调用。用户进程在正常执行中是不能禁止中断的，而当它发出系统调用后，将通过Trap Gate完成了从用户态（ring 3）的用户进程进了核心态（ring 0）的OS kernel。如果在到达OS kernel后禁止EFLAGS里的IF位，第一没意义（因为不会出现嵌套系统调用的情况），第二还会导致某些中断得不到及时响应，所以调用Trap Gate时，CPU则不会去禁止中断。总之，interrupt gate和trap gate之间没有优先级之分，仅仅是CPU在处理中断时有不同的方法，供操作系统在实现时根据需要进行选择。</p>
-</blockquote>
-</li>
-<li><p>在IDT中，可以包含如下3种类型的Descriptor：</p>
-<ul>
-<li>Task-gate descriptor （这里没有使用）</li>
-<li>Interrupt-gate descriptor （中断方式用到）</li>
-<li>Trap-gate descriptor（系统调用用到）</li>
-</ul>
-</li>
-</ul>
-<img src="https://i.loli.net/2021/11/16/qbyzSN56w9eDHKX.png" srcset="/img/loading.gif" lazyload alt="image-20211116161700420" style="zoom:70%;" />
+<h3 id="附-TSS"><a href="#附-TSS" class="headerlink" title="附: TSS"></a>附: TSS</h3><p>在<code>kern_init()-&gt;pmm_init()-&gt;gdt_init()</code>中初始化, TSS中的内核栈地址就在这里设置</p>
+<p>TSS可以在内存的任意位置, 而ucore的taskstate定义在pmm.c中, 通过构造<em>门描述符</em> , 弄到<code>struct segdesc gdt[]</code>里面,<br>然后使用lgdt指令加载到GDT中, <strong>内核栈(8KB)从<code>c0120000 bootstack</code>到<code>c0122000 bootstacktop</code></strong>, 在entry.S中找到的, kernel.sym可看地址</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs c">...详见Lab2<br><span class="hljs-comment">// Since we are using bootloader&#x27;s GDT,</span><br>  <span class="hljs-comment">// we should reload gdt (second time, the last time) to get user segments and the TSS</span><br>  <span class="hljs-comment">// map virtual_addr 0 ~ 4G = linear_addr 0 ~ 4G</span><br>  <span class="hljs-comment">// then set kernel stack (ss:esp) in TSS, setup TSS in gdt, load TSS</span><br>  gdt_init();<br>  ...<br></code></pre></td></tr></table></figure>
 
-<p>​    Interrrupt Gate and Trap Gate 和Call Gate非常相似, 不同的Gate用3bit的Type来表示:</p>
-<img src="../../image/ucore/image-20211209164600135.png" srcset="/img/loading.gif" lazyload alt="image-20211209164600135" style="zoom:67%;" />
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SEG_TSS     5</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> GD_TSS      ((SEG_TSS) &lt;&lt; 3)        <span class="hljs-comment">// task segment selector</span></span><br><span class="hljs-comment">/* gdt_init - initialize the default GDT and TSS */</span><br><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span></span><br><span class="hljs-function"><span class="hljs-title">gdt_init</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-comment">// set boot kernel stack and default SS0</span><br>    load_esp0((<span class="hljs-keyword">uintptr_t</span>)bootstacktop);<br>    ts.ts_ss0 = KERNEL_DS;<br><br>    <span class="hljs-comment">// initialize the TSS filed of the gdt</span><br>    gdt[SEG_TSS] = SEGTSS(STS_T32A, (<span class="hljs-keyword">uintptr_t</span>)&amp;ts, <span class="hljs-keyword">sizeof</span>(ts), DPL_KERNEL);<br><br>    <span class="hljs-comment">// reload all segment registers</span><br>    lgdt(&amp;gdt_pd);<br><br>    <span class="hljs-comment">// load the TSS</span><br>    ltr(GD_TSS);<br>&#125;<br></code></pre></td></tr></table></figure>
 
+<img src="../../image/ucore/image-20211221160818556.png" srcset="/img/loading.gif" lazyload alt="image-20211221160818556" style="zoom: 67%;" />
 
+<img src="../../image/ucore/image-20211221161024855.png" srcset="/img/loading.gif" lazyload alt="image-20211221161024855" style="zoom:67%;" />
 
-<h4 id="中断处理流程"><a href="#中断处理流程" class="headerlink" title="中断处理流程:"></a>中断处理流程:</h4><ul>
-<li><p>硬件中断处理过程1（起始）：从CPU收到中断事件后，打断当前程序或任务的执行，根据某种机制跳转到中断服务例程去执行的过程。其具体流程如下：</p>
-<ul>
-<li><p>CPU在执行完当前程序的每一条指令后，都会去确认在执行刚才的指令过程中中断控制器（如：<a target="_blank" rel="noopener" href="https://blog.csdn.net/longintchar/article/details/79439466">8259A</a>）是否发送中断请求过来，如果有那么CPU就会在相应的时钟脉冲到来时从总线上读取中断请求对应的中断向量；</p>
-</li>
-<li><p>CPU根据得到的中断向量（以此为索引）到IDT中找到该向量对应的中断描述符，中断描述符里保存着中断服务例程的段选择子； <a href='#idtr' id='idtr_r'>image</a> </p>
-</li>
-<li><p>CPU使用IDT查到的中断服务例程的段选择子从**GDT(这几个表一定要去分开来, 现在这个是指寻址的段描述符表)**中取得相应的段描述符，段描述符里保存了中断服务例程的段基址和属性信息，此时CPU就得到了中断服务例程的起始地址，并跳转到该地址；</p>
-</li>
-</ul>
-<p>以上三个过程示意图: <a id='ipc_r' href="#ipc">link</a> </p>
-<ul>
-<li>CPU会根据CPL和中断服务例程的段描述符的DPL信息确认是否发生了特权级的转换。比如当前程序正运行在用户态，而中断程序是运行在内核态的，则意味着发生了特权级的转换，这时CPU会从当前程序的TSS信息（该信息在内存中的起始地址存在<strong>TR寄存器</strong>中）里取得该程序的内核栈地址，即包括内核态的ss和esp的值，并立即将系统当前使用的栈切换成新的内核栈。这个栈就是即将运行的中断服务程序要使用的栈。紧接着就将当前程序使用的用户态的ss和esp压到新的内核栈中保存起来；</li>
-<li>CPU需要开始保存当前被打断的程序的现场（即一些寄存器的值），以便于将来恢复被打断的程序继续执行。这需要利用内核栈来保存相关现场信息，即依次压入当前被打断程序使用的eflags，cs，eip，errorCode（如果是有错误码的异常）信息；</li>
-<li>CPU利用中断服务例程的段描述符将其第一条指令的地址加载到cs和eip寄存器中，开始执行中断服务例程。这意味着先前的程序被暂停执行，<strong>中断服务程序正式开始工作</strong>。</li>
-</ul>
-</li>
-<li><p>硬件中断处理过程2（结束）：<strong>中断处理工作完成后</strong>需要通过iret（或iretd）指令恢复被打断的程序的执行。CPU执行IRET指令的具体过程如下：</p>
-<ul>
-<li>程序执行这条iret指令时，首先会从内核栈里弹出先前保存的被打断的程序的现场信息，即eflags，cs，eip重新开始执行；</li>
-<li>如果存在特权级转换（从内核态转换到用户态），则还需要从内核栈中弹出用户态栈的ss和esp，这样也意味着栈也被切换回原先使用的用户态的栈了；</li>
-<li>如果此次处理的是带有错误码（errorCode）的异常，CPU在恢复先前程序的现场时，并不会弹出errorCode。这一步需要通过软件完成，即要求相关的中断服务例程在调用iret返回之前添加出栈代码主动弹出errorCode。</li>
-</ul>
-</li>
-</ul>
-<p><a href='#idtr_r' id='idtr'><img src="https://i.loli.net/2021/11/16/5HxAC9w4XSiasbK.png" srcset="/img/loading.gif" lazyload  style="zoom: 60%;" /></a></p>
-<hr>
-<p><a href='#ipc_r' id='ipc'><img src="https://i.loli.net/2021/11/16/hGLAjlTYVSWpk67.png" srcset="/img/loading.gif" lazyload alt="image-20211116163957527.png" style="zoom: 67%;"/></a></p>
-<ul>
-<li><p>中断处理得==特权级转换==是通过门描述符（gate descriptor）和相关指令来完成的。一个门描述符就是一个系统类型的段描述符，一共有4个子类型：</p>
-<ul>
-<li>调用门描述符（call-gate descriptor may reside in the GDT or in an LDT, but not in the interrupt descriptor table (IDT)），</li>
-<li>中断门描述符（interrupt-gate descriptor）</li>
-<li>陷阱门描述符（trap-gate descriptor）</li>
-<li>任务门描述符（task-gate descriptor）。</li>
-</ul>
-<p>Task gates are used for task switching and are discussed in Chapter 7, “Task Management”. Trap and interrupt<br>gates are special kinds of call gates used for calling exception and interrupt handlers。中断门描述符和陷阱门描述符几乎是一样的。</p>
-<ul>
-<li>中断发生时实施特权检查的过程如下图所示：</li>
-</ul>
-<img src="https://i.loli.net/2021/11/16/fqGtF4SHxWPCJhg.png" srcset="/img/loading.gif" lazyload alt="这里是图片描述" style="zoom:80%;" />
-
-<ul>
-<li>门中的DPL和段选择符一起控制着访问，同时，段选择符结合偏移量（Offset）指出了中断处理例程的入口点。内核一般在门描述符中填入内核代码段的段选择子。产生中断后，CPU一定不会将运行控制从高特权环转向低特权环，特权级必须要么保持不变（当操作系统内核自己被中断的时候），或被提升（当用户态程序被中断的时候）。无论哪一种情况，作为结果的CPL必须大于等于目的代码段的DPL。如果CPL发生了改变，一个堆栈切换操作（通过<strong>TSS</strong>完成）就会发生。如果中断是被用户态程序中的指令所触发的（比如软件执行INT n生产的中断），还会增加一个额外的检查：门的DPL必须具有与CPL相同或更低的特权。这就防止了用户代码随意触发中断。如果这些检查失败，会产生一个一般保护异常（general-protection exception）。</li>
-</ul>
-</li>
-</ul>
-<h3 id="7-Privilege-Level"><a href="#7-Privilege-Level" class="headerlink" title="7.Privilege Level"></a>7.Privilege Level</h3><h4 id="Three-types"><a href="#Three-types" class="headerlink" title="Three types"></a>Three types</h4><ul>
-<li>Current privilege level (<strong>CPL</strong>) — The CPL is the privilege level of the currently executing program or task. <u>It</u><br><u>is stored in bits 0 and 1 of the CS and SS segment registers.</u> Normally, the CPL is equal to the privilege level of<br>the code segment from which instructions are being fetched. The processor changes the CPL when program<br>control is transferred to a code segment with a different privilege level. </li>
-</ul>
-<blockquote>
-<p>The CPL is treated slightly differently when accessing <strong>conforming code segments</strong>. Conforming code segments can be accessed from any privilege level that is equal to or numerically greater (less privileged) than the DPL of the conforming code segment. Also, the CPL is not changed when the processor accesses a conforming code segment that has a different privilege level than the CPL.</p>
-</blockquote>
-<ul>
-<li>Descriptor privilege level (<strong>DPL</strong>) — The DPL is the privilege level of a segment or gate. It is stored in the DPL<br>field of the segment or gate descriptor for the segment or gate. </li>
-<li>Requested privilege level (<strong>RPL</strong>) — The RPL is an override privilege level that is assigned to segment<br>selectors. It is stored in bits 0 and 1 of the segment selector. The RPL can be used to ensure that privileged code<br>does not access a segment on behalf of an application program unless the program itself has access privileges for<br>that segment. See Section 5.10.4, “Checking Caller Access Privileges (ARPL Instruction),” for a detailed description of<br>the purpose and typical use of the RPL.</li>
-</ul>
-<h4 id="PRIVILEGE-CHECK"><a href="#PRIVILEGE-CHECK" class="headerlink" title="PRIVILEGE CHECK:"></a><strong>PRIVILEGE CHECK:</strong></h4><p><img src="https://i.loli.net/2021/11/16/JGd27NnTwFDipOe.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
 <h2 id="几个练习"><a href="#几个练习" class="headerlink" title="几个练习"></a>几个练习</h2><h3 id="项目组成"><a href="#项目组成" class="headerlink" title="项目组成"></a><a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/lab1/lab1_2_2_files.html">项目组成</a></h3><h3 id="练习一"><a href="#练习一" class="headerlink" title="练习一"></a>练习一</h3><blockquote>
 <p>理解通过<a target="_blank" rel="noopener" href="https://www.gnu.org/software/make/manual/make.html">make</a>生成执行文件的过程</p>
 </blockquote>
@@ -604,11 +640,6 @@
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs asm">call bootmain<br></code></pre></td></tr></table></figure>
 
-<ul>
-<li>Long jump, use 0xfebc for the CS register and 0x12345678 for the EIP register:</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs asm">ljmp $0xfebc, $0x12345678<br></code></pre></td></tr></table></figure>
-
 <h3 id="练习四"><a href="#练习四" class="headerlink" title="练习四"></a>练习四</h3><blockquote>
 <p>分析bootloader加载ELF格式的OS的过程。</p>
 </blockquote>
@@ -710,13 +741,14 @@
 </li>
 <li><p>编程完善kern/trap/trap.c中对中断向量表进行初始化的函数idt_init.</p>
 <ul>
-<li>具体实现如下,<br><strong>这段代码的作用是将vector的内容 按顺序 装入中断描述符表中</strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">idt_init</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span> </span>&#123;<br>  <span class="hljs-comment">// __vectors定义于vector.S中</span><br>  <span class="hljs-keyword">extern</span> <span class="hljs-keyword">uintptr_t</span> __vectors[];<br>  <span class="hljs-keyword">int</span> i;<br>  <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">sizeof</span>(idt) / <span class="hljs-keyword">sizeof</span>(struct gatedesc); i ++)<br>      <span class="hljs-comment">// 目标idt项为idt[i]</span><br>      <span class="hljs-comment">// 该idt项为内核代码，所以使用GD_KTEXT段选择子</span><br>      <span class="hljs-comment">// 中断处理程序的入口地址存放于__vectors[i]</span><br>      <span class="hljs-comment">// 特权级为DPL_KERNEL</span><br>      SETGATE(idt[i], <span class="hljs-number">0</span>, GD_KTEXT, __vectors[i], DPL_KERNEL);<br>  <span class="hljs-comment">// 设置从用户态转为内核态的中断的特权级为DPL_USER</span><br>  <span class="hljs-comment">// 好像就是int 0x80, 不过我没有在任何地方看到说明, 尝试自己写这一段代码花了好多无谓的时间, 诶</span><br>  <span class="hljs-comment">// T_SWITCH_TOK也不知道是什么东西(就是task switch to kernel, 用户级(即DPL_USER)`syscall`函数)</span><br>  SETGATE(idt[T_SWITCH_TOK], <span class="hljs-number">0</span>, GD_KTEXT, __vectors[T_SWITCH_TOK], DPL_USER);<br>  <span class="hljs-comment">// load IDT from idt_pd</span><br>  lidt(&amp;idt_pd);<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p>具体实现如下，详细信息以注释的形式写入代码中。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">idt_init</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span> </span>&#123;<br>  <span class="hljs-comment">// __vectors定义于vector.S中</span><br>  <span class="hljs-keyword">extern</span> <span class="hljs-keyword">uintptr_t</span> __vectors[];<br>  <span class="hljs-keyword">int</span> i;<br>  <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">sizeof</span>(idt) / <span class="hljs-keyword">sizeof</span>(struct gatedesc); i ++)<br>      <span class="hljs-comment">// 目标idt项为idt[i]</span><br>      <span class="hljs-comment">// 该idt项为内核代码，所以使用GD_KTEXT段选择子</span><br>      <span class="hljs-comment">// 中断处理程序的入口地址存放于__vectors[i]</span><br>      <span class="hljs-comment">// 特权级为DPL_KERNEL</span><br>      SETGATE(idt[i], <span class="hljs-number">0</span>, GD_KTEXT, __vectors[i], DPL_KERNEL);<br>  <span class="hljs-comment">// 设置从用户态转为内核态的中断的特权级为DPL_USER</span><br>  <span class="hljs-comment">// 好像就是int 0x80, 不过我没有在任何地方看到说明, 尝试自己写这一段代码花了好多无谓的时间, 诶</span><br>  <span class="hljs-comment">// T_SWITCH_TOK也不知道是什么东西</span><br>  SETGATE(idt[T_SWITCH_TOK], <span class="hljs-number">0</span>, GD_KTEXT, __vectors[T_SWITCH_TOK], DPL_USER);<br>  <span class="hljs-comment">// 加载该IDT</span><br>  lidt(&amp;idt_pd);<br>&#125;<br></code></pre></td></tr></table></figure></li>
 </ul>
 </li>
 <li><p>编程完善trap.c中的中断处理函数trap_dispatch**(called by trap(), and trap() called in trapentry.S)**，在对时钟中断进行处理的部分填写trap函数中处理时钟中断的部分，使操作系统每遇到100次时钟中断后，调用print_ticks子程序，向屏幕上打印一行文字”100 ticks”。</p>
 <ul>
 <li><p>这个实现还是比较简单的，注释都说清楚了</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* trap_dispatch - dispatch based on what type of trap occurred */</span><br><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">trap_dispatch</span><span class="hljs-params">(struct trapframe *tf)</span> </span>&#123;<br>    <span class="hljs-keyword">char</span> c;<br>    <span class="hljs-keyword">switch</span> (tf-&gt;tf_trapno) &#123;<br>    <span class="hljs-keyword">case</span> IRQ_OFFSET + IRQ_TIMER:<br>        <span class="hljs-comment">// 全局变量ticks定义于kern/driver/clock.c</span><br>        ticks++;<br>        <span class="hljs-keyword">if</span>(ticks % TICK_NUM == <span class="hljs-number">0</span>)<br>            print_ticks();<br>        <span class="hljs-keyword">break</span>;<br>    <span class="hljs-comment">// .........</span><br></code></pre></td></tr></table></figure></li>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* trap_dispatch - dispatch based on what type of trap occurred */</span><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">trap_dispatch</span><span class="hljs-params">(struct trapframe *tf)</span> </span>&#123;    <span class="hljs-keyword">char</span> c;    <span class="hljs-keyword">switch</span> (tf-&gt;tf_trapno) &#123;    <span class="hljs-keyword">case</span> IRQ_OFFSET + IRQ_TIMER:        <span class="hljs-comment">// 全局变量ticks定义于kern/driver/clock.c        ticks++;        if(ticks % TICK_NUM == 0)            print_ticks();        break;    // .........</span><br></code></pre></td></tr></table></figure></li>
 </ul>
 </li>
 <li><p>结果:</p>
@@ -727,6 +759,7 @@
 <h3 id="拓展练习"><a href="#拓展练习" class="headerlink" title="拓展练习"></a>拓展练习</h3><blockquote>
 <p>Challenge 1: 扩展proj4,增加syscall功能，即增加一用户态函数（可执行一特定系统调用：获得时钟计数值），当内核初始完毕后，可从内核态返回到用户态的函数，而用户态的函数又通过系统调用得到内核态的服务</p>
 </blockquote>
+<p>详见知识点</p>
 <blockquote>
 <p>Challenge 2:用键盘实现用户模式内核模式切换。具体目标是：“键盘输入3时切换到用户模式，键盘输入0时切换到内核模式”。 基本思路是借鉴软中断(syscall功能)的代码，并且把trap.c中软中断处理的设置语句拿过来。</p>
 </blockquote>
@@ -813,7 +846,8 @@
 <li>12-31 - Offset: 目标<strong>物理</strong>地址的高20位。</li>
 </ul>
 <p><strong>页目录表:</strong> </p>
-<p><img src="https://i.loli.net/2021/11/23/9B45OFTQWedfhw1.png" srcset="/img/loading.gif" lazyload alt="image-20211123104109784"></p>
+<img src="https://i.loli.net/2021/11/23/9B45OFTQWedfhw1.png" srcset="/img/loading.gif" lazyload alt="image-20211123104109784" style="zoom:80%;" />
+
 <table>
 <thead>
 <tr>
@@ -863,7 +897,7 @@
 </tr>
 </tbody></table>
 <h3 id="6-链接脚本"><a href="#6-链接脚本" class="headerlink" title="6.链接脚本"></a>6.链接脚本</h3><ul>
-<li>edata[]和 end[]这些变量是ld根据kernel.ld链接脚本生成的全局变量，表示相应段的起始地址或结束地址等，它们不在任何一个.S、.c或.h文件中定义。</li>
+<li><strong>edata[]和 end[]这些变量是ld根据kernel.ld链接脚本生成的全局变量，表示相应段的起始地址或结束地址等，它们不在任何一个.S、.c或.h文件中定义。</strong> </li>
 <li><strong>逻辑地址或虚拟地址是可执行代码在编译的时候由链接器生成的</strong> </li>
 <li>ucore内核的链接地址==ucore内核的虚拟地址；boot loader加载ucore内核用到的加载地址==ucore内核的物理地址。</li>
 <li><a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/lab2/lab2_3_7_phymemlab_concepts.html">more…</a> </li>
@@ -1010,14 +1044,236 @@
 <p><strong>buddy system（伙伴系统）分配算法, <a target="_blank" rel="noopener" href="http://coolshell.cn/articles/10427.html">伙伴分配器的一个极简实现</a> <a target="_blank" rel="noopener" href="https://github.com/wuwenbin/buddy2/blob/master/buddy2.c">具体实现</a></strong></p>
 <p>Buddy System算法把系统中的可用存储空间划分为存储块(Block)来进行管理, 每个存储块的大小必须是2的n次幂(Pow(2, n)), 即1, 2, 4, 8, 16, 32, 64, 128…</p>
 </blockquote>
-<p>经过一番思考, 属于是没搞懂用在这里的优势在哪, 分配的时候得遍历一遍双向链表, 找到了再分割, 和FIFO没啥区别, 释放时稍微有一点优势,  但最主要的问题是如果内存探测弄出的block很多的话也就略微有一点优势, 至于用双向链表而不是二叉树就更离谱了, 不如不写</p>
+<p>经过一番思考, 属于是没搞懂用在这里的优势在哪, 分配的时候得遍历一遍双向链表, 找到了再分割, 和FIFO没啥区别, 释放时稍微有一点优势,  但最主要的问题是如果内存探测弄出的block很多的话也就只有略微有一点优势, 至于用双向链表而不是二叉树就更离谱了, 不如不写</p>
 <h4 id="Challenge-2"><a href="#Challenge-2" class="headerlink" title="Challenge 2"></a>Challenge 2</h4><blockquote>
 <p>slub算法，实现两层架构的高效内存单元分配，第一层是基于页大小的内存分配，第二层是在第一层基础上实现基于任意大小的内存分配。可简化实现，能够体现其主体思想即可。</p>
 <ul>
 <li>参考<a target="_blank" rel="noopener" href="http://www.ibm.com/developerworks/cn/linux/l-cn-slub/">linux的slub分配算法/</a>，在ucore中实现slub分配算法。要求有比较充分的测试用例说明实现的正确性，需要有设计文档。</li>
 </ul>
 </blockquote>
-<h1 id="Lab3"><a href="#Lab3" class="headerlink" title="Lab3"></a>Lab3</h1><h2 id="知识点-2"><a href="#知识点-2" class="headerlink" title="知识点"></a>知识点</h2><h3 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h3><ul>
+<h1 id="Lab3"><a href="#Lab3" class="headerlink" title="Lab3"></a>Lab3</h1><h2 id="0-项目组成"><a href="#0-项目组成" class="headerlink" title="0.项目组成"></a>0.项目组成</h2><p>相对与实验二，实验三主要改动如下：</p>
+<ul>
+<li>kern/mm/default_pmm.[ch]：实现基于struct pmm_manager类框架的Fist-Fit物理内存分配参考实现（分配最小单位为页，即4096字节），相关分配页和释放页等实现会间接被kmalloc/kfree等函数使用。</li>
+<li>kern/mm/pmm.[ch]：pmm.h定义物理内存分配类框架struct pmm_manager。pmm.c包含了对此物理内存分配类框架的访问，以及与建立、修改、访问页表相关的各种函数实现。在本实验中会用到kmalloc/kfree等函数。</li>
+<li>libs/list.h：定义了通用双向链表结构以及相关的查找、插入等基本操作，这是建立基于链表方法的物理内存管理（以及其他内核功能）的基础。在lab0文档中有相关描述。其他有类似双向链表需求的内核功能模块可直接使用list.h中定义的函数。在本实验中会多次用到插入，删除等操作函数。</li>
+<li>kern/driver/ide.[ch]：定义和实现了内存页swap机制所需的磁盘扇区的读写操作支持；在本实验中会涉及通过swapfs_*函数间接使用文件中的函数。故了解即可。</li>
+<li>kern/fs/*：定义和实现了内存页swap机制所需从磁盘读数据到内存页和写内存数据到磁盘上去的函数 swapfs_read/swapfs_write。在本实验中会涉及使用这两个函数。</li>
+<li>kern/mm/memlayout.h：修改了struct Page，增加了两项pra_*成员结构，其中pra_page_link可以用来建立描述各个页访问情况（比如根据访问先后）的链表。在本实验中会涉及使用这两个成员结构，以及le2page等宏。</li>
+<li>kern/mm/vmm.[ch]：vmm.h描述了mm_struct，vma_struct等表述可访问的虚存地址访问的一些信息，下面会进一步详细讲解。vmm.c涉及mm,vma结构数据的创建/销毁/查找/插入等函数，这些函数在check_vma、check_vmm等中被使用，理解即可。而page fault处理相关的do_pgfault函数是本次实验需要涉及完成的。</li>
+<li>kern/mm/swap.[ch]：定义了实现页替换算法类框架struct swap_manager。swap.c包含了对此页替换算法类框架的初始化、页换入/换出等各种函数实现。重点是要理解何时调用swap_out和swap_in函数。和如何在此框架下连接具体的页替换算法实现。check_swap函数以及被此函数调用的_fifo_check_swap函数完成了对本次实验中的练习2：FIFO页替换算法基本正确性的检查，可了解，便于知道为何产生错误。</li>
+<li>kern/mm/swap_fifo.[ch]：FIFO页替换算法的基于页替换算法类框架struct swap_manager的简化实现，主要被swap.c的相关函数调用。重点是_fifo_map_swappable函数（可用于建立页访问属性和关系，比如访问时间的先后顺序）和_fifo_swap_out_victim函数（可用于实现挑选出要换出的页），当然换出哪个页需要借助于fifo_map_swappable函数建立的某种属性关系，已选出合适的页。</li>
+<li>kern/mm/mmu.h：其中定义了页表项的各种属性位，比如PTE_P\PET_D\PET_A等，对于实现扩展实验的clock算法会有帮助。</li>
+</ul>
+<p>本次实验的主要练习集中在vmm.c中的do_pgfault函数和swap_fifo.c中的_fifo_map_swappable函数、_fifo_swap_out_victim函数。</p>
+<h2 id="1-实验执行流程概述"><a href="#1-实验执行流程概述" class="headerlink" title="1.实验执行流程概述"></a>1.实验执行流程概述</h2><p>首先是初始化过程。参考ucore总控函数init的代码，可以看到在调用完成虚拟内存初始化的vmm_init函数之前，需要首先调用pmm_init函数完成物理内存的管理，这也是我们lab2已经完成的内容。接着是执行中断和异常相关的初始化工作，即调用pic_init函数和idt_init函数等，这些工作与lab1的中断异常初始化工作的内容是相同的。</p>
+<p>在调用完idt_init函数之后，将进一步调用三个lab3中才有的新函数vmm_init、ide_init和swap_init。这三个函数涉及了本次实验中的两个练习。第一个函数vmm_init是检查我们的练习1是否正确实现了。为了表述不在物理内存中的“合法”虚拟页，需要有数据结构来描述这样的页，为此ucore建立了mm_struct和vma_struct数据结构（接下来的小节中有进一步详细描述），假定我们已经描述好了这样的“合法”虚拟页，当ucore访问这些“合法”虚拟页时，会由于没有虚实地址映射而产生页访问异常。如果我们正确实现了练习1，则do_pgfault函数会申请一个空闲物理页，并建立好虚实映射关系，从而使得这样的“合法”虚拟页有实际的物理页帧对应。这样练习1就算完成了。</p>
+<p>ide_init和swap_init是为练习2准备的。由于页面置换算法的实现存在对硬盘数据块的读写，所以ide_init就是完成对用于页换入换出的硬盘（简称swap硬盘）的初始化工作。完成ide_init函数后，ucore就可以对这个swap硬盘进行读写操作了。swap_init函数首先建立swap_manager，swap_manager是完成页面替换过程的主要功能模块，其中包含了页面置换算法的实现（具体内容可参考5小节）。然后会进一步调用执行check_swap函数在内核中分配一些页，模拟对这些页的访问，这会产生页访问异常。如果我们正确实现了练习2，就可通过do_pgfault来调用swap_map_swappable函数来查询这些页的访问情况并间接调用实现页面置换算法的相关函数，把“不常用”的页换出到磁盘上。</p>
+<h2 id="2-置换算法"><a href="#2-置换算法" class="headerlink" title="2.置换算法"></a>2.置换算法</h2><p>操作系统迟早会碰到没有内存空闲空间而必须要置换出内存中某个“不常用”的页的情况。如何判断内存中哪些是“常用”的页，哪些是“不常用”的页，把“常用”的页保持在内存中，在物理内存空闲空间不够的情况下，把“不常用”的页置换到硬盘上就是页替换算法着重考虑的问题。容易理解，一个好的页替换算法会导致页访问异常次数少，也就意味着访问硬盘的次数也少，从而使得应用程序执行的效率就高。本次实验涉及的页替换算法（包括扩展练习）：</p>
+<ul>
+<li>先进先出(First In First Out, FIFO)页替换算法：该算法总是淘汰最先进入内存的页，即选择在内存中驻留时间最久的页予以淘汰。只需把一个应用程序在执行过程中已调入内存的页按先后次序链接成一个队列，队列头指向内存中驻留时间最久的页，队列尾指向最近被调入内存的页。这样需要淘汰页时，从队列头很容易查找到需要淘汰的页。FIFO算法只是在应用程序按线性顺序访问地址空间时效果才好，否则效率不高。因为那些常被访问的页，往往在内存中也停留得最久，结果它们因变“老”而不得不被置换出去。FIFO算法的另一个缺点是，它有一种异常现象（Belady现象），即在增加放置页的页帧的情况下，反而使页访问异常次数增多。</li>
+<li>时钟（Clock）页替换算法：是LRU算法的一种近似实现。时钟页替换算法把各个页面组织成环形链表的形式，类似于一个钟的表面。然后把一个指针（简称当前指针）指向最老的那个页面，即最先进来的那个页面。另外，时钟算法需要在页表项（PTE）中设置了一位访问位来表示此页表项对应的页当前是否被访问过。当该页被访问时，CPU中的MMU硬件将把访问位置“1”。当操作系统需要淘汰页时，对当前指针指向的页所对应的页表项进行查询，如果访问位为“0”，则淘汰该页，如果该页被写过，则还要把它换出到硬盘上；如果访问位为“1”，则将该页表项的此位置“0”，继续访问下一个页。该算法近似地体现了LRU的思想，且易于实现，开销少，需要硬件支持来设置访问位。时钟页替换算法在本质上与FIFO算法是类似的，不同之处是在时钟页替换算法中跳过了访问位为1的页。</li>
+<li>改进的时钟（Enhanced Clock）页替换算法：在时钟置换算法中，淘汰一个页面时只考虑了页面是否被访问过，但在实际情况中，还应考虑被淘汰的页面是否被修改过。因为**淘汰修改过的页面还需要写回硬盘(迷惑, 移到swap分区跟是否修改过有什么关系)**，使得其置换代价大于未修改过的页面，所以优先淘汰没有修改的页，减少磁盘操作次数。改进的时钟置换算法除了考虑页面的访问情况，还需考虑页面的修改情况。即该算法不但希望淘汰的页面是最近未使用的页，而且还希望被淘汰的页是在主存驻留期间其页面内容未被修改过的。这需要为每一页的对应页表项内容中增加一位引用位和一位修改位。当该页被访问时，CPU中的MMU硬件将把访问位置“1”。当该页被“写”时，CPU中的MMU硬件将把修改位置“1”。这样这两位就存在四种可能的组合情况：（0，0）表示最近未被引用也未被修改，首先选择此页淘汰；（0，1）最近未被使用，但被修改，其次选择；（1，0）最近使用而未修改，再次选择；（1，1）最近使用且修改，最后选择。该算法与时钟算法相比，可进一步减少磁盘的I/O操作次数，但为了查找到一个尽可能适合淘汰的页面，可能需要经过多次扫描，增加了算法本身的执行开销。</li>
+</ul>
+<h2 id="3-相关数据结构"><a href="#3-相关数据结构" class="headerlink" title="3.相关数据结构"></a>3.相关数据结构</h2><blockquote>
+<p>Typoar给我整了个崩溃, 我也崩溃了⊙▃⊙以下内容直至challenge前复制于<a target="_blank" rel="noopener" href="https://kiprey.github.io/2020/08/uCore-3/#3-uCore%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E6%9C%BA%E5%88%B6%E7%9A%84%E5%AE%9E%E7%8E%B0">这里</a> </p>
+</blockquote>
+<h4 id="I-虚拟内存管理"><a href="#I-虚拟内存管理" class="headerlink" title="I. 虚拟内存管理"></a>I. 虚拟内存管理</h4><ul>
+<li><p>结构体变量<code>check_mm_struct</code>用于管理虚拟内存页面，其结构体如下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// the control struct for a set of vma using the same PDT</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">mm_struct</span> &#123;</span><br>    <span class="hljs-keyword">list_entry_t</span> mmap_list;        <span class="hljs-comment">// 按照虚拟地址顺序双向连接的虚拟页链表</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">vma_struct</span> *<span class="hljs-title">mmap_cache</span>;</span> <span class="hljs-comment">// 当前使用的虚拟页地址，该成员加速页索引速度。</span><br>    <span class="hljs-keyword">pde_t</span> *pgdir;                  <span class="hljs-comment">// 虚拟页对应的PDT</span><br>    <span class="hljs-keyword">int</span> map_count;                 <span class="hljs-comment">// 虚拟页个数</span><br>    <span class="hljs-keyword">void</span> *sm_priv;                 <span class="hljs-comment">// 用于指向swap manager的某个链表,在FIFO算法中，该双向链表用于将可交换的已分配物理页串起来</span><br>&#125;;<br></code></pre></td></tr></table></figure></li>
+<li><p>当分配出新的虚拟页时，程序会执行<code>insert_vma_struct</code>函数，此时虚拟页<code>vma_struct</code>就会被插入<code>mm_struct::mmap_list</code>双向链表中。</p>
+</li>
+<li><p>若程序首次访问该内存而触发缺页中断时，程序会在缺页处理程序中为该虚拟页划分出一块新的物理页。同时，还会更新<code>mm_struct::pgdir</code>上的对应页表条目，之后该页的内存访问即可正常执行。</p>
+</li>
+<li><p>在FIFO页面置换算法中，初始时，<code>mm_struct</code>中的<code>sm_priv</code>会被设置为<code>pra_list_head</code>。而<code>pra_list_head</code>是一个双向链表的起始结点，该双向链表用于将<strong>可交换的已分配物理页</strong>串起来。</p>
+</li>
+</ul>
+<h4 id="II-页面置换"><a href="#II-页面置换" class="headerlink" title="II. 页面置换"></a>II. 页面置换</h4><ul>
+<li><p><code>swap_manager</code>与<code>pmm_manager</code>类似，都设置了一个用于管理某个功能的模块。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">swap_manager</span></span><br><span class="hljs-class">&#123;</span><br>     <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *name;<br>     <span class="hljs-comment">/* Global initialization for the swap manager */</span><br>     <span class="hljs-keyword">int</span> (*init)            (<span class="hljs-keyword">void</span>);<br>     <span class="hljs-comment">/* Initialize the priv data inside mm_struct */</span><br>     <span class="hljs-keyword">int</span> (*init_mm)         (struct mm_struct *mm);<br>     <span class="hljs-comment">/* Called when tick interrupt occured */</span><br>     <span class="hljs-keyword">int</span> (*tick_event)      (struct mm_struct *mm);<br>     <span class="hljs-comment">/* Called when map a swappable page into the mm_struct */</span><br>     <span class="hljs-keyword">int</span> (*map_swappable)   (struct mm_struct *mm, <span class="hljs-keyword">uintptr_t</span> addr, struct Page *page, <span class="hljs-keyword">int</span> swap_in);<br>     <span class="hljs-comment">/* When a page is marked as shared, this routine is called to</span><br><span class="hljs-comment">      * delete the addr entry from the swap manager */</span><br>     <span class="hljs-keyword">int</span> (*set_unswappable) (struct mm_struct *mm, <span class="hljs-keyword">uintptr_t</span> addr);<br>     <span class="hljs-comment">/* Try to swap out a page, return then victim */</span><br>     <span class="hljs-keyword">int</span> (*swap_out_victim) (struct mm_struct *mm, struct Page **ptr_page, <span class="hljs-keyword">int</span> in_tick);<br>     <span class="hljs-comment">/* check the page relpacement algorithm */</span><br>     <span class="hljs-keyword">int</span> (*check_swap)(<span class="hljs-keyword">void</span>);<br>&#125;;<br></code></pre></td></tr></table></figure></li>
+<li><p>若使用FIFO页面置换算法，则在缺页中断程序中，程序只会<strong>换入</strong>目标物理页，而不会主动换出。</p>
+<p>只有在分配空闲物理页时，若<code>pmm_manager-&gt;alloc_pages(n)</code>失败，则程序才会执行一次页面换出，以腾出空闲的物理页，并重新分配。</p>
+</li>
+<li><p><code>swap_in</code>函数只会将目标物理页加载进内存中，而不会修改页表条目。所以相关的标志位设置必须在<code>swap_in</code>函数的外部手动处理。而<code>swap_out</code>函数会先执行<code>swap_out_victim</code>，找出最适合换出的物理页，并将其换出，最后刷新TLB, <strong>有可能换出多页</strong>。需要注意的是<code>swap_out</code>函数会在函数内部设置PTE，当某个页面被换出后，PTE会被设置为所换出物理页在硬盘上的偏移, 而且会执行<strong>free_page</strong>, 往空闲链表里面加入该page</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c">cprintf(<span class="hljs-string">&quot;swap_out: i %d, store page in vaddr 0x%x to disk swap entry %d\n&quot;</span>, i, v, page-&gt;pra_vaddr/PGSIZE+<span class="hljs-number">1</span>);<br>*ptep = (page-&gt;pra_vaddr/PGSIZE+<span class="hljs-number">1</span>)&lt;&lt;<span class="hljs-number">8</span>;<br>free_page(page);<br></code></pre></td></tr></table></figure>
+
+<p>当PTE所对应的物理页存在于内存中，那么该PTE就是正常的页表条目，可被CPU直接寻址用于转换地址。但当所对应的物理页不在内存时，该PTE就成为<code>swap_entry_t</code>，保存该物理页数据在外存的偏移位置。相关代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * swap_entry_t</span><br><span class="hljs-comment"> * --------------------------------------------</span><br><span class="hljs-comment"> * |         offset        |   reserved   | 0 |</span><br><span class="hljs-comment"> * --------------------------------------------</span><br><span class="hljs-comment"> *           24 bits            7 bits    1 bit</span><br><span class="hljs-comment"> * /</span><br><span class="hljs-comment"> /* *</span><br><span class="hljs-comment"> * swap_offset - takes a swap_entry (saved in pte), and returns</span><br><span class="hljs-comment"> * the corresponding offset in swap mem_map.</span><br><span class="hljs-comment"> * */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> swap_offset(entry) (&#123;                                       \</span><br><span class="hljs-meta">               size_t __offset = (entry &gt;&gt; 8);                        \</span><br><span class="hljs-meta">               <span class="hljs-meta-keyword">if</span> (!(__offset &gt; 0 &amp;&amp; __offset &lt; max_swap_offset)) &#123;    \</span><br><span class="hljs-meta">                    panic(<span class="hljs-meta-string">&quot;invalid swap_entry_t = %08x.\n&quot;</span>, entry);    \</span><br><span class="hljs-meta">               &#125;                                                    \</span><br><span class="hljs-meta">               __offset;                                            \</span><br><span class="hljs-meta">          &#125;)</span><br></code></pre></td></tr></table></figure></li>
+<li><p>同时，不是所有物理页面都可以置换，例如内核关键代码和数据等等，所以在分配物理页时，需要对于那些可被置换的物理页执行<code>swap_map_swappable</code>函数，将该物理页加入到<code>mm_struct::sm_priv</code>指针所指向的双向链表中，换入和换出操作都会操作该链表（插入/移除<strong>可交换的已分配</strong>物理页）。</p>
+</li>
+<li><p>数据结构<code>Page</code>和<code>vma_struct</code>分别用于管理物理页和虚拟页，其结构如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// 用于描述某个虚拟页的结构</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">vma_struct</span> &#123;</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">mm_struct</span> *<span class="hljs-title">vm_mm</span>;</span> <span class="hljs-comment">// 管理该虚拟页的mm_struct</span><br>    <span class="hljs-keyword">uintptr_t</span> vm_start;      <span class="hljs-comment">// 虚拟页起始地址，包括当前地址  </span><br>    <span class="hljs-keyword">uintptr_t</span> vm_end;        <span class="hljs-comment">// 虚拟页终止地址，不包括当前地址（地址前闭后开）  </span><br>    <span class="hljs-keyword">uint32_t</span> vm_flags;       <span class="hljs-comment">// 相关标志位</span><br>    <span class="hljs-keyword">list_entry_t</span> list_link;  <span class="hljs-comment">// 用于连接各个虚拟页的双向指针</span><br>&#125;;<br><br><span class="hljs-comment">// 数据结构Page相关成员的用途已在uCore-2中介绍过，这里只提它新增的两个成员pra_*</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Page</span> &#123;</span><br>    <span class="hljs-keyword">int</span> ref;<br>    <span class="hljs-keyword">uint32_t</span> flags;<br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> property;<br>    <span class="hljs-keyword">list_entry_t</span> page_link;<br>    <span class="hljs-keyword">list_entry_t</span> pra_page_link;     <span class="hljs-comment">// 用于连接上一个和下一个*可交换已分配*的物理页</span><br>    <span class="hljs-keyword">uintptr_t</span> pra_vaddr;            <span class="hljs-comment">// 用于保存该物理页所对应的虚拟地址。</span><br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>当分配某个虚拟页<code>vma_struct</code>时，程序会在<code>insert_vma_struct</code>函数中设置其<code>vm_mm</code>成员为某个<code>mm_struct</code>，这样便于后续的管理。</li>
+<li>在函数<code>pgdir_alloc_page</code>中，程序会设置<code>Page</code>的<code>pra_vaddr</code>成员，将其设置为当前物理页所对应的虚拟地址，之后便可通过<code>Page-&gt;pra_vaddr-&gt;pte</code>一条链，直接找到当前<strong>物理页</strong>地址所对应的PTE条目。同时，也可通过<code>pra_vaddr</code>来确定对应外存的相对偏移<code>page-&gt;pra_vaddr/PGSIZE+1</code>。</li>
+<li><code>Page::page_link</code>用于将空闲物理页连接至双向链表中，而<code>page::pra_page_link</code>用于将<strong>可交换的已分配</strong>物理页连接至另一个双向链表中，注意两者的用途是不同的。</li>
+</ul>
+</li>
+</ul>
+<h2 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h2><h3 id="练习0"><a href="#练习0" class="headerlink" title="练习0"></a>练习0</h3><blockquote>
+<p><strong>填写已有实验</strong> </p>
+</blockquote>
+<h3 id="练习1"><a href="#练习1" class="headerlink" title="练习1"></a>练习1</h3><blockquote>
+<p><strong>给未被映射的地址映射上物理页</strong></p>
+<p>完成do_pgfault（mm/vmm.c）函数，给未被映射的地址映射上物理页。设置访问权限 的时候需要参考页面所在 VMA 的权限，同时需要注意映射物理页时需要操作内存控制 结构所指定的页表，而不是内核的页表。</p>
+</blockquote>
+<p>实验代码如下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">do_pgfault</span><span class="hljs-params">(struct mm_struct *mm, <span class="hljs-keyword">uint32_t</span> error_code, <span class="hljs-keyword">uintptr_t</span> addr)</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> ret = -E_INVAL;<br>    <span class="hljs-comment">// 获取触发pgfault的虚拟地址所在虚拟页</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">vma_struct</span> *<span class="hljs-title">vma</span> =</span> find_vma(mm, addr);<br><br>    pgfault_num++;<br>    <span class="hljs-comment">// 如果当前访问的虚拟地址不在已经分配的虚拟页中</span><br>    <span class="hljs-keyword">if</span> (vma == <span class="hljs-literal">NULL</span> || vma-&gt;vm_start &gt; addr) &#123;<br>        cprintf(<span class="hljs-string">&quot;not valid addr %x, and  can not find it in vma\n&quot;</span>, addr);<br>        <span class="hljs-keyword">goto</span> failed;<br>    &#125;<br>    <span class="hljs-comment">// 检测错误代码。这里的检测不涉及特权判断。</span><br>    <span class="hljs-keyword">switch</span> (error_code &amp; <span class="hljs-number">3</span>) &#123;<br>    <span class="hljs-keyword">default</span>:<br>        <span class="hljs-comment">// 写，同时存在物理页，则写时复制</span><br>        <span class="hljs-comment">// 需要注意的是，default会执行case2的代码，也就是判断是否有写权限。</span><br>    <span class="hljs-keyword">case</span> <span class="hljs-number">2</span>:<br>        <span class="hljs-comment">// 同时如果当前操作是写入，但所在虚拟页不允许写入</span><br>        <span class="hljs-keyword">if</span> (!(vma-&gt;vm_flags &amp; VM_WRITE)) &#123;<br>            cprintf(<span class="hljs-string">&quot;do_pgfault failed: error code flag = write AND not present, but the addr&#x27;s vma cannot write\n&quot;</span>);<br>            <span class="hljs-keyword">goto</span> failed;<br>        &#125;<br>        <span class="hljs-keyword">break</span>;<br>    <span class="hljs-keyword">case</span> <span class="hljs-number">1</span>: <span class="hljs-comment">/* error code flag : (W/R=0, P=1): read, present */</span><br>        <span class="hljs-comment">// 读，同时存在物理页。那就不可能会调用page fault，肯定哪里有问题，直接failed</span><br>        cprintf(<span class="hljs-string">&quot;do_pgfault failed: error code flag = read AND present\n&quot;</span>);<br>        <span class="hljs-keyword">goto</span> failed;<br>    <span class="hljs-keyword">case</span> <span class="hljs-number">0</span>: <span class="hljs-comment">/* error code flag : (W/R=0, P=0): read, not present */</span><br>        <span class="hljs-comment">// 如果当前操作是读取，但所在虚拟页不允许读取或执行</span><br>        <span class="hljs-keyword">if</span> (!(vma-&gt;vm_flags &amp; (VM_READ | VM_EXEC))) &#123;<br>            cprintf(<span class="hljs-string">&quot;do_pgfault failed: error code flag = read AND not present, but the addr&#x27;s vma cannot read or exec\n&quot;</span>);<br>            <span class="hljs-keyword">goto</span> failed;<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">// 设置页表条目所对应的权限</span><br>    <span class="hljs-keyword">uint32_t</span> perm = PTE_U;<br>    <span class="hljs-keyword">if</span> (vma-&gt;vm_flags &amp; VM_WRITE) &#123;<br>        perm |= PTE_W;<br>    &#125;<br>    addr = ROUNDDOWN(addr, PGSIZE);<br>    ret = -E_NO_MEM;<br>    <span class="hljs-keyword">pte_t</span> *ptep=<span class="hljs-literal">NULL</span>;<br><br>    <span class="hljs-comment">/* LAB3 EXERCISE 1: YOUR CODE */</span><br>    <span class="hljs-comment">// 查找当前虚拟地址所对应的页表项</span><br>    <span class="hljs-keyword">if</span> ((ptep = get_pte(mm-&gt;pgdir, addr, <span class="hljs-number">1</span>)) == <span class="hljs-literal">NULL</span>) &#123;<br>        cprintf(<span class="hljs-string">&quot;get_pte in do_pgfault failed\n&quot;</span>);<br>        <span class="hljs-keyword">goto</span> failed;<br>    &#125;<br>    <span class="hljs-comment">// 如果这个页表项所对应的物理页不存在，则</span><br>    <span class="hljs-keyword">if</span> (*ptep == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-comment">// 分配一块物理页，并设置页表项</span><br>        <span class="hljs-keyword">if</span> (pgdir_alloc_page(mm-&gt;pgdir, addr, perm) == <span class="hljs-literal">NULL</span>) &#123;<br>            cprintf(<span class="hljs-string">&quot;pgdir_alloc_page in do_pgfault failed\n&quot;</span>);<br>            <span class="hljs-keyword">goto</span> failed;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">/* LAB3 EXERCISE 2: YOUR CODE */</span><br>        <span class="hljs-comment">// 如果这个页表项所对应的物理页存在，但不在内存中</span><br>        <span class="hljs-comment">// 如果swap已经初始化完成</span><br>        <span class="hljs-keyword">if</span>(swap_init_ok) &#123;<br>            struct Page *page=<span class="hljs-literal">NULL</span>;<br>            <span class="hljs-comment">// 将目标数据加载到某块新的物理页中。</span><br>            <span class="hljs-comment">// 该物理页可能是尚未分配的物理页，也可能是从别的已分配物理页中取的</span><br>            <span class="hljs-keyword">if</span> ((ret = swap_in(mm, addr, &amp;page)) != <span class="hljs-number">0</span>) &#123;<br>                cprintf(<span class="hljs-string">&quot;swap_in in do_pgfault failed\n&quot;</span>);<br>                <span class="hljs-keyword">goto</span> failed;<br>            &#125;<br>            <span class="hljs-comment">// 将该物理页与对应的虚拟地址关联，同时设置页表。</span><br>            page_insert(mm-&gt;pgdir, page, addr, perm);<br>            <span class="hljs-comment">// 当前缺失的页已经加载回内存中，所以设置当前页为可swap。</span><br>            swap_map_swappable(mm, addr, page, <span class="hljs-number">1</span>);<br>            page-&gt;pra_vaddr = addr;<br>        &#125;<br>        <span class="hljs-keyword">else</span> &#123;<br>            cprintf(<span class="hljs-string">&quot;no swap_init_ok but ptep is %x, failed\n&quot;</span>,*ptep);<br>            <span class="hljs-keyword">goto</span> failed;<br>        &#125;<br>   &#125;<br>   ret = <span class="hljs-number">0</span>;<br>failed:<br>    <span class="hljs-keyword">return</span> ret;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>关于<code>get_pte() and page_remove_pte() vs. page_inseret()</code>回顾: <ul>
+<li>get pte and return the kernel virtual address of this pte for la if the PT contianing this pte didn’t exist, alloc a page for PT</li>
+<li>page的插入和删除意味着page结构的ref增减以及pte的存在与否, 而实验为了弄出一个练习, 在<code>page_remove()</code>中判断pte不为空后调用<code>page_remove_pte()</code>, ref_dec and clear pte.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<ul>
+<li>请描述页目录项（Page Directory Entry）和页表项（Page Table Entry）中组成部分对ucore实现页替换算法的潜在用处。<ul>
+<li>即PTE结构与其标志位用途</li>
+</ul>
+</li>
+<li>如果ucore的缺页服务例程在执行过程中访问内存，出现了页访问异常，请问硬件要做哪些事情？<ul>
+<li>将发生错误的线性地址（虚拟地址）保存至CR2寄存器中。</li>
+<li>压入<code>EFLAGS</code>，<code>CS</code>, <code>EIP</code>，错误码和中断号至当前内核栈中。</li>
+<li>保存上下文。</li>
+<li>执行新的缺页中断程序。</li>
+<li>恢复上下文。</li>
+<li>继续执行<strong>上一级</strong>的缺页服务例程。</li>
+</ul>
+</li>
+</ul>
+<h3 id="练习2"><a href="#练习2" class="headerlink" title="练习2"></a>练习2</h3><blockquote>
+<p><strong>补充完成基于FIFO的页面替换算法</strong></p>
+<p>完成vmm.c中的do_pgfault函数，并且在实现FIFO算法的swap_fifo.c中完成map_swappable和swap_out_victim函数。</p>
+</blockquote>
+<ul>
+<li><p><code>FIFO</code>中，当新加入一个物理页时，我们只需将该物理页加入至链表首部即可。当需要换出某个物理页时，选择链表末尾的物理页即可。</p>
+</li>
+<li><p>相关实现如下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span><br>_fifo_map_swappable(struct mm_struct *mm, <span class="hljs-keyword">uintptr_t</span> addr, struct Page   *page, <span class="hljs-keyword">int</span> swap_in)<br>&#123;<br>    <span class="hljs-keyword">list_entry_t</span> *head=(<span class="hljs-keyword">list_entry_t</span>*) mm-&gt;sm_priv;<br>    <span class="hljs-keyword">list_entry_t</span> *entry=&amp;(page-&gt;pra_page_link);<br><br>    assert(entry != <span class="hljs-literal">NULL</span> &amp;&amp; head != <span class="hljs-literal">NULL</span>);<br>    <span class="hljs-comment">//record the page access situlation</span><br>    <span class="hljs-comment">/*LAB3 EXERCISE 2: YOUR CODE*/</span><br>    <span class="hljs-comment">//(1)link the most recent arrival page at the back of the pra_list_head qeueue.</span><br>    list_add(head, entry);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span><br>_fifo_swap_out_victim(struct mm_struct *mm, struct Page ** ptr_page, <span class="hljs-keyword">int</span> in_tick)<br>&#123;<br>     <span class="hljs-keyword">list_entry_t</span> *head=(<span class="hljs-keyword">list_entry_t</span>*) mm-&gt;sm_priv;<br>         assert(head != <span class="hljs-literal">NULL</span>);<br>     assert(in_tick==<span class="hljs-number">0</span>);<br>     <span class="hljs-comment">/* Select the victim */</span><br>     <span class="hljs-comment">/*LAB3 EXERCISE 2: YOUR CODE*/</span><br>     <span class="hljs-comment">//(1)  unlink the  earliest arrival page in front of pra_list_head qeueue</span><br>     <span class="hljs-comment">//(2)  assign the value of *ptr_page to the addr of this page</span><br>     <span class="hljs-keyword">list_entry_t</span> *le = head-&gt;prev;<br>     assert(head!=le);<br>     <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Page</span> *<span class="hljs-title">p</span> =</span> le2page(le, pra_page_link);<br>     list_del(le);<br>     assert(p !=<span class="hljs-literal">NULL</span>);<br>     *ptr_page = p;<br><br>     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p>如果要在ucore上实现”extended clock页替换算法”请给你的设计方案，现有的swap_manager框架是否足以支持在ucore中实现此算法？如果是，请给你的设计方案。如果不是，请给出你的新的扩展和基此扩展的设计方案。并需要回答如下问题</p>
+<ul>
+<li>现有的swap_manager框架可以支持在ucore中实现此算法，具体见<strong>扩展练习1</strong>。</li>
+<li>需要被换出的页的特征是什么？<ul>
+<li><code>PTE_P</code>(Present)和<code>PTE_D</code>(Dirty)位均为0。</li>
+</ul>
+</li>
+<li>在ucore中如何判断具有这样特征的页？<ul>
+<li>获取线性地址所对应的页表项，之后使用位运算判断<code>PTE_P</code>和<code>PTE_D</code>。</li>
+</ul>
+</li>
+<li>何时进行换入和换出操作？<ul>
+<li>缺页时换入。</li>
+<li>物理页帧满时换出，不过需要注意dirty bit的处理。可以在修改dirty的时候写入外存，或者可以在最终要删除该物理页时再写入外存。后者有利于多个写操作的合并，降低缺页代价，但此时的页替换算法却退化成普通的clock算法，而不是extended clock算法了。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="challenge1"><a href="#challenge1" class="headerlink" title="challenge1"></a>challenge1</h3><ul>
+<li><p>需要注意的是extended clock算法会修改dirty bit, 但是swap.c中的swap_out()函数直接把<code>_fifo_swap_out_victim()</code>通过参数返回的page写入到磁盘swap分区中, <strong>根本不管有没有修改过</strong>, 或许可以改进</p>
+</li>
+<li><p>改进的时钟算法会修改dirty bit的原因可能是让被修改过的页面停留在内存中的时间更长, 因为要经过更多次的遍历才能被置换出</p>
+</li>
+<li><p>我寻思把PTE_D and PTE_A结合起来遍历到了就减一也没啥特别的, 而且下一次进入错误处理例程指针还是按照上次的接着继续(如果严格按照PPT上的话), 按别人的做法还要遍历三次当前swappable的页面, 遍历一次记录第一次遇到的00,10,11不就成了, 减少一点微不足道的写回时间(好像没有</p>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span><br>_extend_clock_swap_out_victim(struct mm_struct *mm, struct Page **ptr_page, <span class="hljs-keyword">int</span> in_tick)<br>&#123;<br>    <span class="hljs-keyword">list_entry_t</span> *head = (<span class="hljs-keyword">list_entry_t</span> *)mm-&gt;sm_priv;<br>    assert(head != <span class="hljs-literal">NULL</span>);<br>    assert(in_tick == <span class="hljs-number">0</span>);<br>    <span class="hljs-comment">//在head双向链表中从头开始遍历, 两个数字代表PTE_A PTE_D组成两位的样子</span><br>    <span class="hljs-comment">//用三个指针取第一次遍历到的page, 00优先级最高</span><br>    <span class="hljs-keyword">list_entry_t</span> *le = head-&gt;next, *_00 = <span class="hljs-literal">NULL</span>, *_10 = <span class="hljs-literal">NULL</span>, *_11 = <span class="hljs-literal">NULL</span>;<br>    <span class="hljs-keyword">while</span> (le != head)<br>    &#123;<span class="hljs-comment">//只需遍历一次</span><br>        <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Page</span> *<span class="hljs-title">page</span> =</span> le2page(le, pra_page_link); <span class="hljs-comment">//字面意思</span><br><br>        <span class="hljs-keyword">pte_t</span> *ptep = get_pte(mm-&gt;pgdir, page-&gt;pra_vaddr, <span class="hljs-number">0</span>);<br>        assert(ptep != <span class="hljs-literal">NULL</span>);	<span class="hljs-comment">//写着意思一下, 也不知有啥用</span><br>        <span class="hljs-keyword">if</span> (!(*ptep &amp; PTE_A))<br>        &#123;<span class="hljs-comment">//遇到第一个00就可以直接break了, 受害者就是你!</span><br>            _00 = le;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<span class="hljs-comment">//剩下两种情况不能break(为了不写的更复杂</span><br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!(*ptep &amp; PTE_D) &amp;&amp; _10 == <span class="hljs-literal">NULL</span>)<br>            _10 = le;<br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (_11 == <span class="hljs-literal">NULL</span>)<br>            _11 = le;<br>        le = le-&gt;next;<br>    &#125;<br>    le = _00 != <span class="hljs-literal">NULL</span> ? _00 : (_10 != <span class="hljs-literal">NULL</span> ? _10 : _11);<span class="hljs-comment">//根据优先级选一个不为零的</span><br>    *ptr_page = le2page(le, pra_page_link);<span class="hljs-comment">//把受害者的page赋值给这东西</span><br>    list_del(le);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>成了, 简化了一下没有什么用的改进时钟算法, 只要一次甚至不用完全的一次遍历即可做到相同效果, 还通过了fifo的检查, 有这么巧吗</p>
+<blockquote>
+<p>想了一下, 我这快简化成FIFO了, 而改进的时钟置换算法的优势在于相近的多次遍历之中, 被写过的页面可以在内存中驻留更久的时间</p>
+<p>坑不填了, 问题就是这个意思没有很复杂</p>
+</blockquote>
+<h3 id="challenge2"><a href="#challenge2" class="headerlink" title="challenge2"></a>challenge2</h3><p>暂时不写</p>
+<h1 id="Lab4"><a href="#Lab4" class="headerlink" title="Lab4"></a>Lab4</h1><h2 id="知识点-2"><a href="#知识点-2" class="headerlink" title="知识点"></a>知识点</h2><h3 id="0-项目组成-1"><a href="#0-项目组成-1" class="headerlink" title="0.项目组成"></a>0.项目组成</h3><p>相对与实验三，实验四中主要改动如下：</p>
+<ul>
+<li>kern/process/ （新增进程管理相关文件）<ul>
+<li>proc.[ch]：新增：实现进程、线程相关功能，包括：创建进程/线程，初始化进程/线程，处理进程/线程退出等功能</li>
+<li>entry.S：新增：内核线程入口函数kernel_thread_entry的实现</li>
+<li>switch.S：新增：上下文切换，利用堆栈保存、恢复进程上下文</li>
+</ul>
+</li>
+<li>kern/init/<ul>
+<li>init.c：修改：完成进程系统初始化，并在内核初始化后切入idle进程</li>
+</ul>
+</li>
+<li>kern/mm/ （基本上与本次实验没有太直接的联系，了解kmalloc和kfree如何使用即可）<ul>
+<li>kmalloc.[ch]：新增：定义和实现了新的kmalloc/kfree函数。具体实现是基于slab分配的简化算法 （只要求会调用这两个函数即可）</li>
+<li>memlayout.h：增加slab物理内存分配相关的定义与宏 （可不用理会）。</li>
+<li>pmm.[ch]：修改：在pmm.c中添加了调用kmalloc_init函数,取消了老的kmalloc/kfree的实现；在pmm.h中取消了老的kmalloc/kfree的定义</li>
+<li>swap.c：修改：取消了用于check的Line 185的执行</li>
+<li>vmm.c：修改：调用新的kmalloc/kfree</li>
+</ul>
+</li>
+<li>kern/trap/<ul>
+<li>trapentry.S：增加了汇编写的函数forkrets，用于do_fork调用的返回处理。</li>
+</ul>
+</li>
+<li>kern/schedule/<ul>
+<li>sched.[ch]：新增：实现FIFO策略的进程调度</li>
+</ul>
+</li>
+<li>kern/libs<ul>
+<li>rb_tree.[ch]：新增：实现红黑树，被slab分配的简化算法使用（可不用理会）</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-重要数据结构-link"><a href="#1-重要数据结构-link" class="headerlink" title="1.重要数据结构[link]"></a>1.重要数据结构<a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/lab4/lab4_3_2_pcb.html">[link]</a></h3><blockquote>
+<p>这次的<a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/lab4/lab4_3_1_lab_steps.html">实验指导书</a>真绝, 写的是没法比那个好了, 就写点自己领悟到的流程吧</p>
+</blockquote>
+<p>为了管理系统中所有的进程控制块，uCore维护了如下全局变量（位于<em>kern/process/proc.c</em>）：</p>
+<ul>
+<li><code>static struct proc *current</code>：当前占用CPU且处于“运行”状态进程控制块指针。通常这个变量是只读的，只有在进程切换的时候才进行修改，并且整个切换和修改过程需要保证操作的原子性，目前至少需要屏蔽中断。可以参考 switch_to 的实现。</li>
+<li><code>static struct proc *initproc</code>：本实验中，指向一个内核线程。本实验以后，此指针将指向第一个用户态进程。</li>
+<li><code>static list_entry_t hash_list[HASH_LIST_SIZE]</code>：所有进程控制块的哈希表，proc_struct中的成员变量hash_link将基于pid链接入这个哈希表中。</li>
+<li><code>list_entry_t proc_list</code>：所有进程控制块的双向线性列表，proc_struct中的成员变量list_link将链接入这个链表中。</li>
+</ul>
+<p>PCB好像有所简化:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">proc_state</span> &#123;</span><br>    PROC_UNINIT = <span class="hljs-number">0</span>,  <span class="hljs-comment">// 未初始化的     -- alloc_proc</span><br>    PROC_SLEEPING,    <span class="hljs-comment">// 等待状态       -- try_free_pages, do_wait, do_sleep</span><br>    PROC_RUNNABLE,    <span class="hljs-comment">// 就绪/运行状态   -- proc_init, wakeup_proc,</span><br>    PROC_ZOMBIE,      <span class="hljs-comment">// 僵死状态       -- do_exit</span><br>&#125;;<br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">context</span> &#123;</span>  <span class="hljs-comment">// 保存的上下文寄存器，注意没有eax寄存器和段寄存器</span><br>    <span class="hljs-keyword">uint32_t</span> eip;<br>    <span class="hljs-keyword">uint32_t</span> esp;<br>    <span class="hljs-keyword">uint32_t</span> ebx;<br>    <span class="hljs-keyword">uint32_t</span> ecx;<br>    <span class="hljs-keyword">uint32_t</span> edx;<br>    <span class="hljs-keyword">uint32_t</span> esi;<br>    <span class="hljs-keyword">uint32_t</span> edi;<br>    <span class="hljs-keyword">uint32_t</span> ebp;<br>&#125;;<br><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proc_struct</span> &#123;</span><br>    <span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">proc_state</span> <span class="hljs-title">state</span>;</span>          <span class="hljs-comment">// 当前进程的状态</span><br>    <span class="hljs-keyword">int</span> pid;                        <span class="hljs-comment">// 进程ID</span><br>    <span class="hljs-keyword">int</span> runs;                       <span class="hljs-comment">// 当前进程被调度的次数</span><br>    <span class="hljs-keyword">uintptr_t</span> kstack;               <span class="hljs-comment">// 内核栈</span><br>    <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">bool</span> need_resched;     <span class="hljs-comment">// 是否需要被调度</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proc_struct</span> *<span class="hljs-title">parent</span>;</span>     <span class="hljs-comment">// 父进程ID</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">mm_struct</span> *<span class="hljs-title">mm</span>;</span>           <span class="hljs-comment">// 当前进程所管理的虚拟内存页，包括其所属的页目录项PDT</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">context</span> <span class="hljs-title">context</span>;</span>         <span class="hljs-comment">// 保存的上下文</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">trapframe</span> *<span class="hljs-title">tf</span>;</span>           <span class="hljs-comment">// 中断所保存的上下文</span><br>    <span class="hljs-keyword">uintptr_t</span> cr3;                  <span class="hljs-comment">// 页目录表的地址</span><br>    <span class="hljs-keyword">uint32_t</span> flags;                 <span class="hljs-comment">// 当前进程的相关标志</span><br>    <span class="hljs-keyword">char</span> name[PROC_NAME_LEN + <span class="hljs-number">1</span>];   <span class="hljs-comment">// 进程名称（可执行文件名）</span><br>    <span class="hljs-keyword">list_entry_t</span> list_link;         <span class="hljs-comment">// 用于连接list</span><br>    <span class="hljs-keyword">list_entry_t</span> hash_link;         <span class="hljs-comment">// 用于连接hash list</span><br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-创建流程"><a href="#2-创建流程" class="headerlink" title="2.创建流程"></a>2.创建流程</h3><ul>
+<li>首先肯定是<code>proc_init()</code>:</li>
+</ul>
+<p><img src="../../image/ucore/image-20211224212029857.png" srcset="/img/loading.gif" lazyload alt="image-20211224212029857"></p>
+<ul>
+<li><p>首先初始化一下<code>proc_list</code>和<code>hash_list</code>, 然后调用<code>alloc_proc()</code>来通过<code>kmalloc()</code>获取一个proc_struct的空间, 以及略微初始化一下第0个内核线程idleproc(指把状态设成PROC_UNINIT, pid设成-1等等)</p>
+</li>
+<li><p>接着真正初始化一下各个字段的值, 其中kstack直接设置成内核栈bootstack(前面给过出处, 内核栈总共8KB), 弄成current</p>
+</li>
+<li><p>接着调用kern_thread来创建第1个内核线程</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs c">kernel_thread(<span class="hljs-keyword">int</span> (*fn)(<span class="hljs-keyword">void</span> *), <span class="hljs-keyword">void</span> *arg, <span class="hljs-keyword">uint32_t</span> clone_flags)<br>&#123;	<span class="hljs-comment">//三个参数为init_main, &quot;Hello World!&quot;, 0</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">trapframe</span> <span class="hljs-title">tf</span>;</span><br>    <span class="hljs-built_in">memset</span>(&amp;tf, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span>(struct trapframe));<br>    tf.tf_cs = KERNEL_CS;<br>    tf.tf_ds = tf_struct.tf_es = tf_struct.tf_ss = KERNEL_DS;<br>    tf.tf_regs.reg_ebx = (<span class="hljs-keyword">uint32_t</span>)fn;<br>    tf.tf_regs.reg_edx = (<span class="hljs-keyword">uint32_t</span>)arg;<br>    tf.tf_eip = (<span class="hljs-keyword">uint32_t</span>)kernel_thread_entry;<br>    <span class="hljs-keyword">return</span> do_fork(clone_flags | CLONE_VM, <span class="hljs-number">0</span>, &amp;tf);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>用局部变量在栈上保存trapframe, 全部设置成内核的段和栈</li>
+<li>注意eip, 设置成了四行汇编的入口及退出代码, 效果相当于c语言main函数之前的准备函数</li>
+<li>随后调用do_fork()进行线程的创建(主要根据trapframe)</li>
+</ul>
+</li>
+<li><p>kern_thread中的do_fork()</p>
+<ul>
+<li><p>分配并初始化进程控制块（alloc_proc函数）</p>
+</li>
+<li><p>分配并初始化内核栈（setup_stack函数）,调用alloc_pages()分配2个(即<code>KSTACKPAGE</code>)page</p>
+</li>
+<li><p>根据clone_flag标志复制或共享进程内存管理结构（copy_mm函数）</p>
+</li>
+<li><p>设置进程在内核（将来也包括用户态）正常运行和调度所需的trapframe和执行context (<strong>copy_thread</strong>函数)</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span></span><br><span class="hljs-function"><span class="hljs-title">copy_thread</span><span class="hljs-params">(struct proc_struct *proc, <span class="hljs-keyword">uintptr_t</span> esp, struct trapframe *tf)</span> </span>&#123;<br>    <span class="hljs-comment">//在内核堆栈的顶部设置中断帧大小的一块栈空间</span><br>    <span class="hljs-comment">//这个减一就很灵性, 因为tf在栈上占据了空间, 所以栈指针下移</span><br>    proc-&gt;tf = (struct trapframe *)(proc-&gt;kstack + KSTACKSIZE) - <span class="hljs-number">1</span>;<br>    *(proc-&gt;tf) = *tf; <span class="hljs-comment">//拷贝在kernel_thread函数建立的临时中断帧的初始值</span><br>    proc-&gt;tf-&gt;tf_regs.reg_eax = <span class="hljs-number">0</span>;<br>    <span class="hljs-comment">//设置子进程/线程执行完do_fork后的返回值</span><br>    proc-&gt;tf-&gt;tf_esp = esp; <span class="hljs-comment">//设置中断帧中的栈指针esp</span><br>    proc-&gt;tf-&gt;tf_eflags |= FL_IF; <span class="hljs-comment">//使能中断</span><br>    <span class="hljs-comment">//执行中断返回以便于跳转到tf中的地址(即前面的init_main)</span><br>    proc-&gt;context.eip = (<span class="hljs-keyword">uintptr_t</span>)forkret;<br>    proc-&gt;context.esp = (<span class="hljs-keyword">uintptr_t</span>)(proc-&gt;tf);<br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p>把设置好的进程控制块放入hash_list和proc_list两个全局进程链表中</p>
+</li>
+<li><p>自此，进程已经准备好执行了，把进程状态设置为“就绪”态；</p>
+</li>
+<li><p>设置返回码为子进程的id号。</p>
+</li>
+<li><p>此时可知init_proc的中断帧如下所示, 控制块记录着该线程的一切必要信息, 在内核态设置好了内核栈以及其上的trapframe, 如果是用户程序(应该在下一个实验中)只需执行一下中断返回的流程即可</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//所在地址位置</span><br>initproc-&gt;tf= (proc-&gt;kstack+KSTACKSIZE) – <span class="hljs-keyword">sizeof</span> (struct trapframe);<br><span class="hljs-comment">//具体内容</span><br>initproc-&gt;tf.tf_cs = KERNEL_CS;<br>initproc-&gt;tf.tf_ds = initproc-&gt;tf.tf_es = initproc-&gt;tf.tf_ss = KERNEL_DS;<br>initproc-&gt;tf.tf_regs.reg_ebx = (<span class="hljs-keyword">uint32_t</span>)init_main;<br>initproc-&gt;tf.tf_regs.reg_edx = (<span class="hljs-keyword">uint32_t</span>) ADDRESS of <span class="hljs-string">&quot;Helloworld!!&quot;</span>;<br>initproc-&gt;tf.tf_eip = (<span class="hljs-keyword">uint32_t</span>)kernel_thread_entry;<br>initproc-&gt;tf.tf_regs.reg_eax = <span class="hljs-number">0</span>;<br>initproc-&gt;tf.tf_esp = esp;<br>initproc-&gt;tf.tf_eflags |= FL_IF;<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li></li>
+</ul>
+<ul>
 <li>moocos的密码是空格</li>
 </ul>
 <section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>即原先查找页目录表的目的是想将某个线性地址转换为物理地址，但如果页目录表中存放的是二级页表的<strong>线性</strong>地址，则需要先查找该二级页表的物理地址，此时需要递归查找，这可能会出现永远也查找不到物理地址的情况。
