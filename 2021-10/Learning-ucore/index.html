@@ -202,7 +202,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      23.7k 字
+      24.3k 字
     </span>
   
 
@@ -212,7 +212,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      414
+      424
        分钟
     </span>
   
@@ -254,7 +254,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：1 分钟前
+                  不可视境界线最后变动于：几秒前
                 
               </p>
             
@@ -1233,7 +1233,7 @@
 <p>PCB好像有所简化:</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">proc_state</span> &#123;</span><br>    PROC_UNINIT = <span class="hljs-number">0</span>,  <span class="hljs-comment">// 未初始化的     -- alloc_proc</span><br>    PROC_SLEEPING,    <span class="hljs-comment">// 等待状态       -- try_free_pages, do_wait, do_sleep</span><br>    PROC_RUNNABLE,    <span class="hljs-comment">// 就绪/运行状态   -- proc_init, wakeup_proc,</span><br>    PROC_ZOMBIE,      <span class="hljs-comment">// 僵死状态       -- do_exit</span><br>&#125;;<br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">context</span> &#123;</span>  <span class="hljs-comment">// 保存的上下文寄存器，注意没有eax寄存器和段寄存器</span><br>    <span class="hljs-keyword">uint32_t</span> eip;<br>    <span class="hljs-keyword">uint32_t</span> esp;<br>    <span class="hljs-keyword">uint32_t</span> ebx;<br>    <span class="hljs-keyword">uint32_t</span> ecx;<br>    <span class="hljs-keyword">uint32_t</span> edx;<br>    <span class="hljs-keyword">uint32_t</span> esi;<br>    <span class="hljs-keyword">uint32_t</span> edi;<br>    <span class="hljs-keyword">uint32_t</span> ebp;<br>&#125;;<br><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proc_struct</span> &#123;</span><br>    <span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">proc_state</span> <span class="hljs-title">state</span>;</span>          <span class="hljs-comment">// 当前进程的状态</span><br>    <span class="hljs-keyword">int</span> pid;                        <span class="hljs-comment">// 进程ID</span><br>    <span class="hljs-keyword">int</span> runs;                       <span class="hljs-comment">// 当前进程被调度的次数</span><br>    <span class="hljs-keyword">uintptr_t</span> kstack;               <span class="hljs-comment">// 内核栈</span><br>    <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">bool</span> need_resched;     <span class="hljs-comment">// 是否需要被调度</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proc_struct</span> *<span class="hljs-title">parent</span>;</span>     <span class="hljs-comment">// 父进程ID</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">mm_struct</span> *<span class="hljs-title">mm</span>;</span>           <span class="hljs-comment">// 当前进程所管理的虚拟内存页，包括其所属的页目录项PDT</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">context</span> <span class="hljs-title">context</span>;</span>         <span class="hljs-comment">// 保存的上下文</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">trapframe</span> *<span class="hljs-title">tf</span>;</span>           <span class="hljs-comment">// 中断所保存的上下文</span><br>    <span class="hljs-keyword">uintptr_t</span> cr3;                  <span class="hljs-comment">// 页目录表的地址</span><br>    <span class="hljs-keyword">uint32_t</span> flags;                 <span class="hljs-comment">// 当前进程的相关标志</span><br>    <span class="hljs-keyword">char</span> name[PROC_NAME_LEN + <span class="hljs-number">1</span>];   <span class="hljs-comment">// 进程名称（可执行文件名）</span><br>    <span class="hljs-keyword">list_entry_t</span> list_link;         <span class="hljs-comment">// 用于连接list</span><br>    <span class="hljs-keyword">list_entry_t</span> hash_link;         <span class="hljs-comment">// 用于连接hash list</span><br>&#125;;<br></code></pre></td></tr></table></figure>
 
-<h3 id="2-创建流程"><a href="#2-创建流程" class="headerlink" title="2.创建流程"></a>2.创建流程</h3><ul>
+<h3 id="2-流程"><a href="#2-流程" class="headerlink" title="2.流程"></a>2.流程</h3><ul>
 <li>首先肯定是<code>proc_init()</code>:</li>
 </ul>
 <p><img src="../../image/ucore/image-20211224212029857.png" srcset="/img/loading.gif" lazyload alt="image-20211224212029857"></p>
@@ -1271,6 +1271,37 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//所在地址位置</span><br>initproc-&gt;tf= (proc-&gt;kstack+KSTACKSIZE) – <span class="hljs-keyword">sizeof</span> (struct trapframe);<br><span class="hljs-comment">//具体内容</span><br>initproc-&gt;tf.tf_cs = KERNEL_CS;<br>initproc-&gt;tf.tf_ds = initproc-&gt;tf.tf_es = initproc-&gt;tf.tf_ss = KERNEL_DS;<br>initproc-&gt;tf.tf_regs.reg_ebx = (<span class="hljs-keyword">uint32_t</span>)init_main;<br>initproc-&gt;tf.tf_regs.reg_edx = (<span class="hljs-keyword">uint32_t</span>) ADDRESS of <span class="hljs-string">&quot;Helloworld!!&quot;</span>;<br>initproc-&gt;tf.tf_eip = (<span class="hljs-keyword">uint32_t</span>)kernel_thread_entry;<br>initproc-&gt;tf.tf_regs.reg_eax = <span class="hljs-number">0</span>;<br>initproc-&gt;tf.tf_esp = esp;<br>initproc-&gt;tf.tf_eflags |= FL_IF;<br></code></pre></td></tr></table></figure></li>
 </ul>
 </li>
+<li><p>然后从永真循环的cpu_idle进入调度函数<strong>schedule</strong>(), 是很简单的FIFO, 注意要保证调度操作的atomicity, 即屏蔽中断, IF置零</p>
+<p><img src="../../image/ucore/image-20211224232536016.png" srcset="/img/loading.gif" lazyload alt="image-20211224232536016"></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// cpu_idle - at the end of kern_init, the first kernel thread idleproc will do below works</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">cpu_idle</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span> </span>&#123;<br>    <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) &#123;<br>        <span class="hljs-keyword">if</span> (current-&gt;need_resched) &#123;<br>            schedule();<br>        &#125;&#125;&#125;<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>设置当前内核线程current-&gt;need_resched为0； <strong>(?</strong> </li>
+<li>在proc_list队列中查找下一个处于“就绪”态的线程或进程<code>next</code>； </li>
+<li>找到这样的进程后，就调用proc_run函数，保存当前进程current的执行现场（进程上下文），恢复新进程的执行现场，完成进程切换。</li>
+</ol>
+</li>
+<li><p>proc_run比较重要:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">proc_run</span><span class="hljs-params">(struct proc_struct *proc)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (proc != current) &#123;<br>        <span class="hljs-keyword">bool</span> intr_flag;<br>        <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proc_struct</span> *<span class="hljs-title">prev</span> =</span> current, *next = proc;<br>        local_intr_save(intr_flag); <br>        &#123;<br>            current = proc;<br>            load_esp0(next-&gt;kstack + KSTACKSIZE);	  <span class="hljs-comment">//在TSS中的ring0栈顶指针</span><br>            lcr3(next-&gt;cr3);						<span class="hljs-comment">//这实际上是完成进程间的页表切换；</span><br>            switch_to(&amp;(prev-&gt;context), &amp;(next-&gt;context));<br>        &#125;<br>        local_intr_restore(intr_flag);<br>&#125;&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>switch()比较特别,因为两个参数都是在内存中,然而并不能从内存直接读取到内存, 只能通过一段汇编来把prev的context通过%eax做媒介存入相应寄存器中, 这样context就建立完成了, 注意到eip被设置成forkrets, 就是在trap.S里的一段汇编, 而且重用了以前的代码</li>
+</ul>
+</li>
+<li><p>随后<strong>进程执行完毕后</strong>就返回到kernel_tread_entry函数，并进一步调用do_exit执行退出操作了。本来do_exit应该完成一些资源回收工作等，但这些不是实验四涉及的，而是由后续的实验来完成。</p>
+</li>
+</ul>
+<h2 id="练习-1"><a href="#练习-1" class="headerlink" title="练习"></a>练习</h2><h3 id="练习1-1"><a href="#练习1-1" class="headerlink" title="练习1"></a>练习1</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+<p>请说明proc_struct中<code>struct context context</code>和<code>struct trapframe *tf</code>成员变量含义和在本实验中的作用是啥？</p>
+<ul>
+<li>context的含义很简单, 就是该线程的上下文即必要的控制流信息, 作用是在proc_run()函数中调用的switch(汇编label)保存当前执行的线程, 然后恢复next线程的context</li>
+<li>tf一开始在kern_thread中作为局部变量存在栈上, 设置好从中断返回(通过iret)时的控制流后调用do_fork(), 在do_fork中的copy_thread复制tf到新线程, 至此完成任务</li>
+</ul>
+<h3 id="练习2-1"><a href="#练习2-1" class="headerlink" title="练习2"></a>练习2</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+<p>请说明ucore是否做到给每个新fork的线程一个唯一的id？请说明你的分析和理由。</p>
+<ul>
 <li></li>
 </ul>
 <ul>
