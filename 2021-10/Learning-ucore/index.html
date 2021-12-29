@@ -282,6 +282,12 @@
             <!-- SEO header -->
             <h1 style="display: none">Tsinghua操作系统课程</h1>
             
+              <p class="note note-info">
+                
+                  不可视境界线最后变动于：34 分钟前
+                
+              </p>
+            
             <div class="markdown-body">
               <h1 id="Lab1"><a href="#Lab1" class="headerlink" title="Lab1"></a>Lab1</h1><h2 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h2><h3 id="1-BIOS启动顺序"><a href="#1-BIOS启动顺序" class="headerlink" title="1.BIOS启动顺序"></a>1.BIOS启动顺序</h3><ul>
 <li>CPU加电后代码段寄存器初始化为<strong>CS = F000H, EIP = 0000FFF0H</strong>, 然后再计算 Base+IP = FFFF0000H + 0000FFF0H = FFFFFFF0H 得到BIOS的<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/EPROM">EPROM</a>(Erasable Programmable Read Only Memory)所在地, 这个地址的第一条指令是一个<strong>长跳转指令</strong>(这样CS和EIP都会更新)到BIOS代码中执行</li>
@@ -3354,6 +3360,13 @@ failed:
 
 
 
+
+  <script  src="https://cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js" ></script>
+  <script>
+    if (window.mermaid) {
+      mermaid.initialize({"theme":"default"});
+    }
+  </script>
 
 
 
