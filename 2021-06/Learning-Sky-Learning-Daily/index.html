@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://i.loli.net/2021/07/22/ueHT3S7ComhkflA.png">
 <meta property="og:image" content="https://i.loli.net/2021/08/04/GAxeO2D67LfbKPw.png">
 <meta property="article:published_time" content="2021-06-07T02:00:00.000Z">
-<meta property="article:modified_time" content="2021-12-28T09:24:38.328Z">
+<meta property="article:modified_time" content="2021-12-29T14:04:42.727Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="schedule">
 <meta name="twitter:card" content="summary_large_image">
@@ -48,17 +48,7 @@
     
     
       
-      
-        
-          
-          
-          
-        
-        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism-tomorrow.min.css" />
-      
-      
-        <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/plugins/line-numbers/prism-line-numbers.min.css" />
-      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/obsidian.min.css" />
     
   
 
@@ -234,7 +224,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      141 分钟
+      142 分钟
     </span>
   
 
@@ -415,7 +405,7 @@
 </ul>
 </li>
 </ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//常见函数:</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">getc</span><span class="hljs-params">(FILE *stream)</span> 								  <span class="hljs-comment">//返回字符的int类型值</span></span><br><span class="hljs-function"><span class="hljs-keyword">char</span> *<span class="hljs-title">fgets</span><span class="hljs-params">(<span class="hljs-keyword">char</span> *str, <span class="hljs-keyword">int</span> n, FILE *stream)</span></span>;  			<span class="hljs-comment">//从文件流中读取字符到str中</span><br><span class="hljs-function">FILE *<span class="hljs-title">fopen</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *filename, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *mode)</span></span>;	<span class="hljs-comment">//</span><br><span class="hljs-function"><span class="hljs-keyword">ssize_t</span> <span class="hljs-title">write</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd, <span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *buf, <span class="hljs-keyword">size_t</span> nbyte)</span></span>;	<span class="hljs-comment">//一般是write(1,buf,nbyte),stdout = 1</span><br><span class="hljs-function"><span class="hljs-keyword">unsigned</span> __int64 <span class="hljs-title">sys_read</span><span class="hljs-params">(stdinput:<span class="hljs-number">0</span>, buf, size)</span></span><br><span class="hljs-function"><span class="hljs-comment">//习惯上，标准输入的文件描述符是 0，标准输出是 1，标准错误（standard error）是 2。</span></span><br></code></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">//常见函数:</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">getc</span><span class="hljs-params">(FILE *stream)</span> 								  <span class="hljs-comment">//返回字符的int类型值</span></span><br><span class="hljs-function"><span class="hljs-keyword">char</span> *<span class="hljs-title">fgets</span><span class="hljs-params">(<span class="hljs-keyword">char</span> *str, <span class="hljs-keyword">int</span> n, FILE *stream)</span></span>;  			<span class="hljs-comment">//从文件流中读取字符到str中</span><br><span class="hljs-function">FILE *<span class="hljs-title">fopen</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *filename, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *mode)</span></span>;	<span class="hljs-comment">//</span><br><span class="hljs-function"><span class="hljs-keyword">ssize_t</span> <span class="hljs-title">write</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd, <span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *buf, <span class="hljs-keyword">size_t</span> nbyte)</span></span>;	<span class="hljs-comment">//一般是write(1,buf,nbyte),stdout = 1</span><br><span class="hljs-function"><span class="hljs-keyword">unsigned</span> __int64 <span class="hljs-title">sys_read</span><span class="hljs-params">(stdinput:<span class="hljs-number">0</span>, buf, size)</span></span><br><span class="hljs-function"><span class="hljs-comment">//习惯上，标准输入的文件描述符是 0，标准输出是 1，标准错误（standard error）是 2。</span></span><br></code></pre></div></td></tr></table></figure>
 
 <ul>
 <li><p>bss段原理: executable文件中只记录未初始化变量的起始和终止地址, 在运行时操作系统将这部分内存清零</p>
@@ -613,11 +603,11 @@
 </li>
 <li><p><a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/lab0/lab0_2_3_1_4_extend_gcc_asm.html">扩展内联汇编</a> 详见网站 好复杂, 用时再看</p>
 <ul>
-<li><pre><code class="c">asm [volatile] ( Assembler Template
+<li><div class="hljs code-wrapper"><pre><code class="c">asm [volatile] ( Assembler Template
    : Output Operands
    [ : Input Operands
    [ : Clobbers ] ] )
-</code></pre>
+</code></pre></div>
 </li>
 </ul>
 </li>
@@ -833,6 +823,7 @@
 <li>周一, 经典再现, 我果然没有看懂地址映射的四个阶段, 又重新看了一次ucore自带的一个设置好的页目录表和相应的页表<br>又折腾了半天</li>
 <li>装了一个info包, 暂时只知道能看info ld</li>
 <li><code>make grade</code>在虚拟机共享文件夹里出错了, 诶想省事又有点麻烦的东西</li>
+<li>博客想加上汇编代码高亮, 没有成功, 和Typora的配合不是很好, 鸽了</li>
 <li></li>
 </ul>
 
@@ -1027,14 +1018,6 @@
 
 
 
-  
-    
-      <script  src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-core.min.js" ></script>
-      <script  src="https://cdn.jsdelivr.net/npm/prismjs@1/plugins/autoloader/prism-autoloader.min.js" ></script>
-      
-        <script  src="https://cdn.jsdelivr.net/npm/prismjs@1/plugins/line-numbers/prism-line-numbers.min.js" ></script>
-      
-    
   
 
 
