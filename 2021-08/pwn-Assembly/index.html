@@ -24,7 +24,7 @@
 <meta property="og:description" content="IDA整出来的汇编伪指令看不下去了!!">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-08-09T02:07:00.000Z">
-<meta property="article:modified_time" content="2021-12-12T05:36:21.496Z">
+<meta property="article:modified_time" content="2022-01-05T15:47:57.516Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="programming_language">
 <meta name="twitter:card" content="summary_large_image">
@@ -209,7 +209,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      undefined 字
+      2.7k 字
     </span>
   
 
@@ -218,7 +218,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      NaN 分钟
+      34 分钟
     </span>
   
 
@@ -259,7 +259,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2021年12月12日 下午
+                  不可视境界线最后变动于：2022年1月5日 晚上
                 
               </p>
             
@@ -267,7 +267,7 @@
               <h1 id="汇编语言伪指令-最要命的"><a href="#汇编语言伪指令-最要命的" class="headerlink" title="汇编语言伪指令(最要命的"></a>汇编语言伪指令(最要命的</h1><blockquote>
 <ul>
 <li>伪指令 (directive) 是嵌入源代码中的命令，由汇编器识别和执行。伪指令不在运行时执行，但是它们可以定义变量、宏和子程序；为内存段分配名称，执行许多其他与汇编器相关的日常任务。</li>
-<li>简单来说就是方便编程的指令</li>
+<li>简单来说就是方便编程的指令 </li>
 </ul>
 </blockquote>
 <h2 id="基本"><a href="#基本" class="headerlink" title="基本:"></a>基本:</h2><ul>
@@ -361,7 +361,7 @@
 </tr>
 </tbody></table>
 <p>初始化语句</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">[name] directive initializer [,initializer]...<br></code></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">[name] directive initializer [,initializer]...<br></code></pre></div></td></tr></table></figure>
 
 <p>如果希望不对变量进行初始化（随机分配数值），可以用符号 ? 作为初始值, 所有数值都由汇编器来转成二进制数据</p>
 <ul>
@@ -369,17 +369,17 @@
 <ul>
 <li>多初始值定义数组</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs asm">list BYTE 10,20,30,40<br>#甚至可以:<br>list BYTE 10,20,30,40<br>     BYTE 50,60,70,80<br>     BYTE 81,82,83,84<br></code></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs asm">list BYTE 10,20,30,40<br>#甚至可以:<br>list BYTE 10,20,30,40<br>     BYTE 50,60,70,80<br>     BYTE 81,82,83,84<br></code></pre></div></td></tr></table></figure>
 
 <ul>
 <li> 定义字符串: 使用BYTE, </li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs asm">greeting1 BYTE &quot;Good afternoon&quot;,0<br>#也可以<br>greeting1 BYTE &quot;Welcome to the Encryption Demo program &quot;<br>          BYTE &quot;created by Kip Irvine.&quot;,0dh, 0ah<br>#还可以使用backslash分行<br></code></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs asm">greeting1 BYTE &quot;Good afternoon&quot;,0<br>#也可以<br>greeting1 BYTE &quot;Welcome to the Encryption Demo program &quot;<br>          BYTE &quot;created by Kip Irvine.&quot;,0dh, 0ah<br>#还可以使用backslash分行<br></code></pre></div></td></tr></table></figure>
 
 <ul>
 <li>DUP 操作符: 使用一个整数表达式作为计数器，为多个数据项分配存储空间</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs asm"> BYTE 4 DUP ( &quot;STACK&quot; ) ; 20 个字节：<br>#第一个数字是BYTE的个数, 第二个数字由DUP计算得出, 单位是字节    <br>#提供了一种方便的方式来初始化数组:<br>array BYTE 5 DUP (?) ; 5 个数值，未初始化<br></code></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs asm"> BYTE 4 DUP ( &quot;STACK&quot; ) ; 20 个字节：<br>#第一个数字是BYTE的个数, 第二个数字由DUP计算得出, 单位是字节    <br>#提供了一种方便的方式来初始化数组:<br>array BYTE 5 DUP (?) ; 5 个数值，未初始化<br></code></pre></div></td></tr></table></figure></li>
 <li><p>WORD and SWORD, DWORD, SDWORD, QWORD, </p>
 <ul>
 <li>同BYTE和SBYTE</li>
@@ -397,11 +397,11 @@
 <li><p>当前地址计数器:<strong><code>selfPtr DWORD $</code></strong> </p>
 </li>
 <li><p>让汇编器计算数组长度: </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs asm">list BYTE 10,20,30,40<br>ListSize = ($ - list) # 注意此时计算出来的是地址的差值, 所以单位是字节, 如果遇到WORD要注<br></code></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs asm">list BYTE 10,20,30,40<br>ListSize = ($ - list) # 注意此时计算出来的是地址的差值, 所以单位是字节, 如果遇到WORD要注<br></code></pre></div></td></tr></table></figure></li>
 <li><p>EQU伪指令, 无法多次定义</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs asm">name EQU expression	#必须是整数表达式<br>name EQU symbol		#任意一个用EQU或=定义过的符号<br>name EQU &lt;text&gt;		#直接文本替换, 最像#define, 也可用来定义实数<br></code></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs asm">name EQU expression	#必须是整数表达式<br>name EQU symbol		#任意一个用EQU或=定义过的符号<br>name EQU &lt;text&gt;		#直接文本替换, 最像#define, 也可用来定义实数<br></code></pre></div></td></tr></table></figure></li>
 <li><p>TEXTEQU 文本宏伪指令, </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs asm">name TEXTEQU &lt;text&gt;			# 就是文本<br>name TEXTEQU textmacro		# 前面的文本宏<br>name TEXTEQU %constExpr		# 整数表达式<br></code></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs asm">name TEXTEQU &lt;text&gt;			# 就是文本<br>name TEXTEQU textmacro		# 前面的文本宏<br>name TEXTEQU %constExpr		# 整数表达式<br></code></pre></div></td></tr></table></figure></li>
 </ul>
 <h3 id="相关指令"><a href="#相关指令" class="headerlink" title="相关指令"></a>相关指令</h3><p>操作数有 3 种基本类型：</p>
 <ul>
@@ -477,7 +477,7 @@
 <li><p><code>mov ax,WORD PTR myDouble</code>, 把一个DWORD的低两字节传入ax(因为是小端法存储, 而且可用偏移来传入<br>高两字节:<code>mov ax,WORD PTR [myDouble+2]</code>)</p>
 </li>
 <li><p>把两个小的移入大的: </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs asm">wordList WORD 5678h,1234h<br>mov eax, DWORD PTR wordList<br></code></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs asm">wordList WORD 5678h,1234h<br>mov eax, DWORD PTR wordList<br></code></pre></div></td></tr></table></figure></li>
 </ul>
 <p>4.12 <a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3517.html">TYPE运算符</a> 返回变量的大小</p>
 <p>4.13 <a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3518.html">LENGTHOF运算符 </a> 计算数组中元素的个数, 如果数组占据多行, 只计算第一行</p>
@@ -492,7 +492,7 @@
 <li><p>PUSHA (push all-16bits), PUSHAD (push all double-32bits),  POPAD 和 POPA</p>
 </li>
 <li><p><strong>PROC和ENDP ：定义一个过程</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs asm">main PROC<br>.<br>.<br>main ENDP<br></code></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs asm">main PROC<br>.<br>.<br>main ENDP<br></code></pre></div></td></tr></table></figure>
 
 <ul>
 <li>标号只有过程中的有效, 不过也可以定义全局标号<code>Destination::</code>, 使用两个引号即可, 尽量少用</li>
