@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://i.loli.net/2021/11/15/2voBNa4eHCJYpDS.png">
 <meta property="og:image" content="https://i.loli.net/2021/11/15/2pZPMgihVI6QSrR.png">
 <meta property="og:image" content="https://i.loli.net/2021/11/15/JX7IuMO4QodfVFK.png">
-<meta property="og:image" content="c:/Users/L/AppData/Roaming/image/ucore/IxTJPGOZWVjz2BD-16373800575412.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/ucore/IxTJPGOZWVjz2BD-16373800575412.png">
 <meta property="og:image" content="https://i.loli.net/2021/11/15/t1iNrJbCeBzASFf.png">
 <meta property="og:image" content="https://i.loli.net/2021/11/16/JGd27NnTwFDipOe.jpg">
 <meta property="og:image" content="https://i.loli.net/2021/11/16/5HxAC9w4XSiasbK.png">
@@ -47,8 +47,12 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/image-20211224212029857.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/image-20211224232536016.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/image-20211228201516840.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/ucore/up.gif">
+<meta property="og:image" content="https://yogdzewa.github.io/image/ucore/down.gif">
+<meta property="og:image" content="https://yogdzewa.github.io/image/ucore/image001.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/ucore/fsStruct.png">
 <meta property="article:published_time" content="2021-10-01T02:00:00.000Z">
-<meta property="article:modified_time" content="2021-12-29T16:10:18.655Z">
+<meta property="article:modified_time" content="2022-01-05T09:16:38.908Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary_large_image">
@@ -234,7 +238,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      86k 字
+      106k 字
     </span>
   
 
@@ -243,7 +247,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1078 分钟
+      1321 分钟
     </span>
   
 
@@ -284,7 +288,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2021年12月30日 凌晨
+                  不可视境界线最后变动于：2022年1月5日 下午
                 
               </p>
             
@@ -350,7 +354,7 @@
 <h4 id="e-Segment-Descriptor"><a href="#e-Segment-Descriptor" class="headerlink" title="e.Segment Descriptor"></a>e.Segment Descriptor</h4><blockquote>
 <p><strong>来自IA-32文档 P2902/3-10 Vol. 3A</strong> </p>
 </blockquote>
-<img src="C:/Users/L/AppData/Roaming/image/ucore/IxTJPGOZWVjz2BD-16373800575412.png" srcset="/img/loading.gif" lazyload alt="image-20211110230124631.png" style="zoom:80%;" />
+<img src="..\..\image\ucore\IxTJPGOZWVjz2BD-16373800575412.png" srcset="/img/loading.gif" lazyload alt="image-20211110230124631.png" style="zoom:80%;" />
 
 <h4 id="f-Global-Descriptor-Tables"><a href="#f-Global-Descriptor-Tables" class="headerlink" title="f.Global Descriptor Tables"></a>f.Global Descriptor Tables</h4><blockquote>
 <p><strong>(IA-32 P2906/ 3-14 Vol. 3A)</strong>:</p>
@@ -404,10 +408,6 @@
 
 <p>​    Interrrupt Gate and Trap Gate 和Call Gate非常相似, 不同的Gate用3bit的Type来表示:</p>
 <img src="https://s2.loli.net/2021/12/20/FOG4zJsyutojfen.png" srcset="/img/loading.gif" lazyload alt="image-20211209164600135" style="zoom:67%;" />
-
-
-
-
 
 <h4 id="由硬件完成的工作"><a href="#由硬件完成的工作" class="headerlink" title="由硬件完成的工作"></a>由硬件完成的工作</h4><ul>
 <li><p>硬件中断处理过程1（==起始==）：从CPU收到中断事件后，打断当前程序或任务的执行，根据某种机制跳转到中断服务例程去执行的过程。其具体流程如下：</p>
@@ -778,7 +778,7 @@
 <li><p>编程完善trap.c中的中断处理函数trap_dispatch**(called by trap(), and trap() called in trapentry.S)**，在对时钟中断进行处理的部分填写trap函数中处理时钟中断的部分，使操作系统每遇到100次时钟中断后，调用print_ticks子程序，向屏幕上打印一行文字”100 ticks”。</p>
 <ul>
 <li><p>这个实现还是比较简单的，注释都说清楚了</p>
-<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">/* trap_dispatch - dispatch based on what type of trap occurred */</span><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">trap_dispatch</span><span class="hljs-params">(struct trapframe *tf)</span> </span>&#123;    <span class="hljs-keyword">char</span> c;    <span class="hljs-keyword">switch</span> (tf-&gt;tf_trapno) &#123;    <span class="hljs-keyword">case</span> IRQ_OFFSET + IRQ_TIMER:        <span class="hljs-comment">// 全局变量ticks定义于kern/driver/clock.c        ticks++;        if(ticks % TICK_NUM == 0)            print_ticks();        break;    // .........</span><br></code></pre></div></td></tr></table></figure></li>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">case</span> IRQ_OFFSET + IRQ_TIMER:        <span class="hljs-comment">// 全局变量ticks定义于kern/driver/clock.c</span><br>	ticks++;       <br>	<span class="hljs-keyword">if</span>(ticks % TICK_NUM == <span class="hljs-number">0</span>)            <br>        print_ticks();        <br><span class="hljs-keyword">break</span>;    <span class="hljs-comment">// .........</span><br></code></pre></div></td></tr></table></figure></li>
 </ul>
 </li>
 <li><p>结果:</p>
@@ -810,11 +810,11 @@
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Page</span> &#123;</span><br>    <span class="hljs-keyword">int</span> ref;        <span class="hljs-comment">// page frame&#x27;s reference counter</span><br>    <span class="hljs-keyword">uint32_t</span> flags; <span class="hljs-comment">// array of flags that describe the status of the page frame</span><br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> property;<span class="hljs-comment">// the num of free *page*, used in first fit pm manager</span><br>    <span class="hljs-keyword">list_entry_t</span> page_link;<span class="hljs-comment">// free list link</span><br>&#125;;<br></code></pre></div></td></tr></table></figure>
 
 <ul>
-<li>而flag第一位和第二位(即bit 0 and bit 1):</li>
+<li>而flag第一位和第二位(即bit 0 and bit 1, PG_reserved和PG_property的0和1是指第几位):</li>
 </ul>
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">/* Flags describing the status of a page frame */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> PG_reserved                 0       <span class="hljs-comment">// the page descriptor is reserved for kernel or unusable</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> PG_property                 1       <span class="hljs-comment">// the member &#x27;property&#x27; is valid (free or not)</span></span><br></code></pre></div></td></tr></table></figure>
 
-<p>​    需要注意的是用到property成员变量的这个Page比较特殊，是这个连续内存空闲块地址<strong>最小的一页</strong>（即头一页， Head Page）,<br>​    用bit PG_property来enable<br>​    <strong>为什么PG_ reserved是0??</strong> </p>
+<p>​    需要注意的是用到property成员变量的这个Page比较特殊，是这个连续内存空闲块地址<strong>最小的一页</strong>（即头一页， Head Page）,<br>​    用bit PG_property来enable</p>
 <ul>
 <li>使用btl指令置位某一个bit:</li>
 </ul>
@@ -928,13 +928,13 @@
 </tbody></table>
 <h3 id="6-内存初始化函数pmm-init"><a href="#6-内存初始化函数pmm-init" class="headerlink" title="6.内存初始化函数pmm_init()"></a>6.内存初始化函数pmm_init()</h3><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span></span><br><span class="hljs-function"><span class="hljs-title">pmm_init</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span> </span>&#123;<br>    <span class="hljs-comment">// 装在cr3的物理地址</span><br>    boot_cr3 = PADDR(boot_pgdir);<br>    <br>    init_pmm_manager();<br><br>    <span class="hljs-comment">// detect physical memory space in 0~KERNMSIZE, reserve already used memory,</span><br>    <span class="hljs-comment">// then use pmm-&gt;init_memmap to create free page list</span><br>    page_init();<br><br>    <span class="hljs-comment">// some simple check</span><br>    check_alloc_page();<br>    check_pgdir();<br>    <span class="hljs-keyword">static_assert</span>(KERNBASE % PTSIZE == <span class="hljs-number">0</span> &amp;&amp; KERNTOP % PTSIZE == <span class="hljs-number">0</span>);<br><br>    <span class="hljs-comment">// recursively insert boot_pgdir in itself</span><br>    <span class="hljs-comment">// to form a virtual page table at virtual address VPT</span><br>    boot_pgdir[PDX(VPT)] = PADDR(boot_pgdir) | PTE_P | PTE_W;<br><br>    <span class="hljs-comment">// map all physical memory to linear memory with base linear addr KERNBASE</span><br>    <span class="hljs-comment">// linear_addr KERNBASE ~ KERNBASE + KMEMSIZE = phy_addr 0 ~ KMEMSIZE</span><br>    boot_map_segment(boot_pgdir, KERNBASE, KMEMSIZE, <span class="hljs-number">0</span>, PTE_W);<br><br>    <span class="hljs-comment">// map virtual_addr 0 ~ 4G = linear_addr 0 ~ 4G</span><br>    <span class="hljs-comment">// then set kernel stack (ss:esp) in TSS, setup TSS in gdt, load TSS</span><br>    gdt_init();<br><br>    <span class="hljs-comment">//now the basic virtual memory map(see memalyout.h) is established.</span><br>    <span class="hljs-comment">//check the correctness of the basic virtual memory map.</span><br>    check_boot_pgdir();<br>    print_pgdir();<br>    kmalloc_init();	<span class="hljs-comment">//just print some words</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
 
-<h3 id="7-链接脚本"><a href="#7-链接脚本" class="headerlink" title="7.链接脚本"></a>7.链接脚本</h3><ul>
+<h3 id="7-链接脚本与地址映射"><a href="#7-链接脚本与地址映射" class="headerlink" title="7.链接脚本与地址映射"></a>7.链接脚本与地址映射</h3><ul>
 <li><strong>edata[]和 end[]这些变量是ld根据kernel.ld链接脚本生成的全局变量，表示相应段的起始地址或结束地址等，它们不在任何一个.S、.c或.h文件中定义。</strong> </li>
 <li><strong>逻辑地址或虚拟地址是可执行代码在编译的时候由链接器生成的</strong> </li>
 <li>ucore内核的链接地址==ucore内核的虚拟地址；boot loader加载ucore内核用到的加载地址==ucore内核的物理地址。</li>
 <li><a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/lab2/lab2_3_7_phymemlab_concepts.html">-&gt;详见实验指导书&lt;-</a> </li>
 </ul>
-<h3 id="地址映射的四个阶段"><a href="#地址映射的四个阶段" class="headerlink" title="地址映射的四个阶段"></a>地址映射的四个阶段</h3><p>在lab2中，为了建立正确的地址映射关系，ld在链接阶段生成了ucore OS执行代码的虚拟地址，而bootloader与ucore OS协同工作，通过在运行时对地址映射的一系列“腾挪转移”，从计算机加电，启动段式管理机制，启动段页式管理机制，在段页式管理机制下运行这整个过程中，虚拟地址到物理地址的映射产生了多次变化，实现了最终的段页式映射关系：</p>
+<h4 id="地址映射的四个阶段"><a href="#地址映射的四个阶段" class="headerlink" title="地址映射的四个阶段"></a>地址映射的四个阶段</h4><p>在lab2中，为了建立正确的地址映射关系，ld在链接阶段生成了ucore OS执行代码的虚拟地址，而bootloader与ucore OS协同工作，通过在运行时对地址映射的一系列“腾挪转移”，从计算机加电，启动段式管理机制，启动段页式管理机制，在段页式管理机制下运行这整个过程中，虚拟地址到物理地址的映射产生了多次变化，实现了最终的段页式映射关系：</p>
 <figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">virt addr = linear addr = phy addr + <span class="hljs-number">0xC0000000</span><br></code></pre></div></td></tr></table></figure>
 
 <h4 id="最开始-链接脚本"><a href="#最开始-链接脚本" class="headerlink" title="最开始: 链接脚本"></a>最开始: 链接脚本</h4><p>tools/kernel.ld文件在lab1和lab2中的区别。在lab1中：</p>
@@ -1320,7 +1320,7 @@
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">//所在地址位置</span><br>initproc-&gt;tf= (proc-&gt;kstack+KSTACKSIZE) – <span class="hljs-keyword">sizeof</span> (struct trapframe);<br><span class="hljs-comment">//具体内容</span><br>initproc-&gt;tf.tf_cs = KERNEL_CS;<br>initproc-&gt;tf.tf_ds = initproc-&gt;tf.tf_es = initproc-&gt;tf.tf_ss = KERNEL_DS;<br>initproc-&gt;tf.tf_regs.reg_ebx = (<span class="hljs-keyword">uint32_t</span>)init_main;<br>initproc-&gt;tf.tf_regs.reg_edx = (<span class="hljs-keyword">uint32_t</span>) ADDRESS of <span class="hljs-string">&quot;Helloworld!!&quot;</span>;<br>initproc-&gt;tf.tf_eip = (<span class="hljs-keyword">uint32_t</span>)kernel_thread_entry;<br>initproc-&gt;tf.tf_regs.reg_eax = <span class="hljs-number">0</span>;<br>initproc-&gt;tf.tf_esp = esp;<br>initproc-&gt;tf.tf_eflags |= FL_IF;<br></code></pre></div></td></tr></table></figure></li>
 </ul>
 </li>
-<li><p>然后从永真循环的cpu_idle进入调度函数<strong>schedule</strong>(), 是很简单的FIFO, 注意要保证调度操作的atomicity, 即屏蔽中断, IF置零</p>
+<li><p>然后从kern_init()中永真循环的cpu_idle进入调度函数<strong>schedule</strong>(), 是很简单的FIFO, 注意要保证调度操作的atomicity, 即屏蔽中断, IF置零</p>
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">// cpu_idle - at the end of kern_init, the first kernel thread idleproc will do below works</span><br>  <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">cpu_idle</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span> </span>&#123;<br>      <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) &#123;<br>          <span class="hljs-keyword">if</span> (current-&gt;need_resched) &#123;<br>              schedule();<br>          &#125;&#125;&#125;<br></code></pre></div></td></tr></table></figure>
 
 <p><img src="../../image/ucore/image-20211224232536016.png" srcset="/img/loading.gif" lazyload alt="image-20211224232536016"></p>
@@ -1437,61 +1437,9 @@
 <blockquote>
 <p>先清空当前进程的空间, 然后再alloc新的空间</p>
 </blockquote>
-<p>最终通过<strong>do_execve</strong>函数来完成用户进程的创建工作。此函数的主要工作流程如下：</p>
-<ul>
-<li>首先为加载新的执行码做好用户态内存空间清空准备。如果mm不为NULL，则设置页表为内核空间页表，且进一步判断mm的引用计数减1后是否为0，如果为0，<strong>则表明没有进程再需要此进程所占用的内存空间</strong>，为此将根据mm中的记录，释放进程所占用户空间内存和进程页表本身所占空间。最后把当前进程的mm内存管理指针为空。由于此处的initproc是内核线程，所以mm为NULL，整个处理都不会做。</li>
-<li>接下来的一步是加载应用程序执行码到当前进程的新创建的用户态虚拟空间中。这里涉及到读ELF格式的文件，申请内存空间，建立用户态虚存空间，加载应用程序执行码等。load_icode函数完成了整个复杂的工作。</li>
-</ul>
-<p><strong>load_icode</strong>函数的主要工作就是给用户进程建立一个能够让用户进程正常运行的用户环境。此函数有一百多行，完成了如下重要工作：</p>
-<ol>
-<li>调用mm_create函数来申请进程的内存管理数据结构mm所需内存空间，并对mm进行初始化；</li>
-<li>调用setup_pgdir来申请一个页目录表所需的一个页大小的内存空间，并把描述ucore内核虚空间映射的内核页表（boot_pgdir所指）的内容拷贝到此新目录表中，最后让mm-&gt;pgdir指向此页目录表，这就是进程新的页目录表了，且能够正确映射内核虚空间；</li>
-<li>根据应用程序执行码的起始位置来解析此ELF格式的执行程序，并调用mm_map函数根据ELF格式的执行程序说明的各个段（代码段、数据段、BSS段等）的起始位置和大小建立对应的vma结构，并把vma插入到mm结构中，从而表明了用户进程的合法用户态虚拟地址空间；</li>
-<li>调用根据执行程序各个段的大小分配物理内存空间，并根据执行程序各个段的起始位置确定虚拟地址，并在页表中建立好物理地址和虚拟地址的映射关系，然后把执行程序各个段的内容拷贝到相应的内核虚拟地址中，至此应用程序执行码和数据已经根据编译时设定地址放置到虚拟内存中了；</li>
-<li>需要给用户进程设置用户栈，为此调用mm_mmap函数建立用户栈的vma结构，明确用户栈的位置在用户虚空间的顶端，大小为256个页，即1MB，并分配一定数量的物理内存且建立好栈的虚地址&lt;–&gt;物理地址映射关系；</li>
-<li>至此,进程内的内存管理vma和mm数据结构已经建立完成，于是把mm-&gt;pgdir赋值到cr3寄存器中，即更新了用户进程的虚拟内存空间，此时的initproc已经被hello的代码和数据覆盖，成为了第一个用户进程，但此时这个用户进程的执行现场还没建立好；</li>
-<li>先清空进程的中断帧，再重新设置进程的中断帧，使得在执行中断返回指令“iret”后，能够让CPU转到用户态特权级，并回到用户态内存空间，使用用户态的代码段、数据段和堆栈，且能够跳转到用户进程的第一条指令执行，并确保在用户态能够响应中断；</li>
-</ol>
-<p>至此，用户进程的用户环境已经搭建完毕。此时initproc将按产生系统调用的函数调用路径原路返回，执行中断返回指令“iret”（位于trapentry.S的最后一句）后，将切换到用户进程hello的第一条语句位置_start处（位于user/libs/initcode.S的第三句）开始执行。</p>
-<h3 id="3-进程退出和等待进程"><a href="#3-进程退出和等待进程" class="headerlink" title="3.进程退出和等待进程"></a>3.进程退出和等待进程</h3><p>当进程执行完它的工作后，就需要执行退出操作，释放进程占用的资源。ucore分了两步来完成这个工作，首先由进程本身完成大部分资源的占用内存回收工作，然后由此进程的父进程完成剩余资源占用内存的回收工作。为何不让进程本身完成所有的资源回收工作呢？这是因为进程要执行回收操作，就表明此进程还存在，还在执行指令，这就需要内核栈的空间不能释放，且表示进程存在的进程控制块不能释放。所以需要父进程来帮忙释放子进程无法完成的这两个资源回收工作。</p>
-<p>为此在用户态的函数库中提供了exit函数，此函数最终访问sys_exit系统调用接口让操作系统来帮助当前进程执行退出过程中的部分资源回收。我们来看看ucore是如何做进程退出工作的。</p>
-<p>首先，exit函数会把一个退出码error_code传递给ucore，ucore通过执行内核函数do_exit来完成对当前进程的退出处理，主要工作简单地说就是回收当前进程所占的大部分内存资源，并通知父进程完成最后的回收工作，具体流程如下：</p>
-<ol>
-<li>如果current-&gt;mm != NULL，表示是用户进程，则开始回收此用户进程所占用的用户态虚拟内存空间；</li>
-</ol>
-<ul>
-<li><p>a) 首先执行“lcr3(boot_cr3)”，切换到内核态的页表上，这样当前用户进程目前只能在内核虚拟地址空间执行了，这是为了确保后续释放用户态内存和进程页表的工作能够正常执行；</p>
-</li>
-<li><p>b) 如果当前进程控制块的成员变量mm的成员变量mm_count减1后为0（表明这个mm没有再被其他进程共享，可以彻底释放进程所占的用户虚拟空间了。），则开始回收用户进程所占的内存资源：</p>
-<ul>
-<li>i. 调用exit_mmap函数释放current-&gt;mm-&gt;vma链表中每个vma描述的进程合法空间中实际分配的内存，然后把对应的页表项内容清空，最后还把页表所占用的空间释放并把对应的页目录表项清空；</li>
-<li>ii. 调用put_pgdir函数释放当前进程的页目录所占的内存；</li>
-<li>iii. 调用mm_destroy函数释放mm中的vma所占内存，最后释放mm所占内存；</li>
-</ul>
-</li>
-<li><p>c) 此时设置current-&gt;mm为NULL，表示与当前进程相关的用户虚拟内存空间和对应的内存管理成员变量所占的内核虚拟内存空间已经回收完毕；</p>
-</li>
-</ul>
-<ol start="2">
-<li><p>这时，设置当前进程的执行状态current-&gt;state=PROC_ZOMBIE，当前进程的退出码current-&gt;exit_code=error_code。此时当前进程已经不能被调度了，需要此进程的父进程来做最后的回收工作（即回收描述此进程的内核栈和进程控制块）；</p>
-</li>
-<li><p>如果当前进程的父进程current-&gt;parent处于等待子进程状态：current-&gt;parent-&gt;wait_state==WT_CHILD，<br>则唤醒父进程（即执行“wakup_proc(current-&gt;parent)”），让父进程帮助自己完成最后的资源回收；</p>
-</li>
-<li><p>如果当前进程还有子进程，<strong>则需要把这些子进程的父进程指针设置为内核线程initproc</strong>，且各个子进程指针需要插入到initproc的子进程链表中。如果某个子进程的执行状态是PROC_ZOMBIE，则需要唤醒initproc来完成对此子进程的最后回收工作。</p>
-</li>
-<li><p>执行schedule()函数，选择新的进程执行。</p>
-</li>
-</ol>
-<p>那么父进程如何完成对子进程的最后回收工作呢？这要求父进程要执行wait用户函数或wait_pid用户函数，这两个函数的区别是，wait函数等待任意子进程的结束通知，而wait_pid函数等待进程id号为pid的子进程结束通知。这两个函数最终访问<strong>sys_wait</strong>系统调用接口让ucore来完成对子进程的最后回收工作，即回收子进程的内核栈和进程控制块所占内存空间，具体流程如下：</p>
-<ol>
-<li><p>如果pid!=0，表示只找一个进程id号为pid的退出状态的子进程，否则找任意一个处于退出状态的子进程；</p>
-</li>
-<li><p>如果此子进程的执行状态不为PROC_ZOMBIE，表明此子进程还没有退出，则当前进程只好设置自己的执行状态为PROC_SLEEPING，睡眠原因为WT_CHILD（即等待子进程退出），调用schedule()函数选择新的进程执行，自己睡眠等待，如果被唤醒，则重复跳回步骤1处执行；</p>
-</li>
-<li><p>如果此子进程的执行状态为PROC_ZOMBIE，表明此子进程处于退出状态，需要当前进程（即子进程的父进程）完成对子进程的最终回收工作，即首先把子进程控制块从两个进程队列proc_list和hash_list中删除，并释放子进程的内核堆栈和进程控制块。自此，子进程才彻底地结束了它的执行过程，消除了它所占用的所有资源。</p>
-</li>
-</ol>
-<h3 id="4-系统调用实现"><a href="#4-系统调用实现" class="headerlink" title="4.系统调用实现"></a>4.系统调用实现</h3><p>采用系统调用机制为用户进程提供一个获得操作系统服务的统一接口层，这样一来可简化用户进程的实现，把一些共性的、繁琐的、与硬件相关、与特权指令相关的任务放到操作系统层来实现，但提供一个简洁的接口给用户进程调用；二来这层接口事先可规定好，且严格检查用户进程传递进来的参数和操作系统要返回的数据，使得让操作系统给用户进程服务的同时，保护操作系统不会被用户进程破坏。</p>
+<p>最终通过<strong>do_execve</strong>函数来完成用户进程的创建工作。</p>
+<p><strong>load_icode</strong>函数的主要工作就是给用户进程建立一个能够让用户进程正常运行的用户环境。此函数有一百多行.</p>
+<h3 id="3-系统调用实现"><a href="#3-系统调用实现" class="headerlink" title="3.系统调用实现"></a>3.系统调用实现</h3><p>采用系统调用机制为用户进程提供一个获得操作系统服务的统一接口层，这样一来可简化用户进程的实现，把一些共性的、繁琐的、与硬件相关、与特权指令相关的任务放到操作系统层来实现，但提供一个简洁的接口给用户进程调用；二来这层接口事先可规定好，且严格检查用户进程传递进来的参数和操作系统要返回的数据，使得让操作系统给用户进程服务的同时，保护操作系统不会被用户进程破坏。</p>
 <p>从硬件层面上看，需要硬件能够支持在用户态的用户进程通过某种机制切换到内核态。试验一讲述中断硬件支持和软件处理过程其实就可以用来完成系统调用所需的软硬件支持。下面我们来看看如何在ucore中实现系统调用。</p>
 <h4 id="a-初始化系统调用对应的中断描述符"><a href="#a-初始化系统调用对应的中断描述符" class="headerlink" title="a. 初始化系统调用对应的中断描述符"></a>a. 初始化系统调用对应的中断描述符</h4><p>在ucore初始化函数kern_init中调用了idt_init函数来初始化中断描述符表，并设置一个特定中断号的中断门，专门用于用户进程访问系统调用。此事由ide_init函数完成：</p>
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span></span><br><span class="hljs-function"><span class="hljs-title">idt_init</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span> </span>&#123;<br>    <span class="hljs-keyword">extern</span> <span class="hljs-keyword">uintptr_t</span> __vectors[];<br>    <span class="hljs-keyword">int</span> i;<br>    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">sizeof</span>(idt) / <span class="hljs-keyword">sizeof</span>(struct gatedesc); i ++) &#123;<br>        SETGATE(idt[i], <span class="hljs-number">0</span>, GD_KTEXT, __vectors[i], DPL_KERNEL);<br>    &#125;<br>    SETGATE(idt[T_SYSCALL], <span class="hljs-number">1</span>, GD_KTEXT, __vectors[T_SYSCALL], DPL_USER);<br>    lidt(&amp;idt_pd);<br>&#125;<br></code></pre></div></td></tr></table></figure>
@@ -1500,7 +1448,7 @@
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">vector128(vectors.S)--\&gt;<br>__alltraps(trapentry.S)--\&gt;trap(trap.c)--\&gt;trap_dispatch(trap.c)--\&gt;syscall(syscall.c)<br></code></pre></div></td></tr></table></figure>
 
 <p>在syscall中，根据系统调用号来完成不同的系统调用服务。</p>
-<h4 id="b-建立系统调用的-用户库-准备"><a href="#b-建立系统调用的-用户库-准备" class="headerlink" title="b. 建立系统调用的**用户库**准备"></a>b. 建立系统调用的**<u>用户库</u>**准备</h4><p>在操作系统中初始化好系统调用相关的中断描述符、中断处理起始地址等后，还需在用户态的应用程序中初始化好相关工作，简化应用程序访问系统调用的复杂性。为此在用户态建立了一个中间层，即简化的libc实现，在user/libs/ulib.[ch]和user/libs/syscall.[ch]中完成了对访问系统调用的封装。用户态最终的访问系统调用函数是syscall，实现如下：</p>
+<h4 id="b-建立系统调用的-用户库-准备"><a href="#b-建立系统调用的-用户库-准备" class="headerlink" title="b. 建立系统调用的**用户库**准备"></a>b. 建立系统调用的**<u>用户库</u>**准备</h4><p>在操作系统中初始化好系统调用相关的中断描述符、中断处理起始地址等后，还需在用户态的应用程序中初始化好相关工作，简化应用程序访问系统调用的复杂性。<strong>为此在用户态建立了一个中间层，即简化的libc实现</strong>，在user/libs/ulib.[ch]和user/libs/syscall.[ch]中完成了对访问系统调用的封装。用户态最终的访问系统调用函数是syscall，实现如下：</p>
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-keyword">int</span></span><br><span class="hljs-function"><span class="hljs-title">syscall</span><span class="hljs-params">(<span class="hljs-keyword">int</span> num, ...)</span> </span>&#123;<br>    va_list ap;<br>    va_start(ap, num);<br>    <span class="hljs-keyword">uint32_t</span> a[MAX_ARGS];<br>    <span class="hljs-keyword">int</span> i, ret;<br>    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; MAX_ARGS; i ++) &#123;<br>        a[i] = va_arg(ap, <span class="hljs-keyword">uint32_t</span>);<br>    &#125;<br>    va_end(ap);<br><br>    <span class="hljs-function"><span class="hljs-keyword">asm</span> <span class="hljs-title">volatile</span> <span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">        <span class="hljs-string">&quot;int %1;&quot;</span></span></span><br><span class="hljs-params"><span class="hljs-function">        : <span class="hljs-string">&quot;=a&quot;</span> (ret)</span></span><br><span class="hljs-params"><span class="hljs-function">        : <span class="hljs-string">&quot;i&quot;</span> (T_SYSCALL),</span></span><br><span class="hljs-params"><span class="hljs-function">          <span class="hljs-string">&quot;a&quot;</span> (num),</span></span><br><span class="hljs-params"><span class="hljs-function">          <span class="hljs-string">&quot;d&quot;</span> (a[<span class="hljs-number">0</span>]),</span></span><br><span class="hljs-params"><span class="hljs-function">          <span class="hljs-string">&quot;c&quot;</span> (a[<span class="hljs-number">1</span>]),</span></span><br><span class="hljs-params"><span class="hljs-function">          <span class="hljs-string">&quot;b&quot;</span> (a[<span class="hljs-number">2</span>]),</span></span><br><span class="hljs-params"><span class="hljs-function">          <span class="hljs-string">&quot;D&quot;</span> (a[<span class="hljs-number">3</span>]),</span></span><br><span class="hljs-params"><span class="hljs-function">          <span class="hljs-string">&quot;S&quot;</span> (a[<span class="hljs-number">4</span>])</span></span><br><span class="hljs-params"><span class="hljs-function">        : <span class="hljs-string">&quot;cc&quot;</span>, <span class="hljs-string">&quot;memory&quot;</span>)</span></span>;<br>    <span class="hljs-keyword">return</span> ret;<br>&#125;<br></code></pre></div></td></tr></table></figure>
 
 <p>从中可以看出，应用程序调用的exit/fork/wait/getpid等库函数最终都会调用syscall函数，只是调用的参数不同而已，如果看最终的汇编代码会更清楚：</p>
@@ -1560,7 +1508,7 @@
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-title">int</span> <span class="hljs-params">(*syscalls[])</span><span class="hljs-params">(<span class="hljs-keyword">uint32_t</span> arg[])</span> </span>= &#123; 	<span class="hljs-comment">//funtion ptr array</span><br>    [SYS_exit]              sys_exit,<br>    [SYS_fork]              sys_fork,<br>    [SYS_wait]              sys_wait,<br>    [SYS_exec]              sys_exec,<br>    [SYS_yield]             sys_yield,<br>    [SYS_kill]              sys_kill,<br>    [SYS_getpid]            sys_getpid,<br>    [SYS_putc]              sys_putc,<br>    [SYS_pgdir]             sys_pgdir,<br>&#125;;<br><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> NUM_SYSCALLS        ((sizeof(syscalls)) / (sizeof(syscalls[0])))</span><br><br><span class="hljs-function"><span class="hljs-keyword">void</span></span><br><span class="hljs-function"><span class="hljs-title">syscall</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span> </span>&#123;<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">trapframe</span> *<span class="hljs-title">tf</span> =</span> current-&gt;tf;<br>    <span class="hljs-keyword">uint32_t</span> arg[<span class="hljs-number">5</span>];<br>    <span class="hljs-keyword">int</span> num = tf-&gt;tf_regs.reg_eax;<br>    <span class="hljs-keyword">if</span> (num &gt;= <span class="hljs-number">0</span> &amp;&amp; num &lt; NUM_SYSCALLS) &#123;<br>        <span class="hljs-keyword">if</span> (syscalls[num] != <span class="hljs-literal">NULL</span>) &#123;<br>            arg[<span class="hljs-number">0</span>] = tf-&gt;tf_regs.reg_edx;<br>            arg[<span class="hljs-number">1</span>] = tf-&gt;tf_regs.reg_ecx;<br>            arg[<span class="hljs-number">2</span>] = tf-&gt;tf_regs.reg_ebx;<br>            arg[<span class="hljs-number">3</span>] = tf-&gt;tf_regs.reg_edi;<br>            arg[<span class="hljs-number">4</span>] = tf-&gt;tf_regs.reg_esi;<br>            tf-&gt;tf_regs.reg_eax = syscalls[num](arg);	<span class="hljs-comment">//`syscalls[num]` is function ptr, and `(arg)` is argument</span><br>            <span class="hljs-keyword">return</span> ;<br>        &#125;<br>    &#125;<br>    print_trapframe(tf);<br>    panic(<span class="hljs-string">&quot;undefined syscall %d, pid = %d, name = %s.\n&quot;</span>,<br>            num, current-&gt;pid, current-&gt;name);<br>&#125;<br></code></pre></div></td></tr></table></figure>
 
 <p>如果从哪个系统调用返回了就执行正常的中断退出(比如fork).</p>
-<h3 id="5-fork-exec-wait-exit"><a href="#5-fork-exec-wait-exit" class="headerlink" title="5.fork/exec/wait/exit"></a>5.fork/exec/wait/exit</h3><h4 id="fork"><a href="#fork" class="headerlink" title="fork():"></a>fork():</h4><blockquote>
+<h3 id="4-fork-exec-wait-exit"><a href="#4-fork-exec-wait-exit" class="headerlink" title="4.fork/exec/wait/exit"></a>4.fork/exec/wait/exit</h3><h4 id="fork"><a href="#fork" class="headerlink" title="fork():"></a>fork():</h4><blockquote>
 <p>重复了一下lab4中的内容, 有点不熟悉, 这种流程分析还是要自己写</p>
 </blockquote>
 <p><img src="../../image/ucore/image-20211228201516840.png" srcset="/img/loading.gif" lazyload alt="image-20211228201516840"></p>
@@ -1596,7 +1544,18 @@
 <p>具体注释在下方:</p>
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span></span><br><span class="hljs-function"><span class="hljs-title">do_execve</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *name, <span class="hljs-keyword">size_t</span> len, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span> *binary, <span class="hljs-keyword">size_t</span> size)</span> </span>&#123;<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">mm_struct</span> *<span class="hljs-title">mm</span> =</span> current-&gt;mm;<br>    <span class="hljs-comment">//例行检查以及校正名称长度</span><br>    <span class="hljs-keyword">if</span> (!user_mem_check(mm, (<span class="hljs-keyword">uintptr_t</span>)name, len, <span class="hljs-number">0</span>)) &#123;<br>        <span class="hljs-keyword">return</span> -E_INVAL;<br>    &#125;<br>    <span class="hljs-keyword">if</span> (len &gt; PROC_NAME_LEN) &#123;<br>        len = PROC_NAME_LEN;<br>    &#125;<br>	<span class="hljs-comment">//从name地址上复制名称字符串</span><br>    <span class="hljs-keyword">char</span> local_name[PROC_NAME_LEN + <span class="hljs-number">1</span>];<br>    <span class="hljs-built_in">memset</span>(local_name, <span class="hljs-number">0</span>, <span class="hljs-keyword">sizeof</span>(local_name));<br>    <span class="hljs-built_in">memcpy</span>(local_name, name, len);<br>	<span class="hljs-comment">//如果current-&gt;mm不为NULL, 说明为用户进程, 清空一下mm(包括vma链表,页目录表,以及mm自身)</span><br>    <span class="hljs-keyword">if</span> (mm != <span class="hljs-literal">NULL</span>) &#123;<br>        lcr3(boot_cr3);<br>        <span class="hljs-keyword">if</span> (mm_count_dec(mm) == <span class="hljs-number">0</span>) &#123;<br>            exit_mmap(mm);<br>            put_pgdir(mm);<br>            mm_destroy(mm);<br>        &#125;<br>        current-&gt;mm = <span class="hljs-literal">NULL</span>;<br>    &#125;<br>    <span class="hljs-keyword">int</span> ret;<br>    <span class="hljs-comment">//解析ELF文件以及建立mm内容</span><br>    <span class="hljs-keyword">if</span> ((ret = load_icode(binary, size)) != <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-keyword">goto</span> execve_exit;	<span class="hljs-comment">//出错则退出</span><br>    &#125;<br>    set_proc_name(current, local_name);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br><br>execve_exit:<br>    do_exit(ret);<br>    panic(<span class="hljs-string">&quot;already exit: %e.\n&quot;</span>, ret);<br>&#125;<br></code></pre></div></td></tr></table></figure>
 
-<p>可以看出解析ELF文件才是大头. 分析在目录<strong>2.c</strong>中.</p>
+<p>可以看出解析ELF文件才是大头. 代码在<strong>练习1</strong>或者直接看源码.</p>
+<p><strong>load_icode</strong>函数的主要工作就是给用户进程建立一个能够让用户进程正常运行的用户环境。此函数有一百多行，完成了如下重要工作：</p>
+<ol>
+<li>调用mm_create函数来申请进程的内存管理数据结构mm所需内存空间，并对mm进行初始化；</li>
+<li>调用setup_pgdir来申请一个页目录表所需的一个页大小的内存空间，并把描述ucore内核虚空间映射的内核页表（boot_pgdir所指）的内容拷贝到此新目录表中，最后让mm-&gt;pgdir指向此页目录表，这就是进程新的页目录表了，且能够正确映射内核虚空间；</li>
+<li>根据应用程序执行码的起始位置来解析此ELF格式的执行程序，并调用mm_map函数根据ELF格式的执行程序说明的各个段（代码段、数据段、BSS段等）的起始位置和大小建立对应的vma结构，并把vma插入到mm结构中，从而表明了用户进程的合法用户态虚拟地址空间；</li>
+<li>调用根据执行程序各个段的大小分配物理内存空间，并根据执行程序各个段的起始位置确定虚拟地址，并在页表中建立好物理地址和虚拟地址的映射关系，然后把执行程序各个段的内容拷贝到相应的内核虚拟地址中，至此应用程序执行码和数据已经根据编译时设定地址放置到虚拟内存中了；</li>
+<li>需要给用户进程设置用户栈，为此调用mm_mmap函数建立用户栈的vma结构，明确用户栈的位置在用户虚空间的顶端，大小为256个页，即1MB，并分配一定数量的物理内存且建立好栈的虚地址&lt;–&gt;物理地址映射关系；</li>
+<li>至此,进程内的内存管理vma和mm数据结构已经建立完成，于是把mm-&gt;pgdir赋值到cr3寄存器中，即更新了用户进程的虚拟内存空间，此时的initproc已经被hello的代码和数据覆盖，成为了第一个用户进程，但此时这个用户进程的执行现场还没建立好；</li>
+<li>先清空进程的中断帧，再重新设置进程的中断帧，使得在执行中断返回指令“iret”后，能够让CPU转到用户态特权级，并回到用户态内存空间，使用用户态的代码段、数据段和堆栈，且能够跳转到用户进程的第一条指令执行，并确保在用户态能够响应中断；</li>
+</ol>
+<p>至此，用户进程的用户环境已经搭建完毕。此时initproc将按产生系统调用的函数调用路径原路返回，执行中断返回指令“iret”（位于trapentry.S的最后一句）后，将切换到用户进程hello的第一条语句位置_start处（位于user/libs/initcode.S的第三句）开始执行。</p>
 <h4 id="wait"><a href="#wait" class="headerlink" title="wait()"></a>wait()</h4><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">// do_wait - wait one OR any children to become PROC_ZOMBIE state, and free memory space of kernel stack</span><br><span class="hljs-comment">//         - proc struct of this child.</span><br><span class="hljs-comment">// <span class="hljs-doctag">NOTE:</span> only after do_wait function, all resources of the child proces are free.</span><br><span class="hljs-function"><span class="hljs-keyword">int</span></span><br><span class="hljs-function"><span class="hljs-title">do_wait</span><span class="hljs-params">(<span class="hljs-keyword">int</span> pid, <span class="hljs-keyword">int</span> *code_store)</span> </span>&#123;<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">mm_struct</span> *<span class="hljs-title">mm</span> =</span> current-&gt;mm;<br>    <span class="hljs-keyword">if</span> (code_store != <span class="hljs-literal">NULL</span>) &#123;	<span class="hljs-comment">//例行检查</span><br>        <span class="hljs-keyword">if</span> (!user_mem_check(mm, (<span class="hljs-keyword">uintptr_t</span>)code_store, <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">int</span>), <span class="hljs-number">1</span>)) &#123;<br>            <span class="hljs-keyword">return</span> -E_INVAL;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proc_struct</span> *<span class="hljs-title">proc</span>;</span><br>    <span class="hljs-keyword">bool</span> intr_flag, haskid;<br>repeat:<br>    haskid = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">if</span> (pid != <span class="hljs-number">0</span>) &#123;	<span class="hljs-comment">//不等于零意味着要在hash_list中寻找特定pid的子程序</span><br>        proc = find_proc(pid);<br>        <span class="hljs-keyword">if</span> (proc != <span class="hljs-literal">NULL</span> &amp;&amp; proc-&gt;parent == current) &#123;<br>            haskid = <span class="hljs-number">1</span>;<br>            <span class="hljs-keyword">if</span> (proc-&gt;state == PROC_ZOMBIE) &#123;<br>                <span class="hljs-keyword">goto</span> found;<br>            &#125;<br>        &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123;	<span class="hljs-comment">//查找任意一个为ZOMBIE的子程序</span><br>        proc = current-&gt;cptr;<br>        <span class="hljs-keyword">for</span> (; proc != <span class="hljs-literal">NULL</span>; proc = proc-&gt;optr) &#123;<br>            haskid = <span class="hljs-number">1</span>;<br>            <span class="hljs-keyword">if</span> (proc-&gt;state == PROC_ZOMBIE) &#123;<br>                <span class="hljs-keyword">goto</span> found;<br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">if</span> (haskid) &#123;	<span class="hljs-comment">//存在子程序, 但是没有一个是ZOMBIE, 而且当前是父进程在执行, 所以调用switch()来</span><br>        <span class="hljs-comment">//切换到子进程执行, 并且设置一下父进程为SLEEP状态, wait原因是for child</span><br>        current-&gt;state = PROC_SLEEPING;<br>        current-&gt;wait_state = WT_CHILD;<br>        schedule();	<br>        <span class="hljs-keyword">if</span> (current-&gt;flags &amp; PF_EXITING) &#123;	<span class="hljs-comment">//怎么调用了do_exit()?????</span><br>            do_exit(-E_KILLED);<br>        &#125;<br>        <span class="hljs-keyword">goto</span> repeat;	<span class="hljs-comment">//子进程(应该)执行完了, 重新查找</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> -E_BAD_PROC;	<span class="hljs-comment">//没有子程序的话......</span><br><br>found:<br>    <span class="hljs-keyword">if</span> (proc == idleproc || proc == initproc) &#123;	<span class="hljs-comment">//不可能是任何进程的子进程</span><br>        panic(<span class="hljs-string">&quot;wait idleproc or initproc.\n&quot;</span>);<br>    &#125;<br>    <span class="hljs-keyword">if</span> (code_store != <span class="hljs-literal">NULL</span>) &#123;	<span class="hljs-comment">//如果提供了存放exit_code的变量, 则存入</span><br>        *code_store = proc-&gt;exit_code;<br>    &#125;<br>    local_intr_save(intr_flag);<br>    &#123;<span class="hljs-comment">//对这种链表的操作要屏蔽中断</span><br>        unhash_proc(proc);<br>        remove_links(proc);<br>    &#125;<br>    local_intr_restore(intr_flag);<br>    <span class="hljs-comment">//释放子进程占用资源</span><br>    put_kstack(proc);<br>    kfree(proc);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
 
 <h4 id="exit"><a href="#exit" class="headerlink" title="exit():"></a>exit():</h4><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">// do_exit - called by sys_exit</span><br><span class="hljs-comment">//   1. call exit_mmap &amp; put_pgdir &amp; mm_destroy to free the almost all memory space of process</span><br><span class="hljs-comment">//   2. set process&#x27; state as PROC_ZOMBIE, then call wakeup_proc(parent) to ask parent reclaim itself.</span><br><span class="hljs-comment">//   3. call scheduler to switch to other process</span><br><span class="hljs-function"><span class="hljs-keyword">int</span></span><br><span class="hljs-function"><span class="hljs-title">do_exit</span><span class="hljs-params">(<span class="hljs-keyword">int</span> error_code)</span> </span>&#123;<br>    <span class="hljs-comment">//不能退出的两个内核进程</span><br>    <span class="hljs-keyword">if</span> (current == idleproc) &#123;<br>        panic(<span class="hljs-string">&quot;idleproc exit.\n&quot;</span>);<br>    &#125;<br>    <span class="hljs-keyword">if</span> (current == initproc) &#123;<br>        panic(<span class="hljs-string">&quot;initproc exit.\n&quot;</span>);<br>    &#125;<br>	<span class="hljs-comment">//如果current-&gt;mm不为NULL, 说明为用户进程, 清空一下mm(包括vma链表,页目录表,以及mm自身)</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">mm_struct</span> *<span class="hljs-title">mm</span> =</span> current-&gt;mm;<br>    <span class="hljs-keyword">if</span> (mm != <span class="hljs-literal">NULL</span>) &#123;<br>        lcr3(boot_cr3);<br>        <span class="hljs-keyword">if</span> (mm_count_dec(mm) == <span class="hljs-number">0</span>) &#123;<br>            exit_mmap(mm);<br>            put_pgdir(mm);<br>            mm_destroy(mm);<br>        &#125;<br>        current-&gt;mm = <span class="hljs-literal">NULL</span>;<br>    &#125;<br>    current-&gt;state = PROC_ZOMBIE;<br>    current-&gt;exit_code = error_code;<br><br>    <span class="hljs-keyword">bool</span> intr_flag;<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proc_struct</span> *<span class="hljs-title">proc</span>;</span><br>    local_intr_save(intr_flag);<br>    &#123;<br>        <span class="hljs-comment">//如果父进程因为WT_CHILD睡眠, 则唤醒父进程</span><br>        proc = current-&gt;parent;<br>        <span class="hljs-keyword">if</span> (proc-&gt;wait_state == WT_CHILD) &#123;	<br>            wakeup_proc(proc);<br>        &#125;<br>        <span class="hljs-keyword">while</span> (current-&gt;cptr != <span class="hljs-literal">NULL</span>) &#123;	<span class="hljs-comment">//当前进程有子进程</span><br>            proc = current-&gt;cptr;<br>            current-&gt;cptr = proc-&gt;optr;<br>		   <span class="hljs-comment">//以下几行把proc从current的cptr上插入到initproc的cptr等关系指针中</span><br>            proc-&gt;yptr = <span class="hljs-literal">NULL</span>;	<br>            <span class="hljs-keyword">if</span> ((proc-&gt;optr = initproc-&gt;cptr) != <span class="hljs-literal">NULL</span>) &#123;<span class="hljs-comment">//把current的子进程的父进程设置为initproc</span><br>                initproc-&gt;cptr-&gt;yptr = proc;<br>            &#125;<br>            proc-&gt;parent = initproc;<br>            initproc-&gt;cptr = proc;<br>            <span class="hljs-comment">//如果initproc因为WT_CHILD睡眠, 则唤醒initproc</span><br>            <span class="hljs-keyword">if</span> (proc-&gt;state == PROC_ZOMBIE) &#123;<br>                <span class="hljs-keyword">if</span> (initproc-&gt;wait_state == WT_CHILD) &#123;<br>                    wakeup_proc(initproc);<br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>    local_intr_restore(intr_flag);<br><br>    schedule();<br>    panic(<span class="hljs-string">&quot;do_exit will not return!! %d.\n&quot;</span>, current-&gt;pid);<br></code></pre></div></td></tr></table></figure>
@@ -1669,12 +1628,465 @@ ZOMBIE--&gt;[*]:资源回收
 <p>最终实现如下：</p>
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span></span><br><span class="hljs-function"><span class="hljs-title">do_pgfault</span><span class="hljs-params">(struct mm_struct *mm, <span class="hljs-keyword">uint32_t</span> error_code, <span class="hljs-keyword">uintptr_t</span> addr)</span> </span>&#123;<br>    <span class="hljs-comment">// ........</span><br>   <span class="hljs-comment">// 查找当前虚拟地址所对应的页表项</span><br>    <span class="hljs-keyword">if</span> ((ptep = get_pte(mm-&gt;pgdir, addr, <span class="hljs-number">1</span>)) == <span class="hljs-literal">NULL</span>) &#123;<br>        cprintf(<span class="hljs-string">&quot;get_pte in do_pgfault failed\n&quot;</span>);<br>        <span class="hljs-keyword">goto</span> failed;<br>    &#125;<br>    <span class="hljs-comment">// 如果这个页表项所对应的物理页不存在，则</span><br>    <span class="hljs-keyword">if</span> (*ptep == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-comment">// 分配一块物理页，并设置页表项</span><br>        <span class="hljs-keyword">if</span> (pgdir_alloc_page(mm-&gt;pgdir, addr, perm) == <span class="hljs-literal">NULL</span>) &#123;<br>            cprintf(<span class="hljs-string">&quot;pgdir_alloc_page in do_pgfault failed\n&quot;</span>);<br>            <span class="hljs-keyword">goto</span> failed;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">else</span> &#123;	<span class="hljs-comment">//不为空说明需要swap或者COW</span><br>        struct Page *page=<span class="hljs-literal">NULL</span>;<br>        <span class="hljs-comment">// 如果当前页错误的原因是写入了只读页面</span><br>        <span class="hljs-keyword">if</span> (*ptep &amp; PTE_P) &#123;<br>            <span class="hljs-comment">// 写时复制：复制一块内存给当前进程</span><br>            cprintf(<span class="hljs-string">&quot;\n\nCOW: ptep 0x%x, pte 0x%x\n&quot;</span>,ptep, *ptep);<br>            <span class="hljs-comment">// 原先所使用的只读物理页</span><br>            page = pte2page(*ptep);<br>            <span class="hljs-comment">// 如果该物理页面被多个进程引用</span><br>            <span class="hljs-keyword">if</span>(page_ref(page) &gt; <span class="hljs-number">1</span>)<br>            &#123;<br>                <span class="hljs-comment">// 释放当前PTE的引用并分配一个新物理页</span><br>                <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Page</span>* <span class="hljs-title">newPage</span> =</span> pgdir_alloc_page(mm-&gt;pgdir, addr, perm);<br>                <span class="hljs-keyword">void</span> * kva_src = page2kva(page);<br>                <span class="hljs-keyword">void</span> * kva_dst = page2kva(newPage);<br>                <span class="hljs-comment">// 拷贝数据</span><br>                <span class="hljs-built_in">memcpy</span>(kva_dst, kva_src, PGSIZE);<br>            &#125;<br>            <span class="hljs-comment">// 如果该物理页面只被当前进程所引用,即page_ref等1</span><br>            <span class="hljs-keyword">else</span><br>                <span class="hljs-comment">// 则可以直接执行page_insert，保留当前物理页并重设其PTE权限。</span><br>                page_insert(mm-&gt;pgdir, page, addr, perm);<br>        &#125;<br>        <span class="hljs-keyword">else</span><br>        &#123;<br>            <span class="hljs-comment">// 如果swap已经初始化完成</span><br>            <span class="hljs-keyword">if</span>(swap_init_ok) &#123;<br>                <span class="hljs-comment">// 将目标数据加载到某块新的物理页中。</span><br>                <span class="hljs-comment">// 该物理页可能是尚未分配的物理页，也可能是从别的已分配物理页中取的</span><br>                <span class="hljs-keyword">if</span> ((ret = swap_in(mm, addr, &amp;page)) != <span class="hljs-number">0</span>) &#123;<br>                    cprintf(<span class="hljs-string">&quot;swap_in in do_pgfault failed\n&quot;</span>);<br>                    <span class="hljs-keyword">goto</span> failed;<br>                &#125;<br>                <span class="hljs-comment">// 将该物理页与对应的虚拟地址关联，同时设置页表。</span><br>                page_insert(mm-&gt;pgdir, page, addr, perm);<br>            &#125;<br>            <span class="hljs-keyword">else</span> &#123;<br>                cprintf(<span class="hljs-string">&quot;no swap_init_ok but ptep is %x, failed\n&quot;</span>,*ptep);<br>                <span class="hljs-keyword">goto</span> failed;<br>            &#125;<br>        &#125;<br>        <span class="hljs-comment">// 当前缺失的页已经加载回内存中，所以设置当前页为可swap。</span><br>        swap_map_swappable(mm, addr, page, <span class="hljs-number">1</span>);<br>        page-&gt;pra_vaddr = addr;<br>   &#125;<br>   ret = <span class="hljs-number">0</span>;<br>failed:<br>    <span class="hljs-keyword">return</span> ret;<br>&#125;<br></code></pre></div></td></tr></table></figure></li>
 </ul>
-<h4 id="3-Dirty-COW浅析"><a href="#3-Dirty-COW浅析" class="headerlink" title="3.Dirty COW浅析"></a>3.Dirty COW浅析</h4><p>并回答如下问题：</p>
+<h4 id="3-Dirty-COW浅析"><a href="#3-Dirty-COW浅析" class="headerlink" title="3.Dirty COW浅析"></a>3.Dirty COW浅析</h4><h5 id="0x00-关于linux内核背景知识"><a href="#0x00-关于linux内核背景知识" class="headerlink" title="0x00 关于linux内核背景知识"></a>0x00 关于linux内核背景知识</h5><p>和ucore非常相似, 比如mm_struct, vma, copy_range一些函数. 下面是这个漏洞的相关背景.</p>
 <ul>
-<li>请分析fork/exec/wait/exit在实现中是如何影响进程的执行状态的？</li>
-<li>请给出ucore中一个用户态进程的执行状态生命周期图（包执行状态，执行状态之间的变换关系，以及产生变换的事件或函数调用）。（字符方式画即可）</li>
+<li><a target="_blank" rel="noopener" href="https://man7.org/linux/man-pages/man2/madvise.2.html">madvise</a>(): 内核对该区域的用户虚拟内存应遵循特定的使用模式<ul>
+<li>MADV_DONTNEED参数:</li>
 </ul>
+</li>
+<li><a target="_blank" rel="noopener" href="https://man7.org/linux/man-pages/man2/mmap.2.html">mmap</a>():<ul>
+<li>MAP_PRIVATE参数: Create a private copy-on-write mapping.  Updates to the mapping are not visible to other processes mapping the same file, and are not carried through to the underlying file. </li>
+</ul>
+</li>
+</ul>
+<h5 id="0x01-概述"><a href="#0x01-概述" class="headerlink" title="0x01 概述"></a>0x01 概述</h5><p>该漏洞是Linux的一个本地提权漏洞，发现者是Phil Oester，影响&gt;=2.6.22的所有Linux内核版本，修复时间是2016年10月18号。该漏洞的原因是<code>get_user_page</code>内核函数在处理<code>Copy-on-Write</code>(以下使用COW表示)的过程中，可能产出竞态条件造成COW过程被破坏，导致出现写数据到进程地址空间内只读内存区域的机会。当我们向带有MAP_PRIVATE标记的只读文件映射区域写数据时，会产生一个映射文件的复制(COW)，对此区域的任何修改都不会写回原来的文件，如果上述的竞态条件发生，就能成功的写回原来的文件。比如我们修改su或者passwd程序就可以达到root的目的。</p>
+<blockquote>
+<p>Pocsuite 是由知道创宇404实验室打造的一款开源的远程漏洞测试框架</p>
+</blockquote>
+<h5 id="0x02-POC分析"><a href="#0x02-POC分析" class="headerlink" title="0x02 POC分析"></a>0x02 POC分析</h5><p>首先打开我们需要修改的只读文件并使用<code>MAP_PRIVATE</code>标记映射文件到内存区域，然后启动两个线程：</p>
 <ul>
+<li>其中一个线程向文件映射的内存区域写数据，这时内核采用COW机制。</li>
+<li>另一个线程使用带MADV_DONTNEED参数的madvise系统调用将文件映射内存区域释放，达到干扰另一个线程的COW过程，产生竞态条件，</li>
+</ul>
+<p>当竞态条件发生时就能写入文件成功。</p>
+<h5 id="0x03-大致流程"><a href="#0x03-大致流程" class="headerlink" title="0x03 大致流程"></a>0x03 大致流程</h5><p>当我们用mmap去映射文件到内存区域时使用了<code>MAP_PRIVATE</code>标记，我们写文件时会写到COW机制产生的内存区域中，原文件不受影响。其中获取用户进程内存页的过程如下：</p>
+<ol>
+<li>第一次调用<code>follow_page_mask</code>查找虚拟地址对应的page，带有<code>FOLL_WRITE</code>标记。因为所在page不在内存中，<code>follow_page_mask</code>返回NULL，第一次失败，进入<code>faultin_page</code>，最终进入<code>do_cow_fault</code>分配不带<code>_PAGE_RW</code>标记的匿名内存页，返回值为0。</li>
+<li>重新开始循环，第二次调用<code>follow_page_mask</code>，带有<code>FOLL_WRITE</code>标记。由于不满足<code>((flags &amp; FOLL_WRITE) &amp;&amp; !pte_write(pte))</code>条件，<code>follow_page_mask</code>返回NULL，第二次失败，进入<code>faultin_page</code>，最终进入<code>do_wp_page</code>函数分配COW页。并在上级函数<code>faultin_page</code>中去掉<code>FOLL_WRITE</code>标记,返回0。</li>
+<li>重新开始循环，第三次调用<code>follow_page_mask</code>，不带<code>FOLL_WRITE</code>标记。成功得到page。</li>
+</ol>
+<p>产生竞态条件:</p>
+<ol>
+<li>第一次<code>follow_page_mask(FOLL_WRITE)</code>，page不在内存中，进行pagefault处理。</li>
+<li>第二次<code>follow_page_mask(FOLL_WRITE)</code>，page没有写权限，并去掉<code>FOLL_WRITE</code>。</li>
+<li>另一个线程释放上一步分配的COW页</li>
+<li>第三次<code>follow_page_mask(无FOLL_WRITE)</code>，page不在内存中，进行pagefault处理。</li>
+<li>第四次<code>follow_page_mask(无FOLL_WRITE)</code>,成功返回page，但没有使用COW机制。</li>
+</ol>
+<h1 id="Lab6"><a href="#Lab6" class="headerlink" title="Lab6"></a>Lab6</h1><h2 id="知识点-4"><a href="#知识点-4" class="headerlink" title="知识点"></a>知识点</h2><h3 id="0-项目组成-2"><a href="#0-项目组成-2" class="headerlink" title="0.项目组成"></a>0.项目组成</h3><p>相对与实验五，实验六主要增加的文件如上表红色部分所示，主要修改的文件如上表紫色部分所示。主要改动如下： 简单说明如下：</p>
+<ul>
+<li>libs/skew_heap.h: 提供了基本的优先队列数据结构，为本次实验提供了抽象数据结构方面的支持。</li>
+<li>kern/process/proc.[ch]：proc.h中扩展了proc_struct的成员变量，用于RR和stride调度算法。proc.c中实现了lab6_set_priority，用于设置进程的优先级。</li>
+<li>kern/schedule/{sched.h,sched.c}: 定义了 ucore 的调度器框架，其中包括相关的数据结构（包括调度器的接口和运行队列的结构），和具体的运行时机制。</li>
+<li>kern/schedule/{default_sched.h,default_sched.c}: 具体的 round-robin 算法，在本次实验中你需要了解其实现。</li>
+<li>kern/schedule/default_sched_stride_c: Stride Scheduling调度器的基本框架，在此次实验中你需要填充其中的空白部分以实现一个完整的 Stride 调度器。</li>
+<li>kern/syscall/syscall.[ch]: 增加了sys_gettime系统调用，便于用户进程获取当前时钟值；增加了sys_lab6_set_priority系统调用，便于用户进程设置进程优先级（给priority.c用）</li>
+<li>user/{matrix.c,priority.c,. . . }: 相关的一些测试用户程序，测试调度算法的正确性，user目录下包含但不限于这些程序。在完成实验过程中，建议阅读这些测试程序，以了解这些程序的行为，便于进行调试。</li>
+</ul>
+<h3 id="1-流程概述"><a href="#1-流程概述" class="headerlink" title="1.流程概述"></a>1.流程概述</h3><p>实验中涉及了idle进程的概念。当cpu没有进程可以执行的时候，系统应该如何工作？在实验五的scheduler实现中，ucore内核不断的遍历进程池，直到找到第一个runnable状态的 process，调用并执行它。也就是说，当系统没有进程可以执行的时候，它会把所有 cpu 时间用在搜索进程池，以实现 idle的目的。但是这样的设计不被大多数操作系统所采用，原因在于它将进程调度和 idle 进程两种不同的概念混在了一起，而且，当调度器比较复杂时，schedule 函数本身也会比较复杂，这样的设计结构很不清晰而且难免会出现错误。所以在此次实验中，ucore建立了一个单独的进程(kern/process/proc.c 中的 idleproc)作为 cpu 空闲时的 idle 进程，这个程序是通常一个死循环。你需要了解这个程序的实现。</p>
+<h3 id="2-新增的内容"><a href="#2-新增的内容" class="headerlink" title="2.新增的内容"></a>2.新增的内容</h3><p>ucore定义的进程控制块struct proc_struct包含了成员变量state,用于描述进程的运行状态，而running和runnable共享同一个状态(state)值PROC_RUNNABLE。</p>
+<p>Lab5中有一个全局变量<code>list_entry_t proc_list</code>, 用来存放所有的进程, wakeup_proc()函数只要设置进程为PROC_RUNNABLE, 然后调度函数再遍历proc_list就能取出下一个进程.</p>
+<p>在Lab6中，runnable的进程会被放在运行队列<code>struct run_queue *rq</code>中。值得注意的是，不同之处在于处于running态的进程不会放在运行队列中, 会被直接dequeue.</p>
+<h2 id="练习-3"><a href="#练习-3" class="headerlink" title="练习"></a>练习</h2><h3 id="练习0-1"><a href="#练习0-1" class="headerlink" title="练习0"></a>练习0</h3><blockquote>
+<p>填写前几个lab的代码并且补充一些内容</p>
+</blockquote>
+<p>遇到了大问题, 最后clone了肖佬的Lab6, 然后改成我自己的代码才过了编译. 实在无法理解为什么会在check_pgfault()这函数上出错.</p>
+<h3 id="练习1-3"><a href="#练习1-3" class="headerlink" title="练习1"></a>练习1</h3><blockquote>
+<p>分析了解lab6采用RR调度算法后的执行过程</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">// The introduction of scheduling classes is borrrowed from Linux, and makes the </span><br><span class="hljs-comment">// core scheduler quite extensible. These classes (the scheduler modules) encapsulate </span><br><span class="hljs-comment">// the scheduling policies. </span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sched_class</span> &#123;</span><br>    <span class="hljs-comment">// the name of sched_class</span><br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *name;<br>    <span class="hljs-comment">// Init the run queue</span><br>    <span class="hljs-keyword">void</span> (*init)(struct run_queue *rq);<br>    <span class="hljs-comment">// put the proc into runqueue, and this function must be called with rq_lock</span><br>    <span class="hljs-keyword">void</span> (*enqueue)(struct run_queue *rq, struct proc_struct *proc);<br>    <span class="hljs-comment">// get the proc out runqueue, and this function must be called with rq_lock</span><br>    <span class="hljs-keyword">void</span> (*dequeue)(struct run_queue *rq, struct proc_struct *proc);<br>    <span class="hljs-comment">// choose the next runnable task</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proc_struct</span> *(*<span class="hljs-title">pick_next</span>)(<span class="hljs-keyword">struct</span> <span class="hljs-title">run_queue</span> *<span class="hljs-title">rq</span>);</span><br>    <span class="hljs-comment">// dealer of the time-tick</span><br>    <span class="hljs-keyword">void</span> (*proc_tick)(struct run_queue *rq, struct proc_struct *proc);<br>    <span class="hljs-comment">/* for SMP support in the future</span><br><span class="hljs-comment">     *  load_balance</span><br><span class="hljs-comment">     *     void (*load_balance)(struct rq* rq);</span><br><span class="hljs-comment">     *  get some proc from this rq, used in load_balance,</span><br><span class="hljs-comment">     *  return value is the num of gotten proc</span><br><span class="hljs-comment">     *  int (*get_proc)(struct rq* rq, struct proc* procs_moved[]);</span><br><span class="hljs-comment">     */</span><br>&#125;;<br><br></code></pre></div></td></tr></table></figure>
+
+<p>上面的代码即为sched_class, 如果要使用函数指针只要sched_class-&gt;init(…)这样即可</p>
+<p>时间片轮转算法在os_kernel_lab\labcodes\lab6\kern\schedule\default_sched.c中, 给每个进程分配时间片的FCFS算法, 简单的入队出队, RR_proc_tick()自减剩余时间片, 判断是否为零, 设置need_resched=1等等, 并不复杂.</p>
+<p>在实验报告中完成：</p>
+<ul>
+<li>请理解并分析sched_class中各个函数指针的用法，并结合Round Robin 调度算法描ucore的调度执行过程</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span></span><br><span class="hljs-function"><span class="hljs-title">schedule</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span> </span>&#123;<br>    <span class="hljs-keyword">bool</span> intr_flag;<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proc_struct</span> *<span class="hljs-title">next</span>;</span><br>    local_intr_save(intr_flag);  <span class="hljs-comment">//inhibit interrupt</span><br>    &#123;<br>        current-&gt;need_resched = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">if</span> (current-&gt;state == PROC_RUNNABLE) &#123;<br>            <span class="hljs-comment">//change from list search to function</span><br>            sched_class_enqueue(current);<br>        &#125;<br>        <span class="hljs-keyword">if</span> ((next = sched_class_pick_next()) != <span class="hljs-literal">NULL</span>) &#123;<br>            sched_class_dequeue(next);<br>        &#125;<br>        <span class="hljs-keyword">if</span> (next == <span class="hljs-literal">NULL</span>) &#123;<br>            next = idleproc;<br>        &#125;<br>        next-&gt;runs ++;<br>        <span class="hljs-keyword">if</span> (next != current) &#123;<br>            proc_run(next);<br>        &#125;<br>    &#125;<br>    local_intr_restore(intr_flag);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>首先是schedule函数, 他被调用的函数在下表:</p>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>位置</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>proc.c::do_exit</td>
+<td>用户线程执行结束，主动放弃CPU控制权。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>proc.c::do_wait</td>
+<td>用户线程等待子进程结束，主动放弃CPU控制权。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>proc.c::init_main</td>
+<td>1. initproc内核线程等待所有用户进程结束，如果没有结束，就主动放弃CPU控制权; 2. initproc内核线程在所有用户进程结束后，让kswapd内核线程执行10次，用于回收空闲内存资源</td>
+</tr>
+<tr>
+<td>4</td>
+<td>proc.c::cpu_idle</td>
+<td>idleproc内核线程的工作就是等待有处于就绪态的进程或线程，如果有就调用schedule函数</td>
+</tr>
+<tr>
+<td>5</td>
+<td>sync.h::lock</td>
+<td>在获取锁的过程中，如果无法得到锁，则主动放弃CPU控制权</td>
+</tr>
+<tr>
+<td>6</td>
+<td>trap.c::trap</td>
+<td>如果在当前进程在用户态被打断去，且当前进程控制块的成员变量need_resched设置为1，则当前线程会放弃CPU控制权(<strong>这个感觉挺特别的, 如果需要被调度, 那么只要因为个什么软中断跳转到内核状态进行执行的时候就会放弃控制权. 这实际上体现了对用户进程的可抢占性, 而且是随机抢占</strong>)</td>
+</tr>
+</tbody></table>
+<p>选取下一个完成之后, next变量作为proc_run()的参数进而执行next中的进程.</p>
+<ul>
+<li>请在实验报告中简要说明如何设计实现”多级反馈队列调度算法“，给出概要设计，鼓励给出详细设计</li>
+</ul>
+<p><strong>多级反馈队列算法（MLFQ)</strong> </p>
+<p>进程可<strong>在不同队列间移动</strong>的多级队列算法, 时间片大小随优先级级别的增加而增加,<br>例如进程在当前时间片内没有完成，则降到下一个优先级。</p>
+<p>特征：CPU密集型进程优先级下降的很快，IO密集型进程停留在高优先级</p>
+<p><strong>大概设计:</strong> </p>
+<p>多级反馈队列要有多个<code>run_queue</code>, 每个queue的时间片不同.</p>
+<blockquote>
+<p>假设有三个run_queue, rq0, rq1, rq2, 固定时间片为5, 队列间调度使用RR算法, 时间片长度为10, 8, 6</p>
+</blockquote>
+<ul>
+<li><p>sched_init(): 首先list_init()一下三个rq, 将函数指针结构体赋值一下, 设置当前rq=rq0</p>
+</li>
+<li><p>sched_class_proc_tick: 在时钟中断里被调用, 如果当前时间片用完了, 则设置need_resched为1</p>
+</li>
+<li><p>sched_pick_next: 判断当前queue时间片以及当前进程时间片是否用完, 前者用完则rq切换到下一个queue, 后者用完rq不变, 从rq取出第一个进程</p>
+</li>
+<li><p>sched_enqueue: 通过run_times判断为CPU密集或者IO密集, 通过设定阈值来加入到三个不同的queu中</p>
+</li>
+<li><p>sched_dequeue: delete就完事了</p>
+</li>
+</ul>
+<h3 id="练习2-3"><a href="#练习2-3" class="headerlink" title="练习2"></a>练习2</h3><p><a target="_blank" rel="noopener" href="http://www.waldspurger.org/carl/papers/phd-mit-tr667.pdf">stride算法论文</a> </p>
+<h3 id="Challenge-1-1"><a href="#Challenge-1-1" class="headerlink" title="Challenge 1"></a>Challenge 1</h3><blockquote>
+<p>实现 Linux 的 CFS 调度算法</p>
+</blockquote>
+<h1 id="Lab7"><a href="#Lab7" class="headerlink" title="Lab7"></a>Lab7</h1><h2 id="知识点-5"><a href="#知识点-5" class="headerlink" title="知识点"></a>知识点</h2><h3 id="00-基础原理"><a href="#00-基础原理" class="headerlink" title="00.基础原理"></a>00.<a target="_blank" rel="noopener" href="https://kiprey.github.io/2020/09/uCore-7/#%E7%9F%A5%E8%AF%86%E7%82%B9">基础原理</a></h3><h3 id="0-项目组成-3"><a href="#0-项目组成-3" class="headerlink" title="0.项目组成"></a>0.项目组成</h3><ul>
+<li>kern/schedule/{sched.h,sched.c}: 增加了定时器（timer）机制，用于进程/线程的do_sleep功能。</li>
+<li>kern/sync/sync.h: <strong>去除了lock实现（这对于不抢占内核没用。</strong> </li>
+<li>kern/sync/wait.[ch]: 定义了等待队列wait_queue结构和等待entry的wait结构以及在此之上的函数，这是ucore中的信号量semophore机制和条件变量机制的基础，在本次实验中你需要了解其实现。</li>
+<li>kern/sync/sem.[ch]:定义并实现了ucore中内核级信号量相关的数据结构和函数，本次试验中你需要了解其中的实现，并基于此完成内核级条件变量的设计与实现。</li>
+<li>user/ libs/ {syscall.[ch],ulib.[ch] }与kern/sync/syscall.c：实现了进程sleep相关的系统调用的参数传递和调用关系。</li>
+<li>user/{ sleep.c,sleepkill.c}: 进程睡眠相关的一些测试用户程序。</li>
+<li>kern/sync/monitor.[ch]:基于管程的条件变量的实现程序，在本次实验中是练习的一部分，要求完成。</li>
+<li>kern/sync/check_sync.c：实现了基于管程的哲学家就餐问题，在本次实验中是练习的一部分，要求完成基于管程的哲学家就餐问题。</li>
+<li>kern/mm/vmm.[ch]：用信号量mm_sem取代mm_struct中原有的mm_lock。（本次实验不用管）</li>
+</ul>
+<h3 id="1-定时器相关"><a href="#1-定时器相关" class="headerlink" title="1.定时器相关"></a>1.定时器相关</h3><p>在<code>sched.h</code>中定义了定时器中断相关的函数:</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">sched_init</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">wakeup_proc</span><span class="hljs-params">(struct proc_struct *proc)</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">schedule</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">add_timer</span><span class="hljs-params">(<span class="hljs-keyword">timer_t</span> *timer)</span></span>;     <span class="hljs-comment">// add timer to timer_list</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">del_timer</span><span class="hljs-params">(<span class="hljs-keyword">timer_t</span> *timer)</span></span>;     <span class="hljs-comment">// del timer from timer_list</span><br><span class="hljs-comment">// call scheduler to update tick related info, and check the timer is expired? If expired, then wakup proc</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">run_timer_list</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>;<br></code></pre></div></td></tr></table></figure>
+
+<p>add_timer函数只在do_sleep中会被用到, 用于设定sleep的时长, 然后通过时钟中断里的run_timer_lsit来找到expired的进程, 从而继续执行.</p>
+<h3 id="2-等待队列实现"><a href="#2-等待队列实现" class="headerlink" title="2.等待队列实现"></a>2.等待队列实现</h3><h4 id="基本结构和函数"><a href="#基本结构和函数" class="headerlink" title="基本结构和函数"></a>基本结构和函数</h4><p>需要等待事件的进程在转入休眠状态后插入到等待队列中。当事件发生之后，内核遍历相应等待队列，唤醒休眠的用户进程或内核线程，并设置其状态为就绪状态（PROC_RUNNABLE），并将该进程从等待队列中清除。ucore在kern/sync/{ wait.h, wait.c }中实现了等待项wait结构和等待队列wait queue结构以及相关函数），这是实现ucore中的信号量机制和条件变量机制的基础</p>
+<blockquote>
+<p>总结一下, 到目前为止出现了几个queue, 一个是放着所有进程的proc_list, 用于get_pid(), kern_thread()等等函数; 第二个是<code>struct run_queue *rq</code>, 即运行队列, 当然不仅仅只是一个链表头, 也可以是heap的head; 第三个是这里的等待队列wait_queue, 实现在下面:</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-string">&quot;数据结构</span><br><span class="hljs-string">typedef  struct &#123;</span><br><span class="hljs-string">    struct proc_struct *proc;     //等待进程的指针</span><br><span class="hljs-string">    uint32_t wakeup_flags;        //进程被放入等待队列的原因标记</span><br><span class="hljs-string">    wait_queue_t *wait_queue;     //指向此wait结构所属于的wait_queue</span><br><span class="hljs-string">    list_entry_t wait_link;       //用来组织wait_queue中wait节点的连接</span><br><span class="hljs-string">&#125; wait_t;</span><br><span class="hljs-string"></span><br><span class="hljs-string">typedef struct &#123;</span><br><span class="hljs-string">    list_entry_t wait_head;       //wait_queue的队头</span><br><span class="hljs-string">&#125; wait_queue_t;</span><br><span class="hljs-string"></span><br><span class="hljs-string">le2wait(le, member)               //实现wait_t中成员的指针向wait_t 指针的转化</span><br></code></pre></div></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-string">&quot;底层相关函数, 定义queue级别的操作, wakeup等操作是由高层函数实现的</span><br><span class="hljs-string">void wait_init(wait_t *wait, struct proc_struct *proc);    //初始化wait结构</span><br><span class="hljs-string">bool wait_in_queue(wait_t *wait);                          //wait是否在wait queue中</span><br><span class="hljs-string">void wait_queue_init(wait_queue_t *queue);                 //初始化wait_queue结构</span><br><span class="hljs-string">void wait_queue_add(wait_queue_t *queue, wait_t *wait);    //把wait前插到wait queue中</span><br><span class="hljs-string">void wait_queue_del(wait_queue_t *queue, wait_t *wait);    //从wait queue中删除wait</span><br><span class="hljs-string">//下两个参数中的queue用于assert检查</span><br><span class="hljs-string">wait_t *wait_queue_next(wait_queue_t *queue, wait_t *wait);//取得wait的后一个链接指针</span><br><span class="hljs-string">wait_t *wait_queue_prev(wait_queue_t *queue, wait_t *wait);//取得wait的前一个链接指针</span><br><span class="hljs-string">wait_t *wait_queue_first(wait_queue_t *queue);             //取得wait queue的第一个wait</span><br><span class="hljs-string">wait_t *wait_queue_last(wait_queue_t *queue);              //取得wait queue的最后一个wait</span><br><span class="hljs-string">bool wait_queue_empty(wait_queue_t *queue);                //wait queue是否为空</span><br></code></pre></div></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-string">&quot;高层函数</span><br><span class="hljs-string">//让wait与进程关联，且让当前进程关联的wait进入等待队列queue，当前进程睡眠</span><br><span class="hljs-string">void wait_current_set(wait_queue_t *queue, wait_t *wait, uint32_t wait_state);</span><br><span class="hljs-string">//把与当前进程关联的wait从等待队列queue中删除</span><br><span class="hljs-string">void wait_current_del(queue, wait);</span><br><span class="hljs-string">//下面三个函数中的del是指是否删除</span><br><span class="hljs-string">//唤醒与wait关联的进程, 调用wakeup_proc()-&gt;sche_class_enqueue()把proc加入到rq里</span><br><span class="hljs-string">void wakeup_wait(wait_queue_t *queue, wait_t *wait, uint32_t wakeup_flags, bool del);</span><br><span class="hljs-string">//唤醒等待队列上挂着的第一个wait所关联的进程</span><br><span class="hljs-string">void wakeup_first(wait_queue_t *queue, uint32_t wakeup_flags, bool del);</span><br><span class="hljs-string">//唤醒等待队列上所有的等待的进程, 会调用wakeup_wait和wait_queue_first(next)</span><br><span class="hljs-string">void wakeup_queue(wait_queue_t *queue, uint32_t wakeup_flags, bool del);</span><br></code></pre></div></td></tr></table></figure>
+
+<p>内核前面的流程还是一样的, 由proc_init()函数创建第一个内核进程idleproc, 然后调用kern_thread()创建第二个内核进程initproc, 这个进程会执行init_main函数. 但是一切都还未发生, 直到cpu_idle()函数发现当前(idleproc)的need_resched==1, 换成initproc开始执行, 在这个lab中init_main加上了check_sync()用来检查哲学家思考问题.</p>
+<p>下面是调用关系示例:</p>
+<h4 id="up-V操作"><a href="#up-V操作" class="headerlink" title="__up(): V操作"></a>__up(): V操作</h4><p><img src="../../image/ucore/up.gif" srcset="/img/loading.gif" lazyload alt="up"></p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">static</span> __noinline <span class="hljs-keyword">void</span> __up(<span class="hljs-keyword">semaphore_t</span> *sem, <span class="hljs-keyword">uint32_t</span> wait_state) &#123;<br>    <span class="hljs-keyword">bool</span> intr_flag;<br>    local_intr_save(intr_flag);<br>    &#123;<span class="hljs-comment">//屏蔽中断</span><br>        <span class="hljs-keyword">wait_t</span> *wait;<br>        <span class="hljs-keyword">if</span> ((wait = wait_queue_first(&amp;(sem-&gt;wait_queue))) == <span class="hljs-literal">NULL</span>) <br>        &#123;<span class="hljs-comment">//意味着没有等待的进程</span><br>            sem-&gt;value ++;<br>        &#125;<br>        <span class="hljs-keyword">else</span> &#123;<span class="hljs-comment">//否则要唤醒</span><br>            wakeup_wait(&amp;(sem-&gt;wait_queue), wait, wait_state, <span class="hljs-number">1</span>);<br>        &#125;<br>    &#125;<br>    local_intr_restore(intr_flag);<br><br></code></pre></div></td></tr></table></figure>
+
+<h4 id="down-P操作"><a href="#down-P操作" class="headerlink" title="__down(): P操作"></a>__down(): P操作</h4><p><img src="../../image/ucore/down.gif" srcset="/img/loading.gif" lazyload alt="down"></p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">static</span> __noinline <span class="hljs-keyword">uint32_t</span> __down(<span class="hljs-keyword">semaphore_t</span> *sem, <span class="hljs-keyword">uint32_t</span> wait_state) &#123;<br>    <span class="hljs-comment">//realize P operation</span><br>    <span class="hljs-keyword">bool</span> intr_flag;<br>    local_intr_save(intr_flag);	<span class="hljs-comment">//save the interrupt flag</span><br>    <span class="hljs-keyword">if</span> (sem-&gt;value &gt; <span class="hljs-number">0</span>) &#123;	<span class="hljs-comment">//能够获取信号量</span><br>        sem-&gt;value --;<br>        local_intr_restore(intr_flag);<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>    &#125;<br>    <span class="hljs-comment">//无法获得信号量时:</span><br>    <span class="hljs-keyword">wait_t</span> __wait, *wait = &amp;__wait;<br>    wait_current_set(&amp;(sem-&gt;wait_queue), wait, wait_state); <span class="hljs-comment">//加入等待队列</span><br>    local_intr_restore(intr_flag);	<span class="hljs-comment">//关中断</span><br><br>    schedule();<span class="hljs-comment">//选择另一个进程执行</span><br><br>    local_intr_save(intr_flag);<span class="hljs-comment">//如果被另一个V操作(up函数)唤醒, 继续执行</span><br>    wait_current_del(&amp;(sem-&gt;wait_queue), wait);<span class="hljs-comment">//从wait队列中删除</span><br>    local_intr_restore(intr_flag);<br><br>    <span class="hljs-keyword">if</span> (wait-&gt;wakeup_flags != wait_state) &#123;<br>        <span class="hljs-keyword">return</span> wait-&gt;wakeup_flags;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="3-信号量"><a href="#3-信号量" class="headerlink" title="3.信号量"></a>3.信号量</h3><p>信号量的数据结构定义如下:</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span><br>    <span class="hljs-keyword">int</span> value;                   <span class="hljs-comment">//信号量的当前值</span><br>    <span class="hljs-keyword">wait_queue_t</span> wait_queue;     <span class="hljs-comment">//信号量对应的等待队列</span><br>&#125; <span class="hljs-keyword">semaphore_t</span>;<br></code></pre></div></td></tr></table></figure>
+
+<p>__up()和__down()的分析在上面.</p>
+<p>对照信号量的原理性描述和具体实现，可以发现二者在流程上基本一致，只是具体实现采用了关中断的方式保证了对共享资源的互斥访问，通过等待队列让无法获得信号量的进程睡眠等待。</p>
+<h3 id="4-管程-monitor-和条件变量"><a href="#4-管程-monitor-和条件变量" class="headerlink" title="4.管程(monitor)和条件变量"></a>4.管程(monitor)和条件变量</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://kiprey.github.io/2020/09/uCore-7/#5-%E7%AE%A1%E7%A8%8B">原理</a> </p>
+</blockquote>
+<p>ucore中的管程机制是基于信号量和条件变量来实现的。ucore中的管程的数据结构monitor_t定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">monitor</span>&#123;</span><br>    <span class="hljs-keyword">semaphore_t</span> mutex;	<span class="hljs-comment">// the mutex lock for going into the routines in monitor, should be initialized to 1</span><br>    <span class="hljs-comment">// the next semaphore is used to </span><br>    <span class="hljs-comment">//    (1) procs which call cond_signal funciton should DOWN next sema after UP cv.sema</span><br>    <span class="hljs-comment">// OR (2) procs which call cond_wait funciton should UP next sema before DOWN cv.sema</span><br>    <span class="hljs-keyword">semaphore_t</span> next;        <br>    <span class="hljs-keyword">int</span> next_count;         <span class="hljs-comment">// the number of of sleeped procs which cond_signal funciton</span><br>    <span class="hljs-keyword">condvar_t</span> *cv;          <span class="hljs-comment">// the condvars(是一个array) in monitor</span><br>&#125; <span class="hljs-keyword">monitor_t</span>;<br></code></pre></div></td></tr></table></figure>
+
+<p>Since a signaling process must wait until the resumed process either leaves or waits, an additional binary semaphore, next, is introduced, initialized to 0. ==The signaling processes can use next to suspend themselves==. An integer variable next count is also provided to count the number of processes suspended on next. </p>
+<p>管程中的条件变量的数据结构condvar_t定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">condvar</span>&#123;</span><br><span class="hljs-comment">// the sem semaphore is used to down the waiting proc, and the signaling proc should up the waiting proc</span><br>    <span class="hljs-keyword">semaphore_t</span> sem;     <br>    <span class="hljs-keyword">int</span> count;       　    <span class="hljs-comment">// the number of waiters on condvar</span><br>    <span class="hljs-keyword">monitor_t</span> * owner;     <span class="hljs-comment">// the owner(monitor) of this condvar</span><br>&#125; <span class="hljs-keyword">condvar_t</span>;<br></code></pre></div></td></tr></table></figure>
+
+<p>条件变量的定义中也包含了一系列的成员变量，信号量sem用于让发出<code>wait_cv</code>操作的等待某个条件Cond为真的进程睡眠，而让发出<code>signal_cv</code>操作的进程通过这个sem来唤醒睡眠的进程, <strong>可以看出条件变量是信号量的高层封装.</strong> </p>
+<p>要看懂monitor还可以看看他的初始化函数:</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">// Initialize monitor.</span><br><span class="hljs-keyword">void</span>  <span class="hljs-comment">//monitor中的cv其实是一个数组头, 大小是这个函数的num_cv参数, 能存放多个条件变量, 这样方便管程控制</span><br>monitor_init (<span class="hljs-keyword">monitor_t</span> * mtp, <span class="hljs-keyword">size_t</span> num_cv) &#123;	<br>    <span class="hljs-keyword">int</span> i;<br>    assert(num_cv&gt;<span class="hljs-number">0</span>);<br>    mtp-&gt;next_count = <span class="hljs-number">0</span>;<br>    mtp-&gt;cv = <span class="hljs-literal">NULL</span>;<br>    sem_init(&amp;(mtp-&gt;mutex), <span class="hljs-number">1</span>); <span class="hljs-comment">//unlocked</span><br>    sem_init(&amp;(mtp-&gt;next), <span class="hljs-number">0</span>);	<span class="hljs-comment">//注意到这两个的初始化并不一致, next一开始是空的</span><br>    mtp-&gt;cv =(<span class="hljs-keyword">condvar_t</span> *)kmalloc(<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">condvar_t</span>)*num_cv);<br>    assert(mtp-&gt;cv!=<span class="hljs-literal">NULL</span>);<br>    <span class="hljs-keyword">for</span>(i=<span class="hljs-number">0</span>; i&lt;num_cv; i++)&#123;<span class="hljs-comment">//初始化条件变量</span><br>        mtp-&gt;cv[i].count=<span class="hljs-number">0</span>;<br>        sem_init(&amp;(mtp-&gt;cv[i].sem),<span class="hljs-number">0</span>);<br>        mtp-&gt;cv[i].owner=mtp;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>ucore设计实现了条件变量<code>wait_cv</code>操作和<code>signal_cv</code>操作对应的具体函数，即<code>cond_wait</code>函数和<code>cond_signal</code>函数，此外还有<code>cond_init</code>初始化函数（可直接看源码）</p>
+<p><strong>signal_cv的原理描述</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">if</span>( cv.count &gt; <span class="hljs-number">0</span>) &#123;	<span class="hljs-comment">//如果该cv上没有等待的进程, 直接跳过</span><br>   monitor.next_count ++;	<span class="hljs-comment">//否则next_count++</span><br>   sem_signal(cv.sem);		<span class="hljs-comment">//唤醒队列中第一个进程</span><br>   sem_wait(monitor.next);	<span class="hljs-comment">//一开始的时候next.value=0, 当前进程肯定会被挂起并schedule();</span><br>                            <span class="hljs-comment">//后来(???</span><br>   monitor.next_count -- ;	<span class="hljs-comment">//被唤醒后就减掉了</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>实际代码是差不多的:</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">if</span>(cvp-&gt;count&gt;<span class="hljs-number">0</span>) &#123;<br>    cvp-&gt;owner-&gt;next_count ++;<br>    up(&amp;(cvp-&gt;sem));<br>    down(&amp;(cvp-&gt;owner-&gt;next));<br>    cvp-&gt;owner-&gt;next_count --;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p><strong>wait_cv的原理描述</strong> </p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">cv.count++;	<span class="hljs-comment">//等待数量+1</span><br><span class="hljs-keyword">if</span>(monitor.next_count &gt; <span class="hljs-number">0</span>)	<span class="hljs-comment">//有大于等于1个进程执行cond_signal函数且sleep</span><br>   sem_signal(monitor.next);<span class="hljs-comment">//唤醒wait_queue第一个进程</span><br><span class="hljs-keyword">else</span>	<span class="hljs-comment">//没有进程因执行cond_signal而挂起</span><br>   sem_signal(monitor.mutex);	<span class="hljs-comment">//解开互斥锁, 好让其他进程进入管程</span><br>sem_wait(cv.sem);	<span class="hljs-comment">//当前进程需要等待信号(见下方)</span><br>cv.count --;<br></code></pre></div></td></tr></table></figure>
+
+<blockquote>
+<p>有一点迷惑的地方在于等待信号是在程序中判断的吗? 看代码确实是这个意思, 到了sem_wait就一定会等待(通过相邻哲学家的情况提前signal_cv, 设置state_condvar, 然后sem_wait都用不着判断cv.sem的value, 肯定是0.</p>
+<p>没有弄清楚什么是必须写在操作系统里的什么是要写在程序中的</p>
+</blockquote>
+<p>实际代码:</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">cvp-&gt;count++;<br><span class="hljs-keyword">if</span>(cvp-&gt;owner-&gt;next_count &gt; <span class="hljs-number">0</span>)<br>    up(&amp;(cvp-&gt;owner-&gt;next));<br><span class="hljs-keyword">else</span><br>    up(&amp;(cvp-&gt;owner-&gt;mutex));<br>down(&amp;(cvp-&gt;sem));<br>cvp-&gt;count --;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="5-管程中函数的入口出口设计"><a href="#5-管程中函数的入口出口设计" class="headerlink" title="5.管程中函数的入口出口设计"></a>5.管程中函数的入口出口设计</h3><p>为了让整个管程正常运行，还需在管程中的每个函数的入口和出口增加相关操作，即：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">function_in_monitor （…）<br>&#123;<br>  sem.wait(monitor.mutex);<br><span class="hljs-comment">//-----------------------------</span><br>  the real body of function;<br><span class="hljs-comment">//-----------------------------</span><br>  <span class="hljs-keyword">if</span>(monitor.next_count &gt; <span class="hljs-number">0</span>)<br>     sem_signal(monitor.next);<br>  <span class="hljs-keyword">else</span><br>     sem_signal(monitor.mutex);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>这样带来的作用有两个，（1）只有一个进程在执行管程中的函数。（2）避免由于执行了cond_signal函数而睡眠的进程无法被唤醒。</p>
+<p>具体是这样工作的: </p>
+<ul>
+<li>如果1号进程进入了临界区, 然后由于某种原因(比如外部中断)而切换到了另一个也要访问管程的进程2号, 那么2号就会在sem.wait()里被挂起来, 并且通过调度最终换到1号继续执行. </li>
+<li>当1号执行到出口时, 他会发现next_count=0, 随后释放mutex锁, 发现1号在等待mutex, 所以将其唤醒, 在下一个中断中, 1号进入睡眠, 2号准备执行. (不一定是紧跟着的, 还要看调度器, 这里只是设置成了RUNNALBE)</li>
+<li>2 号执行到出口时发现next_count=1, 于是up一下信号量next, 最终回到一号继续往下执行.</li>
+</ul>
+<h3 id="6-死锁"><a href="#6-死锁" class="headerlink" title="6.死锁"></a>6.死锁</h3><blockquote>
+<p>不用可惜了(bushi <a target="_blank" rel="noopener" href="https://kiprey.github.io/2020/09/uCore-7/#7-%E6%AD%BB%E9%94%81">[link]</a> </p>
+</blockquote>
+<h4 id="a-死锁概念"><a href="#a-死锁概念" class="headerlink" title="a. 死锁概念"></a>a. 死锁概念</h4><h5 id="1-进程访问资源的流程"><a href="#1-进程访问资源的流程" class="headerlink" title="1) 进程访问资源的流程"></a>1) 进程访问资源的流程</h5><ul>
+<li>资源类型R1,R2,…，RmR1,R2,…，Rm: CPU执行时间，内存空间，I/O设备等。</li>
+<li>每类资源RiRi有WiWi个实例</li>
+<li>进程访问资源的流程<ul>
+<li>请求/获取：申请空闲资源</li>
+<li>使用/占用：进程占用资源</li>
+<li>释放：资源状态由占用变成空闲。</li>
+</ul>
+</li>
+</ul>
+<h5 id="2-资源分类"><a href="#2-资源分类" class="headerlink" title="2) 资源分类"></a>2) 资源分类</h5><ul>
+<li>可重用资源（Reusable Resource）<ul>
+<li>资源不能被删除且自任何时刻只能有一个进程在使用</li>
+<li>进程释放资源后，其他进程可重用</li>
+<li>可重用资源示例：硬件如处理器、I/O设备等，软件如文件、数据库等</li>
+<li>可能出现死锁：每个进程占用一部分资源并请求其他资源</li>
+</ul>
+</li>
+<li>消费资源 (Consumable resource)<ul>
+<li>资源创建和销毁</li>
+<li>消耗资源示例：中断、信号、消息</li>
+<li>可能出现死锁：进程间相互等待接收对方的消息</li>
+</ul>
+</li>
+</ul>
+<h5 id="3-出现死锁的必要条件"><a href="#3-出现死锁的必要条件" class="headerlink" title="3) 出现死锁的必要条件"></a>3) 出现死锁的必要条件</h5><ul>
+<li>互斥：任何时刻只能有一个进程使用一个资源实例</li>
+<li>持有并等待：进程保持至少一个资源，并正在等待获取其他进程持有的资源</li>
+<li>非抢占：资源只能在进程使用后自愿释放</li>
+<li>循环等待：进程间相互循环等待</li>
+</ul>
+<h4 id="b-死锁处理方法"><a href="#b-死锁处理方法" class="headerlink" title="b. 死锁处理方法"></a>b. 死锁处理方法</h4><blockquote>
+<p>死锁检测较为复杂，通常由应用程序处理死锁，<strong>操作系统会忽略死锁</strong> </p>
+</blockquote>
+<h5 id="1-死锁预防"><a href="#1-死锁预防" class="headerlink" title="1) 死锁预防"></a>1) 死锁预防</h5><blockquote>
+<p>死锁预防（Deadlock Prevention) ： 确保系统永远不会进入死锁状态。</p>
+</blockquote>
+<p>预防是采用某种策略，<strong>限制</strong>并发进程对资源的请求，使系统在任何时刻都<strong>不满足死锁的必要条件</strong>。</p>
+<ul>
+<li>互斥：把互斥的共享资源封装成可同时访问的</li>
+<li>持有并等待：进程请求资源时，要求它不持有任何其他资源。仅允许进程在开始执行时，一次请求所有需要的资源，但这种做法的资源利用率低。</li>
+<li>非抢占：如进程请求不能立即分配的资源，则释放已经占用的资源。只在能够同时获得所有需要资源时，才执行分配操作。</li>
+<li>循环等待：对资源排序，要求进程按顺序请求资源。</li>
+</ul>
+<h5 id="2-死锁避免"><a href="#2-死锁避免" class="headerlink" title="2) 死锁避免"></a>2) 死锁避免</h5><blockquote>
+<p>死锁避免（Deadlock Avoidance）：在使用前进行判断，只允许不会出现死锁的进程请求资源。</p>
+</blockquote>
+<p>利用额外的先验信息，在分配资源时判断是否会出现死锁，只在不会出现死锁时分配资源。</p>
+<ul>
+<li>要求进程声明需要资源的<strong>最大数目</strong>。</li>
+<li>限定<strong>提供</strong>与<strong>分配</strong>的资源数量，确保满足进程的<strong>最大</strong>需求。</li>
+<li><strong>动态检查</strong>资源分配状态，确保不会出现环形等待。</li>
+</ul>
+<p>系统资源分配的安全状态</p>
+<ul>
+<li>当进程请求资源时，系统判断分配后是否处于安全状态。</li>
+<li>系统处于安全状态：针对所有已占用进程，存在安全序列</li>
+<li>序列&lt;P1,P2,…,PN&gt;是安全的<ul>
+<li>PiPi要求的资源 &lt;= 当前可用资源 + 所有PjPj持有资源。其中<code>j&lt;i</code>。</li>
+<li>如果PiPi的资源请求不能马上分配，则PiPi等待所有Pj(j&lt;i)Pj(j&lt;i)完成</li>
+<li>PiPi完成后，Pi+1Pi+1可得到所需资源，执行并释放所分配的资源。</li>
+<li>最终整个序列的所有PiPi都能获得所需资源。</li>
+</ul>
+</li>
+</ul>
+<p><strong>银行家算法</strong>（Banker’s Algorithm）</p>
+<blockquote>
+<p>银行家算法是一个避免死锁产生的算法，以银行借贷分配策略为基础，判断并保证系统处于安全状态。</p>
+</blockquote>
+<ul>
+<li><p>使用的数据结构</p>
+<blockquote>
+<p>n = 线程数量， m = 资源类型数量</p>
+</blockquote>
+<ul>
+<li>**Max(总需求量)**：n x m 矩阵，线程TiTi最多请求类型RiRi的资源Max[i,j]Max[i,j]个实例</li>
+<li>**Available(剩余空闲量)**：长度为m的向量，当前有Available[i]Available[i]个类型RjRj的资源实例可用</li>
+<li>**Allocation(已分配量)**：n x m 矩阵，线程TiTi当前分配了Allocation[i,j]Allocation[i,j]个RjRj的实例</li>
+<li>**Need(未来需要量)**： n x m矩阵，线程TiTi未来需要Need[i,j]Need[i,j]个RjRj资源实例。</li>
+</ul>
+<blockquote>
+<p>Need[i,j]=Max[i,j]−Allocation[i,j]Need[i,j]=Max[i,j]−Allocation[i,j]</p>
+</blockquote>
+</li>
+<li><p><strong>安全状态判断</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">COPY<span class="hljs-comment">// Work和Finish分别是长度为m和n的向量初始化</span><br>Work[m], Finish[n];<br><br>Work = Available; <span class="hljs-comment">// 当前资源剩余空闲量</span><br><span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++)<br>  Finish[i] = <span class="hljs-literal">false</span>; <span class="hljs-comment">// 线程i没结束</span><br><br><span class="hljs-comment">// ...每个线程开始运行并分配资源</span><br><br><span class="hljs-comment">// 在一段时间后</span><br><span class="hljs-comment">// 寻找Need比Work小，同时还未结束的线程Ti</span><br><span class="hljs-keyword">while</span>(Finish[i] == <span class="hljs-literal">false</span> &amp;&amp; Need[i] &lt;= Work)<br>&#123;<br>    <span class="hljs-comment">// 线程i的资源需求量小于当前剩余空闲资源量，所以该线程可以正常结束，并回收该线程的所有资源</span><br>    Work += Allocation[i];<br>    Finish[i] = <span class="hljs-literal">true</span>;<br>&#125;<br><span class="hljs-comment">// 如果所有线程Ti都满足Finish[i] == true,则系统处于安全状态。</span><br><span class="hljs-keyword">if</span>(Finish == <span class="hljs-literal">true</span>)<br>    Safe;<br><span class="hljs-keyword">else</span><br>    <span class="hljs-comment">// 反之，系统处于不安全状态。</span><br>    NoSafe;<br></code></pre></div></td></tr></table></figure></li>
+<li><p>银行家算法具体设计</p>
+<ul>
+<li><p>初始化：RequestiRequesti：线程TiTi的资源请求向量， Requesti[j]Requesti[j]：线程TiTi请求资源RjRj的实例</p>
+</li>
+<li><p>循环：</p>
+<ol>
+<li><p>如果Requesti&lt;=Need[i]Requesti&lt;=Need[i]，则转到步骤2。否则拒绝资源申请，因为线程已经超过了其最大资源要求。</p>
+</li>
+<li><p>如果Requesti&lt;=AvailableRequesti&lt;=Available，转到步骤3。否则，TiTi必须等待，因为资源不可用。</p>
+</li>
+<li><p>通过安全状态判断来确定是否分配资源给TiTi</p>
+<ul>
+<li><p>生成一个需要判断状态是否安全的资源分配环境</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">COPYAvailable = Available - Request_i;<br>Allocation[i] = Allocation[i] + Request_i;<br>Need[i] = Need[i] - Request_i;<br></code></pre></div></td></tr></table></figure></li>
+<li><p>并调用上文的<strong>安全状态判断</strong></p>
+<ul>
+<li>如果返回结果是<strong>安全</strong>，则将资源分配给TiTi</li>
+<li>如果返回结果是<strong>不安全</strong>，系统会拒绝TiTi的资源请求</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="3-死锁检测和恢复"><a href="#3-死锁检测和恢复" class="headerlink" title="3) 死锁检测和恢复"></a>3) 死锁检测和恢复</h5><blockquote>
+<p>死锁检测和恢复（Deadlock Detection &amp; Recovery） : 在检测到运行系统进入死锁状态后进行恢复。</p>
+</blockquote>
+<ul>
+<li>特点<ul>
+<li>允许系统进入死锁状态</li>
+<li>维护系统的资源分配图</li>
+<li>定期调用死锁检测算法来搜索图中是否存在死锁</li>
+<li>出现死锁时，用死锁恢复机制进行恢复。</li>
+</ul>
+</li>
+</ul>
+<h6 id="i-死锁检测"><a href="#i-死锁检测" class="headerlink" title="i. 死锁检测"></a>i. 死锁检测</h6><ul>
+<li><p>数据结构</p>
+<ul>
+<li>**Available(剩余空闲量)**：长度为m的向量，每种类型可用资源的数量</li>
+<li>**Allocation(已分配量)**：n x m 矩阵，当前分配给各个进程每种类型资源的数量，进程PiPi拥有资源RiRi的Allocation[i,j]Allocation[i,j]个实例。</li>
+</ul>
+</li>
+<li><p>死锁检测算法</p>
+<blockquote>
+<p>该算法与银行家算法类似。</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">COPY<span class="hljs-comment">// Work和Finish分别是长度为m和n的向量初始化</span><br>Work[m], Finish[n];<br><br>Work = Available; <span class="hljs-comment">// 当前资源剩余空闲量</span><br><span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++)<br>&#123;<br>    <span class="hljs-comment">// 如果当前遍历到的线程占用资源，则设置Finish为false</span><br>    <span class="hljs-comment">// 反之，如果当前线程不占用资源，则要么是线程已结束，要么是我们不关心的线程</span><br>    <span class="hljs-keyword">if</span>(Allocation[i] &gt; <span class="hljs-number">0</span>)<br>      Finish[i] = <span class="hljs-literal">false</span>; <span class="hljs-comment">// 线程i没结束</span><br>    <span class="hljs-keyword">else</span><br>      Finish[i] = <span class="hljs-literal">true</span>;<br>&#125;<br><br><span class="hljs-comment">// ...每个线程开始运行并分配资源</span><br><br><span class="hljs-comment">// 在一段时间后</span><br><span class="hljs-comment">// 寻找Request比Work小，同时还未结束的线程Ti</span><br><span class="hljs-keyword">while</span>(Finish[i] == <span class="hljs-literal">false</span> &amp;&amp; Request[i] &lt;= Work)<br>&#123;<br>    <span class="hljs-comment">// 线程i的资源需求量小于当前剩余空闲资源量，所以该线程可以正常结束，并回收该线程的所有资源</span><br>    Work += Allocation[i];<br>    Finish[i] = <span class="hljs-literal">true</span>;<br>&#125;<br><span class="hljs-comment">// 如果所有线程Ti都满足Finish[i] == true,则系统处于正常状态</span><br><span class="hljs-keyword">if</span>(Finish == <span class="hljs-literal">true</span>)<br>    NoDeadlock;<br><span class="hljs-keyword">else</span><br>    <span class="hljs-comment">// 反之，系统处于死锁状态。</span><br>    Deadlock;<br></code></pre></div></td></tr></table></figure></li>
+<li><p>死锁检测算法的使用</p>
+<ul>
+<li>死锁检测的时间和周期选择依据<ul>
+<li>死锁多久可能会发生</li>
+<li>多少进程需要被回滚</li>
+</ul>
+</li>
+<li>资源图可能有多个循环，难以分辨”造成“死锁的关键进程</li>
+</ul>
+</li>
+</ul>
+<h6 id="ii-死锁恢复"><a href="#ii-死锁恢复" class="headerlink" title="ii. 死锁恢复"></a>ii. 死锁恢复</h6><ul>
+<li>进程终止<ul>
+<li>终止所有的死锁线程</li>
+<li>一次只终止一个进程直到死锁消除</li>
+<li>终止进程的顺序应该是<ul>
+<li>进程的优先级: 通常是优先级低的</li>
+<li>进程已运行时间以及还需运行时间: 希望运行时间短的</li>
+<li>进程已占用资源: 占用资源少的</li>
+<li>进程完成需要的资源</li>
+<li>终止进程数目: 自然是越小越好</li>
+<li>进程是交互式还是批处理: 通常是用户交互进程</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>资源抢占<ul>
+<li>选择被抢占进程：最小成本目标</li>
+<li>进程回退：返回到一些安全状态，重启进程到安全状态</li>
+<li>可能会出现饥饿：同一个进程可能一直被选作被抢占者</li>
+</ul>
+</li>
+</ul>
+<h2 id="练习-4"><a href="#练习-4" class="headerlink" title="练习"></a>练习</h2><h3 id="练习1-4"><a href="#练习1-4" class="headerlink" title="练习1"></a>练习1</h3><blockquote>
+<p>理解内核级信号量的实现和基于内核级信号量的哲学家就餐问题</p>
+</blockquote>
+<p>信号量的实现在知识点中有分析. 这里写哲学家就餐问题检查函数的实现和信号量的联系.</p>
+<p>在kern\sync\check_sync.c中有check_sync()函数, 分为使用 信号量的检查 以及 管程的检查, 拿前者说明, 该种检查调用<code>sem_init(&amp;mutex, 1)</code>初始化mutex, 需要设置下面这几个变量存储必要信息. </p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">int</span> state_sema[N]; <span class="hljs-comment">/* 记录每个人状态的数组 */</span><br><span class="hljs-keyword">semaphore_t</span> mutex; <span class="hljs-comment">/* 临界区互斥 */</span><br><span class="hljs-keyword">semaphore_t</span> s[N]; <span class="hljs-comment">/* 每个哲学家一个信号量, 表示是否得到了叉子 */</span><br></code></pre></div></td></tr></table></figure>
+
+<p>然后创建五个内核线程, 线程调用的函数为philosopher_using_[semaphore, monitor], 进入一个总共4次的循环. </p>
+<p>每次循环就是重复思考, 取叉, 进餐, 放叉几个动作, 模拟进程使用资源的几种操作.</p>
+<p>比如取叉会调用<code>phi_take_forks_sema()</code>函数, </p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">phi_take_forks_sema</span><span class="hljs-params">(<span class="hljs-keyword">int</span> i)</span> <span class="hljs-comment">/* i：哲学家号码从0到N-1 */</span></span><br><span class="hljs-function"></span>&#123; <br>        down(&amp;mutex); <span class="hljs-comment">/* 进入临界区 */</span><br>        state_sema[i]=HUNGRY; <span class="hljs-comment">/* 记录下哲学家i饥饿的事实 */</span><br>        phi_test_sema(i); <span class="hljs-comment">/* 试图得到两只叉子 */</span><br>        up(&amp;mutex); <span class="hljs-comment">/* 离开临界区 */</span><br>        down(&amp;s[i]); <span class="hljs-comment">/* 如果得不到叉子就阻塞 */</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>这是一个互斥的资源请求, <del>我认为该函数可以理解为这就相当于进程使用一种系统调用, 在操作系统层面进行进入和离开临界区的操作.</del> ==好吧信号量这种方法其实是需要程序员写出来的.==</p>
+<ul>
+<li>先是临界区互斥信号量mutex的P操作(实现在知识点2里), 同一时间只能有一个哲学家进入临界区</li>
+<li>然后试图得到两只叉子还要查看左边右边哲学家是否在EATING状态, 得到了就进行该哲学家信号量s[i]的V操作, 表示取到了叉子</li>
+<li>最后一句就是如果没取到叉子又进行了P操作, 这时候肯定就阻塞了, 这时候会进行schedule(), 切换到其他进程<ul>
+<li>这一步有点特别, 因为要在临界区内进行一次V操作, 然后在外面进行一次P操作检查刚刚是否进行了V操作.</li>
+</ul>
+</li>
+</ul>
+<p>如果有其他哲学家使用V操作释放了叉子, 就会调用wakeup_wait()来使该信号量的等待队列里的第一个变成RUNNALBLE, 所有使用这种资源的进程只有这个能就绪, 如果调度器调度到了这个进程就可以继续进行了.</p>
+<p>接下来进餐sleep 10个时间片, 然后到了放下叉子. 这时候<strong>需要程序员清楚地知道</strong>放下后需要进行的操作, 这里是检查左右邻座是否在HUNGRY状态, 是的话允许他拿起叉子(通过<code>up(&amp;s[i])</code>).</p>
+<p>大概的过程就是这样.</p>
+<h3 id="练习2-4"><a href="#练习2-4" class="headerlink" title="练习2"></a>练习2</h3><blockquote>
+<p>完成内核级条件变量和基于内核级条件变量的哲学家就餐问题</p>
+</blockquote>
+<p>管程里的全局变量:</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">int</span> state_condvar[N];                            <span class="hljs-comment">// the philosopher&#x27;s state: EATING, HUNGARY, THINKING  </span><br><span class="hljs-keyword">monitor_t</span> mt, *mtp=&amp;mt;                          <span class="hljs-comment">// monitor</span><br></code></pre></div></td></tr></table></figure>
+
+<p>而monitor是这样的(重复了一下上面的):</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">monitor</span>&#123;</span><br>    <span class="hljs-keyword">semaphore_t</span> mutex;	<span class="hljs-comment">// the mutex lock for going into the routines in monitor, should be initialized to 1</span><br>    <span class="hljs-comment">// the next semaphore is used to </span><br>    <span class="hljs-comment">//    (1) procs which call cond_signal funciton should DOWN next sema after UP cv.sema</span><br>    <span class="hljs-comment">// OR (2) procs which call cond_wait funciton should UP next sema before DOWN cv.sema</span><br>    <span class="hljs-keyword">semaphore_t</span> next;        <br>    <span class="hljs-keyword">int</span> next_count;         <span class="hljs-comment">// the number of of sleeped procs which cond_signal funciton</span><br>    <span class="hljs-keyword">condvar_t</span> *cv;          <span class="hljs-comment">// the condvars in monitor</span><br>&#125; <span class="hljs-keyword">monitor_t</span>;<br></code></pre></div></td></tr></table></figure>
+
+<p>大致流程跟上面差不多, 在管程内部设置了cv数组来记录是否拿到了叉子, cond_signal和cond_wait的原理和实现在知识点中.</p>
+<p><del>这里说明一下问题的流程:</del> </p>
+<h1 id="Lab8"><a href="#Lab8" class="headerlink" title="Lab8"></a>Lab8</h1><h2 id="知识点-6"><a href="#知识点-6" class="headerlink" title="知识点"></a>知识点</h2><h3 id="0-项目结构-1"><a href="#0-项目结构-1" class="headerlink" title="0.项目结构"></a>0.项目结构</h3><p>本次实验主要是理解kern/fs目录中的部分文件，并可用user/*.c测试所实现的Simple FS文件系统是否能够正常工作。本次实验涉及到的代码包括：</p>
+<ul>
+<li>文件系统测试用例： user/*.c：对文件系统的实现进行测试的测试用例；</li>
+<li>通用文件系统接口<br>user/libs/file.[ch] | dir.[ch] | syscall.c：与文件系统操作相关的用户库实行；<br>kern/syscall.[ch]：文件中包含文件系统相关的内核态系统调用接口<br>kern/fs/sysfile.[ch]|file.[ch]：通用文件系统接口和实行</li>
+<li>文件系统抽象层-VFS<br>kern/fs/vfs/*.[ch]：虚拟文件系统接口与实现</li>
+<li>Simple FS文件系统<br>kern/fs/sfs/*.[ch]：SimpleFS文件系统实现</li>
+<li>文件系统的硬盘IO接口<br>kern/fs/devs/dev.[ch] | dev_disk0.c：disk0硬盘设备提供给文件系统的I/O访问接口和实现</li>
+<li>辅助工具<br>tools/mksfs.c：创建一个Simple FS文件系统格式的硬盘镜像。（<strong>理解此文件的实现细节对理解SFS文件系统很有帮助</strong>）</li>
+<li>对内核其它模块的扩充<br>kern/process/proc.[ch]：增加成员变量 struct fs_struct *fs_struct，用于支持进程对文件的访问；重写了do_execve load_icode等函数以支持执行文件系统中的文件。<br>kern/init/init.c：增加调用初始化文件系统的函数fs_init。</li>
+</ul>
+<h3 id="1-ucore文件系统"><a href="#1-ucore文件系统" class="headerlink" title="1.ucore文件系统"></a>1.ucore文件系统</h3><p>ucore的文件系统模型源于Havard的OS161的文件系统和Linux文件系统。但其实这二者都是源于传统的UNIX文件系统设计。UNIX提出了四个文件系统抽象概念：文件(file)、目录项(dentry)、索引节点(inode)和安装点(mount point)。</p>
+<ul>
+<li><strong>文件</strong>：UNIX文件中的内容可理解为是一有序字节buffer，文件都有一个方便应用程序识别的文件名称（也称文件路径名）。典型的文件操作有读、写、创建和删除等。</li>
+<li><strong>目录项</strong>：目录项不是目录（又称文件路径），而是目录的组成部分。在UNIX中目录被看作一种特定的文件，而目录项是文件路径中的一部分。如一个文件路径名是“/test/testfile”，则包含的目录项为：根目录“/”，目录“test”和文件“testfile”，这三个都是目录项。一般而言，目录项包含目录项的名字（文件名或目录名）和目录项的索引节点（见下面的描述）位置。</li>
+<li><strong>索引节点</strong>：UNIX将文件的相关元数据信息（如访问控制权限、大小、拥有者、创建时间、数据内容等等信息）存储在一个单独的数据结构中，该结构被称为索引节点。</li>
+<li><strong>安装点</strong>：在UNIX中，文件系统被安装在一个特定的文件路径位置，这个位置就是安装点。所有的已安装文件系统都作为根文件系统树中的叶子出现在系统中。</li>
+</ul>
+<p>上述抽象概念形成了UNIX文件系统的逻辑数据结构，并需要通过一个具体文件系统的架构设计与实现把上述信息映射并储存到磁盘介质上，从而在具体文件系统的磁盘布局（即数据在磁盘上的物理组织）上具体体现出上述抽象概念。比如文件元数据信息存储在磁盘块中的索引节点上。当文件被载入内存时，内核需要使用磁盘块中的索引点来构造内存中的索引节点。</p>
+<p>ucore模仿了UNIX的文件系统设计，ucore的文件系统架构主要由四部分组成：</p>
+<ul>
+<li><strong>通用文件系统访问接口层</strong>：该层提供了一个从用户空间到文件系统的标准访问接口。这一层访问接口让应用程序能够通过一个简单的接口获得ucore内核的文件系统服务。</li>
+<li><strong>文件系统抽象层</strong>：向上提供一个一致的接口给内核其他部分（文件系统相关的系统调用实现模块和其他内核功能模块）访问。向下提供一个同样的抽象函数指针列表和数据结构屏蔽不同文件系统的实现细节。</li>
+<li><strong>Simple FS文件系统层</strong>：一个基于索引方式的简单文件系统实例。向上通过各种具体函数实现以对应文件系统抽象层提出的抽象函数。向下访问外设接口</li>
+<li><strong>外设接口层</strong>：向上提供device访问接口屏蔽不同硬件细节。向下实现访问各种具体设备驱动的接口，比如disk设备接口/串口设备接口/键盘设备接口等。</li>
+</ul>
+<p>文件系统的访问处理过程: 假如应用程序操作文件（打开/创建/删除/读写），首先需要通过文件系统的通用文件系统访问接口层给用户空间提供的访问接口进入文件系统内部，接着由文件系统抽象层把访问请求转发给某一具体文件系统（比如SFS文件系统），具体文件系统（Simple FS文件系统层）把应用程序的访问请求转化为对磁盘上的block的处理请求，并通过外设接口层交给磁盘驱动例程来完成具体的磁盘操作。结合用户态写文件函数write的整个执行过程，我们可以比较清楚地看出ucore文件系统架构的层次和依赖关系。</p>
+<p><img src="../../image/ucore/image001.png" srcset="/img/loading.gif" lazyload alt="image"></p>
+<p><strong>ucore文件系统总体结构</strong></p>
+<p>从ucore操作系统不同的角度来看，ucore中的文件系统架构包含四类主要的数据结构, 它们分别是：</p>
+<ul>
+<li>超级块（SuperBlock），它主要从文件系统的全局角度描述特定文件系统的全局信息。它的作用范围是整个OS空间。</li>
+<li>索引节点（inode）：它主要从文件系统的单个文件的角度它描述了文件的各种属性和数据所在位置。它的作用范围是整个OS空间。</li>
+<li>目录项（dentry）：它主要从文件系统的文件路径的角度描述了文件路径中的一个特定的目录项（注：一系列目录项形成目录/文件路径）。它的作用范围是整个OS空间。对于SFS而言，inode(具体为struct sfs_disk_inode)对应于物理磁盘上的具体对象，dentry（具体为struct sfs_disk_entry）是一个内存实体，其中的ino成员指向对应的inode number，另外一个成员是file name(文件名).</li>
+<li>文件（file），它主要从进程的角度描述了一个进程在访问文件时需要了解的文件标识，文件读写的位置，文件引用情况等信息。它的作用范围是某一具体进程。</li>
+</ul>
+<p>如果一个用户进程打开了一个文件，那么在ucore中涉及的相关数据结构（其中相关数据结构将在下面各个小节中展开叙述）和关系如下图所示：</p>
+<p><img src="../../image/ucore/fsStruct.png" srcset="/img/loading.gif" lazyload alt="fsStruct"></p>
+<h2 id="练习-5"><a href="#练习-5" class="headerlink" title="练习"></a>练习</h2><h3 id="练习1-5"><a href="#练习1-5" class="headerlink" title="练习1"></a>练习1</h3><ul>
 <li>moocos的密码是空格</li>
 </ul>
 <section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>即原先查找页目录表的目的是想将某个线性地址转换为物理地址，但如果页目录表中存放的是二级页表的<strong>线性</strong>地址，则需要先查找该二级页表的物理地址，此时需要递归查找，这可能会出现永远也查找不到物理地址的情况。
