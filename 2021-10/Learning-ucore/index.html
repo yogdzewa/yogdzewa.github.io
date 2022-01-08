@@ -57,7 +57,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/Calls-file_open.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/image-20220108132923299.png">
 <meta property="article:published_time" content="2021-10-01T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-01-08T07:28:55.659Z">
+<meta property="article:modified_time" content="2022-01-08T07:51:37.438Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary_large_image">
@@ -2223,8 +2223,12 @@ ZOMBIE--&gt;[*]:资源回收
 <blockquote>
 <p>struct fs 包装了sfs_fs和一些对sfs_fs的操作</p>
 <p>这种规模的代码我只能去理解了, 暂时没法想象要怎么构建这样大的一个工程</p>
+<p>代码分析了一遍, 而且肖佬写的那几个部分都看过了, 实在是不想写那么多, 想看直接看现成的吧…[<a target="_blank" rel="noopener" href="https://kiprey.github.io/2020/09/uCore-8/#9-uCore%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%AE%9E%E7%8E%B0">link</a>]</p>
 </blockquote>
 <p>基本看懂了, 写了一堆注释在源代码里面.(<code>sfs_inode.c:595</code>)</p>
+<p class="note note-primary" style="font-style:italic;background-color:rgb(240,230,250)">”UNIX的PIPE机制“的概要设计方案 </p>
+
+<p>?</p>
 <h3 id="练习2-5"><a href="#练习2-5" class="headerlink" title="练习2"></a>练习2</h3><ul>
 <li>moocos的密码是空格<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>即原先查找页目录表的目的是想将某个线性地址转换为物理地址，但如果页目录表中存放的是二级页表的<strong>线性</strong>地址，则需要先查找该二级页表的物理地址，此时需要递归查找，这可能会出现永远也查找不到物理地址的情况。
 <a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section></li>
