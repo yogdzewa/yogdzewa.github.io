@@ -53,8 +53,11 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/image-20220105195357089.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/image-20220105200433737.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/image-20220105200753016.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/ucore/image-20220107165956521.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/ucore/Calls-file_open.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/ucore/image-20220108132923299.png">
 <meta property="article:published_time" content="2021-10-01T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-01-05T15:48:42.108Z">
+<meta property="article:modified_time" content="2022-01-08T07:28:55.659Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary_large_image">
@@ -240,7 +243,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      108k 字
+      115k 字
     </span>
   
 
@@ -249,7 +252,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1347 分钟
+      1433 分钟
     </span>
   
 
@@ -290,7 +293,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年1月5日 晚上
+                  不可视境界线最后变动于：2022年1月8日 下午
                 
               </p>
             
@@ -2096,25 +2099,137 @@ ZOMBIE--&gt;[*]:资源回收
 </blockquote>
 <p>需要注意的是虽然inode的大小小于一个块的大小（4096B），<strong>但为了实现简单，每个 inode 都占用一个完整的 block。</strong> </p>
 <p>在sfs_fs.c文件中的<code>sfs_do_mount</code>函数中，完成了加载位于硬盘上的SFS文件系统的超级块superblock和freemap的工作。这样，在内存中就有了SFS文件系统的全局信息。</p>
-<h4 id="索引节点"><a href="#索引节点" class="headerlink" title="索引节点"></a>索引节点</h4><h5 id="磁盘索引节点"><a href="#磁盘索引节点" class="headerlink" title="磁盘索引节点"></a>磁盘索引节点</h5><p>就是<code>sfs_disk_inode </code>, understand结构图中最后一个结构体, <strong>保存在磁盘上</strong>.</p>
+<h4 id="磁盘索引节点"><a href="#磁盘索引节点" class="headerlink" title="磁盘索引节点"></a>磁盘索引节点</h4><p>就是<code>sfs_disk_inode </code>, understand结构图中最后一个结构体, <strong>保存在磁盘上</strong>.</p>
 <p>对于文件, 索引值指向的是数据块.</p>
 <p>对于目录, 索引值指向的是下面这个结构体。数据结构如下：</p>
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">/* file entry (on disk) */</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sfs_disk_entry</span> &#123;</span><br>    <span class="hljs-keyword">uint32_t</span> ino;                                   <span class="hljs-comment">//索引节点所占数据块索引值</span><br>    <span class="hljs-keyword">char</span> name[SFS_MAX_FNAME_LEN + <span class="hljs-number">1</span>];               <span class="hljs-comment">//文件名</span><br>&#125;;<br></code></pre></div></td></tr></table></figure>
 
-<h5 id="内存索引节点"><a href="#内存索引节点" class="headerlink" title="内存索引节点"></a>内存索引节点</h5><p>即<code>sfs_inode</code>.  需要注意，一个内存inode是在打开一个文件后才创建的，如果关机则相关信息都会消失。而硬盘inode的内容是保存在硬盘中的，只是在进程需要时才被读入到内存中，用于访问文件或目录的具体内容数据</p>
+<h4 id="内存索引节点"><a href="#内存索引节点" class="headerlink" title="内存索引节点"></a>内存索引节点</h4><p>即<code>sfs_inode</code>.  需要注意，一个内存inode是在打开一个文件后才创建的，如果关机则相关信息都会消失。而硬盘inode的内容是保存在硬盘中的，只是在进程需要时才被读入到内存中，用于访问文件或目录的具体内容数据</p>
 <p>为了方便实现上面提到的多级数据的访问以及目录中 entry 的操作，对 inode SFS实现了一些<strong>辅助的函数</strong>：</p>
 <ol>
-<li><code>sfs_bmap_load_nolock</code>：将对应 sfs_inode 的第 index 个索引指向的 block 的索引值取出存到相应的指针指向的单元（ino_store）。该函数只接受 index &lt;= inode-&gt;blocks 的参数。当 index == inode-&gt;blocks 时，该函数理解为需要为 inode 增长一个 block。<strong>并标记 inode 为 dirty</strong>（所有对 inode 数据的修改都要做这样的操作，这样，当 inode 不再使用的时候，sfs 能够保证 inode 数据能够被写回到磁盘）。sfs_bmap_load_nolock 调用的 sfs_bmap_get_nolock 来完成相应的操作, 分为直接索引和间接索引两种情况, <u>完成ino的load操作</u>.（sfs_bmap_get_nolock 只由 sfs_bmap_load_nolock 调用）</li>
-<li><code>sfs_bmap_truncate_nolock</code>：将多级数据索引表的最后一个 entry 释放掉。他可以认为是 sfs_bmap_load_nolock 中，index == inode-&gt;blocks 的逆操作。当一个文件或目录被删除时，sfs 会循环调用该函数直到 inode-&gt;blocks 减为 0，释放所有的数据页。函数通过 sfs_bmap_free_nolock 来实现，他应该是 sfs_bmap_get_nolock 的逆操作。和 sfs_bmap_get_nolock 一样，调用 sfs_bmap_free_nolock 也要格外小心。</li>
+<li><code>sfs_bmap_load_nolock</code>：将对应 sfs_inode 的第 index 个索引指向的 block 的<strong>索引值</strong>取出存到相应的指针指向的单元（ino_store）。该函数只接受 index &lt;= inode-&gt;blocks 的参数。当 index == inode-&gt;blocks 时，该函数理解为需要为 inode 增长一个 block。<strong>并标记 inode 为 dirty</strong>（所有对 inode 数据的修改都要做这样的操作，这样，当 inode 不再使用的时候，sfs 能够保证 inode 数据能够被写回到磁盘）。sfs_bmap_load_nolock 调用的 sfs_bmap_get_nolock 来完成相应的操作, 分为直接索引和间接索引两种情况, <u>完成ino的load操作</u>.（sfs_bmap_get_nolock 只由 sfs_bmap_load_nolock 调用）</li>
+<li><code>sfs_bmap_truncate_nolock</code>：将多级数据索引表的最后一个 entry 释放掉。<strong>他可以认为是 sfs_bmap_load_nolock 中，index == inode-&gt;blocks 的逆操作</strong>(检测到时就会从freemap中alloc一个)。当一个文件或目录被删除时，sfs 会循环调用该函数直到 inode-&gt;blocks 减为 0，释放所有的数据页。函数通过 sfs_bmap_free_nolock 来实现，他应该是 sfs_bmap_get_nolock 的逆操作。和 sfs_bmap_get_nolock 一样，调用 sfs_bmap_free_nolock 也要格外小心。</li>
 <li><code>sfs_dirent_read_nolock</code>：将目录的第 slot 个 entry 读取到指定的内存空间。他通过上面提到的函数来完成。</li>
-<li><code>sfs_dirent_search_nolock</code>：是常用的查找函数。他在目录下查找 name，并且返回相应的搜索结果（文件或文件夹）的 inode 的编号（也是磁盘编号），和相应的 entry 在该目录的 index 编号以及目录下的数据页是否有空闲的 entry。（SFS 实现里文件的数据页是连续的，不存在任何空洞；而对于目录，数据页不是连续的，当某个 entry 删除的时候，SFS 通过设置 entry-&gt;ino 为0将该 entry 所在的 block 标记为 free，在需要添加新 entry 的时候，SFS 优先使用这些 free 的 entry，其次才会去在数据页尾追加新的 entry。</li>
+<li><code>sfs_dirent_search_nolock</code>：是常用的查找函数。他在目录下查找 name，并且返回相应的搜索结果（文件或文件夹）的 inode 的编号（<strong>也是磁盘编号</strong>），和相应的 entry 在该目录的 index 编号以及目录下的数据页是否有空闲的 entry。（SFS 实现里文件的数据页是连续的，不存在任何空洞；而对于目录，数据页不是连续的，当某个 entry 删除的时候，SFS 通过设置 entry-&gt;ino 为0将该 entry 所在的 block 标记为 free，在需要添加新 entry 的时候，SFS 优先使用这些 free 的 entry，其次才会去在数据页尾追加新的 entry.)</li>
 </ol>
+<blockquote>
+<p> 从下到上表明了他们之间的包含关系. 注意到dirent是指directory entry, 最后两个函数专用于目录</p>
+</blockquote>
 <p><strong>注意，这些后缀为 nolock 的函数，只能在已经获得相应 inode 的semaphore才能调用。</strong> </p>
-<h2 id="练习-5"><a href="#练习-5" class="headerlink" title="练习"></a>练习</h2><h3 id="练习1-5"><a href="#练习1-5" class="headerlink" title="练习1"></a>练习1</h3><ul>
-<li>moocos的密码是空格</li>
+<hr>
+<h4 id="Inode的文件-目录操作函数"><a href="#Inode的文件-目录操作函数" class="headerlink" title="Inode的文件,目录操作函数"></a>Inode的文件,目录操作函数</h4><p>这些操作函数使用结构体+函数指针来定义, 在inode结构体中被赋值.</p>
+<ul>
+<li>首先是文件操作函数: </li>
 </ul>
-<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>即原先查找页目录表的目的是想将某个线性地址转换为物理地址，但如果页目录表中存放的是二级页表的<strong>线性</strong>地址，则需要先查找该二级页表的物理地址，此时需要递归查找，这可能会出现永远也查找不到物理地址的情况。
-<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">static</span> <span class="hljs-keyword">const</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">inode_ops</span> <span class="hljs-title">sfs_node_fileops</span> =</span> &#123;<br>    .vop_magic                      = VOP_MAGIC,<br>    .vop_open                       = sfs_openfile,<br>    .vop_close                      = sfs_close,<br>    .vop_read                       = sfs_read,<br>    .vop_write                      = sfs_write,<br>    .vop_fstat                      = sfs_fstat,<br>    .vop_fsync                      = sfs_fsync,<br>    .vop_reclaim                    = sfs_reclaim,<br>    .vop_gettype                    = sfs_gettype,<br>    .vop_tryseek                    = sfs_tryseek,<br>    .vop_truncate                   = sfs_truncfile,<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<p>sfs_openfile不用做什么事；sfs_close需要把对文件的修改内容写回到硬盘上，这样确保硬盘上的文件内容数据是最新的；sfs_read和sfs_write函数都调用了一个函数sfs_io，并最终通过访问硬盘驱动来完成对文件内容数据的读写。</p>
+<ul>
+<li>然后是目录操作函数: </li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">static</span> <span class="hljs-keyword">const</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">inode_ops</span> <span class="hljs-title">sfs_node_dirops</span> =</span> &#123;<br>    .vop_magic                      = VOP_MAGIC,<br>    .vop_open                       = sfs_opendir,<br>    .vop_close                      = sfs_close,<br>    .vop_fstat                      = sfs_fstat,<br>    .vop_fsync                      = sfs_fsync,<br>    .vop_namefile                   = sfs_namefile,<br>    .vop_getdirentry                = sfs_getdirentry,<br>    .vop_reclaim                    = sfs_reclaim,<br>    .vop_gettype                    = sfs_gettype,<br>    .vop_lookup                     = sfs_lookup,<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<p>对于目录操作而言，由于目录也是一种文件，所以sfs_opendir、sys_close对应户进程发出的open、close函数。相对于sfs_open，sfs_opendir只是完成一些open函数传递的参数判断，没做其他更多的事情。目录的close操作与文件的close操作完全一致。由于目录的内容数据与文件的内容数据不同，所以读出目录的内容数据的函数是sfs_getdirentry，其主要工作是获取目录下的文件inode信息。</p>
+<h3 id="4-设备device"><a href="#4-设备device" class="headerlink" title="4.设备device"></a>4.设备device</h3><blockquote>
+<p>目前实现了stdin设备文件文件、stdout设备文件、disk0设备。stdin设备就是键盘，stdout设备就是CONSOLE（串口、并口和文本显示器），而disk0设备是承载SFS文件系统的磁盘设备。(无情的复制机器)</p>
+</blockquote>
+<p>为了表示一个设备，需要有对应的数据结构，ucore为此定义了struct device，其描述如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">device</span> &#123;</span><br>    <span class="hljs-keyword">size_t</span> d_blocks;    <span class="hljs-comment">//设备占用的数据块个数            </span><br>    <span class="hljs-keyword">size_t</span> d_blocksize;  <span class="hljs-comment">//数据块的大小</span><br>    <span class="hljs-keyword">int</span> (*d_open)(struct device *dev, <span class="hljs-keyword">uint32_t</span> open_flags);  <span class="hljs-comment">//打开设备的函数指针</span><br>    <span class="hljs-keyword">int</span> (*d_close)(struct device *dev); <span class="hljs-comment">//关闭设备的函数指针</span><br>    <span class="hljs-keyword">int</span> (*d_io)(struct device *dev, struct iobuf *iob, <span class="hljs-keyword">bool</span> write); <span class="hljs-comment">//读写设备的函数指针</span><br>    <span class="hljs-keyword">int</span> (*d_ioctl)(struct device *dev, <span class="hljs-keyword">int</span> op, <span class="hljs-keyword">void</span> *data); <span class="hljs-comment">//用ioctl方式控制设备的函数指针</span><br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<p>这个数据结构能够支持对块设备（比如磁盘）、字符设备（比如键盘、串口）的表示，完成对设备的基本操作。ucore虚拟文件系统为了把这些设备链接在一起，还定义了一个设备链表，即双向链表<strong>vdev_list</strong>，这样通过访问此链表，可以找到ucore能够访问的所有设备文件。</p>
+<p>但这个设备描述没有与文件系统以及表示一个文件的inode数据结构建立关系，为此，还需要另外一个数据结构把device和inode联通起来，这就是vfs_dev_t数据结构：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">// device info entry in vdev_list </span><br><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span><br>    <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *devname;<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">inode</span> *<span class="hljs-title">devnode</span>;</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">fs</span> *<span class="hljs-title">fs</span>;</span><br>    <span class="hljs-keyword">bool</span> mountable;<br>    <span class="hljs-keyword">list_entry_t</span> vdev_link;<br>&#125; <span class="hljs-keyword">vfs_dev_t</span>;<br></code></pre></div></td></tr></table></figure>
+
+<p>利用<code>vfs_dev_t</code>数据结构，就可以让文件系统通过一个链接<code>vfs_dev_t</code>结构的双向链表找到device对应的inode数据结构，一个inode节点的成员变量in_type的值是0x1234，则此 inode的成员变量in_info将成为一个device结构。这样inode就和一个设备建立了联系，这个inode就是一个设备文件。</p>
+<blockquote>
+<p>对于文件来说, inode-&gt;in_info是sfs_inode类型, 记录了文件在磁盘上的信息;<br>而对于设备来说, 是device类型, 存储着针对于device的操作函数和相关信息.1</p>
+</blockquote>
+<h4 id="stdout"><a href="#stdout" class="headerlink" title="stdout"></a>stdout</h4><p><strong>初始化</strong> </p>
+<p>既然stdout设备是设备文件系统的文件，自然有自己的inode结构。在系统初始化时，即只需如下处理过程</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">kern_init--&gt;fs_init--&gt;dev_init--&gt;dev_init_stdout --&gt; dev_create_inode<br>                 --&gt; stdout_device_init<br>                 --&gt; vfs_add_dev<br></code></pre></div></td></tr></table></figure>
+
+<p>在dev_init_stdout中完成了对stdout设备文件的初始化。即首先创建了一个inode，然后通过stdout_device_init完成对inode中的成员变量inode-&gt;__device_info进行初始：</p>
+<p>这里的stdout设备文件实际上就是指的console外设（它其实是串口、并口和CGA的组合型外设）。这个设备文件是一个只写设备，如果读这个设备，就会出错。接下来我们看看stdout设备的相关处理过程。</p>
+<p><strong>初始化</strong> </p>
+<p>stdout设备文件的初始化过程主要由stdout_device_init完成，其具体实现如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span></span><br><span class="hljs-function"><span class="hljs-title">stdout_device_init</span><span class="hljs-params">(struct device *dev)</span> </span>&#123;<br>    dev-&gt;d_blocks = <span class="hljs-number">0</span>;<br>    dev-&gt;d_blocksize = <span class="hljs-number">1</span>;<br>    dev-&gt;d_open = stdout_open;<br>    dev-&gt;d_close = stdout_close;<br>    dev-&gt;d_io = stdout_io;<br>    dev-&gt;d_ioctl = stdout_ioctl;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>可以看到，stdout_open函数完成设备文件打开工作，如果发现用户进程调用open函数的参数flags不是只写（O_WRONLY），则会报错。即<code>stdout_open(struct device *dev, uint32_t open_flags)  </code> </p>
+<p><strong>访问操作实现</strong> </p>
+<p>stdout_io函数完成设备的写操作工作, <strong>具体是从iobuf中一个一个字符输出到串口并口和CGA显示器上</strong>.</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span></span><br><span class="hljs-function"><span class="hljs-title">stdout_io</span><span class="hljs-params">(struct device *dev, struct iobuf *iob, <span class="hljs-keyword">bool</span> write)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (write) &#123;<br>        <span class="hljs-keyword">char</span> *data = iob-&gt;io_base;<br>        <span class="hljs-keyword">for</span> (; iob-&gt;io_resid != <span class="hljs-number">0</span>; iob-&gt;io_resid --) &#123;<br>            cputchar(*data ++);<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> -E_INVAL;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>可以看到，要写的数据放在iob-&gt;io_base所指的内存区域，一直写到iob-&gt;io_resid的值为0为止。每次写操作都是通过cputchar来完成的，此函数最终将通过console外设驱动来完成把数据输出到串口、并口和CGA显示器上过程。另外，也可以注意到，如果用户想执行读操作，则stdout_io函数直接返回错误值**-**E_INVAL。</p>
+<h4 id="stdin"><a href="#stdin" class="headerlink" title="stdin"></a>stdin</h4><p>这里的stdin设备文件实际上就是指的键盘。这个设备文件是一个只读设备，如果写这个设备，就会出错。接下来我们看看stdin设备的相关处理过程。</p>
+<p><strong>初始化</strong> </p>
+<p>stdin设备文件的初始化过程主要由stdin_device_init完成了主要的初始化工作，具体实现如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span></span><br><span class="hljs-function"><span class="hljs-title">stdin_device_init</span><span class="hljs-params">(struct device *dev)</span> </span>&#123;<br>    dev-&gt;d_blocks = <span class="hljs-number">0</span>;<br>    dev-&gt;d_blocksize = <span class="hljs-number">1</span>;<br>    dev-&gt;d_open = stdin_open;<br>    dev-&gt;d_close = stdin_close;<br>    dev-&gt;d_io = stdin_io;<br>    dev-&gt;d_ioctl = stdin_ioctl;<br><br>    p_rpos = p_wpos = <span class="hljs-number">0</span>; <span class="hljs-comment">//这玩意儿是一个在dev_stdin.c中的全局静态变量, 具体是啥含义留个坑, 马上来填</span><br>    wait_queue_init(wait_queue);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>相对于stdout的初始化过程，stdin的初始化相对复杂一些，多了一个stdin_buffer缓冲区，描述缓冲区读写位置的变量p_rpos、p_wpos以及用于等待缓冲区的等待队列wait_queue。在stdin_device_init函数的初始化中，也完成了对p_rpos、p_wpos和wait_queue的初始化。</p>
+<p><strong>访问操作实现</strong> </p>
+<p>stdin_io函数负责完成设备的读操作工作，具体实现如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span></span><br><span class="hljs-function"><span class="hljs-title">stdin_io</span><span class="hljs-params">(struct device *dev, struct iobuf *iob, <span class="hljs-keyword">bool</span> write)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (!write) &#123;<br>        <span class="hljs-keyword">int</span> ret;<br>        <span class="hljs-keyword">if</span> ((ret = dev_stdin_read(iob-&gt;io_base, iob-&gt;io_resid)) &gt; <span class="hljs-number">0</span>) &#123;<br>            iob-&gt;io_resid -= ret;<br>        &#125;<br>        <span class="hljs-keyword">return</span> ret;<br>    &#125;<br>    <span class="hljs-keyword">return</span> -E_INVAL;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>可以看到，如果是写操作，则stdin_io函数直接报错返回。所以这也进一步说明了此设备文件是只读文件。如果此读操作，则此函数进一步调用dev_stdin_read函数完成对键盘设备的读入操作。dev_stdin_read函数的实现相对复杂一些，主要的流程如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span></span><br><span class="hljs-function"><span class="hljs-title">dev_stdin_read</span><span class="hljs-params">(<span class="hljs-keyword">char</span> *buf, <span class="hljs-keyword">size_t</span> len)</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> ret = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">bool</span> intr_flag;<br>    local_intr_save(intr_flag);<br>    &#123;<br>        <span class="hljs-keyword">for</span> (; ret &lt; len; ret ++, p_rpos ++) &#123;<br>        try_again:<br>            <span class="hljs-keyword">if</span> (p_rpos &lt; p_wpos) &#123; <br>                *buf ++ = stdin_buffer[p_rpos % stdin_BUFSIZE];<br>            &#125;<br>            <span class="hljs-keyword">else</span> &#123; <span class="hljs-comment">//没有新字符就要进行睡眠并且调度</span><br>                <span class="hljs-keyword">wait_t</span> __wait, *wait = &amp;__wait;<br>                wait_current_set(wait_queue, wait, WT_KBD);<br>                local_intr_restore(intr_flag);<br><br>                schedule();<br><br>                local_intr_save(intr_flag);<br>                wait_current_del(wait_queue, wait);<br>                <span class="hljs-keyword">if</span> (wait-&gt;wakeup_flags == WT_KBD) &#123;<br>                    <span class="hljs-keyword">goto</span> try_again;<br>                &#125;<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>        &#125;<br>    &#125;<br>    local_intr_restore(intr_flag);<br>    <span class="hljs-keyword">return</span> ret;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>在上述函数中可以看出，如果p_rpos &lt; p_wpos，则表示有键盘输入的新字符在stdin_buffer中，于是就从stdin_buffer中取出新字符放到iobuf指向的缓冲区中；如果p_rpos &gt;=p_wpos，则表明没有新字符，这样调用read用户态库函数的用户进程就需要采用等待队列的睡眠操作进入睡眠状态，等待键盘输入字符的产生。</p>
+<p>键盘输入字符后，如何唤醒等待键盘输入的用户进程呢？回顾lab1中的外设中断处理，可以了解到，当用户敲击键盘时，会产生键盘中断，在trap_dispatch函数中，当识别出中断是键盘中断（中断号为IRQ_OFFSET + IRQ_KBD）时，会调用dev_stdin_write函数，来把字符写入到stdin_buffer中，且会通过等待队列的唤醒操作唤醒正在等待键盘输入的用户进程。</p>
+<h3 id="5-文件系统初始化"><a href="#5-文件系统初始化" class="headerlink" title="5.文件系统初始化"></a>5.文件系统初始化</h3><blockquote>
+<p>指导书写的真好, 又想复制了(</p>
+</blockquote>
+<p>首先看看kern_init函数，可以发现与lab7相比增加了对fs_init函数的调用。fs_init函数就是文件系统初始化的总控函数，它进一步调用了虚拟文件系统初始化函数vfs_init，与文件相关的设备初始化函数dev_init和Simple FS文件系统的初始化函数sfs_init。这三个初始化函数联合在一起，协同完成了整个虚拟文件系统、SFS文件系统和文件系统对应的设备（键盘、串口、磁盘）的初始化工作。其函数调用关系图如下所示：</p>
+<p><img src="../../image/ucore/image-20220107165956521.png" srcset="/img/loading.gif" lazyload alt="image-20220107165956521"></p>
+<p>参考上图，并结合源码分析，可大致了解到文件系统的整个初始化流程。</p>
+<ul>
+<li>vfs_init主要建立了一个device list双向链表vdev_list，为后续具体设备（键盘、串口、磁盘）以文件的形式呈现建立查找访问通道。</li>
+<li>dev_init函数通过进一步调用disk0/stdin/stdout_device_init完成对具体设备的初始化，把它们抽象成一个设备文件，并建立对应的inode数据结构，最后把它们链入到vdev_list中。这样通过虚拟文件系统就可以方便地以文件的形式访问这些设备了。</li>
+<li>sfs_init是完成对Simple FS的初始化工作，并把此实例文件系统挂在虚拟文件系统中，从而让ucore的其他部分能够通过访问虚拟文件系统的接口来进一步访问到SFS实例文件系统。</li>
+</ul>
+<h2 id="练习-5"><a href="#练习-5" class="headerlink" title="练习"></a>练习</h2><h3 id="练习1-5"><a href="#练习1-5" class="headerlink" title="练习1"></a>练习1</h3><h4 id="openfile"><a href="#openfile" class="headerlink" title="openfile"></a>openfile</h4><blockquote>
+<p>发现没有讲到的路径格式: </p>
+<ul>
+<li><p>device:/path  </p>
+  <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">/* *</span><br><span class="hljs-comment">	* we have either /path or :path</span><br><span class="hljs-comment">	* /path is a path relative to the root of the &quot;boot filesystem&quot;</span><br><span class="hljs-comment">	* :path is a path relative to the root of the current filesystem</span><br><span class="hljs-comment">	* */</span><br></code></pre></div></td></tr></table></figure></li>
+</ul>
+</blockquote>
+<p>首先贴一张函数调用图:</p>
+<p><img src="../../image/ucore/Calls-file_open.png" srcset="/img/loading.gif" lazyload alt="Calls-file_open"></p>
+<p>基本上都有多路分支, 具体可以看源码, 这里讲个大概.</p>
+<ul>
+<li><p>通过用户libc库中的syscall调用sys_open, 一直到中断处理转到file_open.</p>
+</li>
+<li><p>这个函数就执行一个简单检查以及调用了vfs_open(最重要的函数)</p>
+</li>
+<li><p>如果一切正常, 只会执行vfs_lookup. </p>
+<ul>
+<li><p>第一个get_device是解析路径的, 如果path没有指定设备名称说明只是一个相对路径, 就会执行vfs_getdir</p>
+</li>
+<li><p>然后会调用sfs_lookup(通过宏定义), 通过path找到对应的inode, 下面是他的调用图</p>
+<p><img src="../../image/ucore/image-20220108132923299.png" srcset="/img/loading.gif" lazyload alt="image-20220108132923299"></p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="read-write-file"><a href="#read-write-file" class="headerlink" title="[read,write]file"></a>[read,write]file</h4><p>调用关系如下:</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">sys_fileread-&gt;file_read-&gt;vop_read(sfs_read)-&gt;sfs_io<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li>在<code>sysfile_read</code>里设置了一个4KB的buff, 主要调用了file_read函数将文件中的内容读取到buff中</li>
+<li>file_read改变file结构体的文件计数以及移动文件指针, 继续调用sfs_read-&gt;sfs_io(sfs_inode.c)</li>
+<li>sfs_io通过第三个参数来判断是读还是写, 接着调用sfs_io_nolock</li>
+<li>接下来就是联系的内容, read different kind of blocks in file</li>
+</ul>
+<blockquote>
+<p>struct fs 包装了sfs_fs和一些对sfs_fs的操作</p>
+<p>这种规模的代码我只能去理解了, 暂时没法想象要怎么构建这样大的一个工程</p>
+</blockquote>
+<p>基本看懂了, 写了一堆注释在源代码里面.(<code>sfs_inode.c:595</code>)</p>
+<h3 id="练习2-5"><a href="#练习2-5" class="headerlink" title="练习2"></a>练习2</h3><ul>
+<li>moocos的密码是空格<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>即原先查找页目录表的目的是想将某个线性地址转换为物理地址，但如果页目录表中存放的是二级页表的<strong>线性</strong>地址，则需要先查找该二级页表的物理地址，此时需要递归查找，这可能会出现永远也查找不到物理地址的情况。
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section></li>
+</ul>
+
             </div>
             <hr>
             <div>
