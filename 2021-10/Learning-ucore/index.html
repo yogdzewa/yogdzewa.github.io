@@ -57,7 +57,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/Calls-file_open.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/image-20220108132923299.png">
 <meta property="article:published_time" content="2021-10-01T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-01-09T09:17:50.111Z">
+<meta property="article:modified_time" content="2022-01-10T12:17:38.521Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary_large_image">
@@ -293,7 +293,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年1月9日 下午
+                  不可视境界线最后变动于：2022年1月10日 晚上
                 
               </p>
             
@@ -1102,7 +1102,7 @@
 <li>参考<a target="_blank" rel="noopener" href="http://www.ibm.com/developerworks/cn/linux/l-cn-slub/">linux的slub分配算法/</a>，在ucore中实现slub分配算法。要求有比较充分的测试用例说明实现的正确性，需要有设计文档。</li>
 </ul>
 </blockquote>
-<h1 id="Lab3"><a href="#Lab3" class="headerlink" title="Lab3"></a>Lab3</h1><h2 id="0-项目组成"><a href="#0-项目组成" class="headerlink" title="0.项目组成"></a>0.项目组成</h2><p>相对与实验二，实验三主要改动如下：</p>
+<h1 id="Lab3"><a href="#Lab3" class="headerlink" title="Lab3"></a>Lab3</h1><h2 id="知识点-2"><a href="#知识点-2" class="headerlink" title="知识点"></a>知识点</h2><h3 id="0-项目组成"><a href="#0-项目组成" class="headerlink" title="0.项目组成"></a>0.项目组成</h3><p>相对与实验二，实验三主要改动如下：</p>
 <ul>
 <li>kern/mm/default_pmm.[ch]：实现基于struct pmm_manager类框架的Fist-Fit物理内存分配参考实现（分配最小单位为页，即4096字节），相关分配页和释放页等实现会间接被kmalloc/kfree等函数使用。</li>
 <li>kern/mm/pmm.[ch]：pmm.h定义物理内存分配类框架struct pmm_manager。pmm.c包含了对此物理内存分配类框架的访问，以及与建立、修改、访问页表相关的各种函数实现。在本实验中会用到kmalloc/kfree等函数。</li>
@@ -1116,16 +1116,16 @@
 <li>kern/mm/mmu.h：其中定义了页表项的各种属性位，比如PTE_P\PET_D\PET_A等，对于实现扩展实验的clock算法会有帮助。</li>
 </ul>
 <p>本次实验的主要练习集中在vmm.c中的do_pgfault函数和swap_fifo.c中的_fifo_map_swappable函数、_fifo_swap_out_victim函数。</p>
-<h2 id="1-实验执行流程概述"><a href="#1-实验执行流程概述" class="headerlink" title="1.实验执行流程概述"></a>1.实验执行流程概述</h2><p>首先是初始化过程。参考ucore总控函数init的代码，可以看到在调用完成虚拟内存初始化的vmm_init函数之前，需要首先调用pmm_init函数完成物理内存的管理，这也是我们lab2已经完成的内容。接着是执行中断和异常相关的初始化工作，即调用pic_init函数和idt_init函数等，这些工作与lab1的中断异常初始化工作的内容是相同的。</p>
+<h3 id="1-实验执行流程概述"><a href="#1-实验执行流程概述" class="headerlink" title="1.实验执行流程概述"></a>1.实验执行流程概述</h3><p>首先是初始化过程。参考ucore总控函数init的代码，可以看到在调用完成虚拟内存初始化的vmm_init函数之前，需要首先调用pmm_init函数完成物理内存的管理，这也是我们lab2已经完成的内容。接着是执行中断和异常相关的初始化工作，即调用pic_init函数和idt_init函数等，这些工作与lab1的中断异常初始化工作的内容是相同的。</p>
 <p>在调用完idt_init函数之后，将进一步调用三个lab3中才有的新函数vmm_init、ide_init和swap_init。这三个函数涉及了本次实验中的两个练习。第一个函数vmm_init是检查我们的练习1是否正确实现了。为了表述不在物理内存中的“合法”虚拟页，需要有数据结构来描述这样的页，为此ucore建立了mm_struct和vma_struct数据结构（接下来的小节中有进一步详细描述），假定我们已经描述好了这样的“合法”虚拟页，当ucore访问这些“合法”虚拟页时，会由于没有虚实地址映射而产生页访问异常。如果我们正确实现了练习1，则do_pgfault函数会申请一个空闲物理页，并建立好虚实映射关系，从而使得这样的“合法”虚拟页有实际的物理页帧对应。这样练习1就算完成了。</p>
 <p>ide_init和swap_init是为练习2准备的。由于页面置换算法的实现存在对硬盘数据块的读写，所以ide_init就是完成对用于页换入换出的硬盘（简称swap硬盘）的初始化工作。完成ide_init函数后，ucore就可以对这个swap硬盘进行读写操作了。swap_init函数首先建立swap_manager，swap_manager是完成页面替换过程的主要功能模块，其中包含了页面置换算法的实现（具体内容可参考5小节）。然后会进一步调用执行check_swap函数在内核中分配一些页，模拟对这些页的访问，这会产生页访问异常。如果我们正确实现了练习2，就可通过do_pgfault来调用swap_map_swappable函数来查询这些页的访问情况并间接调用实现页面置换算法的相关函数，把“不常用”的页换出到磁盘上。</p>
-<h2 id="2-置换算法"><a href="#2-置换算法" class="headerlink" title="2.置换算法"></a>2.置换算法</h2><p>操作系统迟早会碰到没有内存空闲空间而必须要置换出内存中某个“不常用”的页的情况。如何判断内存中哪些是“常用”的页，哪些是“不常用”的页，把“常用”的页保持在内存中，在物理内存空闲空间不够的情况下，把“不常用”的页置换到硬盘上就是页替换算法着重考虑的问题。容易理解，一个好的页替换算法会导致页访问异常次数少，也就意味着访问硬盘的次数也少，从而使得应用程序执行的效率就高。本次实验涉及的页替换算法（包括扩展练习）：</p>
+<h3 id="2-置换算法"><a href="#2-置换算法" class="headerlink" title="2.置换算法"></a>2.置换算法</h3><p>操作系统迟早会碰到没有内存空闲空间而必须要置换出内存中某个“不常用”的页的情况。如何判断内存中哪些是“常用”的页，哪些是“不常用”的页，把“常用”的页保持在内存中，在物理内存空闲空间不够的情况下，把“不常用”的页置换到硬盘上就是页替换算法着重考虑的问题。容易理解，一个好的页替换算法会导致页访问异常次数少，也就意味着访问硬盘的次数也少，从而使得应用程序执行的效率就高。本次实验涉及的页替换算法（包括扩展练习）：</p>
 <ul>
 <li>先进先出(First In First Out, FIFO)页替换算法：该算法总是淘汰最先进入内存的页，即选择在内存中驻留时间最久的页予以淘汰。只需把一个应用程序在执行过程中已调入内存的页按先后次序链接成一个队列，队列头指向内存中驻留时间最久的页，队列尾指向最近被调入内存的页。这样需要淘汰页时，从队列头很容易查找到需要淘汰的页。FIFO算法只是在应用程序按线性顺序访问地址空间时效果才好，否则效率不高。因为那些常被访问的页，往往在内存中也停留得最久，结果它们因变“老”而不得不被置换出去。FIFO算法的另一个缺点是，它有一种异常现象（Belady现象），即在增加放置页的页帧的情况下，反而使页访问异常次数增多。</li>
 <li>时钟（Clock）页替换算法：是LRU算法的一种近似实现。时钟页替换算法把各个页面组织成环形链表的形式，类似于一个钟的表面。然后把一个指针（简称当前指针）指向最老的那个页面，即最先进来的那个页面。另外，时钟算法需要在页表项（PTE）中设置了一位访问位来表示此页表项对应的页当前是否被访问过。当该页被访问时，CPU中的MMU硬件将把访问位置“1”。当操作系统需要淘汰页时，对当前指针指向的页所对应的页表项进行查询，如果访问位为“0”，则淘汰该页，如果该页被写过，则还要把它换出到硬盘上；如果访问位为“1”，则将该页表项的此位置“0”，继续访问下一个页。该算法近似地体现了LRU的思想，且易于实现，开销少，需要硬件支持来设置访问位。时钟页替换算法在本质上与FIFO算法是类似的，不同之处是在时钟页替换算法中跳过了访问位为1的页。</li>
 <li>改进的时钟（Enhanced Clock）页替换算法：在时钟置换算法中，淘汰一个页面时只考虑了页面是否被访问过，但在实际情况中，还应考虑被淘汰的页面是否被修改过。因为**淘汰修改过的页面还需要写回硬盘(迷惑, 移到swap分区跟是否修改过有什么关系)**，使得其置换代价大于未修改过的页面，所以优先淘汰没有修改的页，减少磁盘操作次数。改进的时钟置换算法除了考虑页面的访问情况，还需考虑页面的修改情况。即该算法不但希望淘汰的页面是最近未使用的页，而且还希望被淘汰的页是在主存驻留期间其页面内容未被修改过的。这需要为每一页的对应页表项内容中增加一位引用位和一位修改位。当该页被访问时，CPU中的MMU硬件将把访问位置“1”。当该页被“写”时，CPU中的MMU硬件将把修改位置“1”。这样这两位就存在四种可能的组合情况：（0，0）表示最近未被引用也未被修改，首先选择此页淘汰；（0，1）最近未被使用，但被修改，其次选择；（1，0）最近使用而未修改，再次选择；（1，1）最近使用且修改，最后选择。该算法与时钟算法相比，可进一步减少磁盘的I/O操作次数，但为了查找到一个尽可能适合淘汰的页面，可能需要经过多次扫描，增加了算法本身的执行开销。</li>
 </ul>
-<h2 id="3-相关数据结构"><a href="#3-相关数据结构" class="headerlink" title="3.相关数据结构"></a>3.相关数据结构</h2><blockquote>
+<h3 id="3-相关数据结构"><a href="#3-相关数据结构" class="headerlink" title="3.相关数据结构"></a>3.相关数据结构</h3><blockquote>
 <p>Typoar给我整了个崩溃, 我也崩溃了⊙▃⊙以下内容直至challenge前复制于<a target="_blank" rel="noopener" href="https://kiprey.github.io/2020/08/uCore-3/#3-uCore%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E6%9C%BA%E5%88%B6%E7%9A%84%E5%AE%9E%E7%8E%B0">这里</a> </p>
 </blockquote>
 <h4 id="I-虚拟内存管理"><a href="#I-虚拟内存管理" class="headerlink" title="I. 虚拟内存管理"></a>I. 虚拟内存管理</h4><ul>
@@ -1234,11 +1234,11 @@
 
 <p>成了, 简化了一下没有什么用的改进时钟算法, 只要一次甚至不用完全的一次遍历即可做到相同效果, 还通过了fifo的检查, 有这么巧吗</p>
 <blockquote>
-<p>想了一下, 我这快简化成FIFO了, 而改进的时钟置换算法的优势在于相近的多次遍历之中, 被写过的页面可以在内存中驻留更久的时间</p>
+<p>想了一下, 我这快简化成FIFO了, 而改进的时钟置换算法的优势在于<strong>相近的</strong>多次遍历之中, 被写过的页面可以在内存中驻留更久的时间</p>
 <p>坑不填了, 问题就是这个意思没有很复杂</p>
 </blockquote>
 <h3 id="challenge2"><a href="#challenge2" class="headerlink" title="challenge2"></a>challenge2</h3><p>暂时不写</p>
-<h1 id="Lab4"><a href="#Lab4" class="headerlink" title="Lab4"></a>Lab4</h1><h2 id="知识点-2"><a href="#知识点-2" class="headerlink" title="知识点"></a>知识点</h2><h3 id="0-项目组成-1"><a href="#0-项目组成-1" class="headerlink" title="0.项目组成"></a>0.项目组成</h3><p>相对与实验三，实验四中主要改动如下：</p>
+<h1 id="Lab4"><a href="#Lab4" class="headerlink" title="Lab4"></a>Lab4</h1><h2 id="知识点-3"><a href="#知识点-3" class="headerlink" title="知识点"></a>知识点</h2><h3 id="0-项目组成-1"><a href="#0-项目组成-1" class="headerlink" title="0.项目组成"></a>0.项目组成</h3><p>相对与实验三，实验四中主要改动如下：</p>
 <ul>
 <li>kern/process/ （新增进程管理相关文件）<ul>
 <li>proc.[ch]：新增：实现进程、线程相关功能，包括：创建进程/线程，初始化进程/线程，处理进程/线程退出等功能</li>
@@ -1381,7 +1381,7 @@
 <h3 id="challenge"><a href="#challenge" class="headerlink" title="challenge"></a>challenge</h3><blockquote>
 <p>鸽!</p>
 </blockquote>
-<h1 id="Lab5"><a href="#Lab5" class="headerlink" title="Lab5"></a>Lab5</h1><h2 id="知识点-3"><a href="#知识点-3" class="headerlink" title="知识点"></a>知识点</h2><h3 id="0-项目结构"><a href="#0-项目结构" class="headerlink" title="0.项目结构"></a>0.项目结构</h3><p>相对与实验四，实验五主要改动如下：</p>
+<h1 id="Lab5"><a href="#Lab5" class="headerlink" title="Lab5"></a>Lab5</h1><h2 id="知识点-4"><a href="#知识点-4" class="headerlink" title="知识点"></a>知识点</h2><h3 id="0-项目结构"><a href="#0-项目结构" class="headerlink" title="0.项目结构"></a>0.项目结构</h3><p>相对与实验四，实验五主要改动如下：</p>
 <p>◆ kern/debug/</p>
 <p>kdebug.c：修改：解析用户进程的符号信息表示（可不用理会）</p>
 <p>◆ kern/mm/ （与本次实验有较大关系）</p>
@@ -1665,7 +1665,7 @@ ZOMBIE--&gt;[*]:资源回收
 <li>第三次<code>follow_page_mask(无FOLL_WRITE)</code>，page不在内存中，进行pagefault处理。</li>
 <li>第四次<code>follow_page_mask(无FOLL_WRITE)</code>,成功返回page，但没有使用COW机制。</li>
 </ol>
-<h1 id="Lab6"><a href="#Lab6" class="headerlink" title="Lab6"></a>Lab6</h1><h2 id="知识点-4"><a href="#知识点-4" class="headerlink" title="知识点"></a>知识点</h2><h3 id="0-项目组成-2"><a href="#0-项目组成-2" class="headerlink" title="0.项目组成"></a>0.项目组成</h3><p>相对与实验五，实验六主要增加的文件如上表红色部分所示，主要修改的文件如上表紫色部分所示。主要改动如下： 简单说明如下：</p>
+<h1 id="Lab6"><a href="#Lab6" class="headerlink" title="Lab6"></a>Lab6</h1><h2 id="知识点-5"><a href="#知识点-5" class="headerlink" title="知识点"></a>知识点</h2><h3 id="0-项目组成-2"><a href="#0-项目组成-2" class="headerlink" title="0.项目组成"></a>0.项目组成</h3><p>相对与实验五，实验六主要增加的文件如上表红色部分所示，主要修改的文件如上表紫色部分所示。主要改动如下： 简单说明如下：</p>
 <ul>
 <li>libs/skew_heap.h: 提供了基本的优先队列数据结构，为本次实验提供了抽象数据结构方面的支持。</li>
 <li>kern/process/proc.[ch]：proc.h中扩展了proc_struct的成员变量，用于RR和stride调度算法。proc.c中实现了lab6_set_priority，用于设置进程的优先级。</li>
@@ -1764,7 +1764,7 @@ ZOMBIE--&gt;[*]:资源回收
 <h3 id="Challenge-1-1"><a href="#Challenge-1-1" class="headerlink" title="Challenge 1"></a>Challenge 1</h3><blockquote>
 <p>实现 Linux 的 CFS 调度算法</p>
 </blockquote>
-<h1 id="Lab7"><a href="#Lab7" class="headerlink" title="Lab7"></a>Lab7</h1><h2 id="知识点-5"><a href="#知识点-5" class="headerlink" title="知识点"></a>知识点</h2><h3 id="00-基础原理"><a href="#00-基础原理" class="headerlink" title="00.基础原理"></a>00.<a target="_blank" rel="noopener" href="https://kiprey.github.io/2020/09/uCore-7/#%E7%9F%A5%E8%AF%86%E7%82%B9">基础原理</a></h3><h3 id="0-项目组成-3"><a href="#0-项目组成-3" class="headerlink" title="0.项目组成"></a>0.项目组成</h3><ul>
+<h1 id="Lab7"><a href="#Lab7" class="headerlink" title="Lab7"></a>Lab7</h1><h2 id="知识点-6"><a href="#知识点-6" class="headerlink" title="知识点"></a>知识点</h2><h3 id="00-基础原理"><a href="#00-基础原理" class="headerlink" title="00.基础原理"></a>00.<a target="_blank" rel="noopener" href="https://kiprey.github.io/2020/09/uCore-7/#%E7%9F%A5%E8%AF%86%E7%82%B9">基础原理</a></h3><h3 id="0-项目组成-3"><a href="#0-项目组成-3" class="headerlink" title="0.项目组成"></a>0.项目组成</h3><ul>
 <li>kern/schedule/{sched.h,sched.c}: 增加了定时器（timer）机制，用于进程/线程的do_sleep功能。</li>
 <li>kern/sync/sync.h: <strong>去除了lock实现（这对于不抢占内核没用。</strong> </li>
 <li>kern/sync/wait.[ch]: 定义了等待队列wait_queue结构和等待entry的wait结构以及在此之上的函数，这是ucore中的信号量semophore机制和条件变量机制的基础，在本次实验中你需要了解其实现。</li>
@@ -2051,7 +2051,7 @@ ZOMBIE--&gt;[*]:资源回收
 
 <p>大致流程跟上面差不多, 在管程内部设置了cv数组来记录是否拿到了叉子, cond_signal和cond_wait的原理和实现在知识点中.</p>
 <p><del>这里说明一下问题的流程:</del> </p>
-<h1 id="Lab8"><a href="#Lab8" class="headerlink" title="Lab8"></a>Lab8</h1><h2 id="知识点-6"><a href="#知识点-6" class="headerlink" title="知识点"></a>知识点</h2><h3 id="0-项目结构-1"><a href="#0-项目结构-1" class="headerlink" title="0.项目结构"></a>0.项目结构</h3><p>本次实验主要是理解kern/fs目录中的部分文件，并可用user/*.c测试所实现的Simple FS文件系统是否能够正常工作。本次实验涉及到的代码包括：</p>
+<h1 id="Lab8"><a href="#Lab8" class="headerlink" title="Lab8"></a>Lab8</h1><h2 id="知识点-7"><a href="#知识点-7" class="headerlink" title="知识点"></a>知识点</h2><h3 id="0-项目结构-1"><a href="#0-项目结构-1" class="headerlink" title="0.项目结构"></a>0.项目结构</h3><p>本次实验主要是理解kern/fs目录中的部分文件，并可用user/*.c测试所实现的Simple FS文件系统是否能够正常工作。本次实验涉及到的代码包括：</p>
 <ul>
 <li>文件系统测试用例： user/*.c：对文件系统的实现进行测试的测试用例；</li>
 <li>通用文件系统接口<br>user/libs/file.[ch] | dir.[ch] | syscall.c：与文件系统操作相关的用户库实行；<br>kern/syscall.[ch]：文件中包含文件系统相关的内核态系统调用接口<br>kern/fs/sysfile.[ch]|file.[ch]：通用文件系统接口和实行</li>
@@ -2078,7 +2078,7 @@ ZOMBIE--&gt;[*]:资源回收
 </ul>
 <p>文件系统的访问处理过程: 假如应用程序操作文件（打开/创建/删除/读写），首先需要通过文件系统的通用文件系统访问接口层给用户空间提供的访问接口进入文件系统内部，接着由文件系统抽象层把访问请求转发给某一具体文件系统（比如SFS文件系统），具体文件系统（Simple FS文件系统层）把应用程序的访问请求转化为对磁盘上的block的处理请求，并通过外设接口层交给磁盘驱动例程来完成具体的磁盘操作。结合用户态写文件函数write的整个执行过程，我们可以比较清楚地看出ucore文件系统架构的层次和依赖关系。</p>
 <p><img src="../../image/ucore/image001.png" srcset="/img/loading.gif" lazyload alt="image"></p>
-<h4 id="自上而下的数据结构"><a href="#自上而下的数据结构" class="headerlink" title=".自上而下的数据结构"></a>.自上而下的数据结构</h4><p>从ucore操作系统不同的角度来看，ucore中的文件系统架构包含四类主要的数据结构, 它们分别是：</p>
+<h4 id="自上而下的数据结构"><a href="#自上而下的数据结构" class="headerlink" title="自上而下的数据结构"></a>自上而下的数据结构</h4><p>从ucore操作系统不同的角度来看，ucore中的文件系统架构包含四类主要的数据结构, 它们分别是：</p>
 <ul>
 <li>超级块（SuperBlock），它主要从文件系统的全局角度描述特定文件系统的全局信息。它的作用范围是整个OS空间。</li>
 <li>索引节点（inode）：它主要从文件系统的单个文件的角度它描述了文件的各种属性和数据所在位置。它的作用范围是整个OS空间。</li>
@@ -2089,14 +2089,14 @@ ZOMBIE--&gt;[*]:资源回收
 <p><img src="../../image/ucore/image-20220105195357089.png" srcset="/img/loading.gif" lazyload alt="image-20220105195357089"></p>
 <p>understand生成的关系图:</p>
 <p><img src="../../image/ucore/image-20220105200433737.png" srcset="/img/loading.gif" lazyload alt="image-20220105200433737"></p>
-<h3 id="系统访问接口层"><a href="#系统访问接口层" class="headerlink" title=".系统访问接口层"></a>.系统访问接口层</h3><p>从用户态函数syscall-&gt;sys_open(syscall.c)-&gt;sysfile_open(sysfile.c)中:</p>
+<h3 id="2-系统访问接口层"><a href="#2-系统访问接口层" class="headerlink" title="2.系统访问接口层"></a>2.系统访问接口层</h3><p>从用户态函数syscall-&gt;sys_open(syscall.c)-&gt;sysfile_open(sysfile.c)中:</p>
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sysfile_open</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *path, <span class="hljs-keyword">uint32_t</span> open_flags)</span></span>;     <span class="hljs-comment">// Open or create a file. FLAGS/MODE per the syscall.</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sysfile_close</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd)</span></span>;                                      <span class="hljs-comment">// Close a vnode opened  </span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sysfile_read</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd, <span class="hljs-keyword">void</span> *base, <span class="hljs-keyword">size_t</span> len)</span></span>;               <span class="hljs-comment">// Read file</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sysfile_write</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd, <span class="hljs-keyword">void</span> *base, <span class="hljs-keyword">size_t</span> len)</span></span>;              <span class="hljs-comment">// Write file</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sysfile_seek</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd, <span class="hljs-keyword">off_t</span> pos, <span class="hljs-keyword">int</span> whence)</span></span>;                <span class="hljs-comment">// Seek file  </span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sysfile_fstat</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd, struct stat *stat)</span></span>;                   <span class="hljs-comment">// Stat file </span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sysfile_fsync</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd)</span></span>;                                      <span class="hljs-comment">// Sync file</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sysfile_chdir</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *path)</span></span>;                            <span class="hljs-comment">// change DIR  </span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sysfile_mkdir</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *path)</span></span>;                            <span class="hljs-comment">// create DIR</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sysfile_link</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *path1, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *path2)</span></span>;         <span class="hljs-comment">// set a path1&#x27;s link as path2</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sysfile_rename</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *path1, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *path2)</span></span>;       <span class="hljs-comment">// rename file</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sysfile_unlink</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *path)</span></span>;                           <span class="hljs-comment">// unlink a path</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sysfile_getcwd</span><span class="hljs-params">(<span class="hljs-keyword">char</span> *buf, <span class="hljs-keyword">size_t</span> len)</span></span>;                      <span class="hljs-comment">// get current working directory</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sysfile_getdirentry</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd, struct dirent *direntp)</span></span>;        <span class="hljs-comment">// get the file entry in DIR </span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sysfile_dup</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd1, <span class="hljs-keyword">int</span> fd2)</span></span>;                              <span class="hljs-comment">// duplicate file</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sysfile_pipe</span><span class="hljs-params">(<span class="hljs-keyword">int</span> *fd_store)</span></span>;                                <span class="hljs-comment">// build PIPE   </span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">sysfile_mkfifo</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *name, <span class="hljs-keyword">uint32_t</span> open_flags)</span></span>;      <span class="hljs-comment">// build named PIPE</span><br></code></pre></div></td></tr></table></figure>
 
 <p>然后调用file.c中具体的实现:</p>
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">file_open</span><span class="hljs-params">(<span class="hljs-keyword">char</span> *path, <span class="hljs-keyword">uint32_t</span> open_flags)</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">file_close</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd)</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">file_read</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd, <span class="hljs-keyword">void</span> *base, <span class="hljs-keyword">size_t</span> len, <span class="hljs-keyword">size_t</span> *copied_store)</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">file_write</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd, <span class="hljs-keyword">void</span> *base, <span class="hljs-keyword">size_t</span> len, <span class="hljs-keyword">size_t</span> *copied_store)</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">file_seek</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd, <span class="hljs-keyword">off_t</span> pos, <span class="hljs-keyword">int</span> whence)</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">file_fstat</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd, struct stat *stat)</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">file_fsync</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd)</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">file_getdirentry</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd, struct dirent *dirent)</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">file_dup</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd1, <span class="hljs-keyword">int</span> fd2)</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">file_pipe</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd[])</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">file_mkfifo</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *name, <span class="hljs-keyword">uint32_t</span> open_flags)</span></span>;<br></code></pre></div></td></tr></table></figure>
 
 <p>sysfile_xxx算是在写操作系统的时候比较常用的函数.</p>
-<h3 id="VFS层"><a href="#VFS层" class="headerlink" title=".VFS层"></a>.VFS层</h3><p>VFS有四个接口, 分别是file&amp;dir接口, inode接口, fs接口和外设接口. </p>
+<h3 id="3-VFS层"><a href="#3-VFS层" class="headerlink" title="3.VFS层"></a>3.VFS层</h3><p>VFS有四个接口, 分别是file&amp;dir接口, inode接口, fs接口和外设接口. </p>
 <h4 id="file-amp-dir接口"><a href="#file-amp-dir接口" class="headerlink" title="file&amp;dir接口"></a>file&amp;dir接口</h4><p>file&amp;dir接口层(共用一个结构体, 毕竟目录也是一种文件)定义了进程在内核中直接访问的文件相关信息，这定义在file数据结构中，具体描述如下：</p>
 <blockquote>
 <p>其中fd取决于进程的文件打开顺序, 最大值是<code>(4096 - sizeof(struct files_struct)) / sizeof(struct file)</code><br>而且在fd_array初始化的时候看起来file_struct和file挤满4KB空间, 不过不知道为什么</p>
@@ -2126,9 +2126,9 @@ ZOMBIE--&gt;[*]:资源回收
 <p>所以VFS具体是怎么个抽象法儿呢? </p>
 <p>首先是对PCB中的文件进行抽象, 弄一个files_struct管理fd_array, 每个文件使用file进行定义, file中有基本的打开计数权限索引等等, 处于一个非常高的抽象层, 而且是针对用户的.</p>
 <p>file中包含了一个index node, node记录了设备文件和SFS文件的inode信息(元数据), <strong>向下给sfs_inode和device提供了接口</strong>.</p>
-<p>inode包含一个struct fs*, 而<strong>fs向下接到了SFS层的sys_fs</strong>结构体, 这个才是具体到文件系统的总体信息, 比如super dev bitmap, 这些都是文件的磁盘布局信息.</p>
+<p>inode包含一个struct fs*, <strong>而fs向下接到了SFS层的sys_fs</strong>结构体, 这个才是具体到文件系统的总体信息, 比如super dev bitmap, 这些都是文件的磁盘布局信息.</p>
 <p>当我们需要对文件file层面操作的时候(比如在path下查找 创建 删除等), 我们可以调用file对应inode(元数据)的函数指针, 实际上是调用了sfs层的函数去进行下一步的操作.</p>
-<h3 id="SFS层"><a href="#SFS层" class="headerlink" title=".SFS层"></a>.SFS层</h3><p>SFS文件系统中目录和常规文件具有共同的属性，而这些属性保存在索引节点中。SFS通过索引节点来管理目录和常规文件，索引节点包含操作系统所需要的关于某个文件的关键信息，比如文件的属性、访问许可权以及其它控制信息都保存在索引节点中。多个文件名可指向一个索引节点。</p>
+<h3 id="4-SFS层"><a href="#4-SFS层" class="headerlink" title="4.SFS层"></a>4.SFS层</h3><p>SFS文件系统中目录和常规文件具有共同的属性，而这些属性保存在索引节点中。SFS通过索引节点来管理目录和常规文件，索引节点包含操作系统所需要的关于某个文件的关键信息，比如文件的属性、访问许可权以及其它控制信息都保存在索引节点中。多个文件名可指向一个索引节点。</p>
 <h4 id="函数接口与数据结构"><a href="#函数接口与数据结构" class="headerlink" title="函数接口与数据结构"></a>函数接口与数据结构</h4><blockquote>
 <p>在sfs.h中</p>
 </blockquote>
@@ -2156,7 +2156,7 @@ ZOMBIE--&gt;[*]:资源回收
 
 <p>当uCore创建一个<strong>用于存储文件/目录</strong>的<code>inode</code>结构（即该<code>inode</code>结构的<code>in_info</code>成员变量为<code>sfs_inode</code>类型）时，程序会执行函数<code>sfs_create_inode</code>。该函数会<strong>将<code>inode</code>结构中的<code>sfs_inode</code>成员与磁盘对应结点<code>sfs_disk_inode</code>相关联</strong>，从而使得只凭<code>inode</code>即可操作该结点。 </p>
 <blockquote>
-<p>比如在打开文件的时候, 需要调用<code>sfs_dirent_search_nolock</code>查找路径对应inode, 如果找到了会返回ino编号, 然后调用<code>sfs_load_inode</code>根据ino和sfs找到对应inode, 把对应<code>sfs_disk_inode</code>读到内存中, 然后调用<code>sfs_create_inode</code>, 初始化<code>inode</code>里的<code>sfs_inode</code>.</p>
+<p>比如在打开文件的时候, 需要调用<code>sfs_dirent_search_nolock</code>查找路径对应inode, 如果找到了会返回ino编号, 然后调用<code>sfs_load_inode</code>根据ino和sfs找到对应inode, 把对应<code>sfs_disk_inode</code>读到内存中, 然后调用**<code>sfs_create_inode</code>**, 初始化<code>inode</code>里的<code>sfs_inode</code>.</p>
 </blockquote>
 <blockquote>
 <p>用于描述设备<code>device</code>的<code>inode</code>会在其他函数中被初始化，不会执行函数<code>sfs_create_inode</code></p>
@@ -2198,7 +2198,7 @@ ZOMBIE--&gt;[*]:资源回收
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">static</span> <span class="hljs-keyword">const</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">inode_ops</span> <span class="hljs-title">sfs_node_dirops</span> =</span> &#123;<br>    .vop_magic                      = VOP_MAGIC,<br>	...<br>&#125;;<br></code></pre></div></td></tr></table></figure>
 
 <p>对于目录操作而言，由于目录也是一种文件，所以sfs_opendir、sys_close对应户进程发出的open、close函数。相对于sfs_open，sfs_opendir只是完成一些open函数传递的参数判断，没做其他更多的事情。目录的close操作与文件的close操作完全一致。由于目录的内容数据与文件的内容数据不同，所以读出目录的内容数据的函数是sfs_getdirentry，其主要工作是获取目录下的文件inode信息。</p>
-<h3 id="device层"><a href="#device层" class="headerlink" title=".device层"></a>.device层</h3><blockquote>
+<h3 id="5-device层"><a href="#5-device层" class="headerlink" title="5.device层"></a>5.device层</h3><blockquote>
 <p>目前实现了stdin设备文件文件、stdout设备文件、disk0设备。stdin设备就是键盘，stdout设备就是CONSOLE（串口、并口和文本显示器），而disk0设备是承载SFS文件系统的磁盘设备。(无情的复制机器)</p>
 </blockquote>
 <p>为了表示一个设备，需要有对应的数据结构，ucore为此定义了struct device，其描述如下：</p>
