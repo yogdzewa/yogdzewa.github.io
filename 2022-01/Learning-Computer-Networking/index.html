@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/Computer_Networking/image-20220116215053931.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/Computer_Networking/image-20220116215250646.png">
 <meta property="article:published_time" content="2022-01-16T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-01-16T14:59:13.738Z">
+<meta property="article:modified_time" content="2022-01-16T15:26:46.047Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="Network">
 <meta name="twitter:card" content="summary_large_image">
@@ -336,8 +336,7 @@
 <ul>
 <li><strong>概念：</strong> 是指将端系统连入到<strong>边缘路由器</strong>的<strong>物理链路</strong><ul>
 <li><strong>边缘路由器：</strong> 是指端系统到任何其他远程端系统路径上的<strong>第一台路由器.</strong> </li>
-<li>接入网的几种方式：<ul>
-<li>家庭接入：<strong>DSL、电缆</strong>、FTTH、拨号和卫星<ul>
+<li>接入网的几种方式：家庭接入：<strong>DSL、电缆</strong>、FTTH、拨号和卫星<ul>
 <li><strong>DSL(数字用户线):</strong> 它的ISP是<strong>本地电话公司</strong>。其使用的通信链路的物理材质为电话线，是一种双绞线。<ul>
 <li>用户使用<strong>DSL调制解调器</strong>通过电话线与ISP中的数字用户线接入复用器（<strong>DSLAM</strong>）来交换数据；<strong>家庭DSL调制解调器</strong>将数字数据转换为高频音后通过电话线传输到ISP中心，并且通过<strong>DSL解调器</strong>将DSLAM发送过来的模拟信号转为数字信号<br><img src="../../image/Computer_Networking/image-20220116215009788.png" srcset="/img/loading.gif" lazyload alt="image-20220116215009788"></li>
 </ul>
@@ -348,8 +347,6 @@
 </li>
 <li><strong>FTTH(Fiber TO The Home)光纤到户:</strong> 这里主要是指使用<strong>光纤</strong>作为通信链路的材质。<ul>
 <li>最简单的光纤分布网络称为<strong>直接光纤</strong>，<strong>从本地中心局到每户设置一根光纤</strong>，不过更为一般的是从中心距出来的每根光纤实际上由许多家庭共享，直到相对接近这些家庭的位置，该光纤才被分成每户一根光纤。 <img src="../../image/Computer_Networking/image-20220116215036114.png" srcset="/img/loading.gif" lazyload></li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -380,9 +377,12 @@
 </li>
 <li><p><strong>网络核心：</strong></p>
 <ul>
-<li>在考察了因特网边缘之后，开始深入研究网络核心，也就是<strong>互联网端系统的分组交换机和链路构成的网状网格</strong>。</li>
-<li>通过网络链路和交换机移动数据有两种基本方法：<strong>电路交换和分组交换</strong><ul>
-<li><strong>分组交换：</strong><ul>
+<li><p>在考察了因特网边缘之后，开始深入研究网络核心，也就是<strong>互联网端系统的分组交换机和链路构成的网状网格</strong>。</p>
+</li>
+<li><p>通过网络链路和交换机移动数据有两种基本方法：<strong>电路交换和分组交换</strong></p>
+</li>
+<li><p><strong>分组交换：</strong></p>
+<ul>
 <li>分组在通信链路上以<strong>等于该链路的最大传输速率</strong>传输通过通信链路。</li>
 <li><strong>传输时延（应该是传播时延）：</strong> 如果某条链路的最大传输速率为<strong>R比特/秒</strong>，分组长度为<strong>L比特</strong> ，则该链路传输该分组的时间为<strong>L/R秒</strong>。</li>
 <li><strong>存储转发传输：</strong> 存储转发是指交换机在<strong>收到一个完成的分组</strong>，才会向链路输出转发分组，否则就将收到的部分分组缓存起来；因为<strong>缓存等待一个分组的全部数据</strong>而导致的时间开销被称为<strong>存储转发时延</strong></li>
@@ -399,16 +399,18 @@
 </li>
 </ul>
 </li>
-<li><strong>电路交换：</strong><ul>
-<li>在<strong>电路交换网络</strong>中，在端系统通信会话期间，交换机会<strong>预留</strong>端系统间通信路径上的相关资源（缓存，链路传输速率），即<strong>先建立连接，然后通信</strong>；而在<strong>分组交换网络中，这些资源没有被预留</strong>；也就是说，在端系统进行通信时，其所需要的资源是<strong>被保持</strong>的，其他通信是无法使用这一部分资源的；也就说，端系统间真正建立了一条“连接”；而这一连接，用电话的术语被称为“电路”。传统的电话网络就是电路交换网络的例子。</li>
-<li>电路交换网络中的复用：<ul>
+<li><p><strong>电路交换：</strong></p>
+<ul>
+<li><p>在<strong>电路交换网络</strong>中，在端系统通信会话期间，交换机会<strong>预留</strong>端系统间通信路径上的相关资源（缓存，链路传输速率），即<strong>先建立连接，然后通信</strong>；而在<strong>分组交换网络中，这些资源没有被预留</strong>；也就是说，在端系统进行通信时，其所需要的资源是<strong>被保持</strong>的，其他通信是无法使用这一部分资源的；也就说，端系统间真正建立了一条“连接”；而这一连接，用电话的术语被称为“电路”。传统的电话网络就是电路交换网络的例子。</p>
+</li>
+<li><p>电路交换网络中的复用：</p>
+<ul>
 <li><strong>时分复用（Time-Division Multiplexing TDM）：</strong> 是指将时间划分为<strong>固定区间的帧</strong>，每个帧则又被划分为固定数量的<strong>时间空隙</strong>；当网络需要建立一条连接时，网络将在每个帧中为该连接指定一个时隙；在该时隙内，链路用来传输该链接的数据；</li>
 <li><strong>频分复用(Frequency-Division Multiplexing)：</strong> 将频率域划分为频段，然后将<strong>频段</strong>分配给连接；此频段被用来专门传输链接的数据。该频段的宽度成为带宽。</li>
 </ul>
 </li>
-</ul>
-</li>
-<li><strong>分组交换和电路交换的对比：</strong><ul>
+<li><p><strong>分组交换和电路交换的对比：</strong></p>
+<ul>
 <li><strong>分组交换的优点：</strong><ul>
 <li>它提供了比电路交换更好的带宽共享；</li>
 <li>它比电路交换更简单、更有效、实现成本更低；</li>
@@ -430,14 +432,15 @@
 <li><strong>总结：</strong> 总体上来说，<strong>分组交换的性能要好于电路交换的性能</strong>，但是不同类型的分组交换方式有不同的应用场景；比如一些对最低速率有着严格要求的应用，比如实时服务等，为了获得速率保证，牺牲网络的效率也是可以接受的。趋势向着分组交换发展网络的网络</li>
 </ul>
 </li>
-<li><strong>网络的网络：</strong><ul>
+<li><p><strong>网络的网络：</strong></p>
+<ul>
 <li>该用什么样的结构来刻画因特网呢？<strong>因特网</strong>是网络的网络</li>
 <li>通过5个模型不断过渡到最终模型，其实过渡的过程就结构不断合理、连接方式不断明确的过程</li>
-<li>端系统是通过<strong>ISP接入因特网</strong>的，<strong>为了实现端系统的互联，ISP也必须互联</strong>，其实网络模型就是用来<strong>表达ISP和端系统以及ISP之间的结构的抽象。</strong><ul>
+<li>端系统是通过<strong>ISP接入因特网</strong>的，<strong>为了实现端系统的互联，ISP也必须互联</strong>，其实网络模型就是用来<strong>表达ISP和端系统以及ISP之间的结构的抽象。</strong></li>
 <li><strong>网络结构1：</strong> <strong>存在唯一的全球传输ISP互联所有的接入ISP</strong>，这是指，全球ISP是一个由路由器和通信链路构成的网络，该网络跨越全球，并且其他的接入ISP都至少和一个它的路由器相连（<strong>接入ISP被认为是客户</strong>，<strong>全球传输被认为是提供商</strong>）；</li>
 <li><strong>网络结构2：</strong> <strong>存在多个全球传输ISP</strong>，它们分别于一部分的接入ISP互联；为了实现端系统的互联，这多个全球ISP也必须互联；网络结构是一个两层结构，其中<strong>全球传输ISP位于顶层</strong>，<strong>接入ISP处于底层</strong>；</li>
 <li><strong>网络结构3：</strong> <strong>顶层全球传输ISP基本上已经定型</strong>，但是接入ISP现在还很混乱，比如，它们直接同顶层ISP相连；而网络结构3中，<strong>接入ISP也是分层的</strong>：较小区域中的ISP连入较大区域的ISP，而不是直接与顶层ISP相连；为什么会出现这样的结构呢？这是因为，如果都直接同顶层ISP相连，那么两个同一较小区域内，分属不同ISP的端系统之间通信的数据也会到顶层ISP中心去一趟，如果它们不是直接接入顶层ISP，而是接入了一个较大区域的ISP，那么它们之间的通信数据就不用去顶层ISP中心了，因为它们通过较大区域的ISP已经实现了互连，所以<strong>通信速度肯定就上去了</strong>。</li>
-<li>网络结构4: 是在网络结构3的基础上，增加了以下特点而形成的结构：<strong>存在点</strong>（Point of Presence，<strong>PoP</strong>）、<strong>多宿</strong>、<strong>对等</strong>、<strong>因特网交换点</strong>（Internet exchange point，<strong>IXP</strong>）。<ul>
+<li><strong>网络结构4</strong>: 是在网络结构3的基础上，增加了以下特点而形成的结构：<strong>存在点</strong>（Point of Presence，<strong>PoP</strong>）、<strong>多宿</strong>、<strong>对等</strong>、<strong>因特网交换点</strong>（Internet exchange point，<strong>IXP</strong>）。<ul>
 <li><strong>PoP：</strong> 存在于等级结构中所有层次，但是底层ISP除外；<strong>一个PoP是ISP网络中的一台或者多台路由器群组</strong>，其中客户ISP能够通过第三方<strong>提供的高速链路直接将它的路由器和供应商的PoP连接</strong>，从而实现与提供商ISP连接。这样接入速度很明显就提高了。</li>
 <li><strong>多宿（multi-home）：</strong> 任何ISP（除第一层ISP）都可以与<strong>两个或者多个提供商ISP连接</strong>，这被称为<strong>多宿</strong>；这样网络的<strong>可靠性</strong>就提高了。</li>
 <li><strong>对等（peer）：</strong> 位于<strong>相同等级结构层次的一对邻近ISP能够直接将它们的网络连接到一起</strong>，使它们之间流量经直接连接而不<strong>是经过上游的中间ISP传输</strong>，这样既不用付费，速度也可能会快一些</li>
@@ -445,12 +448,11 @@
 </ul>
 </li>
 <li><strong>网络结构5：</strong> 网络结构5是在网络结构4的基础上<strong>增加了内容提供商网络</strong>而构成。内容提供商构建自己的网络，并且<strong>通过与较低层ISP对等而“绕过”较高层因特网ISP</strong>，而且内容提供商对端用户也有了更多的控制。<br><img src="../../image/Computer_Networking/image-20220116215250646.png" srcset="/img/loading.gif" lazyload alt="image-20220116215250646"></li>
-<li>总体来说，今天的因特网是一个“网络的网络”，其结构复杂，由十多个顶层ISP和数十万个较低层ISP构成。近年来，<strong>主要的内容提供商创建自己的网络，直接在可能的地方与较低层ISP互联.</strong></li>
 </ul>
 </li>
 </ul>
 </li>
-</ul>
+<li><p>总体来说，今天的因特网是一个“网络的网络”，其结构复杂，由十多个顶层ISP和数十万个较低层ISP构成。近年来，<strong>主要的内容提供商创建自己的网络，直接在可能的地方与较低层ISP互联.</strong></p>
 </li>
 </ul>
 </li>
@@ -460,8 +462,7 @@
 </li>
 <li><p><strong>理想目标</strong>：因特网能够在任意两个端系统之间随心所欲地移动数据而没有任何数据丢失，<strong>计算机网络必定要限制在端系统之间的吞吐量（每秒能够传输的数据量），在端系统之间引入时延，而且实际上也会丢失分组</strong></p>
 </li>
-<li><p>分组交换网中的</p>
-<p>时延概述：</p>
+<li><p>分组交换网中的时延概述：</p>
 <ul>
 <li>一个分组在沿途每个节点<strong>承受不同类型的时延</strong>，这些时延中最为重要的是：<strong>结点处理时延、排队时延、传输时延和传播时延</strong>.这些时延总体累加起来是<strong>结点总时延</strong></li>
 <li><strong>节点总时延==结点处理时延+排队时延+传输时延+传播时延</strong></li>
@@ -470,11 +471,11 @@
 <li><strong>排队时延：</strong> 是<strong>因为分组所对应的出链路前面有其他分组正在传输，所以分组需要该链路的缓冲队列里等待其他分组传输完毕而产生的</strong>，一个特定分组的<strong>排队时延长度</strong>将取决于<strong>先前到达的正在排队等待向链路传输的分组数量</strong>。排队时延是到达该队列的流量强度和性质的函数，通常可以达到毫秒级到微秒级；</li>
 <li><strong>传输时延（一个分组的节点全部进入链路的时延）：</strong> 传输时延是将<strong>所有分组的比特推向链路所有需要的时间</strong>，实际的传输时延通常在毫秒到微秒数量级。用L表示分组的长度，用Rbps表示从路由器A到B的链路传输速率。传输时延是L/R。</li>
 <li><strong>传播时延（链路中消耗的）：</strong> 是指<strong>比特进入链路后，从该链路的起点到下一个结点所用的时间</strong>；一旦分组中的最后一个比特到达路由器就意味着该分组的所有比特都已到达路由器；广域网中，传播时延一般是毫秒级的。<strong>传播时延是d/s</strong>。d是路由器A到B的距离。s是链路的传播速率。</li>
+</ul>
+</li>
 <li>传输时延和传播时延的对比：<ul>
 <li>传输时延：大卡车经过收费站的时间（分组长度L <strong>/</strong> 链路的传输速率）</li>
 <li>传播时延：大卡车在高速上行驶的时间（两台路由器之间的链路长度d <strong>/</strong> 两台路由器之间的传输速率）</li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -511,7 +512,7 @@
 <li><p><strong>协议层次及其服务模型：</strong></p>
 <ul>
 <li>因特网是一个极为复杂的系统，该系统里存在着大量的应用程序和协议、各种类型的端系统、分组交换机和各种类型的链路级媒体。但是它同时也是有着清晰结构的，就像我们前面在网络核心 一节介绍的，我们仍能构建它的结构模型</li>
-<li>1.5.1 分层体系结构<ul>
+<li>1.5.1 分层体系结构</li>
 <li>优点：<ul>
 <li><strong>易于服务实现的多样性,因为某一层对其上一层提供服务，同时它可以利用下一层提供的服务，只要对上提供的服务和对下利用的服务没有变化，其层内部的实现并不会对系统结构产生影响，也就是对于大而复杂且需要不断更新的系统来说 改变服务的实现而不会影响系统其他组件。</strong>：</li>
 <li><strong>不用关注下一层如何实现，以及处理故障的细节。</strong></li>
@@ -536,8 +537,6 @@
 <li>OSI的模型一共有7层；</li>
 <li>从下到上依次为：<strong>物理层，链路层，网络层，传输层，会话层，表示层，应用层</strong>。相比因特网体系结构，OSI多了两层。</li>
 <li><strong>因特网</strong>将两层 <strong>（会话层，表示层）</strong> 的功能留给了<strong>开发者自行实现</strong>。</li>
-</ul>
-</li>
 </ul>
 </li>
 <li>封装：<ul>
