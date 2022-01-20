@@ -24,8 +24,9 @@
 <meta property="og:description" content="冲">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220117165401525.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/photo_2018-01-13_11-28-32.jpg">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-01-17T09:16:30.063Z">
+<meta property="article:modified_time" content="2022-01-20T11:32:35.780Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -211,7 +212,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      399 字
+      2.8k 字
     </span>
   
 
@@ -220,7 +221,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      5 分钟
+      36 分钟
     </span>
   
 
@@ -261,13 +262,65 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年1月17日 下午
+                  不可视境界线最后变动于：2022年1月20日 晚上
                 
               </p>
             
             <div class="markdown-body">
-              <h2 id="module-1"><a href="#module-1" class="headerlink" title="module 1"></a>module 1</h2><h3 id="The-file-system"><a href="#The-file-system" class="headerlink" title="The file system"></a>The file system</h3><p><img src="../../image/pwn-modules/image-20220117165401525.png" srcset="/img/loading.gif" lazyload alt="image-20220117165401525"></p>
+              <h1 id="module-1"><a href="#module-1" class="headerlink" title="module 1"></a>module 1</h1><h2 id="The-file-system"><a href="#The-file-system" class="headerlink" title="The file system"></a>The file system</h2><p><img src="../../image/pwn-modules/image-20220117165401525.png" srcset="/img/loading.gif" lazyload alt="image-20220117165401525"></p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">ln -s /old/path /new/path<br>&lt;in_file:      redirect in_file into the command&#x27;s input<br><span class="hljs-meta">&gt;</span><span class="bash">out_file:     redirect the <span class="hljs-built_in">command</span><span class="hljs-string">&#x27;s output into out_file, overwriting it</span></span><br><span class="hljs-meta">&gt;</span><span class="bash"><span class="hljs-string">&gt;out_file:    redirect the command&#x27;</span>s output into out_file, appending to it</span><br><span class="hljs-meta">2&gt;</span><span class="bash">error_file:  redirect the <span class="hljs-built_in">command</span><span class="hljs-string">&#x27;s errors into error_file, overwriting it</span></span><br><span class="hljs-meta">2&gt;</span><span class="bash"><span class="hljs-string">&gt;error_file: redirect the command&#x27;</span>s errors into error_file, appending to it</span><br></code></pre></div></td></tr></table></figure>
+
+<h2 id="Binary-files"><a href="#Binary-files" class="headerlink" title="Binary files"></a>Binary files</h2><blockquote>
+<p>pwn.college的教程还是挺绝的, slide可以做为基础知识的详细参考资料. Binaryfiles的slide在<a target="_blank" rel="noopener" href="https://docs.google.com/presentation/d/1wrX8tvwaxIEk5hx4OtQmPqps-MScIaDO-9bTKQqr8vI/edit#slide=id.g9265d66f8d_0_26">这里</a> </p>
+<p><a target="_blank" rel="noopener" href="https://www.intezer.com/blog/research/executable-linkable-format-101-part1-sections-segments/">ELF base struct: header-sections-segments</a><br><a target="_blank" rel="noopener" href="https://www.intezer.com/blog/elf/executable-linkable-format-101-part-2-symbols/">symbols</a><br><a target="_blank" rel="noopener" href="https://www.intezer.com/blog/elf/executable-and-linkable-format-101-part-3-relocations/">relocations</a><br><a target="_blank" rel="noopener" href="https://www.intezer.com/blog/elf/executable-linkable-format-101-part-4-dynamic-linking/">dynamic-linking</a> </p>
+</blockquote>
+<ul>
+<li>ELF is a binary file format.<br>Contains the program and its data.Describes how the program should be loaded (<em>program/segment headers</em>).Contains metadata describing program components (<em>section headers</em>).</li>
+<li><strong>sections</strong> gather all needed information to link a given object file and build an executable,<br>while <strong>Program Headers</strong> split the executable into segments with different attributes, which will eventually be loaded into memory.</li>
+<li>Section headers are <em><strong>not</strong></em> a necessary part of the ELF. <em>Section headers</em> are just <strong>metadata</strong>.</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> file /bin/cat</span> <br>/bin/cat: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=e6afa43e1e280bd06c018f541c7ae46a2ebda83c, for GNU/Linux 3.2.0, stripped<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li>Several ways to dig in: 在CSAPP里, 当初看的时候被我忽略掉了…<ul>
+<li><input checked="" disabled="" type="checkbox"> <strong>gcc</strong> to make your ELF.</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>readelf</strong> to parse the ELF header.</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>objdump</strong> to parse the ELF header and disassemble the source code.</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>nm</strong> to view your ELF’s symbols.</li>
+<li><input disabled="" type="checkbox"> <strong>patchelf</strong> to change some ELF properties.</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>objcopy</strong> to swap out ELF sections.</li>
+<li><input disabled="" type="checkbox"> <strong>strip</strong> to remove otherwise-helpful information (such as symbols).</li>
+<li><input disabled="" type="checkbox"> <strong>kaitai struct</strong> (<a target="_blank" rel="noopener" href="https://ide.kaitai.io/">https://ide.kaitai.io/</a>) to look through your ELF interactively.</li>
+</ul>
+</li>
+</ul>
+<h3 id="ELF-base-struct"><a href="#ELF-base-struct" class="headerlink" title="ELF base struct"></a>ELF base struct</h3><p>ELF files are composed of three major components:</p>
+<ul>
+<li><strong>ELF Header</strong> : contains general information about the binary <code>readelf -h &lt;executable&gt;</code> </li>
+<li><strong>Sections</strong> : comprise all information needed for linking a target object file in order to build a working executable <code>readelf -S &lt;executable&gt;</code></li>
+<li><strong>Segments</strong> : break down the structure of an ELF binary into suitable chunks to prepare the executable to be loaded into memory</li>
+</ul>
+<p>注意segment在链接的时候没有作用, section在运行时没有作用.</p>
+<p>一方面Segment通过把section分组来提高装载的效率, 另一方面要注意必须和物理页大小对齐, 以便于pte中的权限控制.</p>
+<h3 id="Symbols"><a href="#Symbols" class="headerlink" title="Symbols"></a>Symbols</h3><p><strong>Provide interface to Linkers and Debuggers to enforce their functionality.</strong> </p>
+<p>.dynstr是.dynsym的string table, The section <em>.strtab</em> is the <em>String Table</em> of <em>.symtab Symbol Table</em>. 而且string table的entry数量和symbol table的entry数量一致.</p>
+<p><img src="../../image/pwn-modules/photo_2018-01-13_11-28-32.jpg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="relocation"><a href="#relocation" class="headerlink" title="relocation"></a>relocation</h3><p>There are different types of <u>relocatable files</u>:</p>
+<ul>
+<li>Generic object files (*.o).</li>
+<li>Kernel object files (*.ko).</li>
+<li>Shared object files (*.so).</li>
+</ul>
+<p>第一种比较简单, 就是一个静态链接的文件.</p>
+<p>第二种是</p>
+<h2 id="Process-Loading"><a href="#Process-Loading" class="headerlink" title="Process Loading"></a>Process Loading</h2><h2 id="命令行参数和环境变量"><a href="#命令行参数和环境变量" class="headerlink" title="命令行参数和环境变量"></a>命令行参数和环境变量</h2><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> **argv, <span class="hljs-keyword">char</span> **envp)</span></span><br></code></pre></div></td></tr></table></figure>
+
+<p>main函数的参数, 其中argv和envp是字符串数组的指针, 所以是二重指针, 两个数组的最后一个元素是null.</p>
+<p>就像这样子:</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> gcc -o <span class="hljs-built_in">test</span> test.c</span><br><span class="hljs-meta">$</span><span class="bash"> ./<span class="hljs-built_in">test</span> testing</span><br>The number of arguments is: 2<br><br>First arg: 	The program name is: ./test<br>Second arg: The first argument is: testing<br><br>The first environment variable is: PWD=/home/yans # process working directory<br>The second environment variable is: SHLVL=1<br></code></pre></div></td></tr></table></figure>
+
+<p><code>env</code> runs a command with a modified environment. 也可以设置特定的环境变量.</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> env -i ./countenv</span><br>There are 0 environment variables.<br></code></pre></div></td></tr></table></figure>
 
 
             </div>
