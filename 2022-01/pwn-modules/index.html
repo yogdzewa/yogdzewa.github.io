@@ -1,0 +1,922 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Yogdzewa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="冲">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pwn.college各modules的一点笔记">
+<meta property="og:url" content="https://yogdzewa.github.io/2022-01/pwn-modules/index.html">
+<meta property="og:site_name" content="Yogdzewa">
+<meta property="og:description" content="冲">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220117165401525.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/photo_2018-01-13_11-28-32.jpg">
+<meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
+<meta property="article:modified_time" content="2022-01-30T09:57:50.077Z">
+<meta property="article:author" content="Yogdzewa">
+<meta property="article:tag" content="PWN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220117165401525.png">
+  
+  
+  <title>pwn.college各modules的一点笔记 - Yogdzewa</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/obsidian.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yogdzewa.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>(￣.￣) </strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/image/edit2.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="pwn.college各modules的一点笔记">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-01-16 22:00" pubdate>
+        2022年1月16日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      20k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      254 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">pwn.college各modules的一点笔记</h1>
+            
+              <p class="note note-info">
+                
+                  不可视境界线最后变动于：2022年1月30日 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h1 id="module-1"><a href="#module-1" class="headerlink" title="module 1"></a>module 1</h1><h2 id="The-file-system"><a href="#The-file-system" class="headerlink" title="The file system"></a>The file system</h2><p><img src="../../image/pwn-modules/image-20220117165401525.png" srcset="/img/loading.gif" lazyload alt="image-20220117165401525"></p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">ln -s /old/path /new/path<br>&lt;in_file:      redirect in_file into the command&#x27;s input<br><span class="hljs-meta">&gt;</span><span class="bash">out_file:     redirect the <span class="hljs-built_in">command</span><span class="hljs-string">&#x27;s output into out_file, overwriting it</span></span><br><span class="hljs-meta">&gt;</span><span class="bash"><span class="hljs-string">&gt;out_file:    redirect the command&#x27;</span>s output into out_file, appending to it</span><br><span class="hljs-meta">2&gt;</span><span class="bash">error_file:  redirect the <span class="hljs-built_in">command</span><span class="hljs-string">&#x27;s errors into error_file, overwriting it</span></span><br><span class="hljs-meta">2&gt;</span><span class="bash"><span class="hljs-string">&gt;error_file: redirect the command&#x27;</span>s errors into error_file, appending to it</span><br></code></pre></div></td></tr></table></figure>
+
+<h2 id="Binary-files"><a href="#Binary-files" class="headerlink" title="Binary files"></a>Binary files</h2><blockquote>
+<p>pwn.college的教程还是挺绝的, slide可以做为基础知识的详细参考资料. Binaryfiles的slide在<a target="_blank" rel="noopener" href="https://docs.google.com/presentation/d/1wrX8tvwaxIEk5hx4OtQmPqps-MScIaDO-9bTKQqr8vI/edit#slide=id.g9265d66f8d_0_26">这里</a> </p>
+<p><a target="_blank" rel="noopener" href="https://www.intezer.com/blog/research/executable-linkable-format-101-part1-sections-segments/">ELF base struct: header-sections-segments</a><br><a target="_blank" rel="noopener" href="https://www.intezer.com/blog/elf/executable-linkable-format-101-part-2-symbols/">symbols</a><br><a target="_blank" rel="noopener" href="https://www.intezer.com/blog/elf/executable-and-linkable-format-101-part-3-relocations/">relocations</a><br><a target="_blank" rel="noopener" href="https://www.intezer.com/blog/elf/executable-linkable-format-101-part-4-dynamic-linking/">dynamic-linking</a> </p>
+</blockquote>
+<ul>
+<li>ELF is a binary file format.<br>  Contains the program and its data.Describes how the program should be loaded (<em>program/segment headers</em>).Contains metadata describing program components (<em>section headers</em>).</li>
+<li><strong>sections</strong> gather all needed information to link a given object file and build an executable,<br>  while <strong>Program Headers</strong> split the executable into segments with different attributes, which will eventually be loaded into memory.</li>
+<li>Section headers are <em><strong>not</strong></em> a necessary part of the ELF. <em>Section headers</em> are just <strong>metadata</strong>.</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> file /bin/cat</span> <br>/bin/cat: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=e6afa43e1e280bd06c018f541c7ae46a2ebda83c, for GNU/Linux 3.2.0, stripped<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li>Several ways to dig in: 在CSAPP里, 当初看的时候被我忽略掉了…<ul>
+<li><input checked="" disabled="" type="checkbox"> <strong>gcc</strong> to make your ELF.</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>readelf</strong> to parse the ELF header.</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>objdump</strong> to parse the ELF header and disassemble the source code.</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>nm</strong> to view your ELF’s symbols.</li>
+<li><input disabled="" type="checkbox"> <strong>patchelf</strong> to change some ELF properties.</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>objcopy</strong> to swap out ELF sections.</li>
+<li><input disabled="" type="checkbox"> <strong>strip</strong> to remove otherwise-helpful information (such as symbols).</li>
+<li><input disabled="" type="checkbox"> <strong>kaitai struct</strong> (<a target="_blank" rel="noopener" href="https://ide.kaitai.io/">https://ide.kaitai.io/</a>) to look through your ELF interactively</li>
+</ul>
+</li>
+</ul>
+<h3 id="ELF-base-struct"><a href="#ELF-base-struct" class="headerlink" title="ELF base struct"></a>ELF base struct</h3><p>ELF files are composed of three major components:</p>
+<ul>
+<li><strong>ELF Header</strong> : contains general information about the binary <code>readelf -h &lt;executable&gt;</code> </li>
+<li><strong>Sections</strong> : comprise all information needed for linking a target object file in order to build a working executable <code>readelf -S &lt;executable&gt;</code></li>
+<li><strong>Segments</strong> : break down the structure of an ELF binary into suitable chunks to prepare the executable to be loaded into memory</li>
+</ul>
+<blockquote>
+<p>每个section的意义还是要注意一下, 我又倒回来看.got.plt了</p>
+</blockquote>
+<p>注意segment在链接的时候没有作用, section在运行时没有作用.</p>
+<p>一方面Segment通过把section分组来提高装载的效率, 另一方面要注意必须和物理页大小对齐, 以便于pte中的权限控制.</p>
+<h3 id="Symbols"><a href="#Symbols" class="headerlink" title="Symbols"></a>Symbols</h3><p><strong>Provide interface to Linkers and Debuggers to enforce their functionality.</strong> </p>
+<p>.dynstr是.dynsym的string table, The section <em>.strtab</em> is the <em>String Table</em> of <em>.symtab Symbol Table</em>. 而且string table的entry数量和symbol table的entry数量一致.</p>
+<p><img src="../../image/pwn-modules/photo_2018-01-13_11-28-32.jpg" srcset="/img/loading.gif" lazyload></p>
+<h3 id="relocation"><a href="#relocation" class="headerlink" title="relocation"></a>relocation</h3><ol>
+<li><strong>Defining Relocations</strong> </li>
+</ol>
+<p>There are different types of <u>relocatable files</u>:</p>
+<ul>
+<li>Generic object files (*.o).     比较简单, 就是一个静态链接的文件.</li>
+<li>Kernel object files (*.ko).     wait for future</li>
+<li>Shared object files (*.so).    <ul>
+<li>These type of relocatable files support being linked on runtime, and they may be shared across different processes. Consequently, relocations of dynamic dependencies have to be done at runtime. This process is known as Dynamic Linking.</li>
+</ul>
+</li>
+</ul>
+<p>Elfxx_Rel and Elfxx_Rela差在一个Addend上, 也就是要重定位的位置和下一条指令地址的差值<strong>取反</strong>.</p>
+<p>其他的部分看原博客<a target="_blank" rel="noopener" href="https://www.intezer.com/blog/malware-analysis/executable-and-linkable-format-101-part-3-relocations/">就行</a>, 东西太多必须每一段意思都要懂, 不过重定位条目比较少也容易记住.</p>
+<h3 id="Dynamic-Linking"><a href="#Dynamic-Linking" class="headerlink" title="Dynamic Linking"></a>Dynamic Linking</h3><h4 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h4><p>Unlike in static linking, <em><strong>ld</strong></em> requires shared libraries to create a dynamically linked executable.<br>The output file will contain the <strong>executable’s code</strong> and <strong>the names of the shared libraries</strong> required.</p>
+<p>When the binary is executed, the dynamic linker will find the required dependencies to <strong>load</strong> and link them together.</p>
+<h4 id="Process"><a href="#Process" class="headerlink" title="Process"></a>Process</h4><p>The dynamic linking process begins immediately after execution.</p>
+<p>With dynamically linked programs, the system executes the file’s “<strong>interpreter</strong>”, which is an <u>intermediate</u> program that should <strong>set up the environment and only then execute the main binary</strong>. The interpreter lies in the <em>PT_INTERP</em> segment created by the compile-time linker (<em><strong>ld</strong></em>).</p>
+<p>The dynamic linker will <strong>set up the environment</strong> <u>using dynamic entries</u> from the <em>.dynamic</em> section:</p>
+<p>preparing the environment:</p>
+<ol>
+<li>Load the original file’s PT_LOAD segments in memory.</li>
+<li>Use the <em>.dynamic</em> section/segment to read dependencies, search for them on disk and load them in memory as well. This is done recursively for dependent libraries—they can be dynamically linked as well. The dependency searching algorithm is outlined in the <a target="_blank" rel="noopener" href="http://man7.org/linux/man-pages/man8/ld.so.8.html">ld.so man page</a>.</li>
+<li>Perform relocations – shared libraries are loaded into non-deterministic addresses and must have absolute addresses patched, as well as resolving references to other object files.</li>
+<li>Invoke shared library initialization functions (registered in the <em>.preinit_array, .init, .init_array</em> sections). <strong>What happened?</strong> </li>
+<li>Finally, pass control back to the original binary’s entry point, making it seem to the binary that control was passed directly from <em>exec</em>.</li>
+</ol>
+<p>还讲到了<strong>LD_PRELOAD</strong>和<strong>LD_LIBRARY_PATH</strong>变量…还是看原文吧…</p>
+<h4 id="Lazy-Linking"><a href="#Lazy-Linking" class="headerlink" title="Lazy Linking"></a>Lazy Linking</h4><p>lazy linking的原因是如果一个程序开头出错了马上退出, rendering useless all of the relocation work performed by the dynamic linker, 所以将一些链接工作放到实际调用的时候.</p>
+<p>在CSAPP中看过了, 基本相同, 不同在于提供了IDA的视图看法.</p>
+<h2 id="Process-Loading"><a href="#Process-Loading" class="headerlink" title="Process Loading"></a>Process Loading</h2><ol>
+<li><p>A process is created.</p>
+<p> by fork() or clone() and execve().</p>
+</li>
+<li><p>Cat is loaded.</p>
+<ul>
+<li><p>must be executable</p>
+<p>To figure out what to load, the Linux kernel reads the beginning of the file (i.e., /bin/cat), and makes a decision:</p>
+</li>
+<li><p>If the file starts with <strong>#!</strong>, the kernel extracts the interpreter from the rest of that line and executes this interpreter with the original file as an argument.</p>
+</li>
+<li><p>If the file matches a format in <strong>/proc/sys/fs/binfmt_misc</strong>, the kernel executes the interpreter specified for that format with the original file as an argument.</p>
+</li>
+<li><p>If the file is a <strong>dynamically-linked</strong> ELF, the kernel reads the interpreter/loader defined in the ELF, loads the interpreter and the original file, and lets the interpreter take control.</p>
+</li>
+<li><p>If the file is a <strong>statically-linked</strong> ELF, the kernel will load it.Other legacy file formats are checked for</p>
+<p>notice the interpreter specified in .interp section.</p>
+<p><strong>Dynamically linked ELFs: the loading process</strong> </p>
+</li>
+<li><p>The program and its interpreter are <u>loaded by the kernel</u>.</p>
+</li>
+<li><p>The interpreter <u>locates the libraries</u>.<br>  a. LD_PRELOAD environment variable, and anything in /etc/ld.so.preload<br>  b. LD_LIBRARY_PATH environment variable (can be set in the shell)<br>  c. DT_RUNPATH or DT_RPATH specified in the binary file (both can be modified with patchelf)<br>  d.system-wide configuration (/etc/ld.so.conf)<br>  e. /lib and /usr/lib</p>
+</li>
+<li><p>The interpreter <u>loads the libraries</u>.<br>  a.  these libraries can depend on other libraries, causing more to be loadedb.relocations updated</p>
+</li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://docs.google.com/presentation/d/1TwM5WLWnTqrNkpXjGKkaXYbKZEpatEQYA7ckBVXAOhs/edit#slide=id.g40953d030c_0_179">Cat is initialized</a>.</p>
+<p> <strong>/proc/self/maps</strong> and <strong>attribute((constructor))</strong> </p>
+</li>
+</ol>
+<p>Further readings:</p>
+<p><a target="_blank" rel="noopener" href="https://0xax.gitbooks.io/linux-insides/content/SysCall/linux-syscall-4.html">How does the Linux kernel run a program</a> </p>
+<p><a target="_blank" rel="noopener" href="https://gist.github.com/CMCDragonkai/10ab53654b2aa6ce55c11cfc5b2432a4">Linux: Understanding the Memory Layout of Linux Executables</a> </p>
+<h2 id="Process-Execution"><a href="#Process-Execution" class="headerlink" title="Process Execution"></a>Process Execution</h2><p>用命令行演示了非常多的内容, 基本都没见过我尽量记录下一些细节. <a target="_blank" rel="noopener" href="https://docs.google.com/presentation/d/1ezY9Q8I0tzDD-7ZDXMbQM5RQ7z1dvB9-U_nDEhc6qdE/edit#slide=id.g9279416eed_1_114">谷歌文档</a> </p>
+<ol>
+<li>Cat is launched.</li>
+<li>Cat reads its arguments and environment.</li>
+<li>Cat does its thing.</li>
+<li>Cat terminates. </li>
+</ol>
+<p>上面四个是这一部分要考虑的流程, 我也按流程走:</p>
+<h3 id="Cat-is-launched"><a href="#Cat-is-launched" class="headerlink" title="Cat is launched"></a>Cat is launched</h3><p><code>__libc_start_main()</code>, 又是这个函数, 不过在这之前还有一个<code>_start()</code>, 形成<code>_start()-&gt;__libc_start_main()-&gt;main()</code>流程.</p>
+<blockquote>
+<p>可以指定一下LD_PRELOAD参数来改变__libc_start_main()之类的操作</p>
+</blockquote>
+<h3 id="Cat-reads-arg-amp-env"><a href="#Cat-reads-arg-amp-env" class="headerlink" title="Cat reads arg &amp; env"></a>Cat reads arg &amp; env</h3><p>在下一节中有介绍, 视频里示范了一个改环境变量的例子.</p>
+<p>在执行ls指令的时候 添加<code>LANG = C</code>环境变量, 会导致排序按照ASCII码, 否则会按照系统默认的<code>en_US-UTF-8</code> </p>
+<h3 id="Cat-does-thing"><a href="#Cat-does-thing" class="headerlink" title="Cat does thing"></a>Cat does thing</h3><p>讲到了库函数, 系统调用, 信号, 共享内存. </p>
+<p>通过nm指令来查看symbol, strace的使用, 以及libc库函数可以不用写头文件, 不过会引起一个隐式声明警告, 可以通过man来查看需要引用什么头文件. </p>
+<p>信号演示的时候用了<code>ps pgrep</code>两个指令, 看ps的manual知道了参数有三种风格. 共享内存演示了/dev/shm, <strong>还不知道这怎么用</strong> </p>
+<p>还有一个进程terminate, 和我在操作系统中看到的一致, 不重复了.</p>
+<p>剩下的在PPT里.</p>
+<h2 id="命令行参数和环境变量"><a href="#命令行参数和环境变量" class="headerlink" title="命令行参数和环境变量"></a>命令行参数和环境变量</h2><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> **argv, <span class="hljs-keyword">char</span> **envp)</span></span><br></code></pre></div></td></tr></table></figure>
+
+<p>main函数的参数, 其中argv和envp是字符串数组的指针, 所以是二重指针, 两个数组的最后一个元素是null.</p>
+<p>就像这样子:</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> gcc -o <span class="hljs-built_in">test</span> test.c</span><br><span class="hljs-meta">$</span><span class="bash"> ./<span class="hljs-built_in">test</span> testing</span><br>The number of arguments is: 2<br><br>First arg:     The program name is: ./test<br>Second arg: The first argument is: testing<br><br>The first environment variable is: PWD=/home/yans # process working directory<br>The second environment variable is: SHLVL=1<br></code></pre></div></td></tr></table></figure>
+
+<p><code>env</code> runs a command with a modified environment. 也可以设置特定的环境变量.</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> env -i ./countenv</span>                   <br>There are 0 environment variables.<br></code></pre></div></td></tr></table></figure>
+
+<h2 id="PIPE"><a href="#PIPE" class="headerlink" title="PIPE"></a>PIPE</h2><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span><br><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">subprocess</span> &#123;</span><br>    <span class="hljs-keyword">int</span> pid;<br>    <span class="hljs-keyword">int</span> <span class="hljs-built_in">stdin</span>;<br>    <span class="hljs-keyword">int</span> <span class="hljs-built_in">stdout</span>;<br>    <span class="hljs-keyword">int</span> <span class="hljs-built_in">stderr</span>;<br>&#125;;<br><span class="hljs-keyword">void</span> __close(<span class="hljs-keyword">int</span> fd) &#123;<br>    <span class="hljs-keyword">if</span> (close(fd) == <span class="hljs-number">-1</span>) &#123; perror(<span class="hljs-string">&quot;Could not close pipe end&quot;</span> ); <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>); &#125;<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">mk_pipe</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fds[<span class="hljs-number">2</span>])</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (pipe(fds) == <span class="hljs-number">-1</span>) &#123; perror(<span class="hljs-string">&quot;Could not create pipe&quot;</span>); <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>); &#125;<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">mv_fd</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd1, <span class="hljs-keyword">int</span> fd2)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (dup2(fd1,  fd2) == <span class="hljs-number">-1</span>) &#123; perror(<span class="hljs-string">&quot;Could not duplicate pipe end&quot;</span>); <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>); &#125;<br>    __close(fd1);<br>&#125;<br><br><span class="hljs-comment">// Start program at argv[0] with arguments argv.</span><br><span class="hljs-comment">// Set up new stdin, stdout and stderr.</span><br><span class="hljs-comment">// Puts references to new process and pipes into `p`.</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">call</span><span class="hljs-params">(<span class="hljs-keyword">char</span>* argv[], struct subprocess * p)</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> child_in[<span class="hljs-number">2</span>]; <span class="hljs-keyword">int</span> child_out[<span class="hljs-number">2</span>]; <span class="hljs-keyword">int</span> child_err[<span class="hljs-number">2</span>];<br>    pipe(child_in); pipe(child_out); pipe(child_err);<br>    <span class="hljs-keyword">int</span> pid = fork();<br>    <span class="hljs-keyword">if</span> (pid == <span class="hljs-number">0</span>) &#123;<br>        __close(<span class="hljs-number">0</span>); __close(<span class="hljs-number">1</span>); __close(<span class="hljs-number">2</span>);                                 <span class="hljs-comment">// __close parent pipes</span><br>        __close(child_in[<span class="hljs-number">1</span>]); __close(child_out[<span class="hljs-number">0</span>]); __close(child_err[<span class="hljs-number">0</span>]); <span class="hljs-comment">// unused child pipe ends</span><br>        mv_fd(child_in[<span class="hljs-number">0</span>], <span class="hljs-number">0</span>); mv_fd(child_out[<span class="hljs-number">1</span>], <span class="hljs-number">1</span>); mv_fd(child_err[<span class="hljs-number">1</span>], <span class="hljs-number">2</span>);<br>        <span class="hljs-keyword">char</span>* envp[] = &#123; <span class="hljs-string">&quot;\0&quot;</span> &#125;;<br>        <span class="hljs-comment">//write(1,&quot;what the fuck&quot;, 30);</span><br>        <span class="hljs-keyword">int</span> r=execve(<span class="hljs-string">&quot;/challenge/embryoio_level40&quot;</span>, <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>);<br>        write(<span class="hljs-number">1</span>,<span class="hljs-string">&quot;failure in exec&quot;</span>, <span class="hljs-number">30</span>) ;<br>        <span class="hljs-built_in">exit</span>(<span class="hljs-number">0</span>);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        __close(child_in[<span class="hljs-number">0</span>]); __close(child_out[<span class="hljs-number">1</span>]); __close(child_err[<span class="hljs-number">1</span>]); <span class="hljs-comment">// unused child pipe ends</span><br>        p-&gt;pid = pid;<br>        p-&gt;<span class="hljs-built_in">stdin</span> = child_in[<span class="hljs-number">1</span>];   <span class="hljs-comment">// parent wants to write to subprocess child_in</span><br>        p-&gt;<span class="hljs-built_in">stdout</span> = child_out[<span class="hljs-number">0</span>]; <span class="hljs-comment">// parent wants to read from subprocess child_out</span><br>        p-&gt;<span class="hljs-built_in">stderr</span> = child_err[<span class="hljs-number">0</span>]; <span class="hljs-comment">// parent wants to read from subprocess child_err</span><br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span> </span>&#123;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Hello from parent process!\n&quot;</span>);<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">subprocess</span> <span class="hljs-title">proc</span>;</span><br>    <span class="hljs-keyword">char</span>* argv[] = &#123;<span class="hljs-string">&quot;/challenge/embryoio_level40&quot;</span>, <span class="hljs-string">&quot;\0&quot;</span>&#125;;<br>    call(argv, &amp;proc);<br><span class="hljs-comment">//    mv_fd(STDIN_FILENO, proc.stdin);</span><br><span class="hljs-comment">//    mv_fd(STDOUT_FILENO, proc.stdout);</span><br>    <span class="hljs-keyword">char</span> buf[<span class="hljs-number">2048</span>];<br>    <span class="hljs-keyword">char</span> buf_[<span class="hljs-number">2048</span>];<br>    read(proc.<span class="hljs-built_in">stdout</span>, buf, <span class="hljs-number">2048</span>);<br>    read(proc.<span class="hljs-built_in">stderr</span>, buf_,<span class="hljs-number">2048</span>);<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s\n&quot;</span>, buf);<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%s\n&quot;</span>, buf_);<br>    waitpid(proc.pid);<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><p>真的是相当多, 见<a target="_blank" rel="noopener" href="https://pwn.college/modules/interaction">这里</a> </p>
+<p>有个<a target="_blank" rel="noopener" href="https://gist.github.com/anvbis/64907e4f90974c4bdd930baeb705dedf">pwntools-cheatsheet</a>比较特别, 应该能用上</p>
+<h2 id="WP"><a href="#WP" class="headerlink" title="WP"></a>WP</h2><blockquote>
+<p>怎么会有一百多个, 也太离谱了</p>
+</blockquote>
+<p>基本连接方式: ssh</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">ssh-keygen -f pwnkey<br>cat pwnkey.pub #copy public key<br>ssh -i pwnkey hacker@dojo.pwn.college -v     <br></code></pre></div></td></tr></table></figure>
+
+<p>在/challenge/[对应文件]中, 直接执行即可</p>
+<ul>
+<li>从远程机器复制文件:</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">scp -i pwnkey hacker@dojo.pwn.college:/challenge/checker.py ./<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="level-几来着"><a href="#level-几来着" class="headerlink" title="level(几来着)"></a>level(几来着)</h3><p>要求以0个环境变量运行程序, 可以使用execve函数, env命令, exec命令三种方法</p>
+<blockquote>
+<p>其余的大概就是加环境变量, 加参数, 写在脚本里之类的简单题</p>
+</blockquote>
+<h3 id="level15新东西"><a href="#level15新东西" class="headerlink" title="level15新东西"></a>level15新东西</h3><p>新的一个东西: ipython, An enhenced interactive python, 增加了一些特别的功能, 还有个说明书放在本level的末尾.</p>
+<p>ssh接上后, 进入ipython, 然后Ctrl+O就可以编辑多行脚本了, 使用的还是pwntools, 算是熟悉一点.</p>
+<p>有两种方法: </p>
+<ol>
+<li><code>!exec /challenge/embryoio_level15</code> </li>
+<li>用<code>pwn.process()</code> </li>
+</ol>
+<h4 id="Python-–-An-enhanced-Interactive-Python"><a href="#Python-–-An-enhanced-Interactive-Python" class="headerlink" title="Python – An enhanced Interactive Python"></a>Python – An enhanced Interactive Python</h4><p>IPython offers a fully compatible replacement for the standard Python<br>interpreter, with convenient shell features, special commands, command<br>history mechanism and output results caching.</p>
+<p>At your system command line, type ‘ipython -h’ to see the command line<br>options available. This document only describes interactive features.</p>
+<h5 id="GETTING-HELP"><a href="#GETTING-HELP" class="headerlink" title="GETTING HELP"></a>GETTING HELP</h5><p>Within IPython you have various way to access help:</p>
+<p>  <strong>?         -&gt; Introduction and overview of IPython’s features (this screen).</strong><br>  object?   -&gt; Details about ‘object’.<br>  object??  -&gt; More detailed, verbose information about ‘object’.<br>  %quickref -&gt; Quick reference of all IPython specific syntax and magics.<br>  help      -&gt; Access Python’s own help system.</p>
+<p>If you are in terminal IPython you can quit this screen by pressing <code>q</code>.</p>
+<h5 id="MAIN-FEATURES"><a href="#MAIN-FEATURES" class="headerlink" title="MAIN FEATURES"></a>MAIN FEATURES</h5><ul>
+<li><p>Access to the standard Python help with object docstrings and the Python<br>  manuals. Simply type ‘help’ (no quotes) to invoke it.</p>
+</li>
+<li><p>Magic commands: type %magic for information on the magic subsystem.</p>
+</li>
+<li><p>System command aliases, via the %alias command or the configuration file(s).</p>
+</li>
+<li><p>Dynamic object information:</p>
+<p>  Typing ?word or word? prints detailed information about an object. Certain<br>  long strings (code, etc.) get snipped in the center for brevity.</p>
+<p>  Typing ??word or word?? gives access to the full information without<br>  snipping long strings. Strings that are longer than the screen are printed<br>  through the less pager.</p>
+<p>  The ?/?? system gives access to the full source code for any object (if<br>  available), shows function prototypes and other useful information.</p>
+<p>  If you just want to see an object’s docstring, type ‘%pdoc object’ (without<br>  quotes, and without % if you have automagic on).</p>
+</li>
+<li><p><strong>Tab completion in the local namespace:</strong> </p>
+<p>  At any time, hitting tab will complete any available python commands or<br>  variable names, and show you a list of the possible completions if there’s<br>  no unambiguous one. It will also complete filenames in the current directory.</p>
+</li>
+<li><p><strong>Search previous command history in multiple ways:</strong> </p>
+<ul>
+<li><p>Start typing, and then use arrow keys up/down or (Ctrl-p/Ctrl-n) to search<br>  through the history items that match what you’ve typed so far.</p>
+</li>
+<li><p>Hit Ctrl-r: opens a search prompt. Begin typing and the system searches<br>  your history for lines that match what you’ve typed so far, completing as<br>  much as it can.</p>
+</li>
+<li><p>%hist: search history by index.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>Persistent command history across sessions.</strong></p>
+</li>
+<li><p>Logging of input with the ability to save and restore a working session.</p>
+</li>
+<li><p><strong>System shell with !. Typing !ls will run ‘ls’ in the current directory.</strong></p>
+</li>
+<li><p>The reload command does a ‘deep’ reload of a module: changes made to the<br>  module since you imported will actually be available without having to exit.</p>
+</li>
+<li><p>Verbose and colored exception traceback printouts. See the magic xmode and<br>  xcolor functions for details (just type %magic).</p>
+</li>
+<li><p>Input caching system:</p>
+<p>  IPython offers numbered prompts (In/Out) with input and output caching. All<br>  input is saved and can be retrieved as variables (besides the usual arrow<br>  key recall).</p>
+<p>  The following GLOBAL variables always exist (so don’t overwrite them!):<br>  _i: stores previous input.<br>  _ii: next previous.<br>  _iii: next-next previous.<br>  _ih : a list of all input _ih[n] is the input from line n.</p>
+<p>  Additionally, global variables named _i<n> are dynamically created (<n><br>  being the prompt counter), such that _i<n> == _ih[<n>]</p>
+<p>  For example, what you typed at prompt 14 is available as _i14 and _ih[14].</p>
+<p>  You can create macros which contain multiple input lines from this history,<br>  for later re-execution, with the %macro function.</p>
+<p>  The history function %hist allows you to see any part of your input history<br>  by printing a range of the _i variables. Note that inputs which contain<br>  magic functions (%) appear in the history with a prepended comment. This is<br>  because they aren’t really valid Python code, so you can’t exec them.</p>
+</li>
+<li><p>Output caching system:</p>
+<p>  For output that is returned from actions, a system similar to the input<br>  cache exists but using _ instead of _i. Only actions that produce a result<br>  (NOT assignments, for example) are cached. If you are familiar with<br>  Mathematica, IPython’s _ variables behave exactly like Mathematica’s %<br>   variables.</p>
+<p>  The following GLOBAL variables always exist (so don’t overwrite them!):<br>  _ (one underscore): previous output.<br>  __ (two underscores): next previous.<br>  ___ (three underscores): next-next previous.</p>
+<p>  Global variables named _<n> are dynamically created (<n> being the prompt<br>  counter), such that the result of output <n> is always available as _<n>.</p>
+<p>  Finally, a global dictionary named _oh exists with entries for all lines<br>  which generated output.</p>
+</li>
+<li><p>Directory history:</p>
+<p>  Your history of visited directories is kept in the global list _dh, and the<br>  magic %cd command can be used to go to any entry in that list.</p>
+</li>
+<li><p>Auto-parentheses and auto-quotes (adapted from Nathan Gray’s LazyPython)</p>
+<ol>
+<li><p>Auto-parentheses</p>
+<p> Callable objects (i.e. functions, methods, etc) can be invoked like<br> this (notice the commas between the arguments)::</p>
+<div class="hljs code-wrapper"><pre><code> In [1]: callable_ob arg1, arg2, arg3
+</code></pre></div>
+<p> and the input will be translated to this::</p>
+<div class="hljs code-wrapper"><pre><code> callable_ob(arg1, arg2, arg3)
+</code></pre></div>
+<p> This feature is off by default (in rare cases it can produce<br> undesirable side-effects), but you can activate it at the command-line<br> by starting IPython with <code>--autocall 1</code>, set it permanently in your<br> configuration file, or turn on at runtime with <code>%autocall 1</code>.</p>
+<p> You can force auto-parentheses by using ‘/‘ as the first character<br> of a line.  For example::</p>
+<div class="hljs code-wrapper"><pre><code>  In [1]: /globals             # becomes &#39;globals()&#39;
+</code></pre></div>
+<p> Note that the ‘/‘ MUST be the first character on the line!  This<br> won’t work::</p>
+<div class="hljs code-wrapper"><pre><code>  In [2]: print /globals    # syntax error
+</code></pre></div>
+<p> In most cases the automatic algorithm should work, so you should<br> rarely need to explicitly invoke /. One notable exception is if you<br> are trying to call a function with a list of tuples as arguments (the<br> parenthesis will confuse IPython)::</p>
+<div class="hljs code-wrapper"><pre><code>  In [1]: zip (1,2,3),(4,5,6)  # won&#39;t work
+</code></pre></div>
+<p> but this will work::</p>
+<p>and the input will be translated to this::</p>
+<div class="hljs code-wrapper"><pre><code>callable_ob(arg1, arg2, arg3)
+</code></pre></div>
+<p>This feature is off by default (in rare cases it can produce<br>undesirable side-effects), but you can activate it at the command-line<br>by starting IPython with <code>--autocall 1</code>, set it permanently in your<br>configuration file, or turn on at runtime with <code>%autocall 1</code>.</p>
+<p>You can force auto-parentheses by using ‘/‘ as the first character<br>of a line.  For example::</p>
+<div class="hljs code-wrapper"><pre><code> In [1]: /globals             # becomes &#39;globals()&#39;
+</code></pre></div>
+<p>Note that the ‘/‘ MUST be the first character on the line!  This<br>won’t work::</p>
+<div class="hljs code-wrapper"><pre><code> In [2]: print /globals    # syntax error
+</code></pre></div>
+<p>In most cases the automatic algorithm should work, so you should<br>rarely need to explicitly invoke /. One notable exception is if you<br>are trying to call a function with a list of tuples as arguments (the<br>parenthesis will confuse IPython)::</p>
+<div class="hljs code-wrapper"><pre><code> In [1]: zip (1,2,3),(4,5,6)  # won&#39;t work
+</code></pre></div>
+<p>but this will work::</p>
+<div class="hljs code-wrapper"><pre><code> In [2]: /zip (1,2,3),(4,5,6)
+ ------&gt; zip ((1,2,3),(4,5,6))
+ Out[2]= [(1, 4), (2, 5), (3, 6)]
+</code></pre></div>
+<p>IPython tells you that it has altered your command line by<br>displaying the new command line preceded by –&gt;.  e.g.::</p>
+<div class="hljs code-wrapper"><pre><code> In [18]: callable list
+ -------&gt; callable (list)
+</code></pre></div>
+</li>
+<li><p>Auto-Quoting</p>
+<p> You can force auto-quoting of a function’s arguments by using ‘,’ as<br> the first character of a line.  For example::</p>
+<div class="hljs code-wrapper"><pre><code>  In [1]: ,my_function /home/me   # becomes my_function(&quot;/home/me&quot;)
+</code></pre></div>
+<p> If you use ‘;’ instead, the whole argument is quoted as a single<br> string (while ‘,’ splits on whitespace)::</p>
+<div class="hljs code-wrapper"><pre><code>  In [2]: ,my_function a b c   # becomes my_function(&quot;a&quot;,&quot;b&quot;,&quot;c&quot;)
+  In [3]: ;my_function a b c   # becomes my_function(&quot;a b c&quot;)
+</code></pre></div>
+<p> Note that the ‘,’ MUST be the first character on the line!  This<br> won’t work::</p>
+<div class="hljs code-wrapper"><pre><code>  In [4]: x = ,my_function /home/me    # syntax error
+</code></pre></div>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="level16"><a href="#level16" class="headerlink" title="level16"></a>level16</h3><p>从这题开始使用这个脚本, glob可根据 Unix 终端所用规则找出所有匹配特定模式的路径名</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> glob <br><span class="hljs-keyword">import</span> pwn <br>p= pwn.process(glob.glob(<span class="hljs-string">&quot;/challenge/embryo*&quot;</span>), stdout=pwn.PIPE, stdin=pwn.PIPE) <br>p.sendline(<span class="hljs-string">&quot;password&quot;</span>)    <span class="hljs-comment"># 要加这一个</span><br><span class="hljs-built_in">print</span>(p.read().decode())     <br></code></pre></div></td></tr></table></figure>
+
+<h3 id="level17"><a href="#level17" class="headerlink" title="level17"></a>level17</h3><p>这题检查参数argv[1]. 要注意的是pwntools的process方法以前我都是直接使用process(“file/path”), 实际上是写到了argv[]的第0个位置, 如果<code>executable(Path to the binary to execute)</code>为None, 则会使用argv[0], 这就是为什么往参数里写路径就可以执行的原因.</p>
+<p>写成这样即可:</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> glob <br><span class="hljs-keyword">import</span> pwn <br>p= pwn.process(glob.glob(<span class="hljs-string">&quot;/challenge/embryo*&quot;</span>)+[<span class="hljs-string">&quot;gdncphvdkz&quot;</span>] , stdout=pwn.PIPE, stdin=pwn.PIPE) <br><br><span class="hljs-built_in">print</span>(p.read().decode())     <br></code></pre></div></td></tr></table></figure>
+
+<h3 id="level18-21"><a href="#level18-21" class="headerlink" title="level18-21"></a>level18-21</h3><ul>
+<li>18: 是环境变量, 在process的参数里加个<code>env=&#123;“balabala”=“blabla”&#125;</code>就可以了.</li>
+<li>19: 是重定向stdin.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> glob<br><span class="hljs-keyword">import</span> pwn<br><span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;/tmp/rmxgbo&quot;</span>, <span class="hljs-string">&quot;w&quot;</span>) <span class="hljs-keyword">as</span> o:<br>    o.write(<span class="hljs-string">&quot;kmtxemmo\n&quot;</span>)<br>p= pwn.process(glob.glob(<span class="hljs-string">&quot;/challenge/embryo*&quot;</span>), stdout=pwn.PIPE, stdin=<span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;/tmp/rmxgbo&quot;</span>))<br><br><span class="hljs-built_in">print</span>(p.read().decode()) <br></code></pre></div></td></tr></table></figure>
+
+<p>有一个问题: 上面的代码应该都是正确的, 但是只有再补充一句p.interactive()的时候最后两行flag才显示出来, 原因暂未知晓</p>
+<ul>
+<li>20: </li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> glob<br><span class="hljs-keyword">import</span> pwn<br>p= pwn.process(glob.glob(<span class="hljs-string">&quot;/challenge/embryo*&quot;</span>), stdout=<span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;/tmp/tkpich&quot;</span>, <span class="hljs-string">&quot;w&quot;</span>), stdin=pwn.PIPE)<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li>21<br>  需要清空环境变量.<br>  注意到process这个函数中的env默认会继承python的环境变量就可以了, 必须手动清空</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> glob,pwn<br>p= pwn.process(glob.glob(<span class="hljs-string">&quot;/challenge/embryo*&quot;</span>), stdout=pwn.PIPE, stdin=pwn.PIPE, env=&#123;&#125;)<br><br><span class="hljs-built_in">print</span>(p.read().decode())<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="level-22-28"><a href="#level-22-28" class="headerlink" title="level 22-28"></a>level 22-28</h3><ul>
+<li>22: 这部分是使用命令行执行python来执行程序的,  比较简单.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> glob,pwn<br>p= pwn.process(glob.glob(<span class="hljs-string">&quot;/challenge/embryo*&quot;</span>))<br>p.interactive()<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li>23-28: 重复一遍上面的工作, 比如0 environment, redirect stdin and out, 等等这些.</li>
+</ul>
+<h3 id="level-29-34"><a href="#level-29-34" class="headerlink" title="level 29-34"></a>level 29-34</h3><p>从这个开始就要编译C程序了, 29写下面这一段, 30输入一个密码.</p>
+<p>值得注意的是, 如果直接调用execve, 那么会导致bash在执行.</p>
+<p>如果没有waitpid, 那么子进程会被/docker/init(在我的ubuntu20.04上是/sbin/init)接管. </p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">pwncollege</span><span class="hljs-params">()</span></span>&#123;<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;&#125;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span>* argv[], <span class="hljs-keyword">char</span>** envp)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">int</span> pid = fork();<br>    <span class="hljs-keyword">if</span>(pid == <span class="hljs-number">0</span>)&#123;<span class="hljs-comment">//child process</span><br>        <span class="hljs-keyword">int</span> r=execve(<span class="hljs-string">&quot;/challenge/embryoio_level30&quot;</span>, argv, envp);<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, r);<br>    &#125;<span class="hljs-keyword">else</span>&#123;<br>        waitpid(pid);<br>    &#125;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Parent process termianted.\n&quot;</span>);<br><br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li><strong>31:</strong> 真的绝了, “a”原本写的是””, 父进程都不对, 过了一会儿重新编译又好了, 莫名其妙.</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">pwncollege</span><span class="hljs-params">()</span></span>&#123;<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;&#125;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span>** argv, <span class="hljs-keyword">char</span>** envp)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">int</span> pid = fork();<br><br>    <span class="hljs-keyword">if</span>(pid == <span class="hljs-number">0</span>)&#123;<span class="hljs-comment">//child process</span><br>        <span class="hljs-comment">//int r=execve(&quot;/challenge/embryoio_level31&quot;, argv, envp);</span><br>        <span class="hljs-keyword">int</span> r = execl(<span class="hljs-string">&quot;/challenge/embryoio_level31&quot;</span>, <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-string">&quot;lndhvgwxjx&quot;</span>, <span class="hljs-literal">NULL</span>);<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, r);<br>    &#125;<span class="hljs-keyword">else</span>&#123;<br>        waitpid(pid);<br>    &#125;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Parent process termianted.\n&quot;</span>);<br><br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li>32: 直接修改envp好像会出问题, 原因未知. </li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">pwncollege</span><span class="hljs-params">()</span></span>&#123;<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;&#125;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span>** argv, <span class="hljs-keyword">char</span>** envp)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">int</span> pid = fork();<br>    <span class="hljs-keyword">char</span>* argvs[<span class="hljs-number">3</span>];<br>    argvs[<span class="hljs-number">1</span>]=<span class="hljs-string">&quot;jxdefy=fbilpksemj&quot;</span>;    <span class="hljs-comment">//暂且先手动设置吧</span><br>    argvs[<span class="hljs-number">2</span>]=<span class="hljs-literal">NULL</span>;<br>    argvs[<span class="hljs-number">0</span>]=<span class="hljs-string">&quot;sldkfj&quot;</span>;<br>    <span class="hljs-keyword">if</span>(pid == <span class="hljs-number">0</span>)&#123;<span class="hljs-comment">//child process</span><br>        <span class="hljs-keyword">int</span> r = execle(<span class="hljs-string">&quot;/challenge/embryoio_level32&quot;</span>, <span class="hljs-string">&quot;a&quot;</span>, <span class="hljs-string">&quot;lndhvgwxjx&quot;</span>, <span class="hljs-literal">NULL</span>, argvs);<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;%d\n&quot;</span>, r);<br>    &#125;<span class="hljs-keyword">else</span>&#123;<br>        waitpid(pid);<br>    &#125;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;Parent process termianted.\n&quot;</span>);<br><br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li>33: 这个就是c语言版本的重定位, 还附带父进程检查的那种. 考虑到execve系列函数会直接继承原来进程的大部分属性, 比如输入输出流, 所以直接对c程序重定向即可, 子进程直接继承.</li>
+<li>34: 输出重定向.</li>
+</ul>
+<h3 id="level35"><a href="#level35" class="headerlink" title="level35-"></a>level35-</h3><ul>
+<li><p>35: 用脚本运行, 可以不需要fork, 直接execve</p>
+</li>
+<li><p>36: 输出要是到cat的PIPE, 直接在命令行里输入: <code>./c | cat</code>即可</p>
+</li>
+<li><p>37: <code>./c | grep -E &quot;*&quot;</code> 结束</p>
+</li>
+<li><p>38: <code>./c | sed &quot;=&quot;</code> </p>
+</li>
+<li><p>39: <code>./c  | rev | rev</code> </p>
+</li>
+<li><p>40: 使用管道重定向stdin, 去看了下c中的PIPE操作.暂时没有发现怎么用在这道题目上.</p>
+<p><del>直接来一手三重套娃, 这样子cat就不会马上终止了</del>. md不用也可以, 是我想复杂了.</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">./cat | cat | /challenge/embryoio_level40<br></code></pre></div></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">//cat.</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> **argv)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">char</span> buf[<span class="hljs-number">1024</span>];<br>    <span class="hljs-keyword">int</span> n;<br>    <span class="hljs-keyword">int</span> fd = argc == <span class="hljs-number">1</span> ? <span class="hljs-number">0</span> : open(argv[<span class="hljs-number">1</span>],<span class="hljs-number">0</span>);<br>    <span class="hljs-keyword">while</span> ((n = read(fd,buf,<span class="hljs-number">1024</span>)) &gt; <span class="hljs-number">0</span> &amp;&amp; write(<span class="hljs-number">1</span>,buf,n) &gt; <span class="hljs-number">0</span>);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li>41: 重定向stdout. 一样做法.</li>
+<li>42: <code>bash x.sh | cat</code></li>
+<li>43: grep</li>
+<li>44: sed</li>
+<li>45: rev</li>
+<li>46: 我累了</li>
+</ul>
+<h3 id="level"><a href="#level" class="headerlink" title="level??"></a>level??</h3><figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> glob<br><span class="hljs-keyword">import</span> pwn<br>pwn.context.log_level = <span class="hljs-string">&quot;DEBUG&quot;</span><br>p2 = pwn.process([<span class="hljs-string">&quot; /usr/bin/sed&quot;</span>, <span class="hljs-string">&quot;-e&quot;</span>, <span class="hljs-string">&quot;s/x/×/&quot;</span>])<br>p1 = pwn.process(glob.glob( <span class="hljs-string">&quot; /chailenge/enbryo* &quot;</span>)，stdout=p2.stdin)<br><span class="hljs-built_in">print</span>(p2.readall())<br></code></pre></div></td></tr></table></figure>
+
+<h1 id="module-2"><a href="#module-2" class="headerlink" title="module 2"></a>module 2</h1><ul>
+<li><p><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/File_permissions_and_attributes">文件权限</a> </p>
+</li>
+<li></li>
+</ul>
+<h2 id="WP-1"><a href="#WP-1" class="headerlink" title="WP"></a>WP</h2><p>这部分的题目就是利用被设置suid的程序来以root的权限去读文件, 无论看起来是有多么的不可能.</p>
+<p><code>cat head tail rev nano emacs vim od more less sort hd(hexdump) xxd base32(64) split gzip bzip2 zip&amp;unzip</code><br><code>tar ar cpio genisoimage env </code></p>
+<ul>
+<li>od: <code>od -t x8z -v -w 10 /flag</code> 硬是拼出来. </li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">0000000 6c6c6f632e6e7770 714f6f417b656765 685834544b387868 4e354550757a575a  &gt;pwn.college&#123;AoOqhx8KT4XhZWzuPE5N&lt;<br>0000040 2e337a6d50723671 4d734d54557a5851 0a7d577a49314d54                   &gt;q6rPmz3.QXzUTMsMTM1IzW&#125;.&lt;<br>0000070<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li><p><code>hd /flag</code> (hexdump)</p>
+</li>
+<li><p><code>xxd -c60 /flag</code> 每行60个</p>
+</li>
+<li><p><code>base32 /flag | base32 -d</code> </p>
+</li>
+<li><p>split: split file into pieces. <code>split /flag</code> </p>
+</li>
+<li><p><code>gzip -c /flag | gzip -cd </code> </p>
+</li>
+<li><p>bzip2 有新的机制, 不过命令行参数和gzip非常接近</p>
+</li>
+<li><p><code>zip - /flag &gt; aa</code> and then<code>cat aa    or    unzip -p aa</code> </p>
+</li>
+<li><p><code>tar cf flag.tar flag</code> then <code>tar  -xOf flag.tar</code> 研究了半天tar的参数, main operation那几个参数每次必须加上.f参数后紧跟文件名</p>
+</li>
+<li><p><code>ar c flag.ar flag</code> then <code>cat flag.ar</code> 发现经过root用户创建完archive之后直接就对其他用户可读了…更简单了</p>
+</li>
+<li><p>(23- )  cpio genisoimage: ???</p>
+<ul>
+<li><p><code>echo &quot;/flag&quot; | cpio -ov &gt; ~/flag.cpio</code> then <code>cat flagcpio</code> 不是直接将/flag放到cpio的stdin中……他只要<u>name-list</u>……</p>
+</li>
+<li></li>
+</ul>
+</li>
+<li><p>env也行?太神奇了. <code>env cat /flag</code> </p>
+</li>
+<li></li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/PWN/">PWN</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/PWN/">PWN</a>
+                    
+                  </div>
+                
+              </div>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022-01/Learning-Computer-Networking/">
+                        <span class="hidden-mobile">Computer Networking</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"312db7ebbc085de5d28d","clientSecret":"85ea3cefd13c73a6d85c1813adfde4f1550bfbda","repo":"yogdzewa.github.io","owner":"yogdzewa","admin":["yogdzewa"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
+          {
+            id: '7a9e61b3bf1569e87d096b14b14d3d23'
+          }
+        )
+        var gitalk = new Gitalk(options);
+        gitalk.render('gitalk-container');
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js" ></script>
+  <script>
+    if (window.mermaid) {
+      mermaid.initialize({"theme":"default"});
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
