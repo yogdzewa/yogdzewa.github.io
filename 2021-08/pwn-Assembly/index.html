@@ -24,7 +24,7 @@
 <meta property="og:description" content="IDA整出来的汇编伪指令看不下去了!!">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-08-09T02:07:00.000Z">
-<meta property="article:modified_time" content="2022-02-18T06:25:44.727Z">
+<meta property="article:modified_time" content="2022-02-18T07:15:49.277Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="programming_language">
 <meta name="twitter:card" content="summary_large_image">
@@ -209,7 +209,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.7k 字
+      3.4k 字
     </span>
   
 
@@ -218,7 +218,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      35 分钟
+      43 分钟
     </span>
   
 
@@ -482,7 +482,7 @@
 <p>4.12 <a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3517.html">TYPE运算符</a> 返回变量的大小</p>
 <p>4.13 <a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3518.html">LENGTHOF运算符 </a> 计算数组中元素的个数, 如果数组占据多行, 只计算第一行</p>
 <p>4.14 <a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3519.html">LABEL伪指令</a> 可以插入一个标号，并定义它的大小属性，但是不为这个标号分配存储空间<br>        <code>LongValue LABEL DWORD</code> 标识下一个地址开始的DWORD字节</p>
-<p>4.15 <a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3525.html">间接寻址</a> 特殊: <code>inc BYTE PTR [esi]</code> 要加指针的类型, 剩下的看网站</p>
+<p>4.15 <a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3525.html">间接寻址</a> 特殊: <code>inc BYTE PTR [esi]</code> 要加指针的类型, 剩下的有很多, 详见网站</p>
 <p>4.16 <a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3528.html">JMP和LOOP指令</a> 这个loop集成了ECX以及其他一些指令, 要看的话详见网站</p>
 <h2 id="汇编语言过程"><a href="#汇编语言过程" class="headerlink" title="汇编语言过程"></a>汇编语言过程</h2><ul>
 <li><p>压栈出栈, push&amp;pop</p>
@@ -491,7 +491,7 @@
 </li>
 <li><p>PUSHA (push all-16bits), PUSHAD (push all double-32bits),  POPAD 和 POPA</p>
 </li>
-<li><p><strong>PROC和ENDP ：定义一个过程</strong></p>
+<li><p><strong>PROC和ENDP ：定义一个过程</strong> </p>
 <figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs asm">main PROC<br>.<br>.<br>main ENDP<br></code></pre></div></td></tr></table></figure>
 
 <ul>
@@ -531,7 +531,70 @@
 <td>源操作数和目的操作数进行逻辑与操作，并适当地设置 CPU 标志位</td>
 </tr>
 </tbody></table>
-
+<ul>
+<li>置位和清除零标志位、符号标志位、进位标志位和溢出标志位的<a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3563.html">方法</a> </li>
+<li>汇编语言64位模式下的布尔指令: <ul>
+<li>32 位操作数是一个特殊的情况，需要与其他大小操作数的情况分开考虑。</li>
+</ul>
+</li>
+<li>条件跳转<ul>
+<li>注意无符号数和有符号数的比较是不同的.</li>
+<li></li>
+</ul>
+</li>
+<li>…</li>
+</ul>
+<h2 id="整数运算"><a href="#整数运算" class="headerlink" title="整数运算"></a>整数运算</h2><ol>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3589.html">汇编语言移位和循环移位指令简介</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3590.html">汇编语言SHL（左移）指令：将操作数逻辑左移一位</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3591.html">汇编语言SHR（右移）指令：将操作数逻辑右移一位</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3592.html">汇编语言SAL（算术左移）和SAR（算术右移）指令：将操作数左</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3593.html">汇编语言ROL（循环左移）指令：将操作数所有位都向左移</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3595.html">汇编语言ROR（循环右移）指令：将操作数所有位都向右移</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3596.html">汇编语言RCL（带进位循环左移）和RCR（带进位循环右移）指令</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3597.html">汇编语言SHLD（双精度左移）和SHRD（双精度右移）指令</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3600.html">汇编语言移位和循环移位的应用</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3602.html">汇编语言MUL指令：无符号数乘法</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3603.html">汇编语言IMUL指令：有符号数乘法</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3605.html">汇编语言GetMseconds：测量程序执行时间</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3606.html">汇编语言DIV指令：无符号除法</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3609.html">汇编语言IDICV指令：有符号数除法</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3610.html">使用汇编语言实现算术表达式[实例]</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3611.html">汇编语言ADC指令：带进位加法</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3612.html">汇编语言SBB指令：带借位减法</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3614.html">汇编语言ASCII和非压缩十进制运算</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3615.html">汇编语言AAA指令：调整ADD或ADC指令的二进制运算结果 </a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3616.html">汇编语言AAS指令：减法后的ASXII调整</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3617.html">汇编语言AAM（乘法后的ASCII调整）和AAD（除法之前的ASCII调整）指</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3619.html">汇编语言压缩十进制运算简介</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3621.html">汇编语言DAA指令：加法后的十进制调整</a> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/view/3622.html">汇编语言DAS指令：减法后的十进制调整</a> </p>
+</li>
+</ol>
+<h2 id="汇编语言高级过程"><a href="#汇编语言高级过程" class="headerlink" title="汇编语言高级过程"></a>汇编语言高级过程</h2>
             </div>
             <hr>
             <div>

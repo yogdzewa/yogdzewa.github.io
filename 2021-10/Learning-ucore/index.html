@@ -57,7 +57,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/Calls-file_open.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/image-20220108132923299.png">
 <meta property="article:published_time" content="2021-10-01T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-01-16T08:21:53.886Z">
+<meta property="article:modified_time" content="2022-02-18T08:57:00.544Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary_large_image">
@@ -293,7 +293,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年1月16日 下午
+                  不可视境界线最后变动于：2022年2月18日 下午
                 
               </p>
             
@@ -314,7 +314,7 @@
 
 <h3 id="2-实模式"><a href="#2-实模式" class="headerlink" title="2.实模式"></a>2.实模式</h3><p>参考资料:《Intel 80386 Reference Programmers Manual-i386》, 基本是这个的翻译</p>
 <p>在<strong>bootloader</strong>接手BIOS的工作后，当前的PC系统处于实模式（16位模式）运行状态，在这种状态下软件可访问的物理内存空间不能超过1MB，且无法发挥Intel 80386以上级别的32位CPU的4GB内存管理能力。</p>
-<p>实模式将整个物理内存看成分段的区域，程序代码和数据位于不同区域，操作系统和用户程序并没有区别对待，<strong>而且每一个指针都是指向实际的物理地址</strong>。这样，用户程序的一个指针如果指向了操作系统区域或其他用户程序区域，并修改了内容，那么其后果就很可能是灾难性的。通过修改A20地址线可以完成从实模式到保护模式的转换。有关A20的进一步信息可参考“<a target="_blank" rel="noopener" href="http://hengch.blog.163.com/blog/static/107800672009013104623747/">关于A20 Gate</a>”。</p>
+<p>实模式将整个物理内存看成分段的区域，程序代码和数据位于不同区域，操作系统和用户程序并没有区别对待，<strong>而且每一个指针都是指向实际的物理地址</strong>。这样，用户程序的一个指针如果指向了操作系统区域或其他用户程序区域，并修改了内容，那么其后果就很可能是灾难性的。通过修改A20地址线可以完成从实模式到保护模式的转换。有关A20的进一步信息可参考“<a target="_blank" rel="noopener" href="http://hengch.blog.163.com/blog/static/107800672009013104623747/">关于A20 Gate</a>”。z</p>
 <img src="https://i.loli.net/2021/11/15/v6fC2e43WESLcaU.png" srcset="/img/loading.gif" lazyload alt="img" style="zoom: 67%;" />
 
 <ul>
@@ -384,7 +384,7 @@
 <li>在操作系统中，有三种特殊的中断事件。<ul>
 <li>由CPU<em>外部设备引起的</em> 外部事件如I/O中断、时钟中断、控制台中断等是异步产生的（即产生的时刻不确定），与CPU的执行无关，我们称之为<strong>异步中断</strong>(asynchronous interrupt)也称外部中断,简称<strong>中断</strong>(interrupt)。</li>
 <li>而把在CPU执行指令期间检测到<em>不正常的或非法</em> 的条件(如除零错、地址访问越界)所引起的内部事件称作<strong>同步中断</strong>(synchronous interrupt)，也称内部中断，简称**异常(**exception)。</li>
-<li>把在程序中使用<em>请求系统服务</em> 的系统调用而引发的事件，称作<strong>陷入中断</strong>(trap interrupt)，也称<strong>软中断</strong>(soft interrupt)，系统调用(system call)简称trap。在后续试验中会进一步讲解系统调用。</li>
+<li>把在程序中使用<em>请求系统服务</em> 的系统调用而引发的事件，称作<strong>陷入中断</strong>(trap interrupt)，也称<strong>软中断</strong>(soft interrupt)，系统调用(system call)简称<strong>trap</strong>。在后续试验中会进一步讲解系统调用。</li>
 </ul>
 </li>
 </ul>
@@ -462,7 +462,7 @@
 <h4 id="ucore的实现流程"><a href="#ucore的实现流程" class="headerlink" title="ucore的实现流程"></a>ucore的实现流程</h4><ol>
 <li>首先中断有几种类型<ul>
 <li>使用int软中断, 中断号为<code>T_SWITCH_TOU</code>. 由于一开始ucore运行在内核, 所以内核到用户时会弹出栈上的ss和esp, 所以要在int指令前面加上两个push, 还要注意指令的字节长度匹配.</li>
-<li>使用int软中断, 中断号为<code>T_SWITCH_TOUK</code>. 这个时候从用户态到内核态, 要通过TR寄存器查找当前的内核栈地址, 立即切换然后压入用户态的ss和esp, 由于challenge里有说明不用返回, 所以int执行完后要释放这两个东西.</li>
+<li>使用int软中断, 中断号为<code>T_SWITCH_TOK</code>. 这个时候从用户态到内核态, 要通过TR寄存器查找当前的内核栈地址, 立即切换然后压入用户态的ss和esp, 由于challenge里有说明不用返回, 所以int执行完后要释放这两个东西.</li>
 <li>其他情况就是时钟中断和键盘中断到目前为止都是内核-&gt;内核再跳回内核, 没有什么复杂之处.</li>
 </ul>
 </li>
