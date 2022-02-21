@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://i.loli.net/2021/07/22/ueHT3S7ComhkflA.png">
 <meta property="og:image" content="https://i.loli.net/2021/08/04/GAxeO2D67LfbKPw.png">
 <meta property="article:published_time" content="2021-06-07T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-02-21T08:45:43.959Z">
+<meta property="article:modified_time" content="2022-02-21T08:58:39.012Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="schedule">
 <meta name="twitter:card" content="summary_large_image">
@@ -393,25 +393,13 @@
 </li>
 <li><p><strong>22: 继续</strong> </p>
 <ul>
-<li><p>linux <u>终端suspend问题</u>: pressing the ctrl+z is to suspended current process <a target="_blank" rel="noopener" href="https://www.cnblogs.com/jiangzhaowei/p/8971265.html"><strong>[0]</strong></a>.</p>
-</li>
-<li><p>python3 用pwntools什么东西都得加一个b, 绝了. </p>
-<p>“/bin/sh”没加也报错, 还有ELF.search返回的是一个可迭代的对象</p>
-<p>sendlineafter没加b也在那里给警告</p>
-<p>简单题多做几遍还能多几次收获, 哇, 哇</p>
-</li>
-<li><p>IDA 逆向<a target="_blank" rel="noopener" href="https://blog.csdn.net/huiguixian/article/details/52026710">常用宏定义</a> </p>
-</li>
-<li><p>pwntools的context默认32位, 还是每次手动设定的好,  推荐使用:<code>context.binary = &#39;./challenge-binary&#39;</code>.</p>
-<img src="https://i.loli.net/2021/07/22/ueHT3S7ComhkflA.png" srcset="/img/loading.gif" lazyload alt="image-20210722202114278" style="zoom: 67%;" /> </li>
-<li><p>查找字符串-&gt;flag.txt-&gt;Ctrl+X, Jumptothereference-&gt;继续</p>
-</li>
+<li>linux <u>终端suspend问题</u>: pressing the ctrl+z is to suspended current process <a target="_blank" rel="noopener" href="https://www.cnblogs.com/jiangzhaowei/p/8971265.html"><strong>[0]</strong></a>.</li>
+<li>python3 用pwntools什么东西都得加一个b, 绝了.<br>“/bin/sh”没加也报错, 还有ELF.search返回的是一个可迭代的对象<br>sendlineafter没加b也在那里给警告<br>简单题多做几遍还能多几次收获, 哇, 哇</li>
+<li>IDA 逆向<a target="_blank" rel="noopener" href="https://blog.csdn.net/huiguixian/article/details/52026710">常用宏定义</a> </li>
+<li>pwntools的context默认32位, 还是每次手动设定的好,  推荐使用:<code>context.binary = &#39;./challenge-binary&#39;</code>.<img src="https://i.loli.net/2021/07/22/ueHT3S7ComhkflA.png" srcset="/img/loading.gif" lazyload alt="image-20210722202114278" style="zoom: 67%;" /> </li>
+<li>查找字符串-&gt;flag.txt-&gt;Ctrl+X, Jumptothereference-&gt;继续<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">//常见函数:</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">getc</span><span class="hljs-params">(FILE *stream)</span>                                   <span class="hljs-comment">//返回字符的int类型值</span></span><br><span class="hljs-function"><span class="hljs-keyword">char</span> *<span class="hljs-title">fgets</span><span class="hljs-params">(<span class="hljs-keyword">char</span> *str, <span class="hljs-keyword">int</span> n, FILE *stream)</span></span>;              <span class="hljs-comment">//从文件流中读取字符到str中</span><br><span class="hljs-function">FILE *<span class="hljs-title">fopen</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *filename, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *mode)</span></span>;    <span class="hljs-comment">//</span><br><span class="hljs-function"><span class="hljs-keyword">ssize_t</span> <span class="hljs-title">write</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd, <span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *buf, <span class="hljs-keyword">size_t</span> nbyte)</span></span>;    <span class="hljs-comment">//一般是write(1,buf,nbyte),stdout = 1</span><br><span class="hljs-function"><span class="hljs-keyword">unsigned</span> __int64 <span class="hljs-title">sys_read</span><span class="hljs-params">(stdinput:<span class="hljs-number">0</span>, buf, size)</span></span><br><span class="hljs-function"><span class="hljs-comment">//习惯上，标准输入的文件描述符是 0，标准输出是 1，标准错误（standard error）是 2。</span></span><br></code></pre></div></td></tr></table></figure></li>
 </ul>
 </li>
-</ul>
-<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">//常见函数:</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">getc</span><span class="hljs-params">(FILE *stream)</span>                                   <span class="hljs-comment">//返回字符的int类型值</span></span><br><span class="hljs-function"><span class="hljs-keyword">char</span> *<span class="hljs-title">fgets</span><span class="hljs-params">(<span class="hljs-keyword">char</span> *str, <span class="hljs-keyword">int</span> n, FILE *stream)</span></span>;              <span class="hljs-comment">//从文件流中读取字符到str中</span><br><span class="hljs-function">FILE *<span class="hljs-title">fopen</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *filename, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *mode)</span></span>;    <span class="hljs-comment">//</span><br><span class="hljs-function"><span class="hljs-keyword">ssize_t</span> <span class="hljs-title">write</span><span class="hljs-params">(<span class="hljs-keyword">int</span> fd, <span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *buf, <span class="hljs-keyword">size_t</span> nbyte)</span></span>;    <span class="hljs-comment">//一般是write(1,buf,nbyte),stdout = 1</span><br><span class="hljs-function"><span class="hljs-keyword">unsigned</span> __int64 <span class="hljs-title">sys_read</span><span class="hljs-params">(stdinput:<span class="hljs-number">0</span>, buf, size)</span></span><br><span class="hljs-function"><span class="hljs-comment">//习惯上，标准输入的文件描述符是 0，标准输出是 1，标准错误（standard error）是 2。</span></span><br></code></pre></div></td></tr></table></figure>
-
-<ul>
 <li><p>bss段原理: executable文件中只记录未初始化变量的起始和终止地址, 在运行时操作系统将这部分内存清零</p>
 </li>
 <li><p>可以直接sendline, 不一定要一直用sendlineafter.</p>
@@ -428,27 +416,19 @@
 <ul>
 <li>复习了下<a target="_blank" rel="noopener" href="https://www.cnblogs.com/killerlegend/p/3906502.html">AT&amp;T和Interl语法</a> </li>
 <li>LONG_MAX = INT_MAX</li>
+<li><h3 id="第四周-7-26-8-1"><a href="#第四周-7-26-8-1" class="headerlink" title="第四周: 7/26-8/1"></a>第四周: 7/26-8/1</h3></li>
 </ul>
 </li>
-</ul>
-<h3 id="第四周-7-26-8-1"><a href="#第四周-7-26-8-1" class="headerlink" title="第四周: 7/26-8/1"></a>第四周: 7/26-8/1</h3><ul>
 <li><p><strong>26-28: 划水+看CTF-WiKi上的heap内容</strong> </p>
 </li>
 <li><p><strong>29: 继续WiKi</strong> </p>
 <ul>
-<li><p><code>MALLOC_ALIGN_MASK = 2 * SIZE_SZ -1</code> </p>
-</li>
-<li><p>我居然还在看WiKi, 关键是他的东西也太多了吧, 之前还以为可以跳过的, 结果全都得倒回去看原理和代码, 这波真的是大意了. 堆的相关内容真的好长</p>
-</li>
-<li><p>fastbin是单链表, 所以元素的用户数据段前八字节有数据, 且是fd</p>
-</li>
-<li><p><strong>fd_nextsize， bk_nextsize</strong>是largebins的指针<code>#define MIN_CHUNK_SIZE (offsetof(struct malloc_chunk, fd_nextsize))</code></p>
-</li>
-<li><p>至少包含bk指针, largebins的特有指针可以不要</p>
-</li>
-<li><p>奇了怪了, 看了半天才看出来fastbins里的链表头指针数组的数量是<code>maxsize</code>的字节数, 所以才有<code>fastbin_index(chunksize(victim))</code>这种用字节数定位下标的算法, 好像真的没有一句明白的话说明这玩意儿, 绝了, 看了半天源码才看出来……..</p>
-<p>还是乖乖看源码吧……..</p>
-</li>
+<li><code>MALLOC_ALIGN_MASK = 2 * SIZE_SZ -1</code> </li>
+<li>我居然还在看WiKi, 关键是他的东西也太多了吧, 之前还以为可以跳过的, 结果全都得倒回去看原理和代码, 这波真的是大意了. 堆的相关内容真的好长</li>
+<li>fastbin是单链表, 所以元素的用户数据段前八字节有数据, 且是fd</li>
+<li><strong>fd_nextsize， bk_nextsize</strong>是largebins的指针<code>#define MIN_CHUNK_SIZE (offsetof(struct malloc_chunk, fd_nextsize))</code></li>
+<li>至少包含bk指针, largebins的特有指针可以不要</li>
+<li>奇了怪了, 看了半天才看出来fastbins里的链表头指针数组的数量是<code>maxsize</code>的字节数, 所以才有<code>fastbin_index(chunksize(victim))</code>这种用字节数定位下标的算法, 好像真的没有一句明白的话说明这玩意儿, 绝了, 看了半天源码才看出来……..<br>还是乖乖看源码吧……..</li>
 </ul>
 </li>
 <li><p><strong>30:看懂了fastbinattack</strong></p>
@@ -459,11 +439,9 @@
 </li>
 <li><p>31: </p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/longld/peda">gdb-peda</a> </li>
+<li><a target="_blank" rel="noopener" href="https://github.com/longld/peda">gdb-peda</a> <h3 id="第五周-8-2-8-8"><a href="#第五周-8-2-8-8" class="headerlink" title="第五周: 8/2-8/8"></a>第五周: 8/2-8/8</h3></li>
 </ul>
 </li>
-</ul>
-<h3 id="第五周-8-2-8-8"><a href="#第五周-8-2-8-8" class="headerlink" title="第五周: 8/2-8/8"></a>第五周: 8/2-8/8</h3><ul>
 <li><p><strong>8/2 3: 做题</strong> </p>
 <ul>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43092232/article/details/105648769">pwndbg和Pwngdb</a> </li>
@@ -592,24 +570,15 @@
 </li>
 <li><p><strong>10/3 : 操作系统</strong> </p>
 <ul>
-<li><p>在弄ucore环境, 加入了新的vim<a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/lab0/lab0_2_2_3_1_softwares.html">命令</a>, 包括<a target="_blank" rel="noopener" href="https://www.cnblogs.com/marsggbo/p/12152374.html">这个</a>.</p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/">ucore实验参考书</a> </p>
-</li>
-<li><p>GCC内联汇编</p>
-<ul>
-<li><p><a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/lab0/lab0_2_3_1_3_gcc_inline_asm.html">基本内联汇编</a> </p>
-<p><code>&quot;asm&quot; 和 &quot;__asm__&quot;</code>, 如有多行每一行都要加上 <code>&quot;\n\t&quot;</code>, </p>
-<p>实际上gcc在处理汇编时，是要把asm(…)的内容”打印”到汇编文件中，所以<strong>格式控制字符</strong>是必要的。</p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/lab0/lab0_2_3_1_4_extend_gcc_asm.html">扩展内联汇编</a> 详见网站 好复杂, 用时再看</p>
-<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">asm</span> [<span class="hljs-keyword">volatile</span>] ( Assembler Template<br>   : Output Operands<br>   [ : Input Operands<br>   [ : Clobbers ] ] )<br></code></pre></div></td></tr></table></figure></li>
+<li>在弄ucore环境, 加入了新的vim<a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/lab0/lab0_2_2_3_1_softwares.html">命令</a>, 包括<a target="_blank" rel="noopener" href="https://www.cnblogs.com/marsggbo/p/12152374.html">这个</a>.</li>
+<li><a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/">ucore实验参考书</a> </li>
+<li>GCC内联汇编<ul>
+<li><a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/lab0/lab0_2_3_1_3_gcc_inline_asm.html">基本内联汇编</a><br><code>&quot;asm&quot; 和 &quot;__asm__&quot;</code>, 如有多行每一行都要加上 <code>&quot;\n\t&quot;</code>,<br>实际上gcc在处理汇编时，是要把asm(…)的内容”打印”到汇编文件中，所以<strong>格式控制字符</strong>是必要的。</li>
+<li><a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/lab0/lab0_2_3_1_4_extend_gcc_asm.html">扩展内联汇编</a> 详见网站 好复杂, 用时再看<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">asm</span> [<span class="hljs-keyword">volatile</span>] ( Assembler Template<br>   : Output Operands<br>   [ : Input Operands<br>   [ : Clobbers ] ] )<br></code></pre></div></td></tr></table></figure></li>
 </ul>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/lab0/lab0_2_3_3_gdb.html">gdb基本命令以及窗口命令</a> </p>
-</li>
-<li><p>下午改学编译原理</p>
-</li>
+<li><a target="_blank" rel="noopener" href="https://chyyuu.gitbooks.io/ucore_os_docs/content/lab0/lab0_2_3_3_gdb.html">gdb基本命令以及窗口命令</a> </li>
+<li>下午改学编译原理</li>
 </ul>
 </li>
 <li><p><strong>10/4 : 编译原理</strong> </p>
@@ -642,25 +611,17 @@
 </li>
 <li><p><strong>10/7-10 : 还是看文档</strong> </p>
 <ul>
-<li><p>课程看了两天, 实验相关只花了一下午看</p>
-</li>
-<li><p><strong>#line 命令(还是没懂)</strong> </p>
-<ol>
-<li>#line 行号</li>
+<li>课程看了两天, 实验相关只花了一下午看</li>
+<li><strong>#line 命令(还是没懂)</strong> <ol>
+<li>#line 行号<br>其中行号必须是1~32 767之间的整数，此指示导致程序后面的行被编号为n,n+1,n+2,…</li>
+<li>#line 行号 “文件名”<br>其中行号和文件名说明来源的行号和文件名，指示后面的行会被认为是来自文件，行号由n开始。<br>​    #line指示一种作用是改变__LINE__,__FILE__宏的值。但是大多数编译器不支持#line。#line 主要用于那些产生C代码作为输出的程序，程序员并不常用#line。</li>
 </ol>
-<p>其中行号必须是1~32 767之间的整数，此指示导致程序后面的行被编号为n,n+1,n+2,…</p>
-<ol start="2">
-<li>#line 行号 “文件名”</li>
-</ol>
-<p>其中行号和文件名说明来源的行号和文件名，指示后面的行会被认为是来自文件，行号由n开始。</p>
-<p>​    #line指示一种作用是改变__LINE__,__FILE__宏的值。但是大多数编译器不支持#line。#line 主要用于那些产生C代码作为输出的程序，程序员并不常用#line。</p>
 </li>
-<li><p><strong>看了这么多天文档终于会写代码了, 好感动(╥╯^╰╥)</strong> </p>
-</li>
+<li><strong>看了这么多天文档终于会写代码了, 好感动(╥╯^╰╥)</strong> </li>
 </ul>
 </li>
 </ul>
-<h3 id="第十三周-10-11-10-17"><a href="#第十三周-10-11-10-17" class="headerlink" title="第十三周: 10/11-10/17"></a>第十三周: 10/11-10/17</h3><ul>
+<h3 id="第十四周-10-11-10-17"><a href="#第十四周-10-11-10-17" class="headerlink" title="第十四周: 10/11-10/17"></a>第十四周: 10/11-10/17</h3><ul>
 <li><p>终于整完了cool.flex, 开始看parse部分</p>
 </li>
 <li><p>flex的源码分析抽空看一看, 只写cool.flex还是忽略了一些细节</p>
@@ -672,20 +633,20 @@
 <li><p>学傻了, cool文档哪里看的过来啊</p>
 </li>
 </ul>
-<h3 id="第十四周-10-18-10-24"><a href="#第十四周-10-18-10-24" class="headerlink" title="第十四周: 10/18-10/24"></a>第十四周: 10/18-10/24</h3><ul>
+<h3 id="第十五周-10-18-10-24"><a href="#第十五周-10-18-10-24" class="headerlink" title="第十五周: 10/18-10/24"></a>第十五周: 10/18-10/24</h3><ul>
 <li>我以为我看完文档了, 结果又看到产生式里面给我来一个<code>error &#39;;&#39;</code>人又蒙了, 一看Bison文档在第六章, 我就差这个没看呢, 不过后面的章节应该不是很重要了, 就算做我看完了吧:cry: </li>
 <li>21号, 手写数据库命令行, 练习一下纯命令形式的数据库管理, 以及查看文档的水平, 但没想到的是会错在书上的错误示例中:cold_sweat: </li>
 <li>周末用了一天时间写数据库, 比较忙</li>
 <li>?</li>
 </ul>
-<h3 id="第十五周-10-25-10-31"><a href="#第十五周-10-25-10-31" class="headerlink" title="第十五周: 10/25-10/31"></a>第十五周: 10/25-10/31</h3><ul>
+<h3 id="第十六周-10-25-10-31"><a href="#第十六周-10-25-10-31" class="headerlink" title="第十六周: 10/25-10/31"></a>第十六周: 10/25-10/31</h3><ul>
 <li>服啦, 还是不要想着三个星期整完编译原理了, 毕竟至少一个月打底了</li>
 <li>这几天还是在看视频. 就这视频是能几个星期看完的???还剩下PA45没做</li>
 <li>感天动地, PA4终于能看懂了, 周末尽量争取PA5开个头:ghost: </li>
 <li>把所有文件的关系理一遍终于看懂了PA4, 也对PA3和PA2有了更清楚的理解, 果然还是要把源码看一遍才懂写下去的都是些什么类型什么变量. PA5我还是先看看视频吧, 勉强算作一个开头</li>
 <li>一个小问题是kali中<strong>使用中文输入法的时候无法在vscode中用光标选中文本</strong> </li>
 </ul>
-<h3 id="第十六周-11-01-11-07"><a href="#第十六周-11-01-11-07" class="headerlink" title="第十六周: 11/01-11/07"></a>第十六周: 11/01-11/07</h3><ul>
+<h3 id="第十七周-11-01-11-07"><a href="#第十七周-11-01-11-07" class="headerlink" title="第十七周: 11/01-11/07"></a>第十七周: 11/01-11/07</h3><ul>
 <li>10/01-02: 听了两天的Stanford的课程感觉针不戳, 除了听力没有好到不用看字幕之外看的非常舒服, 不过全看一遍要花非常多的时间, 所以现在改为看PDF, 而PA5会尽快提上日程</li>
 <li>vscode的快捷键真的是超乎想象, 有机会就去看一点</li>
 <li>CSAPP没读完真是硬伤, 关键是哪有看那么快的啊.. 周六开始看网络编程部分, 后续可能补完处理器体系结构(没有然后了)</li>
@@ -693,7 +654,7 @@
 <li>编译原理终于完成了, 下一阶段操作系统+中间代码优化</li>
 <li>开始一点点操作系统</li>
 </ul>
-<h3 id="第十七周-11-08-11-14"><a href="#第十七周-11-08-11-14" class="headerlink" title="第十七周: 11/08-11/14"></a>第十七周: 11/08-11/14</h3><ul>
+<h3 id="第十八周-11-08-11-14"><a href="#第十八周-11-08-11-14" class="headerlink" title="第十八周: 11/08-11/14"></a>第十八周: 11/08-11/14</h3><ul>
 <li><p><strong>11/08:</strong> </p>
 <ul>
 <li><p>网上随便整了个<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43940314/article/details/111279768">序列号</a>就通过了understand的验证, 这软件还真够直接的, 不过我更想在我的kali上弄这些, 先用着试试看. <a target="_blank" rel="noopener" href="https://www.cnblogs.com/wayne-tao/p/11911566.html">这是windows的</a> </p>
@@ -722,7 +683,7 @@
 <li><p>python多版本问题 <a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_39278265/article/details/82938270">link</a>: repaire或者<code>python -m pip install -U pip</code> 就行</p>
 </li>
 </ul>
-<h3 id="第十八周-11-15-11-21"><a href="#第十八周-11-15-11-21" class="headerlink" title="第十八周: 11/15-11/21"></a>第十八周: 11/15-11/21</h3><ul>
+<h3 id="第十九周-11-15-11-21"><a href="#第十九周-11-15-11-21" class="headerlink" title="第十九周: 11/15-11/21"></a>第十九周: 11/15-11/21</h3><ul>
 <li><p>windows下vscode莫名无法拖动文件标签, 快捷方式设为管理员启动然后再取消掉就没事了</p>
 </li>
 <li><p>虚拟机里的vscode果然还是用的怪怪的, 换成windows下的写完再粘贴进去debug</p>
@@ -741,7 +702,7 @@
 <li><p>感觉gdb帮助也是有限, 一个调试还是要把代码看懂了再用gdb查看运行时变量的变化, 而且如果没有特殊情况还很难发现小错误</p>
 </li>
 </ul>
-<h3 id="第十九周-11-22-11-28"><a href="#第十九周-11-22-11-28" class="headerlink" title="第十九周: 11/22-11/28"></a>第十九周: 11/22-11/28</h3><ul>
+<h3 id="第二十周-11-22-11-28"><a href="#第二十周-11-22-11-28" class="headerlink" title="第二十周: 11/22-11/28"></a>第二十周: 11/22-11/28</h3><ul>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/rosetta/article/details/90746936">&amp;((type *)0)-&gt;member</a>: ANSI C标准允许值为0的常量被强制转换成任何一种类型的指针，并且转换的结果是个NULL，因此<code>((type *)0)</code>的结果就是一个类型为<code>type *</code>的NULL指针. 编译器还会对这种形式的宏定义做出优化, 只取出地址而不访问<br>(type *)NULL的成员member.</li>
 <li>感觉是时候看一波网上的<a target="_blank" rel="noopener" href="http://c.biancheng.net/asm/">汇编教程</a>了, 每天看一点就成, 免得看到一些指令还要一个一个搜</li>
 <li>学的少了, 不过考完了全部期中考, 可以有更多时间来做了</li>
@@ -756,11 +717,11 @@
 </ul>
 </li>
 </ul>
-<h3 id="第二十周-11-29-12-5"><a href="#第二十周-11-29-12-5" class="headerlink" title="第二十周: 11/29-12/5"></a>第二十周: 11/29-12/5</h3><ul>
+<h3 id="第二十一周-11-29-12-5"><a href="#第二十一周-11-29-12-5" class="headerlink" title="第二十一周: 11/29-12/5"></a>第二十一周: 11/29-12/5</h3><ul>
 <li>看Lab3的视频中……</li>
 <li>花了剩下的几天时间写完了学校的cpu, 并且完成了板上的时序仿真, 等待下周二的实板测试</li>
 </ul>
-<h3 id="第二十一周-12-6-12-12"><a href="#第二十一周-12-6-12-12" class="headerlink" title="第二十一周: 12/6-12/12"></a>第二十一周: 12/6-12/12</h3><ul>
+<h3 id="第二十二周-12-6-12-12"><a href="#第二十二周-12-6-12-12" class="headerlink" title="第二十二周: 12/6-12/12"></a>第二十二周: 12/6-12/12</h3><ul>
 <li>写CPU都适用的VIM, 找到了一个记录网站感觉挺有用 <a target="_blank" rel="noopener" href="https://yyq123.github.io/learn-vim/">link</a>, 剩下的配置在_vimrc里, 解决了复制到系统剪贴板的问题和保存会话的问题</li>
 <li>写了一周的CPU, 能运行程序了, 不过排个序都得要没有循环的八十多行的代码, 也是一绝</li>
 <li>周三开始继续学操作系统</li>
@@ -768,14 +729,14 @@
 <li>周六现学python的文件操作, 学了一点os, random, shutil库的函数, 还是有需求推动学的快</li>
 <li>周天看CSAPP的处理器体系结构部分, 小有收获, 看的比较流畅</li>
 </ul>
-<h3 id="第二十二周-12-13-12-19"><a href="#第二十二周-12-13-12-19" class="headerlink" title="第二十二周: 12/13-12/19"></a>第二十二周: 12/13-12/19</h3><ul>
+<h3 id="第二十三周-12-13-12-19"><a href="#第二十三周-12-13-12-19" class="headerlink" title="第二十三周: 12/13-12/19"></a>第二十三周: 12/13-12/19</h3><ul>
 <li>花了几天看了CSAPP的处理器体系结构章节, 大有收获, 主要是pipeline processor的设计思考过程一步一步非常详细, 可以说是锻炼思维能力了, 但这只是1980s的理论水平</li>
 <li>周四早上, 终于看完了Processor Architecture, 至于实验等假期再做吧, <u>继续开始操作系统内存管理部分</u> </li>
 <li>周五, 操作系统Lab3, 安装了Windows default keymap, linux里的vscode勉强能用</li>
 <li>可能需要切换一下策略, 直接参照答案学习, 理解写出文档就算成功, 不然看了两天才补完Lab1中的challenge, 还以为是task switch…</li>
 <li>明天看看自动完成合并的diff和patch命令</li>
 </ul>
-<h3 id="第二十三周-12-20-12-26"><a href="#第二十三周-12-20-12-26" class="headerlink" title="第二十三周: 12/20-12/26"></a>第二十三周: 12/20-12/26</h3><p>本周的任务是操作系统, 一下是除了这个之外的小东西</p>
+<h3 id="第二十四周-12-20-12-26"><a href="#第二十四周-12-20-12-26" class="headerlink" title="第二十四周: 12/20-12/26"></a>第二十四周: 12/20-12/26</h3><p>本周的任务是操作系统, 一下是除了这个之外的小东西</p>
 <ul>
 <li>典中典: <strong>我以为我看懂了</strong> </li>
 <li>STI指令: 响应可屏蔽的硬件中断, 在kern_init()中的intr_enable()执行, 就算没设置也能执行<strong>软中断</strong> </li>
@@ -800,7 +761,7 @@
 </ul>
 </li>
 </ul>
-<h3 id="第二十四周-12-27-1-2"><a href="#第二十四周-12-27-1-2" class="headerlink" title="第二十四周: 12/27-1/2"></a>第二十四周: 12/27-1/2</h3><ul>
+<h3 id="第二十五周-12-27-1-2"><a href="#第二十五周-12-27-1-2" class="headerlink" title="第二十五周: 12/27-1/2"></a>第二十五周: 12/27-1/2</h3><ul>
 <li>周一, 经典再现, 我果然没有看懂地址映射的四个阶段, 又重新看了一次ucore自带的一个设置好的页目录表和相应的页表<br>又折腾了半天</li>
 <li>装了一个info包, 暂时只知道能看info ld</li>
 <li><code>make grade</code>在虚拟机共享文件夹里出错了, 诶想省事又有点麻烦的东西</li>
@@ -821,7 +782,7 @@
 <li>装了一个apt install <a target="_blank" rel="noopener" href="https://graphviz.org/">graphviz</a>, an open source graph visualization software</li>
 <li>深受翻译版所害, signaling process直接叫做信号进程</li>
 </ul>
-<h3 id="第二十五周-1-3-1-9"><a href="#第二十五周-1-3-1-9" class="headerlink" title="第二十五周:1/3-1/9"></a>第二十五周:1/3-1/9</h3><ul>
+<h3 id="第二十六周-1-3-1-9"><a href="#第二十六周-1-3-1-9" class="headerlink" title="第二十六周:1/3-1/9"></a>第二十六周:1/3-1/9</h3><ul>
 <li>开始lab8</li>
 <li>print working directory = pwd</li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_40204595/article/details/81109644?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~default-1.no_search_link&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2~default~CTRLIST~default-1.no_search_link&utm_relevant_index=1">C语言宏定义中 ## 和#的作用</a> </li>
@@ -834,7 +795,7 @@
 <li>装上了ahk语法高亮, 硬是整了个小脚本</li>
 </ul>
 <hr>
-<h2 id="开始寒假-pwn-college"><a href="#开始寒假-pwn-college" class="headerlink" title="开始寒假(pwn.college)"></a>开始寒假(pwn.college)</h2><h3 id="第二十六周-1-10-1-16"><a href="#第二十六周-1-10-1-16" class="headerlink" title="第二十六周:1/10-1/16"></a>第二十六周:1/10-1/16</h3><ul>
+<h2 id="开始寒假-pwn-college"><a href="#开始寒假-pwn-college" class="headerlink" title="开始寒假(pwn.college)"></a>开始寒假(pwn.college)</h2><h3 id="第二十七周-1-10-1-16"><a href="#第二十七周-1-10-1-16" class="headerlink" title="第二十七周:1/10-1/16"></a>第二十七周:1/10-1/16</h3><ul>
 <li>gVim是vim的一种, 指GUI Vim, 还有其他的模式可以通过 vim -参数 来指定</li>
 <li>考试周, 看了一点pwn.college的YouTube视频, 介绍视频感觉还挺多的, 是时候再写一篇blog了</li>
 <li>对了, 每天要复习一点前面的东西, 不然到时候就等于重新看了</li>
@@ -846,7 +807,7 @@
 </ul>
 </li>
 </ul>
-<h3 id="第二十七周-1-17-1-23"><a href="#第二十七周-1-17-1-23" class="headerlink" title="第二十七周:1/17-1/23"></a>第二十七周:1/17-1/23</h3><ul>
+<h3 id="第二十八周-1-17-1-23"><a href="#第二十八周-1-17-1-23" class="headerlink" title="第二十八周:1/17-1/23"></a>第二十八周:1/17-1/23</h3><ul>
 <li><strong>17: 看计网, 明天开始pwn.college</strong> </li>
 <li><strong>18:</strong> 找到了一个下载Github单个文件夹的<a target="_blank" rel="noopener" href="https://downgit.github.io/#/home">网站</a>, 以及把tree/master替换为<strong>trunk</strong>. 然后用：svn checkout [source]</li>
 <li>计网开始第二章, 第一章东西也真够多的</li>
@@ -869,7 +830,7 @@
 <li><strong>23:</strong> 终于, 在ubuntu弄好了clash, 深深感到原理一个都不知道只会操作软件的痛苦….<a target="_blank" rel="noopener" href="http://t.zoukankan.com/huang-xiang-p-13922394.html">link</a> </li>
 <li>看计网</li>
 </ul>
-<h3 id="第二十八周-1-24-1-30"><a href="#第二十八周-1-24-1-30" class="headerlink" title="第二十八周 1/24-1/30"></a>第二十八周 1/24-1/30</h3><ul>
+<h3 id="第二十九周-1-24-1-30"><a href="#第二十九周-1-24-1-30" class="headerlink" title="第二十九周 1/24-1/30"></a>第二十九周 1/24-1/30</h3><ul>
 <li><strong>24:</strong> 继续很多的计网和一点pwn.college</li>
 <li><strong>25:</strong> ASCII码中的<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/C0_and_C1_control_codes#C1_controls">控制字符</a>就是按键盘上的Ctrl+字母符号来打出的,<br><strong>Caret(^) notation</strong> is a notation for unprintable control characters in ASCII encoding<br>The actual meaning or interpretation of the individual control-codes is not prescribed by the caret notation, and although the ASCII specification does give names to the control-codes, it does not prescribe how software should respond to them.</li>
 <li>学了一波screen, <del>也不知道有啥用就是了…</del> , 真香.</li>
@@ -880,18 +841,18 @@
 <li>看了一篇PIPE&amp;FIFO的文章, 看不下去了话真的太多了, 也是佩服一篇博客需要这么多字的. <strong>还是linux manual管用</strong>.</li>
 <li><strong>28-30</strong> 看计网和pwn.college.</li>
 </ul>
-<h3 id="第二十九周-1-31-2-6"><a href="#第二十九周-1-31-2-6" class="headerlink" title="第二十九周 1/31-2/6"></a>第二十九周 1/31-2/6</h3><ul>
+<h3 id="第三十周-1-31-2-6"><a href="#第三十周-1-31-2-6" class="headerlink" title="第三十周 1/31-2/6"></a>第三十周 1/31-2/6</h3><ul>
 <li>1/31: 除夕夜, 还在看计网. 看的属实有点慢.</li>
 <li>2/1-2/2: 计网+春节.</li>
 <li>2/3-4: 看书, 进度315/775</li>
 <li>2/5: 连着看了几个小时看不下去了, 不重要的直接跳过不看了.</li>
 </ul>
-<h3 id="第三十周-2-7-2-13"><a href="#第三十周-2-7-2-13" class="headerlink" title="第三十周: 2/7-2/13"></a>第三十周: 2/7-2/13</h3><ul>
+<h3 id="第三十一周-2-7-2-13"><a href="#第三十一周-2-7-2-13" class="headerlink" title="第三十一周: 2/7-2/13"></a>第三十一周: 2/7-2/13</h3><ul>
 <li>2-8: 下午五点, 前六章看完. 巩固下知识(除了算法)</li>
 <li>2-9-13: 终于看完了, (摸:fish:了一天)</li>
 <li>开始pwn.college!</li>
 </ul>
-<h3 id="第三十一周-2-14-2-20"><a href="#第三十一周-2-14-2-20" class="headerlink" title="第三十一周: 2/14-2/20"></a>第三十一周: 2/14-2/20</h3><ul>
+<h3 id="第三十二周-2-14-2-20"><a href="#第三十二周-2-14-2-20" class="headerlink" title="第三十二周: 2/14-2/20"></a>第三十二周: 2/14-2/20</h3><ul>
 <li>14: 发现要自己写汇编代码, 之前看过的一部分还算用到了, 还好做了笔记不然和没看一样. 以前都是看现成的都没有自己写过.</li>
 <li>python3.8特性: <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/90992431">Assignment expressions</a>: <code>:=</code>和<code>=</code>是补充关系并不是替换关系</li>
 <li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/ask/106533">deadbeef渊源</a> 和<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Hexspeak">Hexspeak</a>有关系. 这个Hexspeak也挺有意思, 是用16进制数字来表示英文单词, 可用来编魔数.</li>
