@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://i.loli.net/2021/07/22/ueHT3S7ComhkflA.png">
 <meta property="og:image" content="https://i.loli.net/2021/08/04/GAxeO2D67LfbKPw.png">
 <meta property="article:published_time" content="2021-06-07T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-02-21T08:58:39.012Z">
+<meta property="article:modified_time" content="2022-02-21T09:00:08.148Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="schedule">
 <meta name="twitter:card" content="summary_large_image">
@@ -655,20 +655,14 @@
 <li>开始一点点操作系统</li>
 </ul>
 <h3 id="第十八周-11-08-11-14"><a href="#第十八周-11-08-11-14" class="headerlink" title="第十八周: 11/08-11/14"></a>第十八周: 11/08-11/14</h3><ul>
-<li><p><strong>11/08:</strong> </p>
-<ul>
-<li><p>网上随便整了个<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43940314/article/details/111279768">序列号</a>就通过了understand的验证, 这软件还真够直接的, 不过我更想在我的kali上弄这些, 先用着试试看. <a target="_blank" rel="noopener" href="https://www.cnblogs.com/wayne-tao/p/11911566.html">这是windows的</a> </p>
-</li>
-<li><p>rpm包的命名规范官网, →<a target="_blank" rel="noopener" href="https://rpm-packaging-guide.github.io/#epoch">这里</a>.        3:3.1被认为比2:3.2更新。</p>
-</li>
-<li><p>好像第二次查硬链接和软连接的区别了, 起因是无法使用qemu而要<strong>使用qemu-system-i386或qemu-system-x86_64指令替换qemu指令.</strong> 可以利用软链接<code>ln -s /usr/bin/qemu-system-i386 /usr/bin/qemu</code>创建一个快捷方式一样的东西</p>
-</li>
-<li><p>操作系统的kali环境算是弄好了一大半(我再也不敢说已经弄好了), 剩下的就是要熟悉一下各种软件的操作</p>
-</li>
+<li><strong>11/08:</strong> <ul>
+<li>网上随便整了个<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43940314/article/details/111279768">序列号</a>就通过了understand的验证, 这软件还真够直接的, 不过我更想在我的kali上弄这些, 先用着试试看. <a target="_blank" rel="noopener" href="https://www.cnblogs.com/wayne-tao/p/11911566.html">这是windows的</a> </li>
+<li>rpm包的命名规范官网, →<a target="_blank" rel="noopener" href="https://rpm-packaging-guide.github.io/#epoch">这里</a>.        3:3.1被认为比2:3.2更新。</li>
+<li>好像第二次查硬链接和软连接的区别了, 起因是无法使用qemu而要<strong>使用qemu-system-i386或qemu-system-x86_64指令替换qemu指令.</strong> 可以利用软链接<code>ln -s /usr/bin/qemu-system-i386 /usr/bin/qemu</code>创建一个快捷方式一样的东西</li>
+<li>操作系统的kali环境算是弄好了一大半(我再也不敢说已经弄好了), 剩下的就是要熟悉一下各种软件的操作</li>
 </ul>
 </li>
-<li><p>其余时间</p>
-<ul>
+<li>其余时间<ul>
 <li>整了两三行的bat一键上传blog</li>
 <li>blog图片换成了本地, 还是怕sm.ms跑路, 以前的就不更新了. 找到了一个最保险的办法, 就是两边都存</li>
 <li><code>dpkg-reconfigure tzdata</code>搞定kali时间不准问题</li>
@@ -680,27 +674,17 @@
 <li>keymap调试完成</li>
 </ul>
 </li>
-<li><p>python多版本问题 <a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_39278265/article/details/82938270">link</a>: repaire或者<code>python -m pip install -U pip</code> 就行</p>
-</li>
+<li>python多版本问题 <a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_39278265/article/details/82938270">link</a>: repaire或者<code>python -m pip install -U pip</code> 就行</li>
 </ul>
 <h3 id="第十九周-11-15-11-21"><a href="#第十九周-11-15-11-21" class="headerlink" title="第十九周: 11/15-11/21"></a>第十九周: 11/15-11/21</h3><ul>
-<li><p>windows下vscode莫名无法拖动文件标签, 快捷方式设为管理员启动然后再取消掉就没事了</p>
-</li>
-<li><p>虚拟机里的vscode果然还是用的怪怪的, 换成windows下的写完再粘贴进去debug</p>
-</li>
-<li><p>终于挂载成功了, 问题不是vmware-tools没装好, 也不需要加载ISO文件, <code>sudo vmhgfs-fuse .host:/ /mnt/hgfs</code>不成功不是因为vmtools的问题, 而是和报错说的一模一样, <code>&#39;/mnt/hgfs&#39;: No such file or directory</code>. 真绝了, 新建个hgfs就完事了</p>
-<p>悲报, 可能每次重启我都要执行这一句命令…….:sweat: </p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/MACMACip/article/details/106406066">C语言变量声明时加冒号的用法</a>: C语言提供了一种数据结构，称为“位域”或“位段”</p>
-</li>
-<li><p>16号Lab1暂时完成, 开始下一个Lab的学习</p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/8564532/colon-in-c-struct-what-does-it-mean/85645973#answer-19691081">“:” (colon) and “.”(dot) in C struct</a> 结构体中的冒号和点号</p>
-</li>
-<li><p>c语言结构体名称和结构体变量<strong>可以同名</strong> </p>
-</li>
-<li><p>感觉gdb帮助也是有限, 一个调试还是要把代码看懂了再用gdb查看运行时变量的变化, 而且如果没有特殊情况还很难发现小错误</p>
-</li>
+<li>windows下vscode莫名无法拖动文件标签, 快捷方式设为管理员启动然后再取消掉就没事了</li>
+<li>虚拟机里的vscode果然还是用的怪怪的, 换成windows下的写完再粘贴进去debug</li>
+<li>终于挂载成功了, 问题不是vmware-tools没装好, 也不需要加载ISO文件, <code>sudo vmhgfs-fuse .host:/ /mnt/hgfs</code>不成功不是因为vmtools的问题, 而是和报错说的一模一样, <code>&#39;/mnt/hgfs&#39;: No such file or directory</code>. 真绝了, 新建个hgfs就完事了<br>悲报, 可能每次重启我都要执行这一句命令…….:sweat: </li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/MACMACip/article/details/106406066">C语言变量声明时加冒号的用法</a>: C语言提供了一种数据结构，称为“位域”或“位段”</li>
+<li>16号Lab1暂时完成, 开始下一个Lab的学习</li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/8564532/colon-in-c-struct-what-does-it-mean/85645973#answer-19691081">“:” (colon) and “.”(dot) in C struct</a> 结构体中的冒号和点号</li>
+<li>c语言结构体名称和结构体变量<strong>可以同名</strong> </li>
+<li>感觉gdb帮助也是有限, 一个调试还是要把代码看懂了再用gdb查看运行时变量的变化, 而且如果没有特殊情况还很难发现小错误</li>
 </ul>
 <h3 id="第二十周-11-22-11-28"><a href="#第二十周-11-22-11-28" class="headerlink" title="第二十周: 11/22-11/28"></a>第二十周: 11/22-11/28</h3><ul>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/rosetta/article/details/90746936">&amp;((type *)0)-&gt;member</a>: ANSI C标准允许值为0的常量被强制转换成任何一种类型的指针，并且转换的结果是个NULL，因此<code>((type *)0)</code>的结果就是一个类型为<code>type *</code>的NULL指针. 编译器还会对这种形式的宏定义做出优化, 只取出地址而不访问<br>(type *)NULL的成员member.</li>
