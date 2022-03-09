@@ -16,21 +16,21 @@
   <meta name="author" content="Yogdzewa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="搭环境要人命">
+    <meta name="description" content="llvm实现中间代码优化">
 <meta property="og:type" content="article">
-<meta property="og:title" content="linux使用">
-<meta property="og:url" content="https://yogdzewa.github.io/2021-05/linux%E7%9A%84%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:title" content="CSCD70">
+<meta property="og:url" content="https://yogdzewa.github.io/2022-03/CSCD70/index.html">
 <meta property="og:site_name" content="Yogdzewa">
-<meta property="og:description" content="搭环境要人命">
+<meta property="og:description" content="llvm实现中间代码优化">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-05-06T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-03-08T13:19:43.934Z">
+<meta property="article:published_time" content="2022-03-08T14:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-08T08:31:22.395Z">
 <meta property="article:author" content="Yogdzewa">
-<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="complier">
 <meta name="twitter:card" content="summary_large_image">
   
   
-  <title>linux使用 - Yogdzewa</title>
+  <title>CSCD70 - Yogdzewa</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -188,7 +188,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="linux使用">
+            <span class="h2" id="subtitle" title="CSCD70">
               
             </span>
 
@@ -198,8 +198,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-05-06 10:00" pubdate>
-        2021年5月6日 上午
+      <time datetime="2022-03-08 22:00" pubdate>
+        2022年3月8日 晚上
       </time>
     </span>
   
@@ -209,7 +209,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.7k 字
+      2k 字
     </span>
   
 
@@ -218,7 +218,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      35 分钟
+      25 分钟
     </span>
   
 
@@ -255,179 +255,39 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">linux使用</h1>
+            <h1 style="display: none">CSCD70</h1>
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年3月8日 晚上
+                  不可视境界线最后变动于：2022年3月8日 下午
                 
               </p>
             
             <div class="markdown-body">
-              <h2 id="Kali的问题"><a href="#Kali的问题" class="headerlink" title="Kali的问题"></a>Kali的问题</h2><blockquote>
-<p>linux<a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-command-manual.html">命令</a>在这</p>
+              <h1 id="docker相关"><a href="#docker相关" class="headerlink" title="docker相关"></a>docker相关</h1><blockquote>
+<p>docker原理待看, 主要是chroot+namespace的使用, 所以只能在linux中运行. Windows必须装上WSL.</p>
 </blockquote>
 <ul>
-<li><p>虚拟机的安装(又装了一遍)</p>
-</li>
-<li><p>VMtools的安装(为什么网上会有这么多的<a target="_blank" rel="noopener" href="https://blog.csdn.net/love20165104027/article/details/83377758">方法</a>.</p>
-</li>
-<li><p>中文输入法Ibus的<a target="_blank" rel="noopener" href="https://www.cnblogs.com/donghao0924/p/13503595.html">安装(</a>两行命令解决的事情有些教程搞得几十行,就离谱)</p>
-</li>
-<li><p>vim插件(彻底的失败) 不过在vim设置文件里设置了几个<a target="_blank" rel="noopener" href="https://blog.csdn.net/lovewebeye/article/details/79960675">常用的</a>.</p>
-</li>
-<li><p>密码问题, root初始密码忘记, root下passwd指令.   默认账号kali kali</p>
-</li>
-<li><p>vim在share文件夹里</p>
-</li>
-<li><p>中文输入法出现[Invalid-UTF-8 code], 改成半角中文即可</p>
-</li>
-<li><p>make btest出错, 修改Makefile为生成64位可执行文件<a target="_blank" rel="noopener" href="https://blog.csdn.net/mazamu/article/details/107021054">[0]</a>.</p>
-</li>
-<li><p>LInux中可执行文件和后缀名无关, 和文件的属性有关(????</p>
-</li>
-<li><p>bitset是一个类模板</p>
-</li>
-<li><p>GDB以及gcc的<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/74897601">使用</a>(详见零碎知识)</p>
-</li>
-<li><p>kali如何运行可执行文件: ./bomb</p>
-</li>
-<li><p>set nohlsearch(no highlight search)</p>
-</li>
-<li><p>中文输入法下输入命令:w按下回车vim会卡死, <strong>输入逗号也能卡死?????</strong></p>
-</li>
-<li><p>kali装Chrome:他有sandbox机制, 无法在root用户下运行<a target="_blank" rel="noopener" href="https://www.cnblogs.com/smart-zihan/p/13440084.html">[1]</a>.</p>
-</li>
-<li><p>kali使用vpn:  <strong>失败</strong>.</p>
-</li>
-<li><p>kill占了端口的进程<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42108437/article/details/106072810">[0]</a>.</p>
-</li>
-<li><p>虚拟机卡死时查找log文件里的pid, 在任务管理器里停止</p>
-</li>
-<li><p>查看磁盘使用情况<a target="_blank" rel="noopener" href="https://www.cnblogs.com/flyingeagle/articles/9219106.html">[0]</a>.</p>
-</li>
-<li><p>Typora的安装<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_33694648/article/details/104403618">问题</a>.</p>
-</li>
-<li><p>.tar文件相关<a target="_blank" rel="noopener" href="https://zhidao.baidu.com/question/873537413743808372.html">问题</a>.</p>
-</li>
-<li><p>root用户安装了vmtool, 切换到lbjyye后需要重新安装(?)</p>
-</li>
-<li><p>修改命令行终端字体大小: ~/.config/qterminal.org/qterminal.ini 里的fontsize或fontfamily并将其改为只读文件(<strong>新版完全没这个问题</strong>)</p>
-</li>
-<li><p>要显示隐藏文件夹直接到工具栏上的视图里去找</p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Cappuccino_jay/article/details/105474581">延长</a>锁屏时间</p>
-</li>
-<li><p>终端补全只要方向键</p>
-</li>
-<li><p>关机命令 init 0 重启 reboot</p>
-</li>
-<li><p>chorme里<a target="_blank" rel="noopener" href="https://jingyan.baidu.com/article/75ab0bcb8547fed6864db2f8.html">添加</a>搜索引擎</p>
-</li>
-<li><p>vim无法打开文件, <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38238114/article/details/78524043">改为</a>下载GVIM</p>
-</li>
-<li><p>啥玩意儿啊, kali2021干吗搞没了图形界面clash弄半天也没成<a target="_blank" rel="noopener" href="https://dcrelay.me/#/knowledge">[0]</a></p>
-</li>
-<li><p>main函数的两个参数: 一个是命令参数的个数, 另一个是命令参数数组,argv[0]是程序本身的文件名</p>
-</li>
-<li><p>快照管理其中的保留是防止自动保存的快照被删除</p>
-</li>
-<li><p>**Typora里使用中文状态下的Ctrl+A, 文件直接丢失!!!!**太特么蠢了.</p>
-</li>
-<li><p>/usr/share/vim/vim82/colors/有vim的主题</p>
-<ul>
-<li>industry 全黑,  evening 还行, koel 超级黑的背景, morning 灰白很不错, murpy又是黑的字体细点,  peachpuff 桃色背景, shine 亮瞎狗眼 颜色太浅, slate 字体太紧, zellner 平平无奇的白底, 剩下的不用考虑</li>
+<li>多开container: </li>
 </ul>
-</li>
-<li><p>了解了链接引用和脚注是个<a target="_blank" rel="noopener" href="https://www.cnblogs.com/hnrainll/p/3514637.html">啥</a>.</p>
-</li>
-<li><p>Operation inconsistent with current state。VM报错, 只要以管理员身份运行就可以了</p>
-</li>
-<li><p>Linux中的Chrome无法自动升级,干脆就不升级了, 命令加一个<code>--disable-background-networking</code> </p>
-</li>
-<li><p>kali中使用中文输入法的时候无法在vscode中用光标选中文本</p>
-</li>
-<li><p>vim进阶</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wajika/p/6606353.html">vim可视化模式选择</a> </li>
-</ul>
-<figure class="highlight vim"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs vim">选择： <br><span class="hljs-keyword">vi</span>选中&#123;&#125;中间的内容,不包括&#123;&#125;<br>va&#123; 选中&#123;&#125;中间内容，包括&#123;&#125;<br>选中()中间内容<br><span class="hljs-keyword">vi</span>&lt; 选中&lt;&gt;中间内容<br><span class="hljs-keyword">vi</span>[ 选中[]中间内容<br>vit 选中中间的内容<br><span class="hljs-keyword">vi</span><span class="hljs-string">&quot; 选中&quot;</span>中间内容<br><span class="hljs-keyword">vi</span><span class="hljs-string">&#x27; 选中&#x27;</span>中间的内容、<br><br>块选择:<br>vis 选中一个句子<br>vib 选中一个block<br>viw 选中一个单词<br>vip 选中一个段落<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">sudo docker exec -it &#123;container_ID&#125; /bin/bash <br><span class="hljs-meta">#</span><span class="bash"> 一长串的是container ID, 可以使用`sudo docker ps`来查看</span><br></code></pre></div></td></tr></table></figure>
 
 <ul>
-<li>自动提示： <code>&lt;C-n&gt;</code> 和 <code>&lt;C-p&gt;</code> </li>
+<li>开启container</li>
 </ul>
-</li>
-<li><p>Kali成功登上google, 使用chrome的代理就成. 算是搞明白一点代理是怎么回事了, Kali没有全局代理只能再需要的软件里面设置代理, 命令行程序要用代理要装proxytrain</p>
-<ul>
-<li>proxychains<a target="_blank" rel="noopener" href="https://oopsdc.com/post/proxychains%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/">使用方法</a>, 其中本机ip地址为<code>无线局域网适配器 WLAN:</code> ipv4那一栏的地址</li>
-<li>终于啊, kali和ubuntu都能走代理了:sob: </li>
-</ul>
-</li>
-</ul>
-<h2 id="ubuntu"><a href="#ubuntu" class="headerlink" title="ubuntu"></a>ubuntu</h2><ul>
-<li>ubuntu虽然任务栏不好用, 但是有快捷键挺舒服的, 继续记!</li>
-<li>ubuntu sudo命令延时很长<a target="_blank" rel="noopener" href="https://blog.csdn.net/kiritow/article/details/80687036">解决办法</a> </li>
-<li>更新<a target="_blank" rel="noopener" href="https://blog.csdn.net/wangyijieonline/article/details/105360138">ubuntu源</a> </li>
-<li>linux终端<a target="_blank" rel="noopener" href="http://www.360doc.com/content/16/0615/15/7044580_567984505.shtml">快捷键</a> </li>
-<li>通过增加快捷键绑定解决vim终端中无法使用方向键的问题</li>
-<li>init 0重启发现挂载失败了, 之前那个命令也不管用了, 只能倒回上一个快照继续, 还好博客都是用的共享文件夹.<br>不说了, 快照再次救我一命.<ul>
-<li>找到了解决办法, 要给普通用户权限访问</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">echo &quot; &quot; | sudo -S vmhgfs-fuse -o allow_other ......<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">sudo docker run -it -v $(pwd):/mnt --rm --name cscd70_a1 cscd70:2021S <br></code></pre></div></td></tr></table></figure>
 
-<h2 id="各种命令-软件包"><a href="#各种命令-软件包" class="headerlink" title="各种命令+软件包"></a>各种命令+软件包</h2><ul>
-<li><p><em>ldd</em>  <em>strace(刚刚装的)</em> <em>head打印前n行</em>  <em>du显示文件大小</em>   <em>ps打印进程信息</em>  </p>
 <ul>
-<li>ldd: print shared object dependencies</li>
-<li>ps aux  –  BSD参数风格</li>
+<li>具体怎么创建在Assignment0里面, 我还为此换了个源… 下面是dockerfile.</li>
 </ul>
-</li>
-<li><p>Linux下<code>!</code>的<a target="_blank" rel="noopener" href="https://www.cnblogs.com/wxywxy/p/7756596.html">用法</a>, 主要是传递最后执行的命令的参数，以方便的运行新命令(非常实用)</p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/linux/ln.html">ln命令|symbolic_link</a> </p>
-</li>
-<li><p>scp&amp; mkdir &amp; mv(linux中重命名的唯一方法)</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dockerfile"><span class="hljs-comment"># RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak</span><br><span class="hljs-keyword">RUN</span><span class="bash"> <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb http://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse&quot;</span> &gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb-src http://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb http://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb-src http://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb http://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb-src http://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb http://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb-src http://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb-src http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list</span><br></code></pre></div></td></tr></table></figure>
+
+<h1 id="LLVM"><a href="#LLVM" class="headerlink" title="LLVM"></a>LLVM</h1><h2 id="CLI-Guide"><a href="#CLI-Guide" class="headerlink" title="CLI Guide"></a>CLI Guide</h2><ul>
+<li>-load: load additional library    -{pass_name}    ./test/Loop.c: <strong>check file</strong>    stdin of FileCheck: <strong>input file</strong><br>  if correct, nothing will be printed.</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">opt -load ./FunctionInfo.so -function-info ./test/Loop.bc \<br>-disable-output | FileCheck --check-prefix=SAMPLE ./test/Loop.c<br></code></pre></div></td></tr></table></figure>
+
 <ul>
-<li>scp: copy files between hosts on a network</li>
-</ul>
-</li>
-<li><p><em>screen</em>: window manager, 好多快捷键, 复制了一份<a target="_blank" rel="noopener" href="https://gist.github.com/joaopizani/2718397">.screenrc</a>, 还挺有趣的.</p>
-<ul>
-<li>screen这玩意儿也太强了.</li>
-<li><code>Ctrl + A + [</code>进入copy模式才能使用滚轮或者Ctrl+F/B等等来翻页</li>
-</ul>
-</li>
-<li><p>装了一个httping玩一玩</p>
-</li>
-<li><p>看到一个cscope包可以用来解析C/C++项目, 有空再研究怎么玩</p>
-</li>
-<li><p>vim-gtk是vim的一个GUI版本, 装了之后才能vim -g</p>
-</li>
-<li><p>新命令: tput好像是用一个通用命令做参数,  然后在当前终端的数据库中找到正确的命令并发送</p>
-</li>
-<li><p><strong>ipython: System shell with !</strong> interactive Python也挺神奇的, 具体见pwn-modulesj里的帮助.</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://blog.51cto.com/essun/1712322">ipython用法</a> </li>
-</ul>
-</li>
-<li><p>发现grep有拓展正则和普通正则的区别, 又是一大堆东西, 有缘再看吧.</p>
-</li>
-<li><p>新东西: <strong>sed</strong>, stream editor.  还有一个ed, 根本不知道怎么用. <del>这东西这两天把菜鸟教程上所有的命令全看一边就行了</del> 上面没有.<br><em><strong>rev nl</strong></em>  perror[[]]</p>
-<ul>
-<li>命令或许可以写在思维导图里, md肯定是不太行的.</li>
-<li>真不错, 用了sed来改c.c中的题目标号, 再方便一点.</li>
-</ul>
-</li>
-<li><p>装了一个rappel. 改成了<code>rap</code>直接执行.</p>
-</li>
-<li></li>
-</ul>
-<h2 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h2><ul>
-<li>How to exit the running container? <a target="_blank" rel="noopener" href="https://linuxhandbook.com/exit-docker-container/">here</a> : that is pressing ctrl+p &amp;&amp; ctrl+q.</li>
-<li><code>sudo docker ps</code> </li>
-<li><code>sudo docker exec -it CONTAINER_ID sh</code> </li>
 <li></li>
 </ul>
 
@@ -436,11 +296,18 @@
             <div>
               <div class="post-metas mb-3">
                 
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/CS/">CS</a>
+                    
+                  </div>
+                
                 
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
+                      <a class="hover-with-bg" href="/tags/complier/">complier</a>
                     
                   </div>
                 
@@ -451,15 +318,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021-05/Learning-CSAPP-Lab/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">CSAPP_Lab</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2022-01/pwn-modules/">
+                        <span class="hidden-mobile">pwn.college各modules的一点笔记</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
@@ -481,7 +348,7 @@
         var options = Object.assign(
           {"clientID":"312db7ebbc085de5d28d","clientSecret":"85ea3cefd13c73a6d85c1813adfde4f1550bfbda","repo":"yogdzewa.github.io","owner":"yogdzewa","admin":["yogdzewa"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: 'b2f2812d8fcd733082e00a7d5815b4bb'
+            id: '72e8bff60da7d1c89b2c1121b3172d9e'
           }
         )
         var gitalk = new Gitalk(options);
@@ -658,6 +525,13 @@
 
 
 
+
+  <script  src="https://cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js" ></script>
+  <script>
+    if (window.mermaid) {
+      mermaid.initialize({"theme":"default"});
+    }
+  </script>
 
 
 
