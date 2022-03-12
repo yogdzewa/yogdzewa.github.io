@@ -24,7 +24,7 @@
 <meta property="og:description" content="llvm实现中间代码优化">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-03-08T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-03-11T13:13:49.949Z">
+<meta property="article:modified_time" content="2022-03-12T02:59:13.939Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="complier">
 <meta name="twitter:card" content="summary_large_image">
@@ -259,7 +259,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年3月11日 晚上
+                  不可视境界线最后变动于：2022年3月12日 上午
                 
               </p>
             
@@ -268,14 +268,14 @@
 <p>docker原理待看, 主要是chroot+namespace的使用, 所以只能在linux中运行. Windows必须装上WSL.</p>
 </blockquote>
 <ul>
-<li>多开container: </li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">sudo docker exec -it &#123;container_ID&#125; /bin/bash <br><span class="hljs-meta">#</span><span class="bash"> 一长串的是container ID, 可以使用`sudo docker ps`来查看</span><br></code></pre></div></td></tr></table></figure>
-
-<ul>
 <li>开启container</li>
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">cd ~/Desktop/CSCD70/Assignment1-Introduction_to_LLVM/FunctionInfo/<br>sudo docker run -it -v $(pwd):/mnt --rm --name cscd70_a1 cscd70:2021S<br><br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li>多开container: </li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">sudo docker exec -it &#123;container_ID&#125; /bin/bash <br><span class="hljs-meta">#</span><span class="bash"> 一长串的是container ID, 可以使用`sudo docker ps`来查看</span><br></code></pre></div></td></tr></table></figure>
 
 <ul>
 <li>具体怎么创建在Assignment0里面, 我还为此换了个源… 下面是dockerfile.</li>
