@@ -24,7 +24,7 @@
 <meta property="og:description" content="搭环境要人命">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-05-06T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-03-11T01:51:01.958Z">
+<meta property="article:modified_time" content="2022-03-12T08:33:39.708Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary_large_image">
@@ -209,7 +209,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.8k 字
+      2.9k 字
     </span>
   
 
@@ -218,7 +218,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      35 分钟
+      36 分钟
     </span>
   
 
@@ -259,7 +259,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年3月11日 上午
+                  不可视境界线最后变动于：2022年3月12日 下午
                 
               </p>
             
@@ -347,16 +347,6 @@
 </li>
 <li><p>kali中使用中文输入法的时候无法在vscode中用光标选中文本</p>
 </li>
-<li><p>vim进阶</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wajika/p/6606353.html">vim可视化模式选择</a> </li>
-</ul>
-<figure class="highlight vim"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs vim">选择： <br><span class="hljs-keyword">vi</span>选中&#123;&#125;中间的内容,不包括&#123;&#125;<br>va&#123; 选中&#123;&#125;中间内容，包括&#123;&#125;<br>选中()中间内容<br><span class="hljs-keyword">vi</span>&lt; 选中&lt;&gt;中间内容<br><span class="hljs-keyword">vi</span>[ 选中[]中间内容<br>vit 选中中间的内容<br><span class="hljs-keyword">vi</span><span class="hljs-string">&quot; 选中&quot;</span>中间内容<br><span class="hljs-keyword">vi</span><span class="hljs-string">&#x27; 选中&#x27;</span>中间的内容、<br><br>块选择:<br>vis 选中一个句子<br>vib 选中一个block<br>viw 选中一个单词<br>vip 选中一个段落<br></code></pre></div></td></tr></table></figure>
-
-<ul>
-<li>自动提示： <code>&lt;C-n&gt;</code> 和 <code>&lt;C-p&gt;</code> </li>
-</ul>
-</li>
 <li><p>Kali成功登上google, 使用chrome的代理就成. 算是搞明白一点代理是怎么回事了, Kali没有全局代理只能再需要的软件里面设置代理, 命令行程序要用代理要装proxytrain</p>
 <ul>
 <li>proxychains<a target="_blank" rel="noopener" href="https://oopsdc.com/post/proxychains%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/">使用方法</a>, 其中本机ip地址为<code>无线局域网适配器 WLAN:</code> ipv4那一栏的地址</li>
@@ -364,6 +354,16 @@
 <li>过了一天好像又不行了, 换成<code>127.0.0.1 7891</code>后换了个新版本才行. <a target="_blank" rel="noopener" href="http://www.bubuko.com/infodetail-3531993.html">link</a> </li>
 </ul>
 </li>
+</ul>
+<h2 id="vim进阶"><a href="#vim进阶" class="headerlink" title="vim进阶"></a>vim进阶</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wajika/p/6606353.html">vim可视化模式选择</a> </li>
+</ul>
+<figure class="highlight vim"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs vim">选择： <br><span class="hljs-keyword">vi</span>选中&#123;&#125;中间的内容,不包括&#123;&#125;<br>va&#123; 选中&#123;&#125;中间内容，包括&#123;&#125;<br>选中()中间内容<br><span class="hljs-keyword">vi</span>&lt; 选中&lt;&gt;中间内容<br><span class="hljs-keyword">vi</span>[ 选中[]中间内容<br>vit 选中中间的内容<br><span class="hljs-keyword">vi</span><span class="hljs-string">&quot; 选中&quot;</span>中间内容<br><span class="hljs-keyword">vi</span><span class="hljs-string">&#x27; 选中&#x27;</span>中间的内容、<br><br>块选择:<br>vis 选中一个句子<br>vib 选中一个block<br>viw 选中一个单词<br>vip 选中一个段落<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li>自动提示： <code>&lt;C-n&gt;</code> 和 <code>&lt;C-p&gt;</code> </li>
+<li>vim<a target="_blank" rel="noopener" href="https://blog.easwy.com/archives/advanced-vim-skills-auto-complete/">路径补全</a> </li>
+<li></li>
 </ul>
 <h2 id="ubuntu"><a href="#ubuntu" class="headerlink" title="ubuntu"></a>ubuntu</h2><ul>
 <li>ubuntu虽然任务栏不好用, 但是有快捷键挺舒服的, 继续记!</li>
@@ -378,6 +378,10 @@
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">echo &quot; &quot; | sudo -S vmhgfs-fuse -o allow_other ......<br></code></pre></div></td></tr></table></figure>
 
+<ul>
+<li>colorizing man pages: <a target="_blank" rel="noopener" href="https://askubuntu.com/questions/156383/how-to-have-colored-manual-pages-in-gnome-terminal/834107#834107">link</a> &amp;&amp; <a target="_blank" rel="noopener" href="https://seamatinee.com/2021/09/23/ubuntu-customization/#Terminal-%E7%BE%8E%E5%8C%96">zsh</a> </li>
+<li>save zsh history and multiterminal-hisory-share <a target="_blank" rel="noopener" href="https://blog.lilydjwg.me/2013/7/3/manually-save-read-zsh-history-entries.39852.html">link</a> </li>
+</ul>
 <h2 id="各种命令-软件包"><a href="#各种命令-软件包" class="headerlink" title="各种命令+软件包"></a>各种命令+软件包</h2><ul>
 <li><p><em>ldd</em>  <em>strace(刚刚装的)</em> <em>head打印前n行</em>  <em>du显示文件大小</em>   <em>ps打印进程信息</em>  </p>
 <ul>
