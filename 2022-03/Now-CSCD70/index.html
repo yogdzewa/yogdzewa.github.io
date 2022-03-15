@@ -19,15 +19,19 @@
     <meta name="description" content="llvm实现中间代码优化">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CSCD70">
-<meta property="og:url" content="https://yogdzewa.github.io/2022-03/CSCD70/index.html">
+<meta property="og:url" content="https://yogdzewa.github.io/2022-03/Now-CSCD70/index.html">
 <meta property="og:site_name" content="Yogdzewa">
 <meta property="og:description" content="llvm实现中间代码优化">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yogdzewa.github.io/image/CSCD70/image-20220315181757882.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/CSCD70/image-20220315185203276.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/CSCD70/image-20220315183948503.png">
 <meta property="article:published_time" content="2022-03-08T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-03-14T04:17:59.845Z">
+<meta property="article:modified_time" content="2022-03-15T12:17:01.640Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="complier">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://yogdzewa.github.io/image/CSCD70/image-20220315181757882.png">
   
   
   <title>CSCD70 - Yogdzewa</title>
@@ -209,7 +213,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.1k 字
+      3.5k 字
     </span>
   
 
@@ -218,7 +222,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      27 分钟
+      45 分钟
     </span>
   
 
@@ -259,7 +263,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年3月14日 中午
+                  不可视境界线最后变动于：2022年3月15日 晚上
                 
               </p>
             
@@ -275,12 +279,12 @@
 <ul>
 <li>多开container: </li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">sudo docker exec -it <br>sudo docker exec -it &#123;container_ID&#125; /bin/bash <br><span class="hljs-meta">#</span><span class="bash"> 一长串的是container ID, 可以使用`sudo docker ps`来查看</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">sudo docker exec -it <br>sudo docker exec -it &#123;container_ID&#125; /bin/bash <br><span class="hljs-meta">#</span><span class="bash"> 一长串的是container ID, 可以直接看容器用户名, 或者使用`sudo docker ps`</span><br></code></pre></div></td></tr></table></figure>
 
 <ul>
-<li>具体怎么创建在Assignment0里面, 我还为此换了个源… 下面是dockerfile.</li>
+<li>具体怎么创建在Assignment0里面, 我还为此换了个阿里源… 下面是dockerfile新加上的部分.</li>
 </ul>
-<figure class="highlight dockerfile"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dockerfile"><span class="hljs-comment"># RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak</span><br><span class="hljs-keyword">RUN</span><span class="bash"> <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb http://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse&quot;</span> &gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb-src http://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb http://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb-src http://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb http://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb-src http://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb http://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb-src http://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb-src http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight dockerfile"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs dockerfile"><span class="hljs-keyword">RUN</span><span class="bash"> mv /etc/apt/sources.list /etc/apt/sources.list.bak</span><br><span class="hljs-keyword">RUN</span><span class="bash"> <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb http://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse&quot;</span> &gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb-src http://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb http://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb-src http://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb http://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb-src http://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb http://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb-src http://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list &amp;&amp; \</span><br><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb-src http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse&quot;</span> &gt;&gt; /etc/apt/sources.list</span><br></code></pre></div></td></tr></table></figure>
 
 <h1 id="LLVM"><a href="#LLVM" class="headerlink" title="LLVM"></a>LLVM</h1><h2 id="CLI-Guide"><a href="#CLI-Guide" class="headerlink" title="CLI Guide"></a>CLI Guide</h2><ul>
 <li>-load: load additional library    -{pass_name}    ./test/Loop.c: <strong>check file(expected)</strong>    stdin of FileCheck: <strong>input file</strong><br>  if correct, nothing will be printed.<br>  需要先在FunctionInfo文件夹执行make.</li>
@@ -290,6 +294,96 @@
 <ul>
 <li></li>
 </ul>
+<h2 id="class-architecture"><a href="#class-architecture" class="headerlink" title="class architecture"></a>class architecture</h2><h3 id="Value"><a href="#Value" class="headerlink" title="Value"></a><a target="_blank" rel="noopener" href="https://llvm.org/docs/ProgrammersManual.html#the-value-class">Value</a></h3><p>就和名字一个意思, It represents a typed value that may be used (among other things) as an operand to an instruction. To keep track of this relationship, the <code>Value</code> class keeps a list of all of the <code>User</code>s that is using it( 就是def-use chain)</p>
+<p>有一些getType, getValue, use_list_iterator之类的成员函数.</p>
+<img src="../../image/CSCD70/image-20220315181757882.png" srcset="/img/loading.gif" lazyload alt="image-20220315181757882" style="zoom: 80%;" />
+
+<h3 id="User"><a href="#User" class="headerlink" title="User"></a>User</h3><p>It exposes a list of “Operands” that are all of the <code>Value</code>s that the User is referring to.</p>
+<p>Because LLVM uses <strong>Static Single Assignment (SSA)</strong> form, there can only be one definition referred to, allowing this direct connection. This connection provides the use-def information in LLVM. 真巧, 因为采用了SSA所以实现了一一对应的指针.</p>
+<p>有一些<code>getOperand</code>, <code>getNumOperands</code>之类的函数(显而易见了). 像这种的都会有迭代器.</p>
+<p>派生类包括==Constant, Instruction, Operator==之类的(图片过长).</p>
+<h3 id="Instruction"><a href="#Instruction" class="headerlink" title="Instruction"></a><a target="_blank" rel="noopener" href="https://llvm.org/doxygen/classllvm_1_1Instruction.html">Instruction</a></h3><p>真的是一堆派生类.</p>
+<p>To represent a specific type of instruction, one of many subclasses of <code>Instruction</code> are used. 真的非常多, 比如说二元运算符和UnaryInstruction(又分成UnaryOperator和LoadInstruction之类的).</p>
+<p>继承图: Value&lt;-User&lt;-Instruction</p>
+<h3 id="Constant"><a href="#Constant" class="headerlink" title="Constant"></a>Constant</h3><h3 id="Function"><a href="#Function" class="headerlink" title="Function"></a><a target="_blank" rel="noopener" href="https://llvm.org/docs/ProgrammersManual.html#the-function-class">Function</a></h3><img src="../../image/CSCD70/image-20220315185203276.png" srcset="/img/loading.gif" lazyload alt="image-20220315185203276" style="zoom:67%;" />
+
+<h3 id="BB"><a href="#BB" class="headerlink" title="BB"></a><a target="_blank" rel="noopener" href="https://llvm.org/docs/ProgrammersManual.html#the-basicblock-class">BB</a></h3><p>没啥好说的. 查就完事了.</p>
+<h3 id="Type"><a href="#Type" class="headerlink" title="Type"></a>Type</h3><p>Every <code>Value</code> has a <code>Type</code>. 有一个<code>SubClassData</code>可以在派生类中存储数据, 使用<code>Type class</code>中的<code>set~()</code>即可设置.</p>
+<p>有一个我查了挺久的问题: Function和FunctionType有什么区别?</p>
+<ul>
+<li>The <code>Function</code> class keeps track of a <strong>list</strong> of <a target="_blank" rel="noopener" href="https://llvm.org/docs/ProgrammersManual.html#basicblock">BasicBlock</a>s, a <strong>list</strong> of formal <a target="_blank" rel="noopener" href="https://llvm.org/docs/ProgrammersManual.html#argument">Argument</a>s, and a <a target="_blank" rel="noopener" href="https://llvm.org/docs/ProgrammersManual.html#symboltable">SymbolTable</a>.<br>有像getArgumentList这样的函数. 基本都是存储一个list的信息.</li>
+<li>而FunctionType的功能就像下面所展示的那样, 存储着编程层面上一个函数的基本信息. </li>
+</ul>
+<blockquote>
+<p>**FunctionType: ** </p>
+<p>Subclass of DerivedTypes for function types.</p>
+<ul>
+<li><code>bool isVarArg() const</code>: Returns true if it’s a vararg function.</li>
+<li><code>const Type * getReturnType() const</code>: Returns the return type of the function.</li>
+<li><code>const Type * getParamType (unsigned i)</code>: Returns the type of the ith parameter.</li>
+<li><code>const unsigned getNumParams() const</code>: Returns the number of formal parameters.</li>
+</ul>
+</blockquote>
+<img src="../../image/CSCD70/image-20220315183948503.png" srcset="/img/loading.gif" lazyload alt="image-20220315183948503" style="zoom:67%;" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             </div>
             <hr>
@@ -322,7 +416,7 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022-01/pwn-modules/">
+                      <a href="/2022-01/Now-pwn-modules/">
                         <span class="hidden-mobile">pwn.college各modules的一点笔记</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -348,7 +442,7 @@
         var options = Object.assign(
           {"clientID":"312db7ebbc085de5d28d","clientSecret":"85ea3cefd13c73a6d85c1813adfde4f1550bfbda","repo":"yogdzewa.github.io","owner":"yogdzewa","admin":["yogdzewa"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: '72e8bff60da7d1c89b2c1121b3172d9e'
+            id: 'a7de983752cd9a2d0217a0ae4edadd03'
           }
         )
         var gitalk = new Gitalk(options);
