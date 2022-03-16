@@ -18,7 +18,7 @@
   
     <meta name="description" content="llvm实现中间代码优化">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CSCD70">
+<meta property="og:title" content="CSCD70 &amp;&amp; LLVM">
 <meta property="og:url" content="https://yogdzewa.github.io/2022-03/Now-CSCD70/index.html">
 <meta property="og:site_name" content="Yogdzewa">
 <meta property="og:description" content="llvm实现中间代码优化">
@@ -27,14 +27,14 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/CSCD70/image-20220315185203276.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/CSCD70/image-20220315183948503.png">
 <meta property="article:published_time" content="2022-03-08T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-03-15T12:17:01.640Z">
+<meta property="article:modified_time" content="2022-03-16T04:28:25.894Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="complier">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://yogdzewa.github.io/image/CSCD70/image-20220315181757882.png">
   
   
-  <title>CSCD70 - Yogdzewa</title>
+  <title>CSCD70 &amp;&amp; LLVM - Yogdzewa</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -192,7 +192,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="CSCD70">
+            <span class="h2" id="subtitle" title="CSCD70 &amp;&amp; LLVM">
               
             </span>
 
@@ -213,7 +213,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      3.5k 字
+      3.8k 字
     </span>
   
 
@@ -222,7 +222,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      45 分钟
+      48 分钟
     </span>
   
 
@@ -259,11 +259,11 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">CSCD70</h1>
+            <h1 style="display: none">CSCD70 &amp;&amp; LLVM</h1>
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年3月15日 晚上
+                  不可视境界线最后变动于：2022年3月16日 中午
                 
               </p>
             
@@ -298,21 +298,25 @@
 <p>有一些getType, getValue, use_list_iterator之类的成员函数.</p>
 <img src="../../image/CSCD70/image-20220315181757882.png" srcset="/img/loading.gif" lazyload alt="image-20220315181757882" style="zoom: 80%;" />
 
-<h3 id="User"><a href="#User" class="headerlink" title="User"></a>User</h3><p>It exposes a list of “Operands” that are all of the <code>Value</code>s that the User is referring to.</p>
+<h3 id="BB"><a href="#BB" class="headerlink" title="BB"></a><a target="_blank" rel="noopener" href="https://llvm.org/docs/ProgrammersManual.html#the-basicblock-class">BB</a></h3><p>没啥好说的. 查就完事了.</p>
+<h3 id="User"><a href="#User" class="headerlink" title="User!!!"></a>User!!!</h3><p>It exposes a list of “Operands” that are all of the <code>Value</code>s that the User is referring to.</p>
 <p>Because LLVM uses <strong>Static Single Assignment (SSA)</strong> form, there can only be one definition referred to, allowing this direct connection. This connection provides the use-def information in LLVM. 真巧, 因为采用了SSA所以实现了一一对应的指针.</p>
 <p>有一些<code>getOperand</code>, <code>getNumOperands</code>之类的函数(显而易见了). 像这种的都会有迭代器.</p>
 <p>派生类包括==Constant, Instruction, Operator==之类的(图片过长).</p>
+<p>几个重要的问题: User为什么继承于Value? User和Use有什么关系?</p>
+<ul>
+<li>第一个问题, 比如说Instruction class(假设是<code>%add1 : x = y + z</code>), 既有value的definition(x), 也有use(y和z). </li>
+</ul>
 <h3 id="Instruction"><a href="#Instruction" class="headerlink" title="Instruction"></a><a target="_blank" rel="noopener" href="https://llvm.org/doxygen/classllvm_1_1Instruction.html">Instruction</a></h3><p>真的是一堆派生类.</p>
 <p>To represent a specific type of instruction, one of many subclasses of <code>Instruction</code> are used. 真的非常多, 比如说二元运算符和UnaryInstruction(又分成UnaryOperator和LoadInstruction之类的).</p>
 <p>继承图: Value&lt;-User&lt;-Instruction</p>
 <h3 id="Constant"><a href="#Constant" class="headerlink" title="Constant"></a>Constant</h3><h3 id="Function"><a href="#Function" class="headerlink" title="Function"></a><a target="_blank" rel="noopener" href="https://llvm.org/docs/ProgrammersManual.html#the-function-class">Function</a></h3><img src="../../image/CSCD70/image-20220315185203276.png" srcset="/img/loading.gif" lazyload alt="image-20220315185203276" style="zoom:67%;" />
 
-<h3 id="BB"><a href="#BB" class="headerlink" title="BB"></a><a target="_blank" rel="noopener" href="https://llvm.org/docs/ProgrammersManual.html#the-basicblock-class">BB</a></h3><p>没啥好说的. 查就完事了.</p>
 <h3 id="Type"><a href="#Type" class="headerlink" title="Type"></a>Type</h3><p>Every <code>Value</code> has a <code>Type</code>. 有一个<code>SubClassData</code>可以在派生类中存储数据, 使用<code>Type class</code>中的<code>set~()</code>即可设置.</p>
 <p>有一个我查了挺久的问题: Function和FunctionType有什么区别?</p>
 <ul>
 <li>The <code>Function</code> class keeps track of a <strong>list</strong> of <a target="_blank" rel="noopener" href="https://llvm.org/docs/ProgrammersManual.html#basicblock">BasicBlock</a>s, a <strong>list</strong> of formal <a target="_blank" rel="noopener" href="https://llvm.org/docs/ProgrammersManual.html#argument">Argument</a>s, and a <a target="_blank" rel="noopener" href="https://llvm.org/docs/ProgrammersManual.html#symboltable">SymbolTable</a>.<br>有像getArgumentList这样的函数. 基本都是存储一个list的信息.</li>
-<li>而FunctionType的功能就像下面所展示的那样, 存储着编程层面上一个函数的基本信息. </li>
+<li>而FunctionType的功能就像下面所展示的那样, 存储着编程层面上/一个函数的基本信息. </li>
 </ul>
 <blockquote>
 <p>**FunctionType: ** </p>
@@ -326,64 +330,15 @@
 </blockquote>
 <img src="../../image/CSCD70/image-20220315183948503.png" srcset="/img/loading.gif" lazyload alt="image-20220315183948503" style="zoom:67%;" />
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<h1 id="Optimization"><a href="#Optimization" class="headerlink" title="Optimization"></a>Optimization</h1><blockquote>
+<p>肖佬博客<a target="_blank" rel="noopener" href="https://kiprey.github.io/2020/06/LLVM-IR-pass/#4-%E5%9F%BA%E6%9C%AC%E5%9D%97%E7%9A%84%E4%BC%98%E5%8C%96">在此</a>, 即基本概念+LLVM实例.</p>
+</blockquote>
+<h2 id="Dataflow"><a href="#Dataflow" class="headerlink" title="Dataflow"></a>Dataflow</h2><ul>
+<li>到达-定值分析（Reaching-Definition Analysis)</li>
+<li>活跃变量分析（Live-Variable Analysis)</li>
+<li>可用表达式分析（Available-Exprssion Analysis）</li>
+<li>SSA ( static single assignment )</li>
+</ul>
 
             </div>
             <hr>
