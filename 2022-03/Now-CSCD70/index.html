@@ -24,10 +24,11 @@
 <meta property="og:description" content="llvm实现中间代码优化">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yogdzewa.github.io/image/CSCD70/image-20220315181757882.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/CSCD70/image-20220317122408594.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/CSCD70/image-20220315185203276.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/CSCD70/image-20220315183948503.png">
 <meta property="article:published_time" content="2022-03-08T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-03-17T03:38:53.176Z">
+<meta property="article:modified_time" content="2022-03-17T04:24:16.963Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="complier">
 <meta name="twitter:card" content="summary_large_image">
@@ -325,6 +326,8 @@
 
 <h3 id="Constant"><a href="#Constant" class="headerlink" title="Constant"></a>Constant</h3><p>Constant represents a base class for different types of constants.</p>
 <p>It is subclassed by <strong>ConstantInt</strong>, <strong>ConstantArray</strong>, etc. for representing the various types of Constants. </p>
+<img src="../../image/CSCD70/image-20220317122408594.png" srcset="/img/loading.gif" lazyload alt="image-20220317122408594" style="zoom:67%;" />
+
 <h3 id="Function"><a href="#Function" class="headerlink" title="Function"></a><a target="_blank" rel="noopener" href="https://llvm.org/docs/ProgrammersManual.html#the-function-class">Function</a></h3><img src="../../image/CSCD70/image-20220315185203276.png" srcset="/img/loading.gif" lazyload alt="image-20220315185203276" style="zoom:67%;" />
 
 <h3 id="Type"><a href="#Type" class="headerlink" title="Type"></a>Type</h3><p>Every <code>Value</code> has a <code>Type</code>. 有一个<code>SubClassData</code>可以在派生类中存储数据, 使用<code>Type class</code>中的<code>set~()</code>即可设置.</p>
