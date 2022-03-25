@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220117165401525.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/photo_2018-01-13_11-28-32.jpg">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-03-23T08:38:55.268Z">
+<meta property="article:modified_time" content="2022-03-24T16:34:33.528Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -212,7 +212,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      30k 字
+      31k 字
     </span>
   
 
@@ -221,7 +221,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      381 分钟
+      383 分钟
     </span>
   
 
@@ -262,7 +262,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年3月23日 下午
+                  不可视境界线最后变动于：2022年3月25日 凌晨
                 
               </p>
             
@@ -946,6 +946,12 @@
 <p>而且第一次只有0x12(18)字节的汇编字节可以输入. 后面的字节使用了 <code>mprotect(shellcode_mem, 4096, PROT_READ|PROT_EXEC)</code>来限制再次write.</p>
 </blockquote>
 <p>emmmmmm……….</p>
+<p>tips:</p>
+<blockquote>
+<p>In fact these are a lot of bytes. Try different <strong>sys calls</strong>. There are other ways to read a flag as well</p>
+<p>Search for a syscall that takes minimal argument so as to decrease size</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://man7.org/linux/man-pages/man2/syscalls.2.html">syscalls man7</a> <a target="_blank" rel="noopener" href="https://linuxhint.com/list_of_linux_syscalls/">List of Linux Syscalls</a> <a target="_blank" rel="noopener" href="https://chromium.googlesource.com/chromiumos/docs/+/master/constants/syscalls.md#x86_64-64_bit">googlesource</a> </p>
 <p>13.同上, 而且变成0xc字节</p>
 <h2 id="9-被动修改"><a href="#9-被动修改" class="headerlink" title="9.被动修改"></a>9.被动修改</h2><blockquote>
 <p>This challenge modified your shellcode by overwriting every other 10 bytes with 0xcc. 0xcc, when interpreted as an<br>instruction is an <code>INT 3</code>, which is an interrupt to call into the debugger. You must avoid these modifications in your<br>shellcode.</p>
