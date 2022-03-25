@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220117165401525.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/photo_2018-01-13_11-28-32.jpg">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-03-24T16:34:33.528Z">
+<meta property="article:modified_time" content="2022-03-25T04:53:45.503Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -221,7 +221,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      383 分钟
+      384 分钟
     </span>
   
 
@@ -262,7 +262,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年3月25日 凌晨
+                  不可视境界线最后变动于：2022年3月25日 下午
                 
               </p>
             
@@ -270,8 +270,8 @@
               <h1 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h1><ul>
 <li><p>连接</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">ssh -i ~/pwn.college/pwnkey hacker@dojo.pwn.college <br></code></pre></div></td></tr></table></figure></li>
-<li><p>传文件到dojo</p>
-<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">scp -i ~/pwn.college/pwnkey [文件] hacker@dojo.pwn.college:<br></code></pre></div></td></tr></table></figure></li>
+<li><p>传文件到dojo或拉取</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">scp -i ~/pwn.college/pwnkey [文件] hacker@dojo.pwn.college:<br>scp -i ~/pwn.college/pwnkey hacker@dojo.pwn.college:[文件] ./ <br></code></pre></div></td></tr></table></figure></li>
 </ul>
 <h1 id="module-1"><a href="#module-1" class="headerlink" title="module 1"></a>module 1</h1><h2 id="The-file-system"><a href="#The-file-system" class="headerlink" title="The file system"></a>The file system</h2><p><img src="../../image/pwn-modules/image-20220117165401525.png" srcset="/img/loading.gif" lazyload alt="image-20220117165401525"></p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">ln -s /old/path /new/path<br>&lt;in_file:      redirect in_file into the command&#x27;s input<br><span class="hljs-meta">&gt;</span><span class="bash">out_file:     redirect the <span class="hljs-built_in">command</span><span class="hljs-string">&#x27;s output into out_file, overwriting it</span></span><br><span class="hljs-meta">&gt;</span><span class="bash"><span class="hljs-string">&gt;out_file:    redirect the command&#x27;</span>s output into out_file, appending to it</span><br><span class="hljs-meta">2&gt;</span><span class="bash">error_file:  redirect the <span class="hljs-built_in">command</span><span class="hljs-string">&#x27;s errors into error_file, overwriting it</span></span><br><span class="hljs-meta">2&gt;</span><span class="bash"><span class="hljs-string">&gt;error_file: redirect the command&#x27;</span>s errors into error_file, appending to it</span><br></code></pre></div></td></tr></table></figure>
