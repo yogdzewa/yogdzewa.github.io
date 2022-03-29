@@ -24,7 +24,7 @@
 <meta property="og:description" content="IDA整出来的汇编伪指令看不下去了!!">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-08-09T02:07:00.000Z">
-<meta property="article:modified_time" content="2022-03-27T15:10:20.583Z">
+<meta property="article:modified_time" content="2022-03-29T11:16:17.396Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="programming_language">
 <meta name="twitter:card" content="summary_large_image">
@@ -259,7 +259,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年3月27日 晚上
+                  不可视境界线最后变动于：2022年3月29日 晚上
                 
               </p>
             
@@ -373,7 +373,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs asm">list BYTE 10,20,30,40<br>#甚至可以:<br>list BYTE 10,20,30,40<br>     BYTE 50,60,70,80<br>     BYTE 81,82,83,84<br></code></pre></div></td></tr></table></figure>
 
 <ul>
-<li> 定义字符串: 使用BYTE, </li>
+<li>定义字符串: 使用BYTE, </li>
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs asm">greeting1 BYTE &quot;Good afternoon&quot;,0<br>#也可以<br>greeting1 BYTE &quot;Welcome to the Encryption Demo program &quot;<br>          BYTE &quot;created by Kip Irvine.&quot;,0dh, 0ah<br>#还可以使用backslash分行<br></code></pre></div></td></tr></table></figure>
 
@@ -399,9 +399,9 @@
 <li><p>让汇编器计算数组长度: </p>
 <figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs asm">list BYTE 10,20,30,40<br>ListSize = ($ - list) # 注意此时计算出来的是地址的差值, 所以单位是字节, 如果遇到WORD要注<br></code></pre></div></td></tr></table></figure></li>
 <li><p>EQU伪指令, 无法多次定义</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs asm">name EQU expression	#必须是整数表达式<br>name EQU symbol		#任意一个用EQU或=定义过的符号<br>name EQU &lt;text&gt;		#直接文本替换, 最像#define, 也可用来定义实数<br></code></pre></div></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs asm">name EQU expression    #必须是整数表达式<br>name EQU symbol        #任意一个用EQU或=定义过的符号<br>name EQU &lt;text&gt;        #直接文本替换, 最像#define, 也可用来定义实数<br></code></pre></div></td></tr></table></figure></li>
 <li><p>TEXTEQU 文本宏伪指令, </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs asm">name TEXTEQU &lt;text&gt;			# 就是文本<br>name TEXTEQU textmacro		# 前面的文本宏<br>name TEXTEQU %constExpr		# 整数表达式<br></code></pre></div></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs asm">name TEXTEQU &lt;text&gt;            # 就是文本<br>name TEXTEQU textmacro        # 前面的文本宏<br>name TEXTEQU %constExpr        # 整数表达式<br></code></pre></div></td></tr></table></figure></li>
 </ul>
 <h3 id="相关指令"><a href="#相关指令" class="headerlink" title="相关指令"></a>相关指令</h3><p>操作数有 3 种基本类型：</p>
 <ul>

