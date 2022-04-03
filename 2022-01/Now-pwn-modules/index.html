@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220117165401525.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/photo_2018-01-13_11-28-32.jpg">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-03-31T02:17:13.624Z">
+<meta property="article:modified_time" content="2022-04-02T07:39:55.195Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -212,7 +212,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      32k 字
+      33k 字
     </span>
   
 
@@ -221,7 +221,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      397 分钟
+      415 分钟
     </span>
   
 
@@ -262,7 +262,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年3月31日 上午
+                  不可视境界线最后变动于：2022年4月2日 下午
                 
               </p>
             
@@ -977,10 +977,51 @@
 
 <p>出乎意料的简单, 只要把第二个xor改成lea指令去清空edx就可以了. 一开始改的mov还不行.</p>
 <h2 id="14-只读6个字节"><a href="#14-只读6个字节" class="headerlink" title="14.只读6个字节"></a>14.只读6个字节</h2><blockquote>
-<p>好像只能2-stage shellcode</p>
+<p>好像只能2-stage shellcode, emmmmmmmm…….</p>
 </blockquote>
 <figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><br></code></pre></div></td></tr></table></figure>
 
+<h1 id="module-5"><a href="#module-5" class="headerlink" title="module 5"></a>module 5</h1><ul>
+<li><p>chroot(“/tmp/jail”)</p>
+<ul>
+<li><p>chroot(“/tmp/jail”) does NOT:</p>
+<p>Close resources that reside outside of the jail.<br>cd (chdir()) into the jail.<br>Do anything else!</p>
+</li>
+<li><p>you can use open<strong>at</strong> and execve<strong>at</strong>: <code>int openat(**int dirfd**, char *pathname, int flags);</code></p>
+<p>这两个函数的path如果是绝对路径, 那么dirfd就会被忽略;<br>如果path是相对路径, 而且dirfd是合法的, 那么path所引用的就是dirfd所表示的路径.</p>
+</li>
+<li><p>如果再次chroot会发生什么? kernel对此是完全不知情的.</p>
+</li>
+<li><p>Generally, a user with an effective ID of 0 (i.e., a process run as root or SUIDed to root) can <em><strong>always</strong></em> break out of a chroot, unless the chroot syscall is blocked!</p>
+</li>
+<li><p>Also missing other forms of isolation: <strong>PID, network, IPC</strong> </p>
+</li>
+<li><p>Replacements: <strong>cgroups, namespaces, seccomp</strong> </p>
+</li>
+</ul>
+</li>
+<li><p>seccomp: </p>
+<ul>
+<li><code>gcc -o test test.c -lseccomp</code> <code>seccomp-tools dump ./test</code> </li>
+<li>原理是eBPF, seccomp就是使用的eBPF来实现的, 还可以用来实现一系列system trace <a target="_blank" rel="noopener" href="https://github.com/iovisor/bcc">tools</a> </li>
+</ul>
+</li>
+<li><p>break out seccomp: Generally, to do anything useful, a sandboxed process needs to be able to communicate with the privileged process. 有两点可能, 第一是syscall很多, 有些可能可以被利用, 第二是开发者可能为了不破坏功能而在权限方面犯错误.</p>
+<ul>
+<li><strong>permissive policies</strong>: ptrace() sendmsg() prctl() process_vm_writev()</li>
+<li><strong>syscall confusion:</strong> on some systems, you can switch between 32-bit mode with 64-bit mode <em>in the same process</em>, and the syscall numbers are different between architectures. 比如说系统调用分别是<code>int 0x80 and syscall</code>(<code>\xcd\x80 and \x0f\x05</code>), 系统调用号也不同.</li>
+<li><strong>kernel vulnerabilities</strong> in the syscall handlers: Over 30 chrome sandbox escapes in 2019 <a target="_blank" rel="noopener" href="https://github.com/allpaca/chrome-sbx-db">link</a> </li>
+<li>data exfiltration: such as sleep(), exit(), normal or crash. Or use DNS queries to bypass network egress filters.</li>
+</ul>
+</li>
+</ul>
+<h2 id="WP-2"><a href="#WP-2" class="headerlink" title="WP:"></a>WP:</h2><blockquote>
+<p>Redirections很重要. <a target="_blank" rel="noopener" href="https://www.gnu.org/software/bash/manual/html_node/Redirections.html">link</a> </p>
+</blockquote>
+<h3 id="1-exemplify"><a href="#1-exemplify" class="headerlink" title="1.exemplify"></a>1.exemplify</h3><p>相当简单, 直接利用程序中chroot后没有切换到jail里面的特点, 更改cwd为真正的根目录, 第一个参数填写为flag, 最后open的时候由于flag是相对地址, 会以真正的根目录作为基准来定位true flag.</p>
+<h3 id="2"><a href="#2" class="headerlink" title="2."></a>2.</h3><blockquote>
+<p>第一个参数不能含有flag字符串, 是为了禁止直接打开flag文件. 在这个challenge中还可以注入shellcode, </p>
+</blockquote>
 
             </div>
             <hr>
