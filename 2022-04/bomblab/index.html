@@ -28,8 +28,19 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/bomblab/image-20220407223508319.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/bomblab/image-20220407230203129.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/bomblab/image-20220407234209172.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/bomblab/image-20220408110655913.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/bomblab/image-20220408141431553.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/bomblab/image-20220408162001671.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/bomblab/image-20220408160714783.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/bomblab/image-20220408172414134.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/bomblab/image-20220408185638322.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/bomblab/image-20220408210707142.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/bomblab/image-20220408211006097.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/bomblab/image-20220408212043397.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/bomblab/image-20220408214819710.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/bomblab/image-20220408220808673.png">
 <meta property="article:published_time" content="2022-04-07T13:05:48.979Z">
-<meta property="article:modified_time" content="2022-04-07T15:58:52.930Z">
+<meta property="article:modified_time" content="2022-04-09T02:43:09.275Z">
 <meta property="article:author" content="Yogdzewa">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://yogdzewa.github.io/image/bomblab/image-20220407211011229.png">
@@ -214,7 +225,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.8k 字
+      3.9k 字
     </span>
   
 
@@ -223,7 +234,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      23 分钟
+      50 分钟
     </span>
   
 
@@ -264,7 +275,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年4月7日 晚上
+                  不可视境界线最后变动于：2022年4月9日 上午
                 
               </p>
             
@@ -293,7 +304,7 @@
 <p><img src="../../image/bomblab/image-20220407214048071.png" srcset="/img/loading.gif" lazyload alt="image-20220407214048071"></p>
 <p>输入改成六个之后, 继续查看.</p>
 <p>第一个数字必须是1. 然后是一些跳转, 经过转换成类c代码就是:</p>
-<figure class="highlight apache"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs apache">	<span class="hljs-attribute">left</span> = <span class="hljs-number">2</span><br>	<span class="hljs-attribute">end</span> = <span class="hljs-number">6</span><br><span class="hljs-attribute">L1</span>: <br>	<span class="hljs-attribute">tmp</span> = v[left-<span class="hljs-number">1</span>]<br>	<span class="hljs-attribute">tmp</span> = tmp * <span class="hljs-number">2</span><br>	<span class="hljs-attribute">if</span> v[left] != tmp then bomb<br>	<span class="hljs-attribute">left</span> += <span class="hljs-number">1</span><br>	<span class="hljs-attribute">if</span> left != <span class="hljs-number">6</span> then jmp L<span class="hljs-number">1</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">	left = <span class="hljs-number">2</span><br>	end = <span class="hljs-number">6</span><br>L1: <br>	tmp = v[left<span class="hljs-number">-1</span>]<br>	tmp = tmp * <span class="hljs-number">2</span><br>	<span class="hljs-keyword">if</span> v[left] != tmp then bomb<br>	left += <span class="hljs-number">1</span><br>	<span class="hljs-keyword">if</span> left != <span class="hljs-number">6</span> then jmp L1<br></code></pre></div></td></tr></table></figure>
 
 <p>转换成高级语言的形式就比较容易看出其中的逻辑, 也就是在第二个到第六个数字中每个数字必须是前一个数字的两倍, 也就是公比为2的等比数列. 换成1 2 4 8 16 32即可通过.</p>
 <h2 id="phase-3"><a href="#phase-3" class="headerlink" title="phase_3"></a>phase_3</h2><p>这一关直接查看汇编码, 容易看出有一个一个switch跳转表.</p>
@@ -305,10 +316,11 @@
 
 <p>然后会判断v2是不是result的值. 否则爆炸.</p>
 <p>答案显而易见, 选取第一种: 0 331即可.</p>
-<h3 id="phase-4"><a href="#phase-4" class="headerlink" title="phase_4"></a>phase_4</h3><p>sscanf仍然是四个参数, 只要两个数字, 也必须是两个数字. 参数仍然从0x18开始. 叫做v1 v2吧</p>
+<h2 id="phase-4"><a href="#phase-4" class="headerlink" title="phase_4"></a>phase_4</h2><p>sscanf仍然是四个参数, 至少是两个数字, 多的会被舍弃. 参数仍然从0x18开始. 叫做v1 v2吧</p>
 <p>没有往回跳转的jmp, 所以直接看顺序的流程即可.</p>
 <p>v1要小于等于0xe, 然后调用<code>func4(v1, 0, 0xe)</code>,  并判断其返回值是否等于7, 然后第二个参数也要为7.</p>
-<p><img src="../../image/bomblab/image-20220407230203129.png" srcset="/img/loading.gif" lazyload alt="image-20220407230203129"></p>
+<img src="../../image/bomblab/image-20220407230203129.png" srcset="/img/loading.gif" lazyload alt="image-20220407230203129" style="zoom:80%;" />
+
 <p>然后再看func4, 本身是一个递归调用的函数. 对应c代码如下:</p>
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">func4</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a1, <span class="hljs-keyword">int</span> a2, <span class="hljs-keyword">int</span> a3)</span></span><br><span class="hljs-function"></span>&#123;<br>  <span class="hljs-keyword">int</span> v3; <span class="hljs-comment">// ecx</span><br>  <span class="hljs-keyword">int</span> result; <span class="hljs-comment">// eax</span><br><br>  v3 = a2 + (a3 - a2) / <span class="hljs-number">2</span>;<br>  <span class="hljs-keyword">if</span> ( v3 &gt; a1 )<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">2</span> * func4(a1, a2, v3 - <span class="hljs-number">1</span>);<br>  result = <span class="hljs-number">0</span>;<br>  <span class="hljs-keyword">if</span> ( v3 &lt; a1 )<br>    result = <span class="hljs-number">2</span> * func4(a1, v3 + <span class="hljs-number">1</span>, a3) + <span class="hljs-number">1</span>;<br>  <span class="hljs-keyword">return</span> result;<br>&#125;<br></code></pre></div></td></tr></table></figure>
 
@@ -323,8 +335,65 @@
 <li><p>待6次循环结束后，将选出的字符串与字符串<code>&quot;sabres&quot;</code>相比较，如果相同，则通过当前关卡</p>
 </li>
 </ol>
-<p>故根据上面的信息可得，<code>phases_5</code>:  <code>GAMFEG</code>（答案不为一）</p>
-<h2 id="phase-6"><a href="#phase-6" class="headerlink" title="phase_6"></a>phase_6</h2>
+<p>然后man ascii查询hex表示的最低位, 也就是查看第四位.</p>
+<p>故根据上面的信息可得，<code>phases_5</code>:  <code>GAMFEG</code>（答案不唯一）</p>
+<h2 id="phase-6"><a href="#phase-6" class="headerlink" title="phase_6"></a>phase_6</h2><p>输入的6个数字从esp+0x10开始.</p>
+<ul>
+<li><p>第一部分是一个嵌套循环。</p>
+<img src="../../image/bomblab/image-20220408110655913.png" srcset="/img/loading.gif" lazyload alt="image-20220408110655913" style="zoom:90%;" /></li>
+<li><p>为便于理解，将该嵌套循环的汇编代码翻译为如下类C代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">	<span class="hljs-keyword">int</span> num[<span class="hljs-number">6</span>]<br>	<span class="hljs-keyword">int</span> pos1 = <span class="hljs-number">0</span><br><span class="hljs-keyword">do</span>&#123;<br>	tmp = num[pos1]<br>	tmp - <span class="hljs-number">1</span> MUST &lt;= <span class="hljs-number">5</span><br><br>	pos1 += <span class="hljs-number">1</span><br>	<span class="hljs-keyword">if</span>(pos1 == <span class="hljs-number">6</span>) <span class="hljs-keyword">break</span><br>	<span class="hljs-keyword">int</span> pos2 = pos1<br>	<span class="hljs-keyword">do</span>&#123;<br>		<span class="hljs-keyword">if</span>(num[pos1<span class="hljs-number">-1</span>] == num[pos2]) bommmb<br>		pos2 += <span class="hljs-number">1</span><br>	&#125;<span class="hljs-keyword">while</span>(pos2 &lt;=<span class="hljs-number">5</span>)<br>&#125;<span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>)<br></code></pre></div></td></tr></table></figure>
+
+<p>这个代码比较简单，因为它实际上就是遍历检测所输入的6个数是否出现重复，如果存在重复则爆炸。同时还将输入的数字限制在了1-6中(注意其中的数字是 <strong>无符号</strong> 整数), 所以问题就在于六个数字的<strong>顺序</strong>.</p>
+</li>
+<li><p>第二部分同样是一个嵌套循环，不是一个顺序结构，将该部分的汇编代码转换为如下的C代码并调整代码顺序后如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">for</span> ( i = <span class="hljs-number">0</span>; i != <span class="hljs-number">6</span>; ++i )<br>&#123;	<span class="hljs-comment">//简单说来就是num[]每个</span><br>    v6 = num[i];<br>    <span class="hljs-keyword">if</span> ( v6 == <span class="hljs-number">1</span> )<br>    &#123;<br>        v4 = &amp;node1;<br>    &#125;<br>    <span class="hljs-keyword">else</span><br>    &#123;<br>        v5 = <span class="hljs-number">1</span>;<br>        v4 = &amp;node1;<br>        <span class="hljs-keyword">do</span><br>        &#123;<br>            v4 = *v4[<span class="hljs-number">2</span>];<br>            ++v5;<br>        &#125;<br>        <span class="hljs-keyword">while</span> ( v5 != v6 );<br>    &#125;<br>    *(&amp;v15 + i) = v4;　<span class="hljs-comment">//v15是栈上一个空间的地址</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>程序遍历之前转换的值，并将其作为索引，来获取链表上特定位置的地址，并将其存入栈中。</p>
+</li>
+<li><p>第三部分还是一个万年不变的循环。</p>
+<img src="../../image/bomblab/image-20220408141431553.png" srcset="/img/loading.gif" lazyload alt="image-20220408141431553" style="zoom:80%;" />
+这个循环会改变原来的链表顺序，并将其设置为栈上链表的顺序。其代码如下</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">	eax = &amp;v[<span class="hljs-number">1</span>]	<span class="hljs-comment">//ptr array</span><br>    link = v[<span class="hljs-number">0</span>]<br>L1:<br>	tmp = v[<span class="hljs-number">1</span>]<br>    link.addr = tmp<br>    eax += <span class="hljs-number">4</span><br>    <span class="hljs-keyword">if</span>(eax == &amp;v[<span class="hljs-number">5</span>]) <span class="hljs-keyword">break</span><br>    link = v[pos]<br>    jmp L1<br><br><span class="hljs-comment">//再简化, 就剩个五行...还是下标而非指针比较像给人看的</span><br>node = <span class="hljs-built_in">list</span>[<span class="hljs-number">0</span>]	<span class="hljs-comment">//ptr array</span><br><span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i=<span class="hljs-number">1</span>; i&lt;=<span class="hljs-number">5</span>; i++)&#123;<br>	node-&gt;addr = <span class="hljs-built_in">list</span>[<span class="hljs-number">1</span>];<br>	node = <span class="hljs-built_in">list</span>[<span class="hljs-number">1</span>];<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li>第五部分是一个校验循环。这个循环会使用新顺序来获取链表上的值并判断其关系，其中链表上的值必须逐级<strong>递增</strong>，否则炸弹爆炸。</li>
+<li>其中ebx是<code>&amp;list[i]</code>, eax是下一个元素的第一个整数元素.<img src="../../image/bomblab/image-20220408162001671.png" srcset="/img/loading.gif" lazyload alt="image-20220408162001671" style="zoom:80%;" /></li>
+<li>由于链表上的值顺序为 <strong>node3 &gt; node4 &gt; node6 &gt; node2 &gt; node1 &gt; node5</strong> </li>
+</ul>
+<img src="../../image/bomblab/image-20220408160714783.png" srcset="/img/loading.gif" lazyload alt="image-20220408160714783" style="zoom: 80%;" />
+
+<p>  故我们最后终于可以得出<code>phases6</code>: <code>5 1 2 6 4 3</code> </p>
+<h2 id="secret-phase"><a href="#secret-phase" class="headerlink" title="secret_phase"></a>secret_phase</h2><p>查看函数表会发现有个secret_phase!, 可是在main函数中并没有直接调用. 发现在phase_defuse中有调用, 第一个调用条件就是<code>num_input_strings == 6</code>. 这个在每个<code>read_line()</code>函数中都有用到, 每次读取一行就会加一, 每行占据80字节.</p>
+<p>再查看sscanf参数, 发现读取字符串是read_line读取到的空间中第四个区域, 也就是phase_4的空间中.</p>
+<p>回想一下phase_4, sscanf只会识别前两个数字, 也就是phase_4的答案, 这一行中第三部分写成<code>DrEvil</code>就会在执行完phase_6之后(num_input_strings==6)满足第二个条件, 从而进入到secret_phase中.</p>
+<img src="../../image/bomblab/image-20220408172414134.png" srcset="/img/loading.gif" lazyload alt="image-20220408172414134" style="zoom:80%;" />
+
+<p>当然, 直接使用gdb也可以快速的找到这一点. 直接在phase_6结束后在sscanf下断点, 就能发现第一个参数是第四关输入字符串的地址.</p>
+<img src="../../image/bomblab/image-20220408185638322.png" srcset="/img/loading.gif" lazyload alt="image-20220408185638322" style="zoom:80%;" />
+
+<p>进入secre_phase.</p>
+<p>使用read_line读取一行, 然后_strtol转换成数字, 要小于3E9. 再调用fun7(n1, num), 其中n1是一个未知结构体, 存着一个数字两个指针, 大小12字节, num是输入的数字. 函数返回值必须为零.</p>
+<img src="../../image/bomblab/image-20220408210707142.png" srcset="/img/loading.gif" lazyload alt="image-20220408210707142" style="zoom:80%;" />
+
+<p><img src="../../image/bomblab/image-20220408211006097.png" srcset="/img/loading.gif" lazyload alt="image-20220408211006097"></p>
+<p>再看func7, 能想到这是一个数的node, 毕竟一个数据然后左右指针指向子树, 函数中还有递归调用, 所以看起来就是检查树节点的数值特征.</p>
+<img src="../../image/bomblab/image-20220408212043397.png" srcset="/img/loading.gif" lazyload alt="image-20220408212043397" style="zoom:80%;" />
+
+<p>伪代码如下:</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">fun7</span><span class="hljs-params">(tree_node* a1, <span class="hljs-keyword">int</span> a2)</span></span><br><span class="hljs-function"></span>&#123;<br>  <span class="hljs-keyword">if</span> ( a1 == <span class="hljs-literal">NULL</span> )<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>  <span class="hljs-keyword">if</span> ( a1-&gt;value &gt; a2 )<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">2</span> * fun7(a1-&gt;left, a2);<br>  <span class="hljs-keyword">if</span> ( a1-&gt;value &lt; a2 )<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">2</span> * fun7(a1-&gt;right, a2) + <span class="hljs-number">1</span>;<br>  <span class="hljs-keyword">if</span> ( a1-&gt;value == a2 ) <br>  	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>查看树的所有node(画这么多个好像没啥用……):</p>
+<img src="../../image/bomblab/image-20220408214819710.png" srcset="/img/loading.gif" lazyload alt="image-20220408214819710" style="zoom:80%;" />
+
+<p>输入的数字不会改变, 一直用在比较之中, 重点就在怎么凑出一个0. 最简单的, 直接等于0x24.</p>
+<p>所以, 输入1或者0x24结束本次实验.</p>
+<p><img src="../../image/bomblab/image-20220408220808673.png" srcset="/img/loading.gif" lazyload alt="image-20220408220808673"></p>
+<p>答案: </p>
+<figure class="highlight apache"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">All</span> your base are belong to us.<br><span class="hljs-attribute">1</span> <span class="hljs-number">2</span> <span class="hljs-number">4</span> <span class="hljs-number">8</span> <span class="hljs-number">16</span> <span class="hljs-number">32</span><br><span class="hljs-attribute">0</span> <span class="hljs-number">331</span><br><span class="hljs-attribute">14</span> <span class="hljs-number">7</span> DrEvil<br><span class="hljs-attribute">GAMFEG</span><br><span class="hljs-attribute">5</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">6</span> <span class="hljs-number">4</span> <span class="hljs-number">3</span><br><span class="hljs-attribute">1</span><br>                                <br></code></pre></div></td></tr></table></figure>
+
+
             </div>
             <hr>
             <div>
@@ -333,23 +402,6 @@
                 
               </div>
               
-              
-                <div class="post-prevnext">
-                  <article class="post-prev col-6">
-                    
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/2022-03/Now-CSCD70/">
-                        <span class="hidden-mobile">CSCD70 && LLVM</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
               
             </div>
 

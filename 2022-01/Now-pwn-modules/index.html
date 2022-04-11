@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220117165401525.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/photo_2018-01-13_11-28-32.jpg">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-04-07T13:27:00.570Z">
+<meta property="article:modified_time" content="2022-04-10T12:50:37.222Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -212,7 +212,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      40k 字
+      43k 字
     </span>
   
 
@@ -221,7 +221,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      503 分钟
+      535 分钟
     </span>
   
 
@@ -262,7 +262,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年4月7日 晚上
+                  不可视境界线最后变动于：2022年4月10日 晚上
                 
               </p>
             
@@ -1083,6 +1083,7 @@
 <p>遇到的几个问题:</p>
 <ul>
 <li>偶然会发生broken tube, 不知原因.</li>
+<li>可以用字符串的format函数. </li>
 <li>在pwn.college机子上timespec结构体两个成员都是<strong>八字节(包括long)</strong> </li>
 <li>被网上抄来的32位程序nasm坑了一把, 现在是64位gas, 基本全改了……….</li>
 <li>setnz是思维导图里看到突然想起来能用的. 以前整得笔记还不错.</li>
@@ -1105,13 +1106,81 @@
 <p>开始gdb refresher!!!!!</p>
 <h1 id="module-6"><a href="#module-6" class="headerlink" title="module 6"></a>module 6</h1><p>GDB时间!</p>
 <ul>
-<li>info有好多东西. 看到一个<code>i proc m(appings)</code>, 不就是我上次用的<code>! cat /proc/pid</code>么.</li>
+<li>info有好多东西. 看到一个<code>i proc m(appings)</code>, 不就是我上次用的<code>! cat /proc/pid/maps</code>么.</li>
 <li> 一份超好看的<a target="_blank" rel="noopener" href="https://www.cs.umd.edu/class/spring2015/cmsc414/downloads/gdb-refcard.pdf">cheatsheet</a>!</li>
 <li>pwndbg的<a target="_blank" rel="noopener" href="https://github.com/pwndbg/pwndbg/blob/dev/FEATURES.md">features</a> </li>
 <li>神奇的教程网站, 视频是文字. <a target="_blank" rel="noopener" href="https://p.ost2.fyi/courses/course-v1:OpenSecurityTraining2+Dbg1012_GDB_1+2021_v1/course/">link</a> </li>
-<li>三种gdb插件–gef(<a target="_blank" rel="noopener" href="https://demo.gef.blah.cat/">demo网站</a>|<a target="_blank" rel="noopener" href="https://gef.readthedocs.io/en/master/">doc</a>), 其他两个装好了.</li>
+<li>三种gdb插件–gef(<a target="_blank" rel="noopener" href="https://demo.gef.blah.cat/">demo网站</a>|<a target="_blank" rel="noopener" href="https://gef.readthedocs.io/en/master/">doc</a>), 其他两个装好了. 还是peda安装简单, 还能整到pwncollege上. 再用一个插件我会混的….</li>
 </ul>
 <p>“Auto-loading safe path” section in the GDB manual.</p>
+<p>前几题都没什么特别的, 就是一个refresher.</p>
+<p>命令行选项: <code>/challenge/e* -x gdbscrip -q</code> </p>
+<h3 id="level4"><a href="#level4" class="headerlink" title="level4"></a>level4</h3><p>居然要重复四次, 直接修改推导变量. 而且没有运行前加上断点会出错….原因待查.</p>
+<h3 id="level5"><a href="#level5" class="headerlink" title="level5"></a>level5</h3><p>开始编写gdb脚本. 没有尝试过的东西, 马上开学.</p>
+<p>查看gdb manual, <code>5.1.7 Breakpoint Command Lists</code>有提到一种特别的写法:</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs jboss-cli">commands [list.<span class="hljs-string">..</span>]<br><span class="hljs-string">...</span> command-list <span class="hljs-string">...</span><br>end<br></code></pre></div></td></tr></table></figure>
+
+<p>Any other command after a command that resumes execution will be ignored. </p>
+<p>Can use <code>silent</code> to disable the printing of usual message when stopping at certain breakpoint. Usefull command for contolled output in <code>23.1.4 Commands for Controlled Output</code>, usually <code>echo, output, and printf</code> </p>
+<p>You can also use breakpoint commands to compensate for one bug and test the other!</p>
+<p><strong>e.g.</strong> </p>
+<figure class="highlight arduino"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs arduino"><span class="hljs-keyword">break</span> foo <span class="hljs-keyword">if</span> x&gt;<span class="hljs-number">0</span><br>commands<br>silent<br>printf <span class="hljs-string">&quot;x is %d\n&quot;</span>,x<br>cont<br>end<br></code></pre></div></td></tr></table></figure>
+
+<p>好家伙, 每次地址都会变, 得换成相对地址. printf *($rbp-0x18)直接失败, 报attemp to dereferecing a generic pointer. 要想dereference指针得确定指针的类型, </p>
+<p>先设断点然后再c(ontinue).</p>
+<figure class="highlight llvm"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs llvm">r                           <br>b *main+<span class="hljs-number">709</span><br>commands<br>    silent<br>    <span class="hljs-keyword">x</span>/gx $rbp<span class="hljs-number">-0</span><span class="hljs-keyword">x</span><span class="hljs-number">18</span><br>    set *(int*)($rbp<span class="hljs-number">-0</span><span class="hljs-keyword">x</span><span class="hljs-number">1</span><span class="hljs-keyword">c</span>)<span class="hljs-operator">=</span><span class="hljs-number">7</span><br>    <span class="hljs-keyword">c</span><br><span class="hljs-keyword">end</span><br><span class="hljs-keyword">c</span><br></code></pre></div></td></tr></table></figure>
+
+<p>真正自己写起来问题怎么这么多……</p>
+<h3 id="level6"><a href="#level6" class="headerlink" title="level6"></a>level6</h3><ul>
+<li><p>全自动scrip. 在手册中的<code>23.1.3 Command Files</code>有介绍一些flow control command. 然后<code>5.1.3 Setting Catchpoints</code>也挺重要.</p>
+</li>
+<li><p>This time, try to write a script that doesn’t require you to ever talk to the program, and instead automatically solves each challenge by correctly <strong>modifying registers / memory.</strong> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.mengyibai.com/p/gdb-print-variables/">GDB: Printing Variables to File</a>, 不太好用, 毕竟是logging文件.</p>
+</li>
+<li><p>使用<code>printf</code>命令来写raw bytes到文件中.</p>
+</li>
+<li><p><code>commands</code>命令可以为断点添加命令.</p>
+</li>
+<li><p><code>ddb</code> – interactive kernel debugger</p>
+</li>
+</ul>
+<p>如果要全自动, 我想到的思路是在read /dev/urandom的时候改成从stdin获取, 然后再gdb中使用<code>r &lt; tmp</code>来重定向. 后面的scanf也是从stdin获取, 这样的话就好办了. 为了测试conditionally perform gdb commands, 就不更改循环变量了.</p>
+<p>历经挫折: </p>
+<ul>
+<li><del>把文件作为输入而且要多次输入, 每次文件指针都会向后移动的…..所以还是改变内存吧……</del>事实证明没有问题, 不过如果只是简单地&gt;=3会导致flag无法打开. 所以加上<code>4&lt;tmp</code>, if条件换成<code>if $rdi &gt;= 3 &amp;&amp; $rdi != 0x44</code>即可. </li>
+<li>这个程序每次都会重新打开/dev/uramdom, 或许是因为新的随机数要重新打开???这样文件指针会大于等于3……</li>
+<li>catch syscall会在syscall之前和之后调用, 所以设置好if语句就行…. (calls to and returns from system calls will be caught.)</li>
+<li>还把==写成=, 绝</li>
+<li>还发现了一个, 第六行按理来说已经跳到别的函数了, 毕竟read也只是glibc的封装, 但没注意到的是<code>__GI___libc_read()</code>这个函数根本没有<code>push rbp</code>,  <strong>所以当前栈帧没有变化</strong>.</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">r &lt;tmp<br>catch syscall read<br>commands<br>    silent<br>    if($rdi &gt;= 3)<br>        set *(int64_t*)($rbp-0x18) = 0x010203 # set ptr type<br>    end<br>    c<br>end<br><br>b *main+630 # stop at scanf()<br>commands<br>    silent<br>    set *(int64_t*)($rbp-0x10) = 0x010203<br>    c<br>end<br>c<br></code></pre></div></td></tr></table></figure>
+
+<p>一个level能挣这么多东西出来…….</p>
+<h3 id="level-7"><a href="#level-7" class="headerlink" title="level 7"></a>level 7</h3><p>直接一个<code>call (void*)win()</code>就结束了….</p>
+<h1 id="module-7"><a href="#module-7" class="headerlink" title="module 7"></a>module 7</h1><ul>
+<li>forword engineering vs. reverse engineering</li>
+<li><code>cpp du strip strings</code> commands.</li>
+<li>the most often we do is reversing the main modules.</li>
+<li><code>fomit-frame-pointer</code> </li>
+<li><a target="_blank" rel="noopener" href="https://cloud.binary.ninja/u/yogdzewa">https://cloud.binary.ninja/u/yogdzewa</a></li>
+<li>把另一个checksec链接成了secheck, 功能似乎更多一点.</li>
+<li>Open source:<ul>
+<li><strong>angr management:</strong> an academic binary analysis framework! (<a target="_blank" rel="noopener" href="https://github.com/angr/angr-management/releases">https://github.com/angr/angr-management/releases</a>) </li>
+<li><strong>ghidra:</strong> a reversing tool created by the National Security Agency (<a target="_blank" rel="noopener" href="https://ghidra-sre.org/">https://ghidra-sre.org/</a>) </li>
+<li><strong>cutter:</strong> a reversing tool created by the radare2 open source project (<a target="_blank" rel="noopener" href="https://cutter.re/">https://cutter.re/</a>) </li>
+</ul>
+</li>
+<li>dynamic analysis: <ul>
+<li>ltrace and strace </li>
+<li>gdb<ul>
+<li>context可以直接用display命令在每次停下来的时候模拟.</li>
+</ul>
+</li>
+<li>Timeless Debugging ??</li>
+</ul>
+</li>
+</ul>
 
             </div>
             <hr>
