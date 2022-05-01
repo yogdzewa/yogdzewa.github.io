@@ -57,7 +57,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/Calls-file_open.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/image-20220108132923299.png">
 <meta property="article:published_time" content="2021-10-01T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-04-28T02:15:25.169Z">
+<meta property="article:modified_time" content="2022-05-01T01:20:38.618Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary_large_image">
@@ -293,7 +293,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年4月28日 上午
+                  不可视境界线最后变动于：2022年5月1日 上午
                 
               </p>
             
@@ -836,7 +836,7 @@
 <li>使用btl指令置位某一个bit:</li>
 </ul>
 <blockquote>
-<p>BTS %1,  %2     :先把%2对应的内存地址的第%1位的值填入cflags寄存器的进位位C，然后把该位<strong>置位</strong>)</p>
+<p>BTS %1,  %2     :先把%2对应的内存地址的第%1位的值填入cflags寄存器的CF，然后把该位<strong>置位</strong>)</p>
 </blockquote>
 <figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SetPageReserved(page)       set_bit(PG_reserved, &amp;((page)-&gt;flags)) <span class="hljs-comment">//setbit使用的是内联汇编形式的btl指令</span></span><br></code></pre></div></td></tr></table></figure>
 
