@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220430102917561.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220503162403150.png">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-04T01:15:49.984Z">
+<meta property="article:modified_time" content="2022-05-04T02:43:51.626Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -224,7 +224,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      715 分钟
+      716 分钟
     </span>
   
 
@@ -1486,10 +1486,11 @@
 </ul>
 <h4 id="level8-2"><a href="#level8-2" class="headerlink" title="level8"></a>level8</h4><p>这题在上一题的基础之上加了canary和PIE.</p>
 <p>其余部分应该是一样的, 溢出点也是一样的. 对了, write函数也没有边界检查, 可以利用这个来leak出canary和rbp.</p>
-<h4 id="level9-2"><a href="#level9-2" class="headerlink" title="level9"></a>level9</h4><p>保护半开, 可用open, disallowed read_code, no bundary check in read, but write has.</p>
+<h4 id="level9-2"><a href="#level9-2" class="headerlink" title="level9"></a>level9</h4><p>保护半开, 可用open, <strong>disallowed read_code</strong>, no bundary check in read, but write has.</p>
 <p>只允许byte code中出现一次syscall.</p>
-<p>但是发现read_memory的目的地变成了指令的区域. 于是就可以修改自身的编码.</p>
-<h4 id="level10-2"><a href="#level10-2" class="headerlink" title="level10"></a>level10</h4>
+<p>但是发现read_memory的目的地变成了指令的区域. 于是就可以使用这个调用来输入新的代码去覆盖旧的.</p>
+<h4 id="level10-2"><a href="#level10-2" class="headerlink" title="level10"></a>level10</h4><p>这次在上一题的基础上补上了read_memory的错误, 仍然只能用用一次syscall. <strong>边界检查全开</strong>.</p>
+
             </div>
             <hr>
             <div>
