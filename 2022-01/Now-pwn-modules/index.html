@@ -28,8 +28,10 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220426223702228.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220430102917561.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220503162403150.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220505210342026.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220505165437735.png">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-05T01:56:39.502Z">
+<meta property="article:modified_time" content="2022-05-05T13:55:09.762Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -215,7 +217,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      57k 字
+      59k 字
     </span>
   
 
@@ -224,7 +226,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      718 分钟
+      740 分钟
     </span>
   
 
@@ -265,7 +267,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月5日 上午
+                  不可视境界线最后变动于：2022年5月5日 晚上
                 
               </p>
             
@@ -1502,9 +1504,53 @@
 <li>stack pivot: 栈转移.</li>
 <li>data transfer.</li>
 <li>USE INFO IN THE STACK OR REGISTERS.</li>
-<li></li>
 </ul>
+<p>Counter-CFI(Control Flow Integrity) techniques:</p>
+<ul>
+<li><input disabled="" type="checkbox"> <strong>B(lock)OP:</strong> ROP on a block (or multi-block) level by carefully compensating for side-effects.</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>J(ump)OP:</strong> instead of returns, use indirect jumps to control execution flow</li>
+<li><input disabled="" type="checkbox"> <strong>C(all)OP:</strong> instead of returns, use indirect calls to control execution flow</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>S(ignreturn)ROP:</strong> instead of returns, use the sigreturn system call </li>
+<li><input disabled="" type="checkbox"> <strong>D(ata)OP:</strong> instead of hijacking control flow, carefully overwrite the program’s data to puppet it</li>
+</ul>
+<p><strong>Intel Edition(endbr64 after ret instruction)</strong> is still bypassable by some advanced ROP techniques (<u>Block Oriented Programming, SROP, etc</u>), but it will significantly complicate exploitation.</p>
+<p><a target="_blank" rel="noopener" href="http://www.scs.stanford.edu/brop/bittau-brop.pdf">Hacking blind</a>:</p>
+<ul>
+<li>The standard blind attack requires a <strong>forking service</strong>. 就像</li>
+<li>Break ASLR and the canary byte-by-byte. Now we can redirect memory semi-controllably.</li>
+<li>Redirect memory until we have a <em>survival signal</em> (i.e., an address that doesn’t crash).</li>
+<li>Use the survival signal to find non-crashing ROP gadgets.</li>
+<li>Find functionality to produce output.</li>
+<li>Leak the program.</li>
+<li>Hack it.</li>
+</ul>
+<h4 id="level1-1"><a href="#level1-1" class="headerlink" title="level1"></a>level1</h4><p>啥主要的保护也没开, 简单的覆盖返回地址.</p>
+<h4 id="level2-1"><a href="#level2-1" class="headerlink" title="level2"></a>level2</h4><p>没开啥保护, 查了一下lseek的使用, 主要就是win函数分成了两个阶段, 一次读一半.</p>
+<p>只要在栈上弄两个返回地址就行了. 简单</p>
+<h4 id="level3-2"><a href="#level3-2" class="headerlink" title="level3"></a>level3</h4><p>5个stage, 每个stage都要有对应数字的参数, 简单跳过.</p>
+<h4 id="level4-3"><a href="#level4-3" class="headerlink" title="level4"></a>level4</h4><p>有一整个函数用来提供gadgets.</p>
+<img src="../../image/pwn-modules/image-20220505210342026.png" srcset="/img/loading.gif" lazyload alt="image-20220505210342026" style="zoom:80%;" />
 
+<p>利用这几个gadgets就可以实现chmod系统调用了. (或者execve)</p>
+<p>rdi是’/flag’字符串的地址, 存在栈上. 鉴于栈空间会不断的减少, 就存在challenge的栈帧中. <code>rbp=0x7fffffffe1e0</code> </p>
+<p>好吧, 这栈地址会变化的.</p>
+<h4 id="level5-4"><a href="#level5-4" class="headerlink" title="level5"></a>level5</h4><p>这和上一题区别何在? 干脆都做一遍.</p>
+<h1 id="module-B"><a href="#module-B" class="headerlink" title="module B"></a>module B</h1><p>Dynamic Allocators:</p>
+<ul>
+<li>**General Purpose:**Doug Lea (pictured) releases dlmalloc into public domain in 1987.</li>
+<li>**Linux:**ptmalloc (<strong>P</strong>osix <strong>T</strong>hread aware fork of dlmalloc)</li>
+<li>**FreeBSD:**jemalloc (also used in Firefox, Android)</li>
+<li>**Windows:**Segment Heap, NT Heap</li>
+<li>**Kernel allocators:**kmalloc (Linux kernel memory allocator)kalloc (iOS kernel memory allocator)</li>
+</ul>
+<p>managed by the brk and sbrk system calls:</p>
+<ul>
+<li>sbrk(NULL) returns the end of the data segment</li>
+<li>sbrk(delta) expands the end of the data segment by delta bytes</li>
+<li>brk(addr) expands the end of the data segment to addr</li>
+</ul>
+<p>ubuntu 2004还在图中粗线框的阶段, 这是由于tcache的引入. 不过这个module并不会深入这个cache.</p>
+<img src="../../image/pwn-modules/image-20220505165437735.png" srcset="/img/loading.gif" lazyload alt="image-20220505165437735" style="zoom:80%;" />
             </div>
             <hr>
             <div>
