@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220430102917561.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220503162403150.png">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-04T02:43:51.626Z">
+<meta property="article:modified_time" content="2022-05-04T15:25:52.404Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -265,7 +265,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月4日 上午
+                  不可视境界线最后变动于：2022年5月4日 晚上
                 
               </p>
             
@@ -1490,6 +1490,12 @@
 <p>只允许byte code中出现一次syscall.</p>
 <p>但是发现read_memory的目的地变成了指令的区域. 于是就可以使用这个调用来输入新的代码去覆盖旧的.</p>
 <h4 id="level10-2"><a href="#level10-2" class="headerlink" title="level10"></a>level10</h4><p>这次在上一题的基础上补上了read_memory的错误, 仍然只能用用一次syscall. <strong>边界检查全开</strong>.</p>
+<p>这???</p>
+<h4 id="level11-2"><a href="#level11-2" class="headerlink" title="level11"></a>level11</h4><p>JIT pray, Yan85_64, 保护全开, 全新逻辑, 暂且放弃.</p>
+<h1 id="module-A"><a href="#module-A" class="headerlink" title="module A"></a>module A</h1><p>ROP</p>
+<ul>
+<li>rp++, ROPgadget.</li>
+</ul>
 
             </div>
             <hr>
