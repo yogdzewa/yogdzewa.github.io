@@ -16,12 +16,12 @@
   <meta name="author" content="Yogdzewa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="bufLabctf pwn buffer overflow基础入门题目. level0由于bufbomb没有开PIE, 所以smoke的地址是固定的, 只要覆盖返回地址就行. smoke() address: 0x08048E0A   getbuf没有开canary, 所以填充完0x28字节+8bytes rbp+0x08048E0A即可. 然后突然发现末尾有个0a, 于是换成10, 也就是smo">
+    <meta name="description" content="233">
 <meta property="og:type" content="article">
 <meta property="og:title" content="buflab">
-<meta property="og:url" content="https://yogdzewa.github.io/2022-05/buflab/index.html">
+<meta property="og:url" content="https://yogdzewa.github.io/2022-05/useless-buflab/index.html">
 <meta property="og:site_name" content="Yogdzewa">
-<meta property="og:description" content="bufLabctf pwn buffer overflow基础入门题目. level0由于bufbomb没有开PIE, 所以smoke的地址是固定的, 只要覆盖返回地址就行. smoke() address: 0x08048E0A   getbuf没有开canary, 所以填充完0x28字节+8bytes rbp+0x08048E0A即可. 然后突然发现末尾有个0a, 于是换成10, 也就是smo">
+<meta property="og:description" content="233">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yogdzewa.github.io/image/buflab/image-20220501205056212.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/buflab/image-20220501211931466.png">
@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/buflab/image-20220501233825396.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/buflab/image-20220501233537565.png">
 <meta property="article:published_time" content="2022-05-04T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-07T11:03:56.194Z">
+<meta property="article:modified_time" content="2022-05-07T11:08:27.541Z">
 <meta property="article:author" content="Yogdzewa">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://yogdzewa.github.io/image/buflab/image-20220501205056212.png">
@@ -372,7 +372,7 @@
         var options = Object.assign(
           {"clientID":"312db7ebbc085de5d28d","clientSecret":"85ea3cefd13c73a6d85c1813adfde4f1550bfbda","repo":"yogdzewa.github.io","owner":"yogdzewa","admin":["yogdzewa"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: 'ea6e2870c0748f227852df2b3f977539'
+            id: 'f86e79b6585a734f45e529a7fb266a28'
           }
         )
         var gitalk = new Gitalk(options);
