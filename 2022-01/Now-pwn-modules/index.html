@@ -37,7 +37,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220505165437735.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220511235547367.png">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-12T02:26:23.264Z">
+<meta property="article:modified_time" content="2022-05-12T06:10:14.627Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -223,7 +223,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      66k 字
+      67k 字
     </span>
   
 
@@ -232,7 +232,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      831 分钟
+      834 分钟
     </span>
   
 
@@ -273,7 +273,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月12日 上午
+                  不可视境界线最后变动于：2022年5月12日 下午
                 
               </p>
             
@@ -1680,6 +1680,12 @@
 <li>实际用的是<code>clone()</code>系统调用.</li>
 </ul>
 </li>
+<li>discrepancies between <strong>libc call</strong> and <strong>raw syscall</strong>: <ul>
+<li>setuid() in libc sets the uid for all threads of the process, raw syscall will only set the caller thread.</li>
+<li>exit() in libc will call exit_group(), so exit all threads, but raw syscall only exit caller thread.</li>
+</ul>
+</li>
+<li>实际中常使用全局变量来控制线程的执行.</li>
 <li></li>
 </ul>
 <section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>这里要指向2处的地址, 也就是bss+0x10
