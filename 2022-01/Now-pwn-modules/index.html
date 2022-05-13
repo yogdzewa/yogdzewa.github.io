@@ -36,8 +36,9 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220508231821229.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220505165437735.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220511235547367.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220512222315120.png">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-12T06:10:14.627Z">
+<meta property="article:modified_time" content="2022-05-13T01:39:44.745Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -223,7 +224,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      67k 字
+      68k 字
     </span>
   
 
@@ -232,7 +233,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      834 分钟
+      853 分钟
     </span>
   
 
@@ -273,7 +274,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月12日 下午
+                  不可视境界线最后变动于：2022年5月13日 上午
                 
               </p>
             
@@ -1671,7 +1672,7 @@
 <ul>
 <li>Mitigations<ol>
 <li>Safer programming practices (O_NOFOLLOW, mkstemp(), etc).</li>
-<li>Symlink protections in /tmp<br>a. root cannot follow symlinks in /tmp that are owned by other users<br>b.specifically made to prevent these sorts of issues</li>
+<li>Symlink protections in /tmp<br> a. root cannot follow symlinks in /tmp that are owned by other users<br> b.specifically made to prevent these sorts of issues</li>
 </ol>
 </li>
 <li>非libc的库函数要直接进行编译要给gcc传递相应的链接参数.</li>
@@ -1686,9 +1687,48 @@
 </ul>
 </li>
 <li>实际中常使用全局变量来控制线程的执行.</li>
-<li></li>
+<li>对内存的读写同样会产生竞态条件.</li>
+<li>Data races: 自增的多步骤指令. 不过可以通过上锁解决.</li>
+<li>Detect: valgrind, <a target="_blank" rel="noopener" href="https://docs.google.com/presentation/d/1u-aSz-mqwkMIZEDAR-AEPKw5JPn-1q_3Ek_C6JjQUzY/edit#slide=id.gac4ec7d1a7_0_49">学术界</a> </li>
+<li>signals and reentrancy: <ul>
+<li>use signal to interrupt normal execution control flow.</li>
+<li>use signal function to reenter function.</li>
+<li>DO NOT call non-reentrant funtions in your signal handlers.<ul>
+<li>Your handler might have interrupted those functions mid-execution.</li>
+<li>Another signal might interrupt your signal handler’s non-reentrant invocations mid-execution!</li>
+<li>Depending on settings (<code>SA_NODEFER</code> flag to sigaction()), another iteration of the same signal might interrupt your signal!</li>
 </ul>
-<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>这里要指向2处的地址, 也就是bss+0x10
+</li>
+<li><code>man signal-safety</code> to see all reentrant libc funtions.</li>
+</ul>
+</li>
+</ul>
+<h4 id="level1-2"><a href="#level1-2" class="headerlink" title="level1"></a>level1</h4><p>在程序使用第一个参数当做字符串open文件之前直接停下来等我, 这个时候就可以更改flag的符号链接为那个名字, 于是绕过了不能含有’flag’字符和不能是符号链接的限制.</p>
+<h4 id="level2-2"><a href="#level2-2" class="headerlink" title="level2"></a>level2</h4><p>完全一样</p>
+<h4 id="level3-3"><a href="#level3-3" class="headerlink" title="level3"></a>level3</h4><p>在前两题的基础之上检查大小不能超过256字节, 而且在buf[256]之后有一个控制进入win()的v7, 改改文件名很容易绕过</p>
+<h4 id="level4-4"><a href="#level4-4" class="headerlink" title="level4"></a>level4</h4><p>利用上面的方法更改打开文件进行栈溢出然后改跳转地址跳转到win().</p>
+<p>什么保护都没开, 固定地址加载.</p>
+<h4 id="level5-5"><a href="#level5-5" class="headerlink" title="level5"></a>level5</h4><blockquote>
+<p>思考的一些过程……</p>
+<p>接受一个绝对路径, 除了一些检查(symlink, argname), 还有文件所在目录所有者只能是root, 其他用户没有在此文件夹写的权限.</p>
+<p>???? 不过在看了看dirname的实现之后发现并不需要一个绝对路径.</p>
+<img src="../../image/pwn-modules/image-20220512222315120.png" srcset="/img/loading.gif" lazyload alt="image-20220512222315120" style="zoom:80%;" />
+
+<ul>
+<li>这样的话, <del>参数就定成/home/hacker下的e(0 size file),</del>  </li>
+<li>dirname()只是一个字符串操作, 会截取前面的一部分路径. 所以不能在参数中使用相对路径, 否则dirname会返回当前文件夹: <code>.</code>, 这样没法绕过dirname 而hacker用户有没有在</li>
+</ul>
+</blockquote>
+<p>第一阶段只判断了文件存在与否以及符号链接(no follow lstat), 第二阶段才判断目录信息(use dirname() strip argv[1], and follow link stat), 第三阶段是真正的打开文件.</p>
+<ul>
+<li>首先touch一个/home/hacker/a/b文件, 通过name和symlink验证, </li>
+<li>然后ln两个/home/hacker/a -&gt; /home, 不用管b其实根本不在/home中.</li>
+<li>最后再ln一个/home/hacker/a/b -&gt; /flag</li>
+</ul>
+<p>写了一个脚本避免重复输入一些命令, 不过想清楚之后倒是一遍过了.</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br><br>if [ $1 == &#x27;init&#x27; ]<br>then<br>    cd<br>    mkdir a<br>    cd a<br>    touch b<br>elif [ $1 == 2 ]<br>then<br>    cd<br>    mv a b<br>    ln -s /home /home/hacker/a<br>elif [ $1 == 3 ]<br>then<br>    cd<br>    rm a ./b/b<br>    mv b a<br>    ln -s /flag /home/hacker/a/b<br>elif [ $1 == &#x27;cls&#x27; ]<br>then<br>    rm -r a b 2&gt;/dev/null<br>else<br>    echo &#x27;invalid argument&#x27;<br>fi<br></code></pre></div></td></tr></table></figure>
+
+<h4 id="level6-5"><a href="#level6-5" class="headerlink" title="level6"></a>level6</h4><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>这里要指向2处的地址, 也就是bss+0x10
 <a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span>这里开始就是从改变后的rsp弹出返回地址. 开始准备通过puts来leak处libc地址.
 <a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span>这之后要接收puts的地址.
 <a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
