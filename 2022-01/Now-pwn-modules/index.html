@@ -38,7 +38,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220511235547367.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220512222315120.png">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-14T07:02:26.377Z">
+<meta property="article:modified_time" content="2022-05-14T07:37:34.564Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -233,7 +233,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      871 分钟
+      876 分钟
     </span>
   
 
@@ -1704,14 +1704,18 @@
 </li>
 </ul>
 <h4 id="prepare"><a href="#prepare" class="headerlink" title="prepare"></a>prepare</h4><p>先整个创建超级长的路径的脚本. 顺便学了学shell编程.</p>
-<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br>prefix=&#x27;a&#x27;<br>ln -s $(pwd) ./root<br>for i in &#123;97..122&#125;	#或者直接用&#123;a..z&#125;<br>do<br>    prefix=$(printf &quot;\\x$(printf %x $i)&quot;)<br>    pushd .<br>    mkdir $prefix<br>    cd $prefix<br>    for j in &#123;1..25&#125;<br>    do<br>        mkdir ./$j<br>        cd ./$j<br>    done<br>    innerwd=$(pwd)<br>    popd<br>    cp -a ./root $innerwd<br>    ln -s $innerwd $(pwd)/$&#123;prefix&#125;_end<br>done<br></code></pre></div></td></tr></table></figure>
+<p>难怪视频里只见到t_end, 因为这样路径上每个文件夹其实都是符号链接, 所以最多20个.</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br>prefix=&#x27;a&#x27;<br>ln -s $(pwd) ./root<br>for i in &#123;97..116&#125;	#或者直接用&#123;a..t&#125;<br>do<br>    prefix=$(printf &quot;\\x$(printf %x $i)&quot;)<br>    pushd .<br>    mkdir $prefix<br>    cd $prefix<br>    for j in &#123;1..25&#125;<br>    do<br>        mkdir ./$j<br>        cd ./$j<br>    done<br>    innerwd=$(pwd)<br>    popd<br>    cp -a ./root $innerwd<br>    ln -s $innerwd $(pwd)/$&#123;prefix&#125;_end<br>done<br></code></pre></div></td></tr></table></figure>
 
-<p>生成路径字符串:</p>
-<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br>prefix=&#x27;a&#x27;<br>path=&#x27;&#x27;<br>for i in &#123;97..122&#125;	#或者直接用&#123;a..z&#125;<br>do<br>    prefix=$(printf &quot;\\x$(printf %x $i)&quot;)<br>    path+=prefix<br>    for j in &#123;1..25&#125;<br>    do<br>        mkdir ./$j<br>        cd ./$j<br>    done<br><br>done<br></code></pre></div></td></tr></table></figure>
-
-
+<p>生成路径字符串: 如果路径上还有符号链接那还得再减少几个.</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br>prefix=&#x27;a&#x27;<br>path=&#x27;./&#x27; <br>for i in &#123;97..116&#125; 	#或者直接用&#123;a..t&#125;<br>do<br>    prefix=$(printf &quot;\\x$(printf %x $i)&quot;)<br>    path+=$&#123;prefix&#125;_end/root/<br><br>done<br>ls $path	#test path(though must be true...)<br><span class="hljs-meta">#</span><span class="bash">that is:</span><br>./a_end/root/b_end/root/c_end/root/d_end/root/e_end/root/f_end/root/g_end/root/h_end/root/i_end/root/j_end/root/k_end/root/l_end/root/m_end/root/n_end/root/o_end/root/p_end/root/q_end/root/r_end/root/s_end/root/t_end/root/<br></code></pre></div></td></tr></table></figure>
 
 <h4 id="level1-2"><a href="#level1-2" class="headerlink" title="level1"></a>level1</h4><p>在程序使用第一个参数当做字符串open文件之前直接停下来等我, 这个时候就可以更改flag的符号链接为那个名字, 于是绕过了不能含有’flag’字符和不能是符号链接的限制.</p>
+<p>.1程序的补充shell:</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br><span class="hljs-meta">#</span><span class="bash">一开始是一个普通文件, 然后改成到/flag的符号链接.</span><br><br></code></pre></div></td></tr></table></figure>
+
+
+
 <h4 id="level2-2"><a href="#level2-2" class="headerlink" title="level2"></a>level2</h4><p>完全一样</p>
 <h4 id="level3-3"><a href="#level3-3" class="headerlink" title="level3"></a>level3</h4><p>在前两题的基础之上检查大小不能超过256字节, 而且在buf[256]之后有一个控制进入win()的v7, 改改文件名很容易绕过</p>
 <h4 id="level4-4"><a href="#level4-4" class="headerlink" title="level4"></a>level4</h4><p>利用上面的方法更改打开文件进行栈溢出然后改跳转地址跳转到win().</p>
