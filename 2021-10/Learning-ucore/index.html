@@ -57,7 +57,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/Calls-file_open.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/image-20220108132923299.png">
 <meta property="article:published_time" content="2021-10-01T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-14T16:18:46.194Z">
+<meta property="article:modified_time" content="2022-05-15T02:55:00.778Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary_large_image">
@@ -293,7 +293,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月15日 凌晨
+                  不可视境界线最后变动于：2022年5月15日 上午
                 
               </p>
             
@@ -1674,7 +1674,7 @@ ZOMBIE--&gt;[*]:资源回收
 <h5 id="0x03-大致流程"><a href="#0x03-大致流程" class="headerlink" title="0x03 大致流程"></a>0x03 大致流程</h5><p>当我们用mmap去映射文件到内存区域时使用了<code>MAP_PRIVATE</code>标记，我们写文件时会写到COW机制产生的内存区域中，原文件不受影响。其中获取用户进程内存页的过程如下：</p>
 <ol>
 <li>第一次调用<code>follow_page_mask</code>查找虚拟地址对应的page，带有<code>FOLL_WRITE</code>标记。因为所在page不在内存中，<code>follow_page_mask</code>返回NULL，第一次失败，进入<code>faultin_page</code>，最终进入<code>do_cow_fault</code>分配不带<code>_PAGE_RW</code>标记的匿名内存页，返回值为0。</li>
-<li>重新开始循环，第二次调用<code>follow_page_mask</code>，带有<code>FOLL_WRITE</code>标记。由于不满足<code>((flags &amp; FOLL_WRITE) &amp;&amp; !pte_write(pte))</code>条件，<code>follow_page_mask</code>返回NULL，第二次失败，进入<code>faultin_page</code>，最终进入<code>do_wp_page</code>函数分配COW页。并在上级函数<code>faultin_page</code>中去掉<code>FOLL_WRITE</code>标记,返回0。</li>
+<li>重新开始循环，第二次调用<code>follow_page_mask</code>，带有<code>FOLL_WRITE</code>标记。由于不满33333333333333333333333333333333333333333333333333333333–3足<code>((flags &amp; FOLL_WRITE) &amp;&amp; !pte_write(pte))</code>条件，<code>follow_page_mask</code>返回NULL，第二次失败，进入<code>faultin_page</code>，最终进入<code>do_wp_page</code>函数分配COW页。并在上级函数<code>faultin_page</code>中去掉<code>FOLL_WRITE</code>标记,返回0。</li>
 <li>重新开始循环，第三次调用<code>follow_page_mask</code>，不带<code>FOLL_WRITE</code>标记。成功得到page。</li>
 </ol>
 <p>产生竞态条件:</p>
