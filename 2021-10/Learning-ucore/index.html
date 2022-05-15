@@ -57,7 +57,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/Calls-file_open.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/image-20220108132923299.png">
 <meta property="article:published_time" content="2021-10-01T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-12T14:03:18.168Z">
+<meta property="article:modified_time" content="2022-05-14T16:18:46.194Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary_large_image">
@@ -243,7 +243,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      133k 字
+      134k 字
     </span>
   
 
@@ -252,7 +252,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1668 分钟
+      1678 分钟
     </span>
   
 
@@ -293,7 +293,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月12日 晚上
+                  不可视境界线最后变动于：2022年5月15日 凌晨
                 
               </p>
             
@@ -1390,7 +1390,8 @@
 </ul>
 </li>
 </ul>
-<h3 id="challenge"><a href="#challenge" class="headerlink" title="challenge"></a>challenge</h3><blockquote>
+<p>challenge</p>
+<blockquote>
 <p>鸽!</p>
 </blockquote>
 <h1 id="Lab5"><a href="#Lab5" class="headerlink" title="Lab5"></a>Lab5</h1><h2 id="知识点-4"><a href="#知识点-4" class="headerlink" title="知识点"></a>知识点</h2><h3 id="0-项目结构"><a href="#0-项目结构" class="headerlink" title="0.项目结构"></a>0.项目结构</h3><p>相对与实验四，实验五主要改动如下：</p>
@@ -1582,7 +1583,14 @@
 <blockquote>
 <p>请在实验报告中描述当创建一个用户态进程并加载了应用程序后，CPU是如何让这个应用程序最终在用户态执行起来的。即这个用户态进程被ucore选择占用CPU执行（RUNNING态）到具体执行应用程序第一条指令的整个经过。</p>
 </blockquote>
-<p>简单</p>
+<ul>
+<li><p>当一个用户态程序执行<code>sys_execve</code>时，该程序将触发<code>0x80</code>中断，并进入中断处理例程。与Lab1类似，中断处理例程的入口代码会保存<code>trapframe</code>作为跳转回用户态的上下文环境。但与lab1代码所不同的是，lab5中的<code>trap</code>函数实现如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">trap</span><span class="hljs-params">(struct trapframe *tf)</span> </span>&#123;<br>    <span class="hljs-comment">// dispatch based on what type of trap occurred</span><br>    <span class="hljs-comment">// used for previous projects</span><br>    <span class="hljs-keyword">if</span> (current == <span class="hljs-literal">NULL</span>)<br>        trap_dispatch(tf);<br>    <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">// 因为可能会发生嵌套中断的情况，所以保存上一次的trapframe</span><br>        struct trapframe *otf = current-&gt;tf;<br>        <span class="hljs-comment">// 注意这一步，设置当前process的栈帧为当前中断栈帧</span><br>        current-&gt;tf = tf;<br>        <span class="hljs-keyword">bool</span> in_kernel = trap_in_kernel(tf);<br>        trap_dispatch(tf);<br>        current-&gt;tf = otf;<br><br>        <span class="hljs-keyword">if</span> (!in_kernel) &#123;<br>            <span class="hljs-keyword">if</span> (current-&gt;flags &amp; PF_EXITING)<br>                do_exit(-E_KILLED);<br>            <span class="hljs-keyword">if</span> (current-&gt;need_resched)<br>                schedule();<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure></li>
+<li><p>由于<code>trap</code>函数的设计，在<code>do_execve</code>中，此时的<code>current-&gt;tf</code>保存的就是用户态的上下文。</p>
+</li>
+<li><p>因此在执行<code>load_icode</code>函数时，程序只会修改<code>current-&gt;trapframe</code>。因为当中断处理程序返回时，CPU所加载的上下文就是<code>current-&gt;trapframe</code>。</p>
+</li>
+</ul>
 <h3 id="练习2-2"><a href="#练习2-2" class="headerlink" title="练习2"></a>练习2</h3><blockquote>
 <p>do_fork()-&gt;dum_mmap()-&gt;copy_range()的实现</p>
 </blockquote>
@@ -1599,8 +1607,8 @@
 <li>请分析fork/exec/wait/exit在实现中是如何影响进程的执行状态的？<ul>
 <li>fork会修改其子进程的状态为<code>PROC_RUNNABLE</code>，而当前进程状态不变。</li>
 <li>exec不修改当前进程的状态，但会替换内存空间里所有的数据与代码。</li>
-<li>wait会先检测是否存在子进程。如果存在进入<code>PROC_ZONBIE</code>的子进程，则回收该进程并函数返回。但若存在尚处于<code>PROC_RUNNABLE</code>的子进程，则当前进程会进入<code>PROC_SLEEPING</code>状态，并等待子进程唤醒。</li>
-<li>exit会将当前进程状态设置为<code>PROC_ZONBIE</code>，并唤醒父进程，使其处于<code>PROC_RUNNABLE</code>的状态，之后主动让出CPU。</li>
+<li>wait会先检测是否存在子进程。如果存在进入<code>PROC_ZOMBIE</code>的子进程，则回收该进程并函数返回。但若存在尚处于<code>PROC_RUNNABLE</code>的子进程，则当前进程会进入<code>PROC_SLEEPING</code>状态，并等待子进程唤醒。</li>
+<li>exit会将当前进程状态设置为<code>PROC_ZOMBIE</code>，并唤醒父进程，使其处于<code>PROC_RUNNABLE</code>的状态，之后主动让出CPU。</li>
 </ul>
 </li>
 <li>请给出ucore中一个用户态进程的执行状态生命周期图（包括执行状态，执行状态之间的变换关系，以及产生变换的事件或函数调用）。<a target="_blank" rel="noopener" href="https://kiprey.github.io/2020/08/uCore-5/#Questions">link</a> </li>
@@ -1657,9 +1665,6 @@ ZOMBIE--&gt;[*]:资源回收
 </li>
 </ul>
 <h5 id="0x01-概述"><a href="#0x01-概述" class="headerlink" title="0x01 概述"></a>0x01 概述</h5><p>该漏洞是Linux的一个本地提权漏洞，发现者是Phil Oester，影响&gt;=2.6.22的所有Linux内核版本，修复时间是2016年10月18号。该漏洞的原因是<code>get_user_page</code>内核函数在处理<code>Copy-on-Write</code>(以下使用COW表示)的过程中，可能产出竞态条件造成COW过程被破坏，导致出现写数据到进程地址空间内只读内存区域的机会。当我们向带有MAP_PRIVATE标记的只读文件映射区域写数据时，会产生一个映射文件的复制(COW)，对此区域的任何修改都不会写回原来的文件，如果上述的竞态条件发生，就能成功的写回原来的文件。比如我们修改su或者passwd程序就可以达到root提权的目的。</p>
-<blockquote>
-<p>Pocsuite 是由知道创宇404实验室打造的一款开源的远程漏洞测试框架</p>
-</blockquote>
 <h5 id="0x02-POC分析"><a href="#0x02-POC分析" class="headerlink" title="0x02 POC分析"></a>0x02 POC分析</h5><p>首先打开我们需要修改的只读文件并使用<code>MAP_PRIVATE</code>标记映射文件到内存区域，然后启动两个线程：</p>
 <ul>
 <li>其中一个线程向文件映射的内存区域写数据，这时内核采用COW机制。</li>
