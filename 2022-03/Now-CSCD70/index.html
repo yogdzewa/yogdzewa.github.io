@@ -28,7 +28,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/CSCD70/image-20220315185203276.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/CSCD70/image-20220315183948503.png">
 <meta property="article:published_time" content="2022-03-08T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-09T08:25:24.295Z">
+<meta property="article:modified_time" content="2022-05-17T02:06:57.908Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="complier">
 <meta name="twitter:card" content="summary_large_image">
@@ -264,7 +264,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月9日 下午
+                  不可视境界线最后变动于：2022年5月17日 上午
                 
               </p>
             
@@ -275,7 +275,7 @@
 <ul>
 <li>开启container</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">cd ~/Desktop/CSCD70/<br>sudo docker run -it -v $(pwd):/mnt --rm --name cscd70_a1 cscd70:2021S<br><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">cd ~/Desktop/CSCD70/<br>sudo docker run -it -v $(pwd):/mnt --rm --name cscd70_a1 cscd70:2021S<br></code></pre></div></td></tr></table></figure>
 
 <ul>
 <li>多开container: </li>
@@ -293,9 +293,9 @@
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">opt -load ./FunctionInfo.so -function-info ./test/Loop.bc \<br>-disable-output | FileCheck --check-prefix=SAMPLE ./test/Loop.c<br></code></pre></div></td></tr></table></figure>
 
 <ul>
-<li></li>
+<li><h2 id="class-architecture"><a href="#class-architecture" class="headerlink" title="class architecture"></a>class architecture</h2></li>
 </ul>
-<h2 id="class-architecture"><a href="#class-architecture" class="headerlink" title="class architecture"></a>class architecture</h2><h3 id="IR所有头文件"><a href="#IR所有头文件" class="headerlink" title="IR所有头文件"></a><a target="_blank" rel="noopener" href="https://llvm.org/doxygen/dir_c3e93f23a4a31c717998b98ce143b7c0.html">IR所有头文件</a></h3><h3 id="Value"><a href="#Value" class="headerlink" title="Value"></a><a target="_blank" rel="noopener" href="https://llvm.org/docs/ProgrammersManual.html#the-value-class">Value</a></h3><p>就和名字一个意思, It represents a typed value that may be used (among other things) as an operand to an instruction. To keep track of this relationship, the <code>Value</code> class keeps a list of all of the <code>User</code>s that is using it( 就是<code>Use *UseList;</code>)</p>
+<h3 id="IR所有头文件"><a href="#IR所有头文件" class="headerlink" title="IR所有头文件"></a><a target="_blank" rel="noopener" href="https://llvm.org/doxygen/dir_c3e93f23a4a31c717998b98ce143b7c0.html">IR所有头文件</a></h3><h3 id="Value"><a href="#Value" class="headerlink" title="Value"></a><a target="_blank" rel="noopener" href="https://llvm.org/docs/ProgrammersManual.html#the-value-class">Value</a></h3><p>就和名字一个意思, It represents a typed value that may be used (among other things) as an operand to an instruction. To keep track of this relationship, the <code>Value</code> class keeps a list of all of the <code>User</code>s that is using it( 就是<code>Use *UseList;</code>)</p>
 <p>有一些getType, getValue, use_list_iterator之类的成员函数.</p>
 <img src="../../image/CSCD70/image-20220315181757882.png" srcset="/img/loading.gif" lazyload alt="image-20220315181757882" style="zoom: 80%;" />
 
@@ -361,7 +361,7 @@
 <h2 id="Assignment2"><a href="#Assignment2" class="headerlink" title="Assignment2"></a>Assignment2</h2><ul>
 <li>到达-定值分析（Reaching-Definition Analysis)</li>
 <li>活跃变量分析（Live-Variable Analysis)</li>
-<li>可用表达式分析（Available-Exprssion Analysis）</li>
+<li>可用表达式分析 (Available-Exprssion Analysis)</li>
 <li>SSA ( static single assignment )</li>
 </ul>
 
