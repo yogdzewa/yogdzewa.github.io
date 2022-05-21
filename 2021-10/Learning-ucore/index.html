@@ -57,7 +57,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/Calls-file_open.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/image-20220108132923299.png">
 <meta property="article:published_time" content="2021-10-01T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-15T02:55:00.778Z">
+<meta property="article:modified_time" content="2022-05-20T13:25:48.407Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary_large_image">
@@ -243,7 +243,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      134k 字
+      137k 字
     </span>
   
 
@@ -252,7 +252,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1678 分钟
+      1708 分钟
     </span>
   
 
@@ -293,7 +293,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月15日 上午
+                  不可视境界线最后变动于：2022年5月20日 晚上
                 
               </p>
             
@@ -1780,10 +1780,40 @@ ZOMBIE--&gt;[*]:资源回收
 <li><p>sched_dequeue: delete就完事了</p>
 </li>
 </ul>
-<h3 id="练习2-3"><a href="#练习2-3" class="headerlink" title="练习2"></a>练习2</h3><p><a target="_blank" rel="noopener" href="http://www.waldspurger.org/carl/papers/phd-mit-tr667.pdf">stride算法论文</a> </p>
-<h3 id="Challenge-1-1"><a href="#Challenge-1-1" class="headerlink" title="Challenge 1"></a>Challenge 1</h3><blockquote>
-<p>实现 Linux 的 CFS 调度算法</p>
+<h3 id="练习2-3"><a href="#练习2-3" class="headerlink" title="练习2"></a>练习2</h3><p><a target="_blank" rel="noopener" href="http://www.waldspurger.org/carl/papers/phd-mit-tr667.pdf">Lottery and Stride算法论文</a> | <a target="_blank" rel="noopener" href="https://people.cs.umass.edu/~mcorner/courses/691J/papers/PS/waldspurger_stride/waldspurger95stride.pdf">节选重要的部分</a> </p>
+<p>uCore的Round-Robin算法可以保证每个进程得到的CPU资源是相等的，但我们希望调度器能够更加智能的为每个进程分配合理的CPU资源，让<strong>每个进程得到的时间资源与它们的优先级成正比关系</strong>。而Stride Scheduling调度算法就是这样的一种典型而简单的算法。</p>
+<p>其中，该算法的有如下几个特点：</p>
+<ul>
+<li>实现简单</li>
+<li>可控性：可以证明Stride Scheduling对进程的调度次数正比于其优先级</li>
+<li>确定性：在不考虑计时器事件的情况下，整个调度机制都是可预知和重现的。</li>
+</ul>
+<p>而该算法的基本思想如下：</p>
+<ol>
+<li>为每个runnable的进程设置一个当前状态stride，表示该进程当前的调度权。另外定义其对应的pass值，表示对应进程在调度后，stride 需要进行的累加值。</li>
+<li>每次需要调度时，从当前 runnable 态的进程中选择 stride最小的进程调度。</li>
+<li>对于获得调度的进程P，将对应的stride加上其对应的步长pass（只与进程的优先权有关系）。</li>
+<li>在一段固定的时间之后，回到 2.步骤，重新调度当前stride最小的进程。</li>
+</ol>
+<blockquote>
+<p>可以证明，如果令 P.pass = BigStride / P.priority 其中 P.priority 表示进程的优先权（大于 1），而 BigStride 表示一个预先定义的大常数，则该调度方案为每个进程分配的时间将与其优先级成正比。</p>
 </blockquote>
+<p>代码:</p>
+<ul>
+<li><p><code>stride_init</code> </p>
+<p>lab6_run_pool就是一个ucore库自带的一个heap实现, 一开始置空. 后面的增删操作都是使用已经提供的接口.</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span></span><br><span class="hljs-function"><span class="hljs-title">stride_init</span><span class="hljs-params">(struct run_queue *rq)</span> </span>&#123;<br>    list_init(&amp;(rq-&gt;run_list));<br>    <span class="hljs-comment">// 这里不能使用skew_heap_init(rq-&gt;lab6_run_pool)</span><br>    rq-&gt;lab6_run_pool = <span class="hljs-literal">NULL</span>;<br>    rq-&gt;proc_num = <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure></li>
+<li><p><code>stride_enqueue</code> + <code>stride_dequeue</code> </p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span></span><br><span class="hljs-function"><span class="hljs-title">stride_enqueue</span><span class="hljs-params">(struct run_queue *rq, struct proc_struct *proc)</span> </span>&#123;<br>    <span class="hljs-comment">//insert函数返回heap的顶端, 用来更新lab6_run_pool</span><br>    rq-&gt;lab6_run_pool = skew_heap_insert(rq-&gt;lab6_run_pool, &amp;(proc-&gt;lab6_run_pool), proc_stride_comp_f);<br>    <span class="hljs-comment">//不知道什么时候会变成大于max, 估计是溢出</span><br>    <span class="hljs-keyword">if</span> (proc-&gt;time_slice == <span class="hljs-number">0</span> || proc-&gt;time_slice &gt; rq-&gt;max_time_slice) &#123;<br>        proc-&gt;time_slice = rq-&gt;max_time_slice;<br>    &#125;<br>    proc-&gt;rq = rq;<br>    rq-&gt;proc_num ++;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span></span><br><span class="hljs-function"><span class="hljs-title">stride_dequeue</span><span class="hljs-params">(struct run_queue *rq, struct proc_struct *proc)</span> </span>&#123;<br>    rq-&gt;lab6_run_pool = skew_heap_remove(rq-&gt;lab6_run_pool, &amp;(proc-&gt;lab6_run_pool), proc_stride_comp_f);<br>    rq-&gt;proc_num --;<br>&#125;<br></code></pre></div></td></tr></table></figure></li>
+<li><p><code>pick_next</code> </p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span></span><br><span class="hljs-function"><span class="hljs-title">proc_stride_comp_f</span><span class="hljs-params">(<span class="hljs-keyword">void</span> *a, <span class="hljs-keyword">void</span> *b)</span></span><br><span class="hljs-function"></span>&#123;<br>     <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proc_struct</span> *<span class="hljs-title">p</span> =</span> le2proc(a, lab6_run_pool);<br>     <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proc_struct</span> *<span class="hljs-title">q</span> =</span> le2proc(b, lab6_run_pool);<br>     <span class="hljs-keyword">int32_t</span> c = p-&gt;lab6_stride - q-&gt;lab6_stride;<br>     <span class="hljs-keyword">if</span> (c &gt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;<br>     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (c == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>     <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">static</span> struct proc_struct *</span><br><span class="hljs-function"><span class="hljs-title">stride_pick_next</span><span class="hljs-params">(struct run_queue *rq)</span> </span>&#123;<br>    <span class="hljs-keyword">skew_heap_entry_t</span>* she = rq-&gt;lab6_run_pool;<br>    <span class="hljs-keyword">if</span> (she != <span class="hljs-literal">NULL</span>) &#123;<br>        <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proc_struct</span>* <span class="hljs-title">p</span> =</span> le2proc(she, lab6_run_pool);<br>        p-&gt;lab6_stride += BIG_STRIDE / p-&gt;lab6_priority;<br>        <span class="hljs-keyword">return</span> p;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure></li>
+<li><p><code>stride_proc_tick</code> </p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span></span><br><span class="hljs-function"><span class="hljs-title">stride_proc_tick</span><span class="hljs-params">(struct run_queue *rq, struct proc_struct *proc)</span> </span>&#123;<br>     <span class="hljs-keyword">if</span> (proc-&gt;time_slice &gt; <span class="hljs-number">0</span>) &#123;<br>        proc-&gt;time_slice --;<br>    &#125;<br>    <span class="hljs-keyword">if</span> (proc-&gt;time_slice == <span class="hljs-number">0</span>) &#123;<br>        proc-&gt;need_resched = <span class="hljs-number">1</span>;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure></li>
+</ul>
+<h3 id="Challenge-1-1"><a href="#Challenge-1-1" class="headerlink" title="Challenge 1"></a>Challenge 1</h3><blockquote>
+<p>实现 Linux 的 CFS 调度算法 <a target="_blank" rel="noopener" href="https://developer.ibm.com/tutorials/l-completely-fair-scheduler/">link</a> | <a target="_blank" rel="noopener" href="https://cs334.cs.vassar.edu/slides/04_Linux_CFS.pdf">和nice的关系</a> </p>
+</blockquote>
+<p>Completely Fair Scheduling, which is self-explanatory, is to maintain balance (fairness) in providing processor time to tasks.</p>
 <h1 id="Lab7"><a href="#Lab7" class="headerlink" title="Lab7"></a>Lab7</h1><h2 id="知识点-6"><a href="#知识点-6" class="headerlink" title="知识点"></a>知识点</h2><h3 id="00-基础原理"><a href="#00-基础原理" class="headerlink" title="00.基础原理"></a>00.<a target="_blank" rel="noopener" href="https://kiprey.github.io/2020/09/uCore-7/#%E7%9F%A5%E8%AF%86%E7%82%B9">基础原理</a></h3><h3 id="0-项目组成-3"><a href="#0-项目组成-3" class="headerlink" title="0.项目组成"></a>0.项目组成</h3><ul>
 <li>kern/schedule/{sched.h,sched.c}: 增加了定时器（timer）机制，用于进程/线程的do_sleep功能。</li>
 <li>kern/sync/sync.h: <strong>去除了lock实现（这对于不抢占内核没用。</strong> </li>
