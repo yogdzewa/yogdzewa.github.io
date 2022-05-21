@@ -57,7 +57,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/Calls-file_open.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/image-20220108132923299.png">
 <meta property="article:published_time" content="2021-10-01T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-20T13:25:48.407Z">
+<meta property="article:modified_time" content="2022-05-21T06:54:14.154Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary_large_image">
@@ -293,7 +293,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月20日 晚上
+                  不可视境界线最后变动于：2022年5月21日 下午
                 
               </p>
             
@@ -1367,9 +1367,9 @@
 <p>请说明ucore是否做到给每个新fork的线程一个唯一的id？请说明你的分析和理由。</p>
 <p>uCore中，每个新fork的线程都存在唯一的一个ID，理由如下：</p>
 <ul>
-<li><p>这一段代码相当于找出了一个初始为(MAX_PID,MAX_PID), 不满足条件时往pid大的方向查找的空闲区间(last_safe, next_safe),<br>只要<code>++last&lt;next</code>则自增后的last即为可分配的pid, 具体流程写进代码注释中</p>
+<li><p>这一段代码相当于找出了一个初始为(MAX_PID,MAX_PID), 不满足条件时往pid大的方向查找空闲区间(last_safe, next_safe),<br>只要<code>++last&lt;next</code>则自增后的last即为可分配的pid, 具体流程写进代码注释中</p>
 </li>
-<li><p>所以说通过维护一个可用PID的区间, 可以提高分配pid的效率</p>
+<li><p>所以说就是通过维护一个可用PID的区间, 可以提高分配pid的效率</p>
 </li>
 <li><p><code>get_pid</code>代码如下：</p>
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">// get_pid - alloc a unique pid for process</span><br><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span></span><br><span class="hljs-function"><span class="hljs-title">get_pid</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">static_assert</span>(MAX_PID &gt; MAX_PROCESS);<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">proc_struct</span> *<span class="hljs-title">proc</span>;</span><br>    <span class="hljs-keyword">list_entry_t</span> *<span class="hljs-built_in">list</span> = &amp;proc_list, *le;<br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> next_safe = MAX_PID, last_pid = MAX_PID;<br>    <span class="hljs-keyword">if</span> (++last_pid &gt;= MAX_PID)<br>    &#123;<span class="hljs-comment">//last自增后&gt;=MAX_PID, 从1重新开始, next设为MAX_PID, 待后续缩小范围</span><br>        last_pid = <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">goto</span> inside;<br>    &#125;<br>    <span class="hljs-keyword">if</span> (last_pid &gt;= next_safe)<br>    &#123;<span class="hljs-comment">//last自增后&gt;=next, 当前空闲区间**已用完**, 继续向后查找</span><br>    inside:<br>        next_safe = MAX_PID;<br>    repeat:<span class="hljs-comment">//这段代码看半天, 终于看出来是在遍历proc_list, 如果pid==last, last就++</span><br>        <span class="hljs-comment">//如果pid在last和next之间, 则next=pid以缩小范围.</span><br>        <span class="hljs-comment">//特殊情况: ++last&gt;next,则重启while循环, 并且if(++last&gt;MAX_PID)则重置last为1</span><br>        le = <span class="hljs-built_in">list</span>;<br>        <span class="hljs-keyword">while</span> ((le = list_next(le)) != <span class="hljs-built_in">list</span>)<br>        &#123;<br>            proc = le2proc(le, list_link);<br>            <span class="hljs-keyword">if</span> (proc-&gt;pid == last_pid)<br>            &#123;<br>                <span class="hljs-keyword">if</span> (++last_pid &gt;= next_safe)<br>                &#123;<br>                    <span class="hljs-keyword">if</span> (last_pid &gt;= MAX_PID)<br>                    &#123;<br>                        last_pid = <span class="hljs-number">1</span>;<br>                    &#125;<br>                    next_safe = MAX_PID;<br>                    <span class="hljs-keyword">goto</span> repeat;<br>                &#125;<br>            &#125;<br>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (proc-&gt;pid &gt; last_pid &amp;&amp; next_safe &gt; proc-&gt;pid)<br>            &#123;<br>                next_safe = proc-&gt;pid;<br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> last_pid;<br>&#125;<br></code></pre></div></td></tr></table></figure></li>

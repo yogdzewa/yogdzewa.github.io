@@ -44,7 +44,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220512222315120.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220519155802133.png">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-20T14:25:01.747Z">
+<meta property="article:modified_time" content="2022-05-21T13:07:34.711Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -230,7 +230,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      82k 字
+      83k 字
     </span>
   
 
@@ -239,7 +239,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1027 分钟
+      1036 分钟
     </span>
   
 
@@ -280,7 +280,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月20日 晚上
+                  不可视境界线最后变动于：2022年5月21日 晚上
                 
               </p>
             
@@ -1898,7 +1898,7 @@
 
 <p>by patching the program, something strange happened….. how does line 11 occur….? can write syscall to be interrupted and then reenter?</p>
 <p>anyway, that’s the way it is.</p>
-<h4 id="level10-4"><a href="#level10-4" class="headerlink" title="level10"></a>level10</h4><p>global_message with semaphore: sem_wait() + sem_post()……………</p>
+<h5 id="level10-4"><a href="#level10-4" class="headerlink" title="level10"></a>level10</h5><p>global_message with semaphore: sem_wait() + sem_post()……………</p>
 <p>我又不会了…… 做这个真是违反直觉的思考. scp了.0程序, 希望能看出一点提示..没看出来.</p>
 <h4 id="level11-4"><a href="#level11-4" class="headerlink" title="level11"></a>level11</h4><p>没看出和上一题有什么区别. 不过在discord上面看到了一点东西.</p>
 <blockquote>
@@ -1913,19 +1913,23 @@
 <p>processes are as follows:</p>
 <ul>
 <li>one connection sends <code>send_redacted_flag</code> command, then completes the str copy. </li>
-<li>another or still the same connection sends <code>send_message</code> command with <code>whatthefuckisthis</code>, causing overlapping the null-byte between prompt and flag. before null-byte, after last byte, sending SIGPIPE to stop thread.</li>
+<li>another or still the same connection sends <code>send_message</code> command with <code>whatthefuckisthis</code>, causing overlapping the null-byte between prompt and flag. after null-byte, before last byte, sending SIGPIPE to stop thread.</li>
 <li>another connection send <code>receive_message</code>.</li>
 <li>every program run can only test once.</li>
 </ul>
 <p>succeeding in .0 practice.</p>
 <h1 id="module-D-kernel"><a href="#module-D-kernel" class="headerlink" title="module D-kernel"></a>module D-kernel</h1><p>key point:</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://0xax.gitbooks.io/linux-insides/content/SysCall/linux-syscall-1.html">linux syscall details(<strong>linux inside</strong>)</a> | <a target="_blank" rel="noopener" href="https://www.felixcloutier.com/x86/syscall">syscall instruction</a>  </li>
+<li><a target="_blank" rel="noopener" href="https://0xax.gitbooks.io/linux-insides/content/SysCall/linux-syscall-1.html">linux syscall <em>DETAILS</em>(<strong>linux inside</strong>)</a> |  <a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/latest/">linux_kernel_doc</a> | <a target="_blank" rel="noopener" href="https://www.felixcloutier.com/x86/syscall">syscall instruction</a> | <a target="_blank" rel="noopener" href="https://gcc.gnu.org/onlinedocs/gcc/Variable-Attributes.html">Attributes of Variables(gcc)</a> | <ul>
+<li>you cannot find <em>noderef</em> or <em>address_space</em> in the GCC docs because they are not GCC attributes. They have meaning only for <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Sparse">Sparse</a>.<br>about <a target="_blank" rel="noopener" href="https://www.linuxquestions.org/questions/linux-kernel-70/what-does-__attribute__-noderef-address_space-2-mean-4175493101/">the effect</a>.</li>
+<li></li>
+</ul>
+</li>
 <li><strong>Modern solution to Rings:</strong> Ring -1, <em>Hypervisor Mode</em>. Able to intercept sensitive Ring 0 actions done by guests and handle them in the host OS.</li>
 <li>syscall High-level overview:<ol>
 <li>At bootup, in Ring 0, the kernel sets MSR_LSTAR to point to the syscall handler routine.</li>
 <li>When a userspace (Ring 3) process wants to interact with the kernel, it car call syscall.<br>a. Privilege level switches to Ring 0.<br>b. Control flow jumps to value of MSR_LSTAR.<br>c.  Return address saved to <strong>rcx</strong>.<br>d. That’s basically it! <a target="_blank" rel="noopener" href="https://www.felixcloutier.com/x86/syscall">https://www.felixcloutier.com/x86/syscall</a></li>
-<li>When the kernel is ready to return to userspace, it calls the appropriate return instruction (i.e., <strong>sysret</strong> for syscall).<br>a. Privilege level switches to Ring 3.<br>b. Control flow jumps to rcx.<br>c. That’s basically it!</li>
+<li>When the kernel is ready to return to userspace, it calls the appropriate return instruction (i.e., <strong>sysret</strong> for syscall).<br> a. Privilege level switches to Ring 3.<br> b. Control flow jumps to rcx.<br> c. That’s basically it!</li>
 <li><code>x86-64: rdi   rsi   rdx   r10   r8    r9    -</code><br>We can see the 6 args are stored in these registers. rcx is used to store syscall return address, so args skip rcx.</li>
 </ol>
 </li>
@@ -1935,6 +1939,26 @@
 <li>From devices</li>
 </ul>
 </li>
+<li>VM by qemu: <a target="_blank" rel="noopener" href="https://github.com/pwncollege/pwnkernel">set up an environment</a> <ul>
+<li>require: new version of gdb, kernel with debug symbols, ASLR is off. All in above link.</li>
+<li>because the kernel is started with qemu, so can debug with gdb through port 1234.</li>
+<li></li>
+</ul>
+</li>
+</ul>
+<p>build for old kernel 5.4:</p>
+<ul>
+<li>first complie stopping at <code>thunk_64.o</code>, due to missing symbol table.<ul>
+<li>revise <code>linux-5.4/tools/objtool/elf.c</code> line 380 -&gt; <a target="_blank" rel="noopener" href="https://www.spinics.net/lists/kernel/msg3797871.html">link</a> </li>
+</ul>
+</li>
+<li>then revise build.sh and take a vm snapshot.</li>
+<li>then revise <code>arch/x86/boot/compressed/pgtable_64.c</code> to fix multiple definitions of <code>__force_order</code>. <a target="_blank" rel="noopener" href="https://lkml.org/lkml/2019/12/21/121">link</a> </li>
+<li>OK. total size is 4.3G. by <code>du -sh pwnkernel</code> </li>
+</ul>
+<p>usage:</p>
+<ul>
+<li>only a limited number of commands will work in vm. look <code>ls /bin</code> for details. Because the shell is provided by busybox, so there is a lack of functionality.</li>
 <li></li>
 </ul>
 <section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>这里要指向2处的地址, 也就是bss+0x10
