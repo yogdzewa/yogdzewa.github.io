@@ -44,7 +44,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220512222315120.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220519155802133.png">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-21T16:23:26.593Z">
+<meta property="article:modified_time" content="2022-05-22T07:01:08.651Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -230,7 +230,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      83k 字
+      84k 字
     </span>
   
 
@@ -239,7 +239,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1040 分钟
+      1054 分钟
     </span>
   
 
@@ -280,7 +280,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月22日 凌晨
+                  不可视境界线最后变动于：2022年5月22日 下午
                 
               </p>
             
@@ -1877,7 +1877,7 @@
 
 <h4 id="level9-4"><a href="#level9-4" class="headerlink" title="level9"></a>level9</h4><p>看到个新模块<code>psutil</code>. </p>
 <p>执行send_redacted_flag命令时, 向函数栈帧中的的缓冲区写入”REDACTED: “, terminated with null-byte, which is 11bytes long(plus null-byte). Then calling open-&gt;read to read flag into the buffer, right after the previous string’s null-byte.</p>
-<p>if now try to use command <code>receive_message</code> to print out string containing flag, the function will stop at 11th position, because write() function’s <code>n</code> argment is given by strlen() evaluating string in global_message.</p>
+<p>if now try to use command <code>receive_message</code> to print out string containing the flag, the function will stop at 11th position, because write() function’s <code>n</code> argment is given by strlen() evaluating string in global_message.</p>
 <p>so the the procedure is as follows:</p>
 <ul>
 <li><p>In one thread(connection), first send <code>send_redacted_flag</code> command. </p>
@@ -1898,7 +1898,7 @@
 
 <p>by patching the program, something strange happened….. how does line 11 occur….? can write syscall to be interrupted and then reenter?</p>
 <p>anyway, that’s the way it is.</p>
-<h5 id="level10-4"><a href="#level10-4" class="headerlink" title="level10"></a>level10</h5><p>global_message with semaphore: sem_wait() + sem_post()……………</p>
+<h4 id="level10-4"><a href="#level10-4" class="headerlink" title="level10"></a>level10</h4><p>global_message with semaphore: sem_wait() + sem_post()……………</p>
 <p>我又不会了…… 做这个真是违反直觉的思考. scp了.0程序, 希望能看出一点提示..没看出来.</p>
 <h4 id="level11-4"><a href="#level11-4" class="headerlink" title="level11"></a>level11</h4><p>没看出和上一题有什么区别. 不过在discord上面看到了一点东西.</p>
 <blockquote>
@@ -1941,6 +1941,34 @@
 </ul>
 <h5 id="kernel-module"><a href="#kernel-module" class="headerlink" title="kernel module"></a>kernel module</h5><ul>
 <li><code>lsmod</code> list kernel module. like device drivers(graphic card), filesystems, networking functionality, other stuff.<br>all with <code>.ko</code> extension.</li>
+</ul>
+<p>How to interact with kernel module for further exploitation?</p>
+<ul>
+<li>historically, kernel modules could add syscall entries. nowadays less used.</li>
+<li>interrupts. a module could register a interrupt handler to <strong>hook</strong>. <code>int3</code> and <code>int1</code> are one-byte interrupt instructions which may be useful.</li>
+<li>files. <ul>
+<li><code>/dev</code>: mostly traditional devices (i.e., /dev/dsp for audio)</li>
+</ul>
+<ol start="2">
+<li><code>/proc</code>: started out in System V Unix as information about running processes. Linux expanded it into in <strong>a disastrous mess of kernel interfaces</strong>.</li>
+</ol>
+<ul>
+<li><code>/sys</code>: non-process information interface with the kernel. </li>
+<li>A module can register a file in one of the above locations.<br>Userspace code can <em>read|open()</em> that file to interact with the module!<br>or <em>ioctrl()</em> function sends setting and querying non-stream data(i.e., webcam resolution <strong>settings</strong> as opposed to webcam video <strong>stream</strong>).</li>
+</ul>
+</li>
+</ul>
+<p>driver interaction:</p>
+<ul>
+<li>reads data from userspace (using <code>copy_from_user</code>, a kernel API)</li>
+<li>“does stuff” (open files, read files, interact with hardware, etc)</li>
+<li>writes data to userspace (using copy_to_user)</li>
+<li>returns to userspace</li>
+</ul>
+<p>module compilation:</p>
+<ul>
+<li>kernel modules are all listed in the <code>pwnkernel/src/</code> </li>
+<li>at the end of the build.sh, there is a <em>building modules</em> procedure. it calls Make makefile in src dirctory. so before compilation, adding an entry for newly added module.</li>
 <li></li>
 </ul>
 <h5 id="Environment-setup"><a href="#Environment-setup" class="headerlink" title="Environment setup"></a>Environment setup</h5><p>build for old kernel 5.4: <a target="_blank" rel="noopener" href="https://github.com/pwncollege/pwnkernel">set up an environment</a> </p>
