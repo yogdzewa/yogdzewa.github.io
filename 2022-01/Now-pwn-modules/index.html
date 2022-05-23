@@ -44,7 +44,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220512222315120.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220519155802133.png">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-22T12:40:18.595Z">
+<meta property="article:modified_time" content="2022-05-22T15:41:26.875Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -239,7 +239,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1064 分钟
+      1065 分钟
     </span>
   
 
@@ -1882,7 +1882,7 @@
 <ul>
 <li><p>In one thread(connection), first send <code>send_redacted_flag</code> command. </p>
 </li>
-<li><p>Between this and next command, another thread send <code>send_message</code> command, overwrite until the global_message’s 11th position, <strong>before assigning null-byte to the end of string</strong>.</p>
+<li><p>Between this and next command, another thread send <code>send_message</code> command, overwrite until the global_message’s 11th char, <strong>before assigning null-byte to the end of string</strong>.</p>
 <img src="../../image/pwn-modules/image-20220519155802133.png" srcset="/img/loading.gif" lazyload alt="image-20220519155802133" style="zoom:80%;" /></li>
 <li><p>and first thread now continue executing at <code>receive_message</code> command. after the strlen() function, the return value means 11+[flag’s len], then used in the argment of write().</p>
 </li>
@@ -1919,9 +1919,8 @@
 </ul>
 <p>succeeding in .0 practice.</p>
 <h1 id="module-D-kernel"><a href="#module-D-kernel" class="headerlink" title="module D-kernel"></a>module D-kernel</h1><h4 id="key-point"><a href="#key-point" class="headerlink" title="key point:"></a>key point:</h4><h5 id="Intro"><a href="#Intro" class="headerlink" title="Intro:"></a>Intro:</h5><ul>
-<li><a target="_blank" rel="noopener" href="https://0xax.gitbooks.io/linux-insides/content/SysCall/linux-syscall-1.html">linux syscall <em>DETAILS</em>(<strong>linux inside</strong>)</a> |  <a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/latest/">linux_kernel_doc</a> | <a target="_blank" rel="noopener" href="https://www.felixcloutier.com/x86/syscall">syscall instruction</a> | <a target="_blank" rel="noopener" href="https://gcc.gnu.org/onlinedocs/gcc/Variable-Attributes.html">Attributes of Variables(gcc)</a> | <ul>
+<li><a target="_blank" rel="noopener" href="https://0xax.gitbooks.io/linux-insides/content/SysCall/linux-syscall-1.html">linux syscall <em>DETAILS</em> (<strong>linux inside</strong>)</a> |  <a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/latest/">linux_kernel_doc</a> | <a target="_blank" rel="noopener" href="https://www.felixcloutier.com/x86/syscall">syscall instruction</a> | <a target="_blank" rel="noopener" href="https://gcc.gnu.org/onlinedocs/gcc/Variable-Attributes.html">Attributes of Variables(gcc)</a> | <ul>
 <li>you cannot find <em>noderef</em> or <em>address_space</em> in the GCC docs because they are not GCC attributes. They have meaning only for <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Sparse">Sparse</a>.<br>about <a target="_blank" rel="noopener" href="https://www.linuxquestions.org/questions/linux-kernel-70/what-does-__attribute__-noderef-address_space-2-mean-4175493101/">the effect</a>.</li>
-<li></li>
 </ul>
 </li>
 <li><strong>Modern solution to Rings:</strong> Ring -1, <em>Hypervisor Mode</em>. Able to intercept sensitive Ring 0 actions done by guests and handle them in the host OS.</li>
@@ -1973,7 +1972,7 @@
 <li>so before compilation, adding an entry to makefile for newly added module.</li>
 </ul>
 </li>
-<li>command:<ul>
+<li>command: <u>must be used under root. or sh not found</u>.<ul>
 <li><code>insmod</code> command: load kernel module. or through <code>init_module</code> system call.</li>
 <li><code>lsmod</code> : list all modules.</li>
 <li><code>rmmod</code> : remove module.</li>
@@ -1988,7 +1987,8 @@
 </ul>
 </li>
 </ul>
-<h5 id="Environment-setup"><a href="#Environment-setup" class="headerlink" title="Environment setup"></a>Environment setup</h5><p>build for old kernel 5.4: <a target="_blank" rel="noopener" href="https://github.com/pwncollege/pwnkernel">set up an environment</a> </p>
+<h5 id="Privilege-Escalation"><a href="#Privilege-Escalation" class="headerlink" title="Privilege Escalation"></a>Privilege Escalation</h5><p><a target="_blank" rel="noopener" href="https://docs.google.com/presentation/d/1tcR4YsVhN2kVUfe8RJw56dtSs-QOwp4-g8qgI0Q3kFM/edit#slide=id.g75a3c0c177_2_16">SLIDE</a>. in make_root.c.</p>
+<h5 id="Escape-Seccomp"><a href="#Escape-Seccomp" class="headerlink" title="Escape Seccomp"></a>Escape Seccomp</h5><h5 id="Environment-setup"><a href="#Environment-setup" class="headerlink" title="Environment setup"></a>Environment setup</h5><p>build for old kernel 5.4: <a target="_blank" rel="noopener" href="https://github.com/pwncollege/pwnkernel">set up an environment</a> </p>
 <ul>
 <li>first complie stopping at <code>thunk_64.o</code>, due to missing symbol table.<ul>
 <li>revise <code>linux-5.4/tools/objtool/elf.c</code> line 380 -&gt; <a target="_blank" rel="noopener" href="https://www.spinics.net/lists/kernel/msg3797871.html">link</a> </li>
