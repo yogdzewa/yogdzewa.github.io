@@ -43,8 +43,9 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220515155725438.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220512222315120.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220519155802133.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220523182826589.png">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-22T15:41:26.875Z">
+<meta property="article:modified_time" content="2022-05-23T15:57:23.573Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -230,7 +231,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      85k 字
+      87k 字
     </span>
   
 
@@ -239,7 +240,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1065 分钟
+      1083 分钟
     </span>
   
 
@@ -280,7 +281,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月22日 晚上
+                  不可视境界线最后变动于：2022年5月23日 晚上
                 
               </p>
             
@@ -1988,7 +1989,35 @@
 </li>
 </ul>
 <h5 id="Privilege-Escalation"><a href="#Privilege-Escalation" class="headerlink" title="Privilege Escalation"></a>Privilege Escalation</h5><p><a target="_blank" rel="noopener" href="https://docs.google.com/presentation/d/1tcR4YsVhN2kVUfe8RJw56dtSs-QOwp4-g8qgI0Q3kFM/edit#slide=id.g75a3c0c177_2_16">SLIDE</a>. in make_root.c.</p>
-<h5 id="Escape-Seccomp"><a href="#Escape-Seccomp" class="headerlink" title="Escape Seccomp"></a>Escape Seccomp</h5><h5 id="Environment-setup"><a href="#Environment-setup" class="headerlink" title="Environment setup"></a>Environment setup</h5><p>build for old kernel 5.4: <a target="_blank" rel="noopener" href="https://github.com/pwncollege/pwnkernel">set up an environment</a> </p>
+<h5 id="Escape-Seccomp"><a href="#Escape-Seccomp" class="headerlink" title="Escape Seccomp"></a>Escape Seccomp</h5><p><a target="_blank" rel="noopener" href="https://docs.google.com/presentation/d/1YMlOERClX6Yi8Fb9DYxBBJ5MYB1C-_F75XKkoSmbl8k/edit#slide=id.ga2eb818465_0_0">SLIDE</a> </p>
+<p>mainly disable <code>TIF_SECCOMP</code> bit. all in SLIDES.</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">task_struct</span> &#123;</span><br>    <span class="hljs-comment">// LOTS of stuff, including</span><br>    <span class="hljs-keyword">const</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">cred</span> __<span class="hljs-title">rcu</span> *<span class="hljs-title">cred</span>;</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">thread_info</span> <span class="hljs-title">thread_info</span>;</span><br>&#125;<br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">thread_info</span> &#123;</span><br>    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> flags;	<span class="hljs-comment">/* low level flags */</span><br>    u32 status;		<span class="hljs-comment">/* thread synchronous flags */</span><br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<p>Yan demonstrates how to use make_root.ko to escape seccomp and escalating privilege.</p>
+<h5 id="memory-managment"><a href="#memory-managment" class="headerlink" title="memory managment"></a>memory managment</h5><ul>
+<li>linux use four level page table:</li>
+</ul>
+<img src="../../image/pwn-modules/image-20220523182826589.png" srcset="/img/loading.gif" lazyload alt="image-20220523182826589" style="zoom:80%;" /> 
+
+<ul>
+<li>only lower 48 bits are used in addressing. higher 12bits used to denote the kernel space. and ARM arch take these bits as tag for security concerns. <a target="_blank" rel="noopener" href="https://source.android.com/devices/tech/debug/tagged-pointers">android source</a> | <a target="_blank" rel="noopener" href="https://llvm.org/devmtg/2018-10/slides/Serebryany-Stepanov-Tsyrklevich-Memory-Tagging-Slides-LLVM-2018.pdf">LLVM memory tagging</a> | </li>
+<li>Virtual Machine isolation: The extended page table.</li>
+<li>MMU + TLB</li>
+<li>other architectures are analogous in <strong>paging</strong>. Linux <em>requires</em> a hardware MMU (although certain forks do not).</li>
+<li><strong>The Old Way</strong>: Old Linuxes could access physical memory via <strong>/dev/mem</strong> as root.<br><strong>The New Way</strong>: If you want to get at physical memory now, you must do it from the <strong>kernel</strong>. Physical memory is mapped <em>contiguously</em> in kernel’s virtual memory space for convenient access. Two macros, <code>phys_to_virt()</code> and <code>virt_to_phys()</code>.</li>
+</ul>
+<h5 id="Mitigations"><a href="#Mitigations" class="headerlink" title="Mitigations"></a>Mitigations</h5><p><a target="_blank" rel="noopener" href="https://docs.google.com/presentation/d/1DNxufs_WlQRkzBMjPD7UE1qRrd87XDGpfQSPkiajEyE/edit#slide=id.gfbef220448_0_48">SLIDES</a> many links.</p>
+<ul>
+<li><strong>Stack canaries:</strong> leak the canary!<br><strong>kASLR:</strong> leak the kernel base address!<br><strong>Heap/stack regions NX:</strong> ROP!</li>
+<li>Function Granular ASLR.</li>
+<li>Supervisor Memory Protection:<ul>
+<li><strong>SMEP.</strong><br>Prevents kernel-space code from <strong>E</strong>xecuting userspace memory <em>at all ever</em>.</li>
+<li><strong>SMAP.</strong><br>Prevents kernel-space from even <strong>A</strong>ccessing userspace memory <em>unless the AC flag in the RFLAGS register is set</em>. Two ring0 instructions, stac and clac, manage this bit.</li>
+<li>Why separate these? in SLIDES.</li>
+</ul>
+</li>
+</ul>
+<h5 id="Environment-setup"><a href="#Environment-setup" class="headerlink" title="Environment setup"></a>Environment setup</h5><p>build for old kernel 5.4: <a target="_blank" rel="noopener" href="https://github.com/pwncollege/pwnkernel">set up an environment</a> </p>
 <ul>
 <li>first complie stopping at <code>thunk_64.o</code>, due to missing symbol table.<ul>
 <li>revise <code>linux-5.4/tools/objtool/elf.c</code> line 380 -&gt; <a target="_blank" rel="noopener" href="https://www.spinics.net/lists/kernel/msg3797871.html">link</a> </li>
@@ -2017,6 +2046,11 @@
 <ul>
 <li>wget command in build.sh has been added with -c option(–continue), which means that it won’t repeat download when there is an already existing file in the same directory.</li>
 <li><code>mkdir -p</code> no error if existing.</li>
+</ul>
+<h5 id="online-environment"><a href="#online-environment" class="headerlink" title="online environment"></a>online environment</h5><ul>
+<li>I have no idea about what happened…….it suddenly worked and then shutdown…..</li>
+<li>太蠢了, 全都停不下来. 等会看一下writing kernel shellcode. 没用啊, 难不成全部都变成本地做? 也不是不行就是了…….</li>
+<li></li>
 </ul>
 <section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>这里要指向2处的地址, 也就是bss+0x10
 <a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span>这里开始就是从改变后的rsp弹出返回地址. 开始准备通过puts来leak处libc地址.
