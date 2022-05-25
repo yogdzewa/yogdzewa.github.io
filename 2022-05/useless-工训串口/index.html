@@ -16,21 +16,22 @@
   <meta name="author" content="Yogdzewa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="知识补充">
+    <meta name="description" content="林俊烨 信安2002 202008060229  实验目的 加深对Linux系统的了解和使用 熟练使用Linux下io函数read、write和epoll函数 了解Linux设备文件机制 熟练使用示波器识读UART波形 熟练处理流式通信数据  实验内容3.1 准备工作在 VMware Workstation 中安装 Ubuntu 20.04 虚拟机 3.2 Linux操作系统平台安装deb包后进入">
 <meta property="og:type" content="article">
-<meta property="og:title" content="《程序员的自我修养-链接装载与库》">
-<meta property="og:url" content="https://yogdzewa.github.io/2022-05/Now-%E9%93%BE%E6%8E%A5%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93/index.html">
+<meta property="og:title" content="Yogdzewa">
+<meta property="og:url" content="https://yogdzewa.github.io/2022-05/useless-%E5%B7%A5%E8%AE%AD%E4%B8%B2%E5%8F%A3/index.html">
 <meta property="og:site_name" content="Yogdzewa">
-<meta property="og:description" content="知识补充">
+<meta property="og:description" content="林俊烨 信安2002 202008060229  实验目的 加深对Linux系统的了解和使用 熟练使用Linux下io函数read、write和epoll函数 了解Linux设备文件机制 熟练使用示波器识读UART波形 熟练处理流式通信数据  实验内容3.1 准备工作在 VMware Workstation 中安装 Ubuntu 20.04 虚拟机 3.2 Linux操作系统平台安装deb包后进入">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-05-09T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-10T10:17:55.243Z">
+<meta property="og:image" content="https://yogdzewa.github.io/image/Untitled/image-20220524182900905.png">
+<meta property="article:published_time" content="2022-05-24T10:26:07.441Z">
+<meta property="article:modified_time" content="2022-05-24T15:17:37.361Z">
 <meta property="article:author" content="Yogdzewa">
-<meta property="article:tag" content="CS">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://yogdzewa.github.io/image/Untitled/image-20220524182900905.png">
   
   
-  <title>《程序员的自我修养-链接装载与库》 - Yogdzewa</title>
+  <title>Yogdzewa</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -188,7 +189,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="《程序员的自我修养-链接装载与库》">
+            <span class="h2" id="subtitle" title="">
               
             </span>
 
@@ -198,8 +199,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2022-05-09 22:00" pubdate>
-        2022年5月9日 晚上
+      <time datetime="2022-05-24 18:26" pubdate>
+        2022年5月24日 晚上
       </time>
     </span>
   
@@ -209,7 +210,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.1k 字
+      2.4k 字
     </span>
   
 
@@ -218,7 +219,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      26 分钟
+      31 分钟
     </span>
   
 
@@ -255,136 +256,42 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">《程序员的自我修养-链接装载与库》</h1>
+            <h1 style="display: none"></h1>
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月10日 晚上
+                  不可视境界线最后变动于：2022年5月24日 晚上
                 
               </p>
             
             <div class="markdown-body">
-              <h2 id="1-2"><a href="#1-2" class="headerlink" title="1-2"></a>1-2</h2><p>没啥特别的</p>
-<h2 id="3-ELF"><a href="#3-ELF" class="headerlink" title="3 ELF"></a>3 ELF</h2><blockquote>
-<p>COFF 是由 Unix System V Release 3 首先提出并且使用的格式规范，后来微软公司基 于 COFF 格式，制定了 PE 格式标准，并将其用于当时的 Windows NT 系统。 System V Release 4 在 COFF 的基础上引入了 ELF 格式，目前流行的 Linux 系统也以 ELF 作 为基本可执行文件格式。这也就是为什么目前 PE 和 ELF 如此相似的主要原因</p>
-</blockquote>
-<p>段 section：</p>
-<ul>
-<li>另外值得一提的是，有时候编译器会把宁符串常量放到 “.data” 段，而不会单独放在”.rodata” 段。</li>
-<li>” .note.GNU-stack” 段虽然有 “ CONTENTS”, 但它的长度为 0, 这是个很古怪的段</li>
-<li>应用程序也可以使用一些非系统保留的名字作为段名 。 比如我们可以在 ELF 文件中插入一个 “music” 的 段，里面存放了一首 MP3 音乐，节 ELF 文件运行起来以后可以读取这个段播放这首 MP3. 但是应用程序自定义的段名不能使用“.”作为前缀，否则容易跟系统保留段名冲突。</li>
-<li>比如一个 ELF 文件中可能有两个或两个以上叫做 “.text” 的段</li>
-<li>自定义段<ul>
-<li><code>_attribute_( (section( &quot;FOO&quot;))) int global= 42;</code> </li>
+              <p><strong>林俊烨 信安2002 202008060229</strong> </p>
+<h3 id="实验目的"><a href="#实验目的" class="headerlink" title="实验目的"></a>实验目的</h3><ul>
+<li>加深对Linux系统的了解和使用</li>
+<li>熟练使用Linux下io函数read、write和epoll函数</li>
+<li>了解Linux设备文件机制</li>
+<li>熟练使用示波器识读UART波形</li>
+<li>熟练处理流式通信数据</li>
 </ul>
-</li>
-</ul>
-<p>ELF:</p>
-<ul>
-<li>ELF 段表的这个数组的第一个元素是无效的段描述符，它的类型为 ‘,NULL”, 除此之外每个段 描述符都对应一个段</li>
-<li>主要决定段的属性的是段的类型 (<strong>sb_type</strong>) 和段的标志位 (<strong>sh_flags</strong>) P100</li>
-<li>对于变量和函数来说，符号值就是它们的地址</li>
-<li>P108 符号表详细介绍<ul>
-<li>链接器特殊符号! 用extern声明. 在ucore中也见过.</li>
-</ul>
-</li>
-</ul>
-<p>编译器行为:</p>
-<ul>
-<li>符号修饰与函数签名, 加不加下划线的区别.<ul>
-<li>P111 C++函数签名.</li>
-<li>binutils中<code>c++filt</code>命令解析函数签名, 真行</li>
-<li>extern “C”的作用!</li>
-<li>确实是涨知识.</li>
-</ul>
-</li>
-<li>强弱引用:<ul>
-<li>通过使用 <code>&quot;_attribute_((weakref))&quot; </code>这个扩展关键字来声明对一 个外部函数的引用为弱引用</li>
-<li>这种弱符号和弱引用对于库来说十分有用，比如库中定义的弱符号可以被用户定义的强 符号所覆盖，从而使得程序可以使用自定义版本的库函数；或者程序可以对某些扩展功能模块的引用定义为弱引用，当我们将扩展模块与程序链接在一起时，功能模块就可以正常使用； 如果我们去掉了某些功能模块，那么程序也可以正常链接，只是缺少了相应的功能，这使得程序的功能更加容易裁剪和组合。</li>
-</ul>
-</li>
-<li><strong>DWARF</strong> ( Debug With Arbitrary Record Format)</li>
-</ul>
-<h2 id="静态链接"><a href="#静态链接" class="headerlink" title="静态链接"></a>静态链接</h2><p>对于多个输入目标文件，链接器将相似段合并</p>
-<p>整个链接过程分两步:</p>
-<ul>
-<li>扫描所有的输入目标文件，并且获得它们的各个段的长度、 属性和位置，并且将输入目标文件中的符号表中所有的符号定义和符号引用收集起来，统— 放到一个全局符号表。</li>
-<li>使用上面第一步中收集到的所有信息，读取输入文件中段的数据、重定位信息，井且进行符号解析与重定位、调整代码中的地址等</li>
-</ul>
-<p>也就是:</p>
-<ul>
-<li>链接器按照前面介绍的空间分配方法进行分配，这时候输入文 件中的各个段在链接后的<strong>虚拟地址</strong>就已经确定了</li>
-<li>当前面一步完成之后，链接器开始计算各个符号的虚拟地址</li>
-</ul>
-<p>我现在的知识似乎还停留在静态链接的框架里面. 还是继续看吧, 书里也有动态链接的细节. 在CSAPP里也没提及.</p>
-<p><strong>4.3 COMMON 块</strong> </p>
-<ul>
-<li>COMMON 类型的链接规则是针对符号都是弱符号的情况， 如果其中有一个符号 为强符号，那么最终输出结果中的符号所占空间与强符号相同, 如果有弱符号的大小大于强符号的大小, 那么连接器会给出警告.</li>
-<li>直接导致需要COMMON 机制的原因是编译器和链接器允许不同类型的弱符号存在，但最本质的原因还是 链接器不支持符号类型，即链接器无法判断各个符号的类型是否一致。</li>
-<li>编译器在链接前无法为弱符号在BSS 段分配空间，因为所须要空间的大小未知。如果只使用<code>gcc -c</code>的话会发现未初始化的全局变量没有出现在bss段. 但是链接器在链接过程中可以确定弱符号的大小.</li>
-<li><code>-fno-common</code> or <code>__attribute__((nocommon));</code> 禁用common处理.</li>
-<li>一旦一个未初始化的全局变蜇不是以 COMMON 块的形式存在，那么它就相当于一个强符号，如果其他目标文件中还有同一个变量的强符号定义，链接时就会发生符号重复定义错误。</li>
-</ul>
-<p><strong>4.4 C+＋相关问题</strong> P135</p>
-<p><strong>4.4.2 全局构造与析构</strong> </p>
-<ul>
-<li>Linux 系统下一般程序的入口是 “_start”. 这个函数是 Linux 系统库 (Glibc) 的一部分</li>
-<li>利用<code>.init和.fini段</code>的特性， C++的全局构造和析构函数就由此实现</li>
-</ul>
-<p><strong>4.4.3 C+＋与 ABI</strong>  </p>
-<ul>
-<li>其中我们把符号修饰 标准、变量内存布局、函数调用方式等这些跟可执行代码二进制兼容性相关的内容称为 ABI (Application Binary Interface).</li>
-<li>影响ABI的因素. P139</li>
-</ul>
-<p>静态库链接:</p>
-<ul>
-<li>VIsual C+＋也提供了与 Lmux下的ar类似的工具，叫lib.exe，这个程序可以用来创建,提取,列举lib文件中的内容。</li>
-<li>P143 链接的一个示例过程</li>
-</ul>
-<p>4.6.2 最“小＂的程序</p>
-<blockquote>
-<p>做着做着就做到思维导图上去了…</p>
-</blockquote>
+<h3 id="实验内容"><a href="#实验内容" class="headerlink" title="实验内容"></a>实验内容</h3><h4 id="3-1-准备工作"><a href="#3-1-准备工作" class="headerlink" title="3.1 准备工作"></a>3.1 准备工作</h4><p>在 VMware Workstation 中安装 Ubuntu 20.04 虚拟机</p>
+<h4 id="3-2-Linux操作系统平台"><a href="#3-2-Linux操作系统平台" class="headerlink" title="3.2 Linux操作系统平台"></a>3.2 Linux操作系统平台</h4><p>安装deb包后进入根目录以普通用户权限运行 gettips 得到路径，以root权限进入该路径，使用 ls -a 显示隐藏文件，最后使用 cat 读取 .puzzle.txt 文件内容。</p>
+<h4 id="3-3-Linux平台串口数据接收"><a href="#3-3-Linux平台串口数据接收" class="headerlink" title="3.3 Linux平台串口数据接收"></a>3.3 Linux平台串口数据接收</h4><img src="../../../image/Untitled/image-20220524182900905.png" srcset="/img/loading.gif" lazyload alt="image-20220524182900905" style="zoom:67%;" />
+
+<p>使用 STC-ISP 软件将 dut5.hex 程序下载至 STC单片计算机板 。<br>使用示波器观察STC单片机UART串口输出信号，识别单片机发送数据所使用<br>的波特率。<br>经计算得知我拿到的这块单片机的波特率为 9600 。<br>根据单片机串口波特率，编写 C和Python 程序从虚拟机的串口读取信息。<br>C的代码直接下载示例代码改一下波特率就能用，Python的需要自行修改很<br>多部分，不能直接使用示例代码。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> serial<br><span class="hljs-keyword">import</span> binascii<br>ser = serial.Serial(<span class="hljs-string">&quot;/dev/ttyUSB0&quot;</span>, <span class="hljs-number">9600</span>, timeout=<span class="hljs-number">0.5</span>)<br>l = []<br><span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>data = <span class="hljs-built_in">str</span>(binascii.hexlify(ser.read()))[<span class="hljs-number">2</span>:<span class="hljs-number">4</span>].upper()<br>    <span class="hljs-keyword">if</span> data != <span class="hljs-string">&quot;&#x27;&quot;</span>:<br>    l.append(data)<br>    <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(l) == <span class="hljs-number">13</span>:<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;读到的字节：<span class="hljs-subst">&#123;<span class="hljs-string">&quot; &quot;</span>.join(l)&#125;</span>&#x27;</span>)<br>    <span class="hljs-keyword">break</span><br>v = <span class="hljs-string">&quot;&quot;</span>.join(l[<span class="hljs-number">2</span>:])<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;序列号为：<span class="hljs-subst">&#123;v&#125;</span>&#x27;</span>)<br></code></pre></div></td></tr></table></figure>
+
+<h4 id="3-4-计算机串口数据收发与测量"><a href="#3-4-计算机串口数据收发与测量" class="headerlink" title="3.4 计算机串口数据收发与测量"></a>3.4 计算机串口数据收发与测量</h4><p>使用 STC-ISP 软件将 getSecret.hex 程序下载至 STC单片计算机板 。下载程序后，单片机将使用 1200 波特率发送自身序列号。向串口写入自己的学号，STC单片机接收到学号后会发送第一串密码，密码长度为4字节，解析出该串密码并原样发回给串口，STC单品机收到返回后会继续发送下一串密码，继续解析出该串密码并原样发回给串口，以此往复，将收到的最后一串密码记录下来。最后将学号、序列号、最后一串密码发送到课程后台。</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> serial<br><span class="hljs-keyword">import</span> requests<br><span class="hljs-keyword">import</span> serial.tools.list_ports<br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">b2s</span>(<span class="hljs-params">data</span>):</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;&#x27;</span>.join([<span class="hljs-string">f&#x27;<span class="hljs-subst">&#123;ch:<span class="hljs-number">0</span>&gt;2x&#125;</span>&#x27;</span> <span class="hljs-keyword">for</span> ch <span class="hljs-keyword">in</span> data]).upper()<br><br>ser = serial.Serial(<span class="hljs-built_in">list</span>(serial.tools.list_ports.comports()[<span class="hljs-number">0</span>])[<span class="hljs-number">0</span>], <span class="hljs-number">1200</span>)<br><span class="hljs-keyword">assert</span>(ser != <span class="hljs-literal">None</span>)<br><br>studentID = <span class="hljs-built_in">input</span>(<span class="hljs-string">&quot;学号:&quot;</span>)<br><span class="hljs-keyword">assert</span>(studentID.isdigit() <span class="hljs-keyword">and</span> <span class="hljs-built_in">len</span>(studentID) == <span class="hljs-number">12</span>)<br><br>number = b2s(ser.read(<span class="hljs-number">6</span>))<br><span class="hljs-keyword">assert</span>(number[:<span class="hljs-number">4</span>] == <span class="hljs-string">&quot;AA55&quot;</span>)<br><br>number = number[<span class="hljs-number">4</span>:]<br><span class="hljs-keyword">assert</span>(<span class="hljs-built_in">len</span>(number) == <span class="hljs-number">4</span> * <span class="hljs-number">2</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;序列号:<span class="hljs-subst">&#123;number&#125;</span>&#x27;</span>)<br><br>startData = <span class="hljs-string">b&#x27;\xaa\x55&#x27;</span> + <span class="hljs-built_in">bytes</span>([<span class="hljs-built_in">ord</span>(ch) - <span class="hljs-built_in">ord</span>(<span class="hljs-string">&#x27;0&#x27;</span>) <span class="hljs-keyword">for</span> ch <span class="hljs-keyword">in</span> studentID])<br>ser.write(startData)<br><br>password = <span class="hljs-string">b&#x27;&#x27;</span> <br>i = <span class="hljs-number">1</span>  <br><span class="hljs-keyword">try</span>:<br>    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>        data = ser.read_all()<br>        sdata = b2s(data)<br>        <span class="hljs-keyword">if</span> data != <span class="hljs-string">b&#x27;&#x27;</span> <span class="hljs-keyword">and</span> sdata[:<span class="hljs-number">4</span>] == <span class="hljs-string">&quot;AA55&quot;</span>:<br>            password = data[-<span class="hljs-number">4</span>:]<br>            <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(password) == <span class="hljs-number">4</span>:<br>                <span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;[<span class="hljs-subst">&#123;i&#125;</span>]密码:<span class="hljs-subst">&#123;b2s(password)&#125;</span>&#x27;</span>)<br>                ser.write(<span class="hljs-string">b&#x27;\xaa\x55&#x27;</span> + password)<br>                i += <span class="hljs-number">1</span><br><span class="hljs-keyword">except</span> KeyboardInterrupt:<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;[结束]最后一串密码为:<span class="hljs-subst">&#123;b2s(password)&#125;</span>&#x27;</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;[正在提交]http://132.232.98.70:6363/checkSecret?id=<span class="hljs-subst">&#123;studentID&#125;</span>&amp;v=<span class="hljs-subst">&#123;number&#125;</span>&amp;s=<span class="hljs-subst">&#123;b2s(password)&#125;</span>&#x27;</span>)<br><br>    r = requests.get(<span class="hljs-string">f&quot;http://132.232.98.70:6363/checkSecret?id=<span class="hljs-subst">&#123;studentID&#125;</span>&amp;v=<span class="hljs-subst">&#123;number&#125;</span>&amp;s=<span class="hljs-subst">&#123;b2s(password)&#125;</span>&quot;</span>)<br><br>    <span class="hljs-keyword">assert</span>(r.status_code == <span class="hljs-number">200</span> <span class="hljs-keyword">and</span> r.text.isdigit())<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;[提交成功]学号:<span class="hljs-subst">&#123;studentID&#125;</span> 密码循环次数:<span class="hljs-subst">&#123;r.text&#125;</span>&#x27;</span>)<br></code></pre></div></td></tr></table></figure>
+
 
             </div>
             <hr>
             <div>
               <div class="post-metas mb-3">
                 
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/CS/">CS</a>
-                    
-                  </div>
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/CS/">CS</a>
-                    
-                  </div>
                 
               </div>
               
-              
-                <div class="post-prevnext">
-                  <article class="post-prev col-6">
-                    
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/2022-04/Learning-ucore-makefile/">
-                        <span class="hidden-mobile">ucore makefile分析</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
               
             </div>
 
@@ -403,7 +310,7 @@
         var options = Object.assign(
           {"clientID":"312db7ebbc085de5d28d","clientSecret":"85ea3cefd13c73a6d85c1813adfde4f1550bfbda","repo":"yogdzewa.github.io","owner":"yogdzewa","admin":["yogdzewa"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: 'a74ebaf040bb8d141a2e972ee4b617d0'
+            id: '680669b255467b6f7bbfe81910a4ff58'
           }
         )
         var gitalk = new Gitalk(options);

