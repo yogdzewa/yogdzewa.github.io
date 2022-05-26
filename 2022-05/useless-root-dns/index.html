@@ -16,17 +16,20 @@
   <meta name="author" content="Yogdzewa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="实验任务 在自己机器上建立一个根域名解析服务，使得自己机器发出的域名解析请求，需要用到根时直接用自己的机器应答。 请在实验报告里写清楚自己是怎么找到解决方案的，方案的原理是什么，自己怎么实现的 分析这么干的好处坏处，技术检测一下中国各大ISP是怎么干的，为什么要这么干(?)  资料查找首先在IANA官网上找到root相关信息和文件:     同时查找一些DNS server搭建资料, 发现基本都是">
+    <meta name="description" content="实验任务 在自己机器上建立一个根域名解析服务，使得自己机器发出的域名解析请求，需要用到根时直接用自己的机器应答。 请在实验报告里写清楚自己是怎么找到解决方案的，方案的原理是什么，自己怎么实现的 分析这么干的好处坏处，技术检测一下中国各大ISP是怎么干的，为什么要这么干(?)  资料查找 &amp; 初步设置首先在IANA官网上找到root相关信息和文件:     同时查找一些DNS server搭">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Yogdzewa">
 <meta property="og:url" content="https://yogdzewa.github.io/2022-05/useless-root-dns/index.html">
 <meta property="og:site_name" content="Yogdzewa">
-<meta property="og:description" content="实验任务 在自己机器上建立一个根域名解析服务，使得自己机器发出的域名解析请求，需要用到根时直接用自己的机器应答。 请在实验报告里写清楚自己是怎么找到解决方案的，方案的原理是什么，自己怎么实现的 分析这么干的好处坏处，技术检测一下中国各大ISP是怎么干的，为什么要这么干(?)  资料查找首先在IANA官网上找到root相关信息和文件:     同时查找一些DNS server搭建资料, 发现基本都是">
+<meta property="og:description" content="实验任务 在自己机器上建立一个根域名解析服务，使得自己机器发出的域名解析请求，需要用到根时直接用自己的机器应答。 请在实验报告里写清楚自己是怎么找到解决方案的，方案的原理是什么，自己怎么实现的 分析这么干的好处坏处，技术检测一下中国各大ISP是怎么干的，为什么要这么干(?)  资料查找 &amp; 初步设置首先在IANA官网上找到root相关信息和文件:     同时查找一些DNS server搭">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yogdzewa.github.io/image/root_dns/image-20220524232001842.png">
-<meta property="og:image" content="https://yogdzewa.github.io/image/root_dns/image-20220525102930685.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/root_dns/image-20220525195636244.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/root_dns/image-20220525194946758.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/root_dns/image-20220525195000445.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/root_dns/image-20220525195211384.png">
 <meta property="article:published_time" content="2022-05-24T15:17:07.239Z">
-<meta property="article:modified_time" content="2022-05-25T08:30:24.778Z">
+<meta property="article:modified_time" content="2022-05-25T12:36:13.726Z">
 <meta property="article:author" content="Yogdzewa">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://yogdzewa.github.io/image/root_dns/image-20220524232001842.png">
@@ -211,7 +214,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.8k 字
+      3.1k 字
     </span>
   
 
@@ -220,7 +223,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      22 分钟
+      40 分钟
     </span>
   
 
@@ -261,7 +264,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月25日 下午
+                  不可视境界线最后变动于：2022年5月25日 晚上
                 
               </p>
             
@@ -271,11 +274,11 @@
 <li>请在实验报告里写清楚自己是怎么找到解决方案的，方案的原理是什么，自己怎么实现的</li>
 <li>分析这么干的好处坏处，技术检测一下中国各大ISP是怎么干的，为什么要这么干(?)</li>
 </ul>
-<h2 id="资料查找"><a href="#资料查找" class="headerlink" title="资料查找"></a>资料查找</h2><p>首先在<a target="_blank" rel="noopener" href="https://www.iana.org/domains/root/files">IANA官网</a>上找到root相关信息和文件:</p>
+<h2 id="资料查找-amp-初步设置"><a href="#资料查找-amp-初步设置" class="headerlink" title="资料查找 &amp; 初步设置"></a>资料查找 &amp; 初步设置</h2><p>首先在<a target="_blank" rel="noopener" href="https://www.iana.org/domains/root/files">IANA官网</a>上找到root相关信息和文件:</p>
 <blockquote>
 <img src="../../../image/root_dns/image-20220524232001842.png" srcset="/img/loading.gif" lazyload alt="image-20220524232001842" style="zoom: 50%;" /> 
 </blockquote>
-<p>同时查找一些DNS server搭建资料, 发现基本都是使用BIND.</p>
+<p>同时查找一些DNS server搭建资料, 发现基本都是使用BIND. 以下来自ubuntu帮助文档.</p>
 <blockquote>
 <h4 id="Domain-Name-Service-DNS"><a href="#Domain-Name-Service-DNS" class="headerlink" title="Domain Name Service (DNS)"></a><a target="_blank" rel="noopener" href="https://ubuntu.com/server/docs/service-domain-name-service-dns">Domain Name Service (DNS)</a></h4><p>Domain Name Service (DNS) is an Internet service that maps IP addresses and fully qualified domain names (FQDN) to one another. In this way, DNS alleviates the need to remember IP addresses. Computers that run DNS are called <em>name servers</em>. Ubuntu ships with <strong>BIND</strong> (Berkley Internet Naming Daemon), the most common program used for maintaining a name server on Linux.</p>
 </blockquote>
@@ -287,30 +290,46 @@
 </li>
 <li>zone file:<ul>
 <li>an operational requirement to operate two (or more) name servers (which may be contracted to a third party) which will contain the authoritative data for all the domain labels within its zone of authority in a <a target="_blank" rel="noopener" href="https://bind9.readthedocs.io/en/latest/chapter3.html#zone-file"><strong>zone file</strong></a>.</li>
+<li>而hint file是指本服务器上没有该zone的内容, 需要向hint中指定的几个服务器请求内容. 使用本机作为根服务器不需要root hint文件, 只需要root.zone.</li>
+</ul>
+</li>
+<li>在linux中, 使用BIND9情况下DNS配置的主要文件组如下. 这三个文件分开是为了便于管理, 实际上在named.conf文件中有三行#include语句来包含这三个文件的内容. 注意不要重复定义一些规则.<ul>
+<li><code>/etc/bind/named.conf.options</code>: global DNS options</li>
+<li><code>/etc/bind/named.conf.local</code>: for your zones</li>
+<li><code>/etc/bind/named.conf.default-zones</code>: default zones such as localhost, its reverse, and the root hints<br>根据注释, 权威域名解析服务其要能够为自己的localhost域名、反向查找域名、广播域名做解析, 对这里不做更改。</li>
 </ul>
 </li>
 </ul>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">//in named.conf</span><br>include <span class="hljs-string">&quot;/etc/bind/named.conf.options&quot;</span>;      <br>include <span class="hljs-string">&quot;/etc/bind/named.conf.local&quot;</span>;        <br>include <span class="hljs-string">&quot;/etc/bind/named.conf.default-zones&quot;</span>;<br></code></pre></div></td></tr></table></figure>
+
 <p>authoritative primary server的named.conf示例:</p>
-<img src="../../image/root_dns/image-20220525102930685.png" srcset="/img/loading.gif" lazyload alt="image-20220525102930685" style="zoom:67%;" />
+<img src="../../image/root_dns/image-20220525195636244.png" srcset="/img/loading.gif" lazyload alt="image-20220525195636244" style="zoom:80%;" />
 
 <p>修改为:</p>
-<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">// authoritative primary named.conf file</span><br><span class="hljs-comment">// options clause defining the server-wide properties</span><br>options &#123;<br>  <span class="hljs-comment">// all relative paths use this directory as a base</span><br>  directory <span class="hljs-string">&quot;/etc/bind/&quot;</span>;<br>  <span class="hljs-comment">// This is the default - allows user queries from any IP</span><br>  allow-query &#123; any; &#125;;<br>  <span class="hljs-comment">// normal server operations may place items in the cache</span><br>  <span class="hljs-comment">// this prevents any user query from accessing these items</span><br>  <span class="hljs-comment">// only authoritative zone data will be returned</span><br>  allow-query-cache &#123; none; &#125;;<br>  <span class="hljs-comment">// Do not provide recursive service to user queries</span><br>  recursion no;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">// authoritative primary named.conf file</span><br><span class="hljs-comment">// options clause defining the server-wide properties</span><br>options &#123;<br>  <span class="hljs-comment">// all relative paths use this directory as a base</span><br>  <span class="hljs-comment">// 没用什么大作用.</span><br>  directory <span class="hljs-string">&quot;/etc/bind/&quot;</span>;<br>  <span class="hljs-comment">// This is the default - allows user queries from any IP</span><br>  allow-query &#123; any; &#125;;<br>  <span class="hljs-comment">// normal server operations may place items in the cache</span><br>  <span class="hljs-comment">// this prevents any user query from accessing these items</span><br>  <span class="hljs-comment">// only authoritative zone data will be returned</span><br>  allow-query-cache &#123; none; &#125;;<br>  <span class="hljs-comment">// Do not provide recursive service to user queries</span><br>  recursion no;<br>&#125;;<br><br><span class="hljs-comment">//解析根域名, 并且是primary类型而不是一般DNS服务器的hint类型</span><br>zone <span class="hljs-string">&quot;.&quot;</span> &#123;<br>  type primary;<br>  file <span class="hljs-string">&quot;/etc/bind/root.zone&quot;</span>;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
 
+<h2 id="测试-amp-修改"><a href="#测试-amp-修改" class="headerlink" title="测试 &amp; 修改"></a>测试 &amp; 修改</h2><p>至此完成了基本设置. </p>
+<p>使用<code>sudo systemctl restart bind9.service</code>来重启bind9服务, 然后再使用nslookup程序来检测是否成功. DNS服务默认端口号为53, 由于BIND是在本机上运行的程序, 所以要访问时的地址应为localhost, 即127.0.0.1</p>
+<p>而在实际测试时nslookup默认不是localhost, 而是在<code>/etc/resolv.conf</code>中定义的nameserver–127.0.0.53. ubuntu20.04原本文件中有如下内容:</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">nameserver <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.53</span><br>options edns0 trust-ad<br>search localdomain<br></code></pre></div></td></tr></table></figure>
 
-
-
-
-
-
-
-
-
-
-<p>在linux中, 使用BIND9情况下DNS配置的主要文件组:</p>
+<p>通过查看linux man手册中resolv.conf内容, 可以知道</p>
 <ul>
-<li><code>/etc/bind/named.conf.options</code>: global DNS options</li>
-<li><code>/etc/bind/named.conf.local</code>: for your zones</li>
-<li><code>/etc/bind/named.conf.default-zones</code>: default zones such as localhost, its reverse, and the root hints</li>
+<li>search localdomain是指在所给域名没有dot的时候(比如<code>somesite</code>)自动在其后加上<code>.localdomain</code>.多用在局域网, 此处无作用.</li>
+<li>nameserver就是linux下指定域名解析服务器的设置选项. 默认为127.0.0.53, 由系统自身在127.0.0.53:53运行一个虚拟DNS服务器来完成域名解析. <strong>改为<code>nameserver 127.0.0.1</code>即可.</strong> </li>
+</ul>
+<p>如果在named.conf中设置recursion为no, 那么该服务器的行为就和根服务器一致, 其中<strong>198.41.0.4</strong>是a根IP地址.</p>
+<p><img src="../../image/root_dns/image-20220525194946758.png" srcset="/img/loading.gif" lazyload alt="image-20220525194946758" style="zoom:67%;" /><img src="../../image/root_dns/image-20220525195000445.png" srcset="/img/loading.gif" lazyload alt="image-20220525195000445" style="zoom:67%;" /></p>
+<p>返回的信息就是含有.com的TLD服务器.</p>
+<p>但是由于实验要求是解析<strong>自己机器</strong>发出的<strong>域名</strong>请求, 而且是在使用到根域名请求时用本机上的root.zone文件直接应答, 然后<strong>再继续走正常的recursive request流程</strong>.</p>
+<p>这样的话BIND的设置应该为<strong>recursion yes</strong>.</p>
+<p>这样子的结果为:</p>
+<img src="../../image/root_dns/image-20220525195211384.png" srcset="/img/loading.gif" lazyload alt="image-20220525195211384" style="zoom: 80%;" />
+
+<p>到这里实验就算完成了…</p>
+<h2 id="pros-and-cons"><a href="#pros-and-cons" class="headerlink" title="pros and cons"></a>pros and cons</h2><ul>
+<li>好处: 少了一级DNS query, 自然就节省了一点时间.</li>
+<li>坏处: 这个办法只是cache顶级域名列表, 肯定会牵扯到cache的内容是否还有效. 会涉及到更新频率和自动更新的问题.</li>
 </ul>
 
             </div>
