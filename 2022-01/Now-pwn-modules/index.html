@@ -47,7 +47,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220524205647223.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220524211101441.png">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-27T07:21:49.483Z">
+<meta property="article:modified_time" content="2022-05-29T13:49:56.420Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -233,7 +233,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      95k 字
+      97k 字
     </span>
   
 
@@ -242,7 +242,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1191 分钟
+      1210 分钟
     </span>
   
 
@@ -283,7 +283,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年5月27日 下午
+                  不可视境界线最后变动于：2022年5月29日 晚上
                 
               </p>
             
@@ -1654,7 +1654,8 @@
 <p>保护全开, 给出buf位置, 可以leak任意一个地址上8字节数据.</p>
 <p>???这不leak一个canary出来, 然后返回地址改成….和上一题一样了. ret2libc</p>
 <h4 id="level14-1"><a href="#level14-1" class="headerlink" title="level14"></a>level14</h4><p>socket</p>
-<h1 id="module-B-heap"><a href="#module-B-heap" class="headerlink" title="module B-heap"></a>module B-heap</h1><p>Dynamic Allocators:</p>
+<h1 id="module-B-heap"><a href="#module-B-heap" class="headerlink" title="module B-heap"></a>module B-heap</h1><h4 id="key"><a href="#key" class="headerlink" title="key:"></a>key:</h4><ul>
+<li><p>Dynamic Allocators:</p>
 <ul>
 <li>General Purpose: Doug Lea (pictured) releases <strong>dlmalloc</strong> into public domain in 1987.</li>
 <li>Linux: <strong>ptmalloc</strong> (Posix Thread aware fork of dlmalloc)</li>
@@ -1662,18 +1663,50 @@
 <li>Windows: Segment Heap, <strong>NT Heap</strong></li>
 <li>Kernel allocators: <strong>kmalloc</strong> (Linux kernel memory allocator)kalloc (iOS kernel memory allocator)</li>
 </ul>
-<p>managed by the brk and sbrk system calls:</p>
+</li>
+<li><p>managed by the brk and sbrk system calls:</p>
 <ul>
 <li>sbrk(NULL) returns the end of the data segment</li>
 <li>sbrk(delta) expands the end of the data segment by delta bytes</li>
 <li>brk(addr) expands the end of the data segment to addr</li>
 </ul>
+</li>
+</ul>
 <p>ubuntu 2004还在图中粗线框的阶段, 这是由于tcache的引入. 不过这个module并不会深入这个cache.</p>
-<img src="../../image/pwn-modules/image-20220505165437735.png" srcset="/img/loading.gif" lazyload alt="image-20220505165437735" style="zoom:80%;" />
+<img src="../../image/pwn-modules/image-20220505165437735.png" srcset="/img/loading.gif" lazyload alt="image-20220505165437735" style="zoom: 50%;" />
 
+<ul>
+<li><p>tcache: </p>
+<ul>
+<li>a <strong>caching</strong> layer for “small” allocations (&lt;1032 bytes on amd64)</li>
+<li>makes a <strong>singly-linked-list</strong> using the first word of the free chunk</li>
+<li><strong>very few</strong> security checks</li>
+</ul>
+</li>
+<li><p>setvbuf: scanf and printf will use malloc in themselves for buffering, we can use <code>setvbuf(stdin/out, NULL)</code> to disable it. (and avoiding confusion in heap exploitation.)</p>
+</li>
+<li><p>ptmalloc caches(for review):</p>
+<ul>
+<li>64 singly-linked tcache bins for allocations of size 16 to 1032(functionally “covers” fastbins andsmallbins)</li>
+</ul>
+<ol start="2">
+<li>10 singly-linked “fast” bins for allocations of size up to 160 bytes</li>
+</ol>
+<ul>
+<li>1 doubly-linked “unsorted” bin to quickly stash <strong>free()d</strong> chunks that don’t fit into tcache orfastbins</li>
+<li>64 doubly-linked “small” bins for allocations up to 512 bytes</li>
+</ul>
+<ol start="5">
+<li>doubly-linked “large” bins (anything over 512 bytes) that contain different-sized chunks</li>
+</ol>
+</li>
+<li><p>The Unlink Attack, Poison Null Byte</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://docs.google.com/presentation/d/14SYq0TTVxEGWHNUG1BP66A8liPDD2pqJUs2WrXlCZNE/edit#slide=id.g47fd1f5b33_0_204">further reading</a>. </p>
+</li>
+</ul>
 <p><a target="_blank" rel="noopener" href="https://sourceware.org/glibc/wiki/MallocInternals">malloc internals</a> </p>
 <p><a target="_blank" rel="noopener" href="https://seclists.org/bugtraq/2005/Oct/118">the rise of houses</a> </p>
-<p>跳过….</p>
 <h1 id="module-C-race"><a href="#module-C-race" class="headerlink" title="module C-race"></a>module C-race</h1><h4 id="key-points"><a href="#key-points" class="headerlink" title="key points"></a>key points</h4><ul>
 <li>在一个程序打开文件并写入然后再到执行它的期间进程可能被调度, 这个时候如果文件被改写那么就会出现竞态条件.</li>
 <li>如果这个窗口太短那么竞态条件出现的几率就会更小</li>
@@ -2174,12 +2207,33 @@
 
 <h4 id="level10-5"><a href="#level10-5" class="headerlink" title="level10"></a>level10</h4><p>I cannt figure out the difference between this and previous level…..</p>
 <h4 id="level11-5"><a href="#level11-5" class="headerlink" title="level11"></a>level11</h4><h1 id="module-E-advance"><a href="#module-E-advance" class="headerlink" title="module E-advance"></a>module E-advance</h1><h4 id="key-point-1"><a href="#key-point-1" class="headerlink" title="key point:"></a>key point:</h4><ul>
-<li></li>
+<li>Core concept: security checks that do not properly use mutexes are ineffective in a multithreaded environment!</li>
+<li>keeps track of what do you know about the process and the program, what do you need to know, what you can do.</li>
+<li><strong>Problem:</strong> we lack knowledge of:<ul>
+<li>PIE base (binary address)</li>
+<li>ASLR base (library addresses)</li>
+<li>Stack base</li>
+<li>Heap base</li>
+<li>Canary</li>
 </ul>
-<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>这里要指向2处的地址, 也就是bss+0x10
+</li>
+<li>first: heap base, via tcache poisoning.<ul>
+<li>use race condition showed in the vedio, interleave <code>free</code> with <code>write</code>.</li>
+</ul>
+</li>
+<li>When previous work is done, we get one address in per thread tcache memory. then by gdb it we can find the main_areana pointer in the same memory region. Then we have all threads <strong>heap metadata+libc base address</strong>.</li>
+<li>Exploit Primitives:<ul>
+<li>the building block of complex exploitation:<br>arbitrary read, arbitrary write, arbitrary call. or controlled ones.</li>
+<li>the slides demonstrate an exp example of multithread message storing service.</li>
+<li>use wrapped code for reuse intention.</li>
+</ul>
+</li>
+<li><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>这里要指向2处的地址, 也就是bss+0x10
 <a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span>这里开始就是从改变后的rsp弹出返回地址. 开始准备通过puts来leak处libc地址.
 <a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span>这之后要接收puts的地址.
-<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section></li>
+</ul>
+
             </div>
             <hr>
             <div>
