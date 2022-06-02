@@ -57,7 +57,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/Calls-file_open.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/image-20220108132923299.png">
 <meta property="article:published_time" content="2021-10-01T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-31T16:32:05.975Z">
+<meta property="article:modified_time" content="2022-06-02T08:30:43.841Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary_large_image">
@@ -293,7 +293,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年6月1日 凌晨
+                  不可视境界线最后变动于：2022年6月2日 下午
                 
               </p>
             
@@ -2443,7 +2443,7 @@ ZOMBIE--&gt;[*]:资源回收
 <li>copy_to_user()的原因是copy_to_user能够检查地址合法性和可用性. 比单纯的memcpy安全, 而且内核和用户地址空间的复制基本都是通过这个函数来完成的.</li>
 </ul>
 </li>
-<li>file_read改变file结构体的文件计数以及移动文件指针, 继续调用sfs_read-&gt;sfs_io(sfs_inode.c)</li>
+<li>file_read分配file结构体, 设置文件计数以及移动文件指针+缓冲区iobuf, 继续调用sfs_read-&gt;sfs_io(sfs_inode.c)</li>
 <li>sfs_io通过第三个参数来判断是读还是写, 接着调用sfs_io_nolock</li>
 <li>接下来就是练习的内容, read different kind of blocks in file</li>
 </ul>
