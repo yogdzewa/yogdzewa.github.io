@@ -57,7 +57,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/Calls-file_open.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/ucore/image-20220108132923299.png">
 <meta property="article:published_time" content="2021-10-01T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-06-02T10:43:23.085Z">
+<meta property="article:modified_time" content="2022-06-02T12:18:24.765Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="OS">
 <meta name="twitter:card" content="summary_large_image">
@@ -1984,15 +1984,15 @@ ZOMBIE--&gt;[*]:资源回收
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">COPY<span class="hljs-comment">// Work和Finish分别是长度为m和n的向量初始化</span><br>Work[m], Finish[n];<br><br>Work = Available; <span class="hljs-comment">// 当前资源剩余空闲量</span><br><span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++)<br>  Finish[i] = <span class="hljs-literal">false</span>; <span class="hljs-comment">// 线程i没结束</span><br><br><span class="hljs-comment">// ...每个线程开始运行并分配资源</span><br><br><span class="hljs-comment">// 在一段时间后</span><br><span class="hljs-comment">// 寻找Need比Work小，同时还未结束的线程Ti</span><br><span class="hljs-keyword">while</span>(Finish[i] == <span class="hljs-literal">false</span> &amp;&amp; Need[i] &lt;= Work)<br>&#123;<br>    <span class="hljs-comment">// 线程i的资源需求量小于当前剩余空闲资源量，所以该线程可以正常结束，并回收该线程的所有资源</span><br>    Work += Allocation[i];<br>    Finish[i] = <span class="hljs-literal">true</span>;<br>&#125;<br><span class="hljs-comment">// 如果所有线程Ti都满足Finish[i] == true,则系统处于安全状态。</span><br><span class="hljs-keyword">if</span>(Finish == <span class="hljs-literal">true</span>)<br>    Safe;<br><span class="hljs-keyword">else</span><br>    <span class="hljs-comment">// 反之，系统处于不安全状态。</span><br>    NoSafe;<br></code></pre></div></td></tr></table></figure></li>
 <li><p>银行家算法具体设计</p>
 <ul>
-<li><p>初始化：RequestiRequesti：线程TiTi的资源请求向量， Requesti[j]Requesti[j]：线程TiTi请求资源RjRj的实例</p>
+<li><p>初始化：Request_i：线程TiTi的资源请求向量， Requesti[j]Requesti[j]：线程TiTi请求资源RjRj的实例</p>
 </li>
 <li><p>循环：</p>
 <ol>
 <li><p>如果Requesti&lt;=Need[i]Requesti&lt;=Need[i]，则转到步骤2。否则拒绝资源申请，因为线程已经超过了其最大资源要求。</p>
 </li>
-<li><p>如果Requesti&lt;=AvailableRequesti&lt;=Available，转到步骤3。否则，TiTi必须等待，因为资源不可用。</p>
+<li><p>如果Requesti&lt;=Available，转到步骤3。否则，Ti必须等待，因为资源不可用。</p>
 </li>
-<li><p>通过安全状态判断来确定是否分配资源给TiTi</p>
+<li><p>通过安全状态判断来确定是否分配资源给Ti</p>
 <ul>
 <li><p>生成一个需要判断状态是否安全的资源分配环境</p>
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">COPYAvailable = Available - Request_i;<br>Allocation[i] = Allocation[i] + Request_i;<br>Need[i] = Need[i] - Request_i;<br></code></pre></div></td></tr></table></figure></li>
