@@ -24,7 +24,7 @@
 <meta property="og:description" content="搭环境要人命,">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-05-06T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-07-07T14:11:38.014Z">
+<meta property="article:modified_time" content="2022-07-08T10:01:48.566Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary_large_image">
@@ -218,7 +218,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      59 分钟
+      60 分钟
     </span>
   
 
@@ -259,7 +259,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年7月7日 晚上
+                  不可视境界线最后变动于：2022年7月8日 晚上
                 
               </p>
             
@@ -415,8 +415,9 @@
 </ul>
 <h3 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h3><ul>
 <li>How to exit the running container? <a target="_blank" rel="noopener" href="https://linuxhandbook.com/exit-docker-container/">here</a> : that is pressing ctrl+p &amp;&amp; ctrl+q.</li>
-<li><code>sudo docker ps</code> </li>
-<li><code>sudo docker exec -it CONTAINER_ID sh</code> </li>
+<li><code>docker ps</code> </li>
+<li>`docker</li>
+<li><code>sudo docker exec -it CONTAINER_ID sh</code><br>exec: run command in a running container.</li>
 </ul>
 <h3 id="Shell-programming"><a href="#Shell-programming" class="headerlink" title="Shell programming"></a>Shell programming</h3><p>好多东西, 看了下感觉更会用shell了.</p>
 <ul>
@@ -424,7 +425,7 @@
 <li><code>printf &#39;%d %d %d %d&#39; \&#39;a 3 4 \&#39;a</code> <code>printf &quot;\\$(printf %o 74)&quot;</code> <code>printf &quot;\\x$(printf %x 65)&quot;</code> </li>
 </ul>
 </li>
-<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/31255699">double-parenthesis</a> | <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/890262#answer-8339221">&#39;$1 : leading-quote</a> | </li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/31255699">double-parenthesis</a> | <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/890262#answer-8339221">&#39;$1 : leading-quote</a> | condition expr(bash doc P98) | </li>
 <li>Shell Parameter Expansion有字符串下标索引.</li>
 <li>dup2可用来实现shell的redirection. 还可以指定fd. 好像之前的一题又有新的解决方法了, 不过得用c来写.</li>
 <li>开启了extglob(zsh) | extglob(bash)之后, 可以使用<code>?*+@!(pattern-list)</code>这五种.<br>zsh还可以用<code>^</code>等等, <a target="_blank" rel="noopener" href="http://zsh.sourceforge.net/Doc/Release/Expansion.html#Glob-Operators">文档在这儿</a>.<br>知道这些之后就可以更好的filter file了<ul>
