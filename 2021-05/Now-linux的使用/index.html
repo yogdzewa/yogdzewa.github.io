@@ -24,7 +24,7 @@
 <meta property="og:description" content="搭环境要人命,">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-05-06T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-07-09T03:53:34.769Z">
+<meta property="article:modified_time" content="2022-07-09T15:32:43.078Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary_large_image">
@@ -209,7 +209,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      5.2k 字
+      5.4k 字
     </span>
   
 
@@ -218,7 +218,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      65 分钟
+      68 分钟
     </span>
   
 
@@ -259,7 +259,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年7月9日 中午
+                  不可视境界线最后变动于：2022年7月9日 晚上
                 
               </p>
             
@@ -345,7 +345,7 @@
 </li>
 <li><p>:e =&gt; reload file</p>
 </li>
-<li><p>vim plug list -&gt; <a target="_blank" rel="noopener" href="https://vimawesome.com/">link</a> | 装上了tabcompletion. + python completion + </p>
+<li><p>vim plug list -&gt; <a target="_blank" rel="noopener" href="https://vimawesome.com/">link</a> | 装上了tabcompletion. + python completion </p>
 </li>
 <li></li>
 </ul>
@@ -377,7 +377,7 @@
 </ul>
 <h3 id="ubuntu2204"><a href="#ubuntu2204" class="headerlink" title="ubuntu2204"></a>ubuntu2204</h3><ul>
 <li><a target="_blank" rel="noopener" href="https://linuxconfig.org/how-to-allow-gui-root-login-on-ubuntu-22-04-jammy-jellyfish-linux">use root account in ubuntu</a> </li>
-<li>结果chrome显示出问题了, firefox的同步又蠢得一b, 真是受不了了.</li>
+<li>结果chrome显示出问题了(换成了测试版), firefox的同步又蠢得一b, 真是受不了了.</li>
 <li></li>
 </ul>
 <h3 id="各种命令-软件包"><a href="#各种命令-软件包" class="headerlink" title="各种命令+软件包"></a>各种命令+软件包</h3><ul>
@@ -412,22 +412,19 @@
 <li>wc 命令, 计数文件字节数等等.</li>
 <li><code>uniq</code> report repeated lines.</li>
 <li><code>ls -ARl *</code> 递归展示文件并且不显示.和.. 还能显示符号链接</li>
+<li><code>shuf</code> generate random permutation.</li>
+<li><code>sleep infinity</code> 手册里完全没看见这个infinity, 不过作用也显而易见了.</li>
 </ul>
 <h3 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h3><ul>
-<li><p>How to exit the running container? <a target="_blank" rel="noopener" href="https://linuxhandbook.com/exit-docker-container/">here</a> : that is pressing <code>ctrl+p &amp;&amp; ctrl+q</code>.</p>
-</li>
-<li><p><code>sudo docker exec -it CONTAINER_ID sh</code>  exec: run command in a running container.</p>
-</li>
-<li><p><code>docker rm/rmi</code> <code>docker ps -all</code> <code>docker images</code> </p>
-</li>
-<li><p>docker file <a target="_blank" rel="noopener" href="https://docs.docker.com/engine/reference/builder/">reference</a> | docker compose <a target="_blank" rel="noopener" href="https://docs.docker.com/compose/compose-file/">reference</a> </p>
-</li>
-<li><p>docker desktop: BIG FAILURE, gnome desktop environment | KVM in kali is not supported | ubuntu 22.04 wired problem | kali root account cant open docker desktop | kali normal account cant open settings. there are so many problems.</p>
-</li>
-<li><p>docker engine: building and containerizing your application</p>
-</li>
-<li><p>docker compose: defining and running multi-container Docker applications.</p>
+<li>How to exit the running container? <a target="_blank" rel="noopener" href="https://linuxhandbook.com/exit-docker-container/">here</a> : that is pressing <code>ctrl+p &amp;&amp; ctrl+q</code>.</li>
+<li><code>sudo docker exec -it CONTAINER_ID sh</code>  exec: run command in a running container.</li>
+<li><code>docker rm/rmi</code> <code>docker ps -all</code> <code>docker images</code> </li>
+<li>docker <strong>file</strong> <a target="_blank" rel="noopener" href="https://docs.docker.com/engine/reference/builder/">reference</a> | docker <strong>compose</strong> <a target="_blank" rel="noopener" href="https://docs.docker.com/compose/compose-file/">reference</a> </li>
+</ul>
 <ul>
+<li><strong>docker desktop</strong>: BIG FAILURE, gnome desktop environment | KVM in kali is not supported | ubuntu 22.04 wired problem | kali root account cant open docker desktop | kali normal account cant open settings. there are so many problems.</li>
+<li><strong>docker engine</strong>: building and containerizing your application</li>
+<li><strong>docker compose</strong>: defining and running multi-container Docker applications.<ul>
 <li>in one container’s circumstance, the same as docker engine.</li>
 <li>compose file’s <a target="_blank" rel="noopener" href="https://docs.docker.com/compose/compose-file/">format</a> </li>
 </ul>
@@ -454,6 +451,11 @@
 <li><code>$&#123;string##*cd*&#125;</code> 这个##会从string删除匹配字符串就挺神奇的. 得用<code>[ -z ... ]</code>来判断成功.</li>
 </ul>
 </li>
+</ul>
+<h3 id="Deamon"><a href="#Deamon" class="headerlink" title="Deamon"></a>Deamon</h3><ul>
+<li>pronounciation: /ˈdiːmən/</li>
+<li>the parent process is often, but not always, the <em>init</em>  process. often ends with <strong>d</strong> letter.</li>
+<li>deamon exp.: cron | xinetd | </li>
 <li></li>
 </ul>
 
