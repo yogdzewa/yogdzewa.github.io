@@ -24,7 +24,7 @@
 <meta property="og:description" content="搭环境要人命,">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-05-06T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-07-12T02:56:59.141Z">
+<meta property="article:modified_time" content="2022-07-14T05:58:22.972Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary_large_image">
@@ -209,7 +209,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      5.5k 字
+      6k 字
     </span>
   
 
@@ -218,7 +218,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      69 分钟
+      75 分钟
     </span>
   
 
@@ -259,7 +259,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年7月12日 上午
+                  不可视境界线最后变动于：2022年7月14日 下午
                 
               </p>
             
@@ -325,8 +325,6 @@
 <li></li>
 </ul>
 <h3 id="vim进阶"><a href="#vim进阶" class="headerlink" title="vim进阶"></a>vim进阶</h3><ul>
-<li><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wajika/p/6606353.html">vim可视化模式选择</a> </p>
-<figure class="highlight vim"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs vim">选择： <br><span class="hljs-keyword">vi</span>选中&#123;&#125;中间的内容,不包括&#123;&#125;<br>va&#123; 选中&#123;&#125;中间内容，包括&#123;&#125;<br>选中()中间内容<br><span class="hljs-keyword">vi</span>&lt; 选中&lt;&gt;中间内容<br><span class="hljs-keyword">vi</span>[ 选中[]中间内容<br>vit 选中中间的内容<br><span class="hljs-keyword">vi</span><span class="hljs-string">&quot; 选中&quot;</span>中间内容<br><span class="hljs-keyword">vi</span><span class="hljs-string">&#x27; 选中&#x27;</span>中间的内容、<br><br>块选择:<br>vis 选中一个句子<br>vib 选中一个block<br>viw 选中一个单词<br>vip 选中一个段落<br></code></pre></div></td></tr></table></figure></li>
 <li><p>自动提示： <code>&lt;C-n&gt;</code> 和 <code>&lt;C-p&gt;</code> </p>
 </li>
 <li><p>vim<a target="_blank" rel="noopener" href="https://blog.easwy.com/archives/advanced-vim-skills-auto-complete/">路径补全</a> </p>
@@ -349,7 +347,17 @@
 </li>
 <li><p><code>gt gT nnngt</code>: switch tabs.</p>
 </li>
+<li><p>Ctrl-O: enter <code>insert select</code> mode.</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://vimhelp.org/motion.txt.html#CTRL-M">motions(many details)</a> | </p>
+</li>
+<li><p><code>; </code>  :  Repeat latest f, t, F or T [count] times.</p>
+</li>
 </ul>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-string">&quot;dl&quot;</span>    <span class="hljs-function"><span class="hljs-keyword">delete</span> <span class="hljs-title">character</span> <span class="hljs-params">(alias: <span class="hljs-string">&quot;x&quot;</span>)</span>           dl</span><br><span class="hljs-function">&quot;diw&quot;   <span class="hljs-keyword">delete</span> inner word                       diw</span><br><span class="hljs-function">&quot;daw&quot;   <span class="hljs-keyword">delete</span> a word                           daw</span><br><span class="hljs-function">&quot;diW&quot;   <span class="hljs-keyword">delete</span> inner <span class="hljs-title">WORD</span> <span class="hljs-params">(see WORD)</span>          	diW</span><br><span class="hljs-function">&quot;daW&quot;   <span class="hljs-keyword">delete</span> a <span class="hljs-title">WORD</span> <span class="hljs-params">(see WORD)</span>              	daW</span><br><span class="hljs-function">&quot;dgn&quot;   <span class="hljs-keyword">delete</span> the next search pattern match    dgn</span><br><span class="hljs-function">&quot;dd&quot;    <span class="hljs-keyword">delete</span> one line                         dd</span><br><span class="hljs-function">&quot;dis&quot;   <span class="hljs-keyword">delete</span> inner sentence                   dis</span><br><span class="hljs-function">&quot;das&quot;   <span class="hljs-keyword">delete</span> a sentence                       das</span><br><span class="hljs-function">&quot;dib&quot;   <span class="hljs-keyword">delete</span> inner &#x27;<span class="hljs-params">(<span class="hljs-string">&#x27; &#x27;</span>)</span>&#x27; block              dib</span><br><span class="hljs-function">&quot;dab&quot;   <span class="hljs-keyword">delete</span> a &#x27;<span class="hljs-params">(<span class="hljs-string">&#x27; &#x27;</span>)</span>&#x27; block                  dab</span><br><span class="hljs-function">&quot;dip&quot;   <span class="hljs-keyword">delete</span> inner paragraph                  dip</span><br><span class="hljs-function">&quot;dap&quot;   <span class="hljs-keyword">delete</span> a paragraph                      dap</span><br><span class="hljs-function">&quot;diB&quot;   <span class="hljs-keyword">delete</span> inner &#x27;</span>&#123;<span class="hljs-string">&#x27; &#x27;</span>&#125;<span class="hljs-string">&#x27; block              diB</span><br><span class="hljs-string">&quot;daB&quot;   delete a &#x27;</span>&#123;<span class="hljs-string">&#x27; &#x27;</span>&#125;<span class="hljs-string">&#x27; block                  daB</span><br></code></pre></div></td></tr></table></figure>
+
+
+
 <h3 id="tmux-voltron-gdb-multiwindows"><a href="#tmux-voltron-gdb-multiwindows" class="headerlink" title="tmux+voltron gdb multiwindows"></a>tmux+<del>voltron</del> gdb multiwindows</h3><ul>
 <li><a target="_blank" rel="noopener" href="https://github.com/tmux/tmux">tmux</a>  <a target="_blank" rel="noopener" href="https://github.com/tuxotron/voltron-tmux">tmux-voltron</a>  <a target="_blank" rel="noopener" href="https://github.com/tmuxinator/tmuxinator">tmuxinator</a>  <a target="_blank" rel="noopener" href="https://github.com/snare/voltron">voltron</a> 这方法可能没啥用.</li>
 <li>使用pwndbg的split: <a target="_blank" rel="noopener" href="https://github.com/pwndbg/pwndbg/blob/dev/FEATURES.md#splitting--layouting-context">features</a> | <a target="_blank" rel="noopener" href="https://github.com/jerdna-regeiz/splitmind">split mind</a> </li>
