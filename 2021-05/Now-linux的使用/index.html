@@ -24,7 +24,7 @@
 <meta property="og:description" content="搭环境要人命,">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-05-06T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-07-14T05:58:22.972Z">
+<meta property="article:modified_time" content="2022-07-14T08:41:14.639Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary_large_image">
@@ -209,7 +209,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      6k 字
+      6.6k 字
     </span>
   
 
@@ -218,7 +218,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      75 分钟
+      83 分钟
     </span>
   
 
@@ -264,7 +264,7 @@
               </p>
             
             <div class="markdown-body">
-              <h3 id="Kali-amp-Linux的问题"><a href="#Kali-amp-Linux的问题" class="headerlink" title="Kali&amp;Linux的问题"></a>Kali&amp;Linux的问题</h3><blockquote>
+              <h2 id="Kali-amp-Linux的问题"><a href="#Kali-amp-Linux的问题" class="headerlink" title="Kali&amp;Linux的问题"></a>Kali&amp;Linux的问题</h2><blockquote>
 <p>linux<a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-command-manual.html">命令</a>在这</p>
 </blockquote>
 <ul>
@@ -280,7 +280,6 @@
 <li>bitset是一个类模板</li>
 <li>GDB以及gcc的<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/74897601">使用</a>(详见零碎知识)</li>
 <li>kali如何运行可执行文件: ./bomb</li>
-<li>set nohlsearch(no highlight search)</li>
 <li>中文输入法下输入命令:w按下回车vim会卡死, <strong>输入逗号也能卡死?????</strong></li>
 <li>kali装Chrome:他有sandbox机制, 无法在root用户下运行<a target="_blank" rel="noopener" href="https://www.cnblogs.com/smart-zihan/p/13440084.html">[1]</a>.</li>
 <li>kali使用vpn:  <strong>失败</strong>.</li>
@@ -324,7 +323,7 @@
 <li>为了shelltools又装了一个apt install gcc-i686-linux-gnu, 不知道有没用.</li>
 <li></li>
 </ul>
-<h3 id="vim进阶"><a href="#vim进阶" class="headerlink" title="vim进阶"></a>vim进阶</h3><ul>
+<h2 id="vim进阶"><a href="#vim进阶" class="headerlink" title="vim进阶"></a>vim进阶</h2><ul>
 <li><p>自动提示： <code>&lt;C-n&gt;</code> 和 <code>&lt;C-p&gt;</code> </p>
 </li>
 <li><p>vim<a target="_blank" rel="noopener" href="https://blog.easwy.com/archives/advanced-vim-skills-auto-complete/">路径补全</a> </p>
@@ -347,18 +346,23 @@
 </li>
 <li><p><code>gt gT nnngt</code>: switch tabs.</p>
 </li>
-<li><p>Ctrl-O: enter <code>insert select</code> mode.</p>
+<li><p>Ctrl-O: enter <code>insert select</code> mode, can exec one command then.</p>
 </li>
 <li><p><a target="_blank" rel="noopener" href="https://vimhelp.org/motion.txt.html#CTRL-M">motions(many details)</a> | </p>
 </li>
 <li><p><code>; </code>  :  Repeat latest f, t, F or T [count] times.</p>
 </li>
+<li><p><code>echo &amp;var</code> will print out the variable value.</p>
+</li>
 </ul>
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-string">&quot;dl&quot;</span>    <span class="hljs-function"><span class="hljs-keyword">delete</span> <span class="hljs-title">character</span> <span class="hljs-params">(alias: <span class="hljs-string">&quot;x&quot;</span>)</span>           dl</span><br><span class="hljs-function">&quot;diw&quot;   <span class="hljs-keyword">delete</span> inner word                       diw</span><br><span class="hljs-function">&quot;daw&quot;   <span class="hljs-keyword">delete</span> a word                           daw</span><br><span class="hljs-function">&quot;diW&quot;   <span class="hljs-keyword">delete</span> inner <span class="hljs-title">WORD</span> <span class="hljs-params">(see WORD)</span>          	diW</span><br><span class="hljs-function">&quot;daW&quot;   <span class="hljs-keyword">delete</span> a <span class="hljs-title">WORD</span> <span class="hljs-params">(see WORD)</span>              	daW</span><br><span class="hljs-function">&quot;dgn&quot;   <span class="hljs-keyword">delete</span> the next search pattern match    dgn</span><br><span class="hljs-function">&quot;dd&quot;    <span class="hljs-keyword">delete</span> one line                         dd</span><br><span class="hljs-function">&quot;dis&quot;   <span class="hljs-keyword">delete</span> inner sentence                   dis</span><br><span class="hljs-function">&quot;das&quot;   <span class="hljs-keyword">delete</span> a sentence                       das</span><br><span class="hljs-function">&quot;dib&quot;   <span class="hljs-keyword">delete</span> inner &#x27;<span class="hljs-params">(<span class="hljs-string">&#x27; &#x27;</span>)</span>&#x27; block              dib</span><br><span class="hljs-function">&quot;dab&quot;   <span class="hljs-keyword">delete</span> a &#x27;<span class="hljs-params">(<span class="hljs-string">&#x27; &#x27;</span>)</span>&#x27; block                  dab</span><br><span class="hljs-function">&quot;dip&quot;   <span class="hljs-keyword">delete</span> inner paragraph                  dip</span><br><span class="hljs-function">&quot;dap&quot;   <span class="hljs-keyword">delete</span> a paragraph                      dap</span><br><span class="hljs-function">&quot;diB&quot;   <span class="hljs-keyword">delete</span> inner &#x27;</span>&#123;<span class="hljs-string">&#x27; &#x27;</span>&#125;<span class="hljs-string">&#x27; block              diB</span><br><span class="hljs-string">&quot;daB&quot;   delete a &#x27;</span>&#123;<span class="hljs-string">&#x27; &#x27;</span>&#125;<span class="hljs-string">&#x27; block                  daB</span><br></code></pre></div></td></tr></table></figure>
 
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">gUU  : Make current line uppercase.<br>guu	 :                   lowercase.<br>gU&#123;motion&#125; <span class="hljs-keyword">and</span> gu&#123;motion&#125;    Make &#123;motion&#125; text uppercase.<br><br>&#123;Visual&#125;CTRL-A 		<span class="hljs-comment"># INC</span><br>&#123;Visual&#125;g CTRL-A 	<span class="hljs-comment"># sequencial add</span><br><span class="hljs-built_in">set</span> nrformats=<span class="hljs-built_in">bin</span>,<span class="hljs-built_in">hex</span> 	<span class="hljs-comment"># this is default. can include `octal` `alpha`</span><br>Use the following<br><br>steps to make a numbered <span class="hljs-built_in">list</span>.<br><span class="hljs-number">1.</span> Create the first list_entry, make sure it starts <span class="hljs-keyword">with</span> a number.<br><span class="hljs-number">2.</span> qa        - start recording into register <span class="hljs-string">&#x27;a&#x27;</span><br><span class="hljs-number">3.</span> Y         - yank the entry<br><span class="hljs-number">4.</span> p         - put a copy of the entry below the first one<br><span class="hljs-number">5.</span> CTRL-A    - increment the number<br><span class="hljs-number">6.</span> q         - stop recording<br><span class="hljs-number">7.</span> &lt;count&gt;@a - repeat the yank, put <span class="hljs-keyword">and</span> increment &lt;count&gt; times<br></code></pre></div></td></tr></table></figure>
 
-
-<h3 id="tmux-voltron-gdb-multiwindows"><a href="#tmux-voltron-gdb-multiwindows" class="headerlink" title="tmux+voltron gdb multiwindows"></a>tmux+<del>voltron</del> gdb multiwindows</h3><ul>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://vimhelp.org/change.txt.html#complex-change">complex changes</a> : toooooo complex.</li>
+</ul>
+<h2 id="tmux-gdb"><a href="#tmux-gdb" class="headerlink" title="tmux+gdb"></a>tmux+gdb</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://github.com/tmux/tmux">tmux</a>  <a target="_blank" rel="noopener" href="https://github.com/tuxotron/voltron-tmux">tmux-voltron</a>  <a target="_blank" rel="noopener" href="https://github.com/tmuxinator/tmuxinator">tmuxinator</a>  <a target="_blank" rel="noopener" href="https://github.com/snare/voltron">voltron</a> 这方法可能没啥用.</li>
 <li>使用pwndbg的split: <a target="_blank" rel="noopener" href="https://github.com/pwndbg/pwndbg/blob/dev/FEATURES.md#splitting--layouting-context">features</a> | <a target="_blank" rel="noopener" href="https://github.com/jerdna-regeiz/splitmind">split mind</a> </li>
 <li><a target="_blank" rel="noopener" href="https://www.hamvocke.com/blog/a-guide-to-customizing-your-tmux-conf/">tmux config</a> | cheat <a target="_blank" rel="noopener" href="https://tmuxcheatsheet.com/">sheet</a> | <a target="_blank" rel="noopener" href="https://pragprog.com/titles/bhtmux2/tmux-2/">tutorial</a> </li>
@@ -367,7 +371,7 @@
 <li><code>&lt;prefix&gt; !</code>或者<code>:join-pane -t &lt;int&gt;</code>可以将一个spane移进或移出.</li>
 <li>Ctrl+b, <code>.</code>, <code>222</code> (renumber) | Ctrl+A+q = windows number | </li>
 </ul>
-<h3 id="ubuntu2004"><a href="#ubuntu2004" class="headerlink" title="ubuntu2004"></a>ubuntu2004</h3><ul>
+<h2 id="ubuntu2004"><a href="#ubuntu2004" class="headerlink" title="ubuntu2004"></a>ubuntu2004</h2><ul>
 <li>ubuntu虽然任务栏不好用, 但是有快捷键挺舒服的, 继续记!</li>
 <li>ubuntu sudo命令延时很长<a target="_blank" rel="noopener" href="https://blog.csdn.net/kiritow/article/details/80687036">解决办法</a> </li>
 <li>更新<a target="_blank" rel="noopener" href="https://blog.csdn.net/wangyijieonline/article/details/105360138">ubuntu源</a> </li>
@@ -384,12 +388,12 @@
 <li>colorizing man pages: <a target="_blank" rel="noopener" href="https://askubuntu.com/questions/156383/how-to-have-colored-manual-pages-in-gnome-terminal/834107#834107">link</a> &amp;&amp; <a target="_blank" rel="noopener" href="https://seamatinee.com/2021/09/23/ubuntu-customization/#Terminal-%E7%BE%8E%E5%8C%96">zsh</a> </li>
 <li>save zsh history and multiterminal-hisory-share <a target="_blank" rel="noopener" href="https://blog.lilydjwg.me/2013/7/3/manually-save-read-zsh-history-entries.39852.html">link</a> </li>
 </ul>
-<h3 id="ubuntu2204"><a href="#ubuntu2204" class="headerlink" title="ubuntu2204"></a>ubuntu2204</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://linuxconfig.org/how-to-allow-gui-root-login-on-ubuntu-22-04-jammy-jellyfish-linux">use root account in ubuntu</a> </li>
+<h2 id="ubuntu2204"><a href="#ubuntu2204" class="headerlink" title="ubuntu2204"></a>ubuntu2204</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://linuxconfig.org/how-to-allow-gui-root-login-on-ubuntu-22-04-jammy-jellyfish-linux">enable root account in ubuntu</a> </li>
 <li>结果chrome显示出问题了(换成了测试版), firefox的同步又蠢得一b, 真是受不了了.</li>
 <li></li>
 </ul>
-<h3 id="各种命令-软件包"><a href="#各种命令-软件包" class="headerlink" title="各种命令+软件包"></a>各种命令+软件包</h3><ul>
+<h2 id="各种命令-软件包"><a href="#各种命令-软件包" class="headerlink" title="各种命令+软件包"></a>各种命令+软件包</h2><ul>
 <li><em>ldd</em>  <em>strace(刚刚装的)</em> <em>head打印前n行</em>  <em>du显示文件大小</em>   <em>ps打印进程信息</em>  <ul>
 <li>ldd: print shared object dependencies</li>
 <li>ps aux  –  BSD参数风格</li>
@@ -402,10 +406,9 @@
 <li>screen这玩意儿也太强了.<code>Ctrl + A + [</code>进入copy模式才能使用滚轮或者Ctrl+F/B等等来翻页(已经改成&lt;C-/&gt;)</li>
 </ul>
 </li>
-<li>装了一个httping玩一玩</li>
-<li>看到一个cscope包可以用来解析C/C++项目, 有空再研究怎么玩(谁玩啊</li>
+<li><del>看到一个cscope包可以用来解析C/C++项目, 有空再研究怎么玩</del>(谁玩啊</li>
 <li>vim-gtk是vim的一个GUI版本, 装了之后才能vim -g</li>
-<li>新命令: tput好像是用一个通用命令做参数,  然后在当前终端的数据库中找到正确的命令并发送</li>
+<li>新命令: <code>tput</code>好像是用一个通用命令做参数,  然后在当前终端的数据库中找到正确的命令并发送</li>
 <li><strong>ipython: System shell with !</strong> interactive Python也挺神奇的, 具体见pwn-modulesj里的帮助.<ul>
 <li><a target="_blank" rel="noopener" href="https://blog.51cto.com/essun/1712322">ipython用法</a> </li>
 </ul>
@@ -416,20 +419,20 @@
 </ul>
 </li>
 <li><code>find</code>的功能真的很多, 又是一个相当强大的工具. e.g. <code>find . -name Makefile</code> </li>
-<li>wc 命令, 计数文件字节数 行数等等.</li>
+<li><code>wc</code> 命令, 计数文件字节数 行数等等.</li>
 <li><code>uniq</code> report repeated lines.</li>
-<li><code>ls -ARl *</code> 递归展示文件并且不显示.和.. 还能显示符号链接</li>
+<li><code>ls -ARl *</code> 递归展示文件并且不显示.和.. 还能显示符号链接 以及<code>tree</code>命令</li>
 <li><code>shuf</code> generate random permutation.</li>
 <li><code>sleep infinity</code> 手册里完全没看见这个infinity, 不过作用也显而易见了.</li>
 <li><code>xargs</code> build and exec commands from standard input.</li>
 </ul>
-<h3 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h3><ul>
+<h2 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h2><ul>
 <li>How to exit the running container? <a target="_blank" rel="noopener" href="https://linuxhandbook.com/exit-docker-container/">here</a> : that is pressing <code>ctrl+p &amp;&amp; ctrl+q</code>.</li>
 <li><code>sudo docker exec -it CONTAINER_ID sh</code>  exec: run command in a running container.</li>
 <li><code>docker rm/rmi</code> <code>docker ps -all</code> <code>docker images</code> </li>
 <li>docker <strong>file</strong> <a target="_blank" rel="noopener" href="https://docs.docker.com/engine/reference/builder/">reference</a> | docker <strong>compose</strong> <a target="_blank" rel="noopener" href="https://docs.docker.com/compose/compose-file/">reference</a> </li>
 <li><code>netstat -antu</code> to check whether some container is using ports or not.</li>
-<li>remove used data: <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/32723111/how-to-remove-old-and-unused-docker-images/32723127#32723127">link</a> </li>
+<li>remove used data: <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/32723111/how-to-remove-old-and-unused-docker-images/32723127#32723127">prune</a> </li>
 </ul>
 <ul>
 <li><strong>docker desktop</strong>: BIG FAILURE, gnome desktop environment | KVM in kali is not supported | ubuntu 22.04 wired problem | kali root account cant open docker desktop | kali normal account cant open settings. there are so many problems.</li>
@@ -440,13 +443,13 @@
 </ul>
 </li>
 </ul>
-<h3 id="Shell-programming"><a href="#Shell-programming" class="headerlink" title="Shell programming"></a>Shell programming</h3><p>好多东西, 看了下感觉更会用shell了.</p>
+<h2 id="Shell-programming"><a href="#Shell-programming" class="headerlink" title="Shell programming"></a>Shell programming</h2><p>好多东西, 看了下感觉更会用shell了.</p>
 <ul>
 <li>printf使用示例: <ul>
 <li><code>printf &#39;%d %d %d %d&#39; \&#39;a 3 4 \&#39;a</code> <code>printf &quot;\\$(printf %o 74)&quot;</code> <code>printf &quot;\\x$(printf %x 65)&quot;</code> </li>
 </ul>
 </li>
-<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/31255699">double-parenthesis</a> | <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/890262#answer-8339221">&#39;$1 : leading-quote</a> | condition expr(bash doc P98) | </li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/31255699">double-parenthesis</a> | <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/890262#answer-8339221">&#39;$1 : leading-quote</a> | <strong>condition expr</strong>(bash doc P98) | </li>
 <li>Shell Parameter Expansion有字符串下标索引.</li>
 <li>dup2可用来实现shell的redirection. 还可以指定fd. 好像之前的一题又有新的解决方法了, 不过得用c来写.</li>
 <li>开启了extglob(zsh) | extglob(bash)之后, 可以使用<code>?*+@!(pattern-list)</code>这五种.<br>zsh还可以用<code>^</code>等等, <a target="_blank" rel="noopener" href="http://zsh.sourceforge.net/Doc/Release/Expansion.html#Glob-Operators">文档在这儿</a>.<br>知道这些之后就可以更好的filter file了<ul>
@@ -461,7 +464,7 @@
 </ul>
 </li>
 </ul>
-<h3 id="Deamon"><a href="#Deamon" class="headerlink" title="Deamon"></a>Deamon</h3><ul>
+<h2 id="Deamon"><a href="#Deamon" class="headerlink" title="Deamon"></a>Deamon</h2><ul>
 <li>pronounciation: /ˈdiːmən/</li>
 <li>the parent process is often, but not always, the <em>init</em>  process. often ends with <strong>d</strong> letter.</li>
 <li>deamon exp.: cron | xinetd | </li>
