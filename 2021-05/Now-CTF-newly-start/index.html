@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/CTF_newly_start/image-20220710173158610.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/CTF_newly_start/architecture.svg">
 <meta property="article:published_time" content="2021-05-27T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-07-14T14:34:15.714Z">
+<meta property="article:modified_time" content="2022-07-15T03:26:36.644Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -213,7 +213,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2k 字
+      2.5k 字
     </span>
   
 
@@ -222,7 +222,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      26 分钟
+      32 分钟
     </span>
   
 
@@ -263,7 +263,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年7月14日 晚上
+                  不可视境界线最后变动于：2022年7月15日 上午
                 
               </p>
             
@@ -312,7 +312,30 @@
 <h2 id="flying-kernel"><a href="#flying-kernel" class="headerlink" title="flying-kernel"></a><del>flying-kernel</del></h2><p>很好, 又发现他用的是字符设备的kernel module, 继续看kernel module文档(在上面).</p>
 <p>现在又发现CTF-wiki上有内核的知识, 一大堆东西接着pwn.college后面, 所以还得先学掉那些东西…. 不然什么smap smep保护都不知道怎么用. (<del>还有我怎么看到UAF一点都不敏感.</del>)</p>
 <p>smap明明在pwn.college上见到过了, 看来过一遍概念还是没法留下深刻的印象, 之前的再复习复习.</p>
-<h2 id="Kernel-Mode"><a href="#Kernel-Mode" class="headerlink" title="Kernel Mode"></a>Kernel Mode</h2>
+<h2 id="Kernel-Mode"><a href="#Kernel-Mode" class="headerlink" title="Kernel Mode"></a>Kernel Mode</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Read-copy-update">Read-copy-update</a> </li>
+<li>in kernel code may use <code>__rcu</code> before variable to indicate the use of RCU.</li>
+<li>kallsym file info type: <a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/53679">link</a> </li>
+</ul>
+<h3 id="Privilege-escalation"><a href="#Privilege-escalation" class="headerlink" title="Privilege escalation"></a>Privilege escalation</h3><h4 id="change-self-改变自身权限"><a href="#change-self-改变自身权限" class="headerlink" title="change self: 改变自身权限."></a>change self: 改变自身权限.</h4><ul>
+<li>task_struct and cred and other pointers utilization.</li>
+</ul>
+<h4 id="change-others-改变高权限进程的控制流"><a href="#change-others-改变高权限进程的控制流" class="headerlink" title="change others: 改变高权限进程的控制流."></a>change others: 改变高权限进程的控制流.</h4><p><strong>CHANGE DATA</strong> :</p>
+<ul>
+<li><p><code>call_usermodehelper</code> 只能说是告诉了我有这么一种方式, 但是更具体的细节还得搜其他的东西. <a target="_blank" rel="noopener" href="https://lkmidas.github.io/posts/20210223-linux-kernel-pwn-modprobe/">post</a> </p>
+</li>
+<li><p><code>poweroff_cmd</code> </p>
+</li>
+</ul>
+<p><strong>CHANGE CODE</strong> : </p>
+<ul>
+<li>revise code in <strong>vDSO</strong>(virtual dynamic shared object).</li>
+</ul>
+<blockquote>
+<p><em><strong>in Linux man page</strong></em>: </p>
+<p> The “vDSO” (virtual dynamic shared object) is a small shared library that the kernel automatically maps into the address space of all user-space applications.</p>
+</blockquote>
+
             </div>
             <hr>
             <div>
