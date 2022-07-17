@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/CTF_newly_start/image-20220710173158610.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/CTF_newly_start/architecture.svg">
 <meta property="article:published_time" content="2021-05-27T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-07-15T15:47:10.903Z">
+<meta property="article:modified_time" content="2022-07-17T02:02:43.125Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -213,7 +213,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      3.8k 字
+      6.6k 字
     </span>
   
 
@@ -222,7 +222,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      48 分钟
+      84 分钟
     </span>
   
 
@@ -263,7 +263,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年7月15日 晚上
+                  不可视境界线最后变动于：2022年7月17日 上午
                 
               </p>
             
@@ -274,6 +274,11 @@
 </ul>
 <h2 id="a-new-start-from-SCTF-flying-kernel"><a href="#a-new-start-from-SCTF-flying-kernel" class="headerlink" title="a new start from SCTF-flying_kernel"></a>a new start from SCTF-flying_kernel</h2><p>the following is a few concepts.</p>
 <p><img src="../../image/CTF_newly_start/image-20220710173158610.png" srcset="/img/loading.gif" lazyload alt="image-20220710173158610"></p>
+<blockquote>
+<p><em><strong>What is the <code>-initrd</code> in qemu command line used for?</strong></em> </p>
+<p>It is used to init RAM disk, which utilize RAM with a drive to act like an SSD disk.</p>
+<p>And look this <a target="_blank" rel="noopener" href="https://unix.stackexchange.com/questions/5518/what-is-the-difference-between-the-following-kernel-makefile-terms-vmlinux-vml">answer</a> </p>
+</blockquote>
 <h3 id="docker"><a href="#docker" class="headerlink" title="docker"></a>docker</h3><p>review the concepts of docker.</p>
 <img src="../../image/CTF_newly_start/architecture.svg" srcset="/img/loading.gif" lazyload alt="Docker Architecture Diagram" style="zoom:80%;" />
 
@@ -307,14 +312,15 @@
 </ul>
 <h3 id="Others"><a href="#Others" class="headerlink" title="Others"></a>Others</h3><ul>
 <li><a target="_blank" rel="noopener" href="https://www.sudo.ws/docs/man/sudoers.man/"><code>sudoers</code></a> — default sudo security policy plugin </li>
-<li></li>
 </ul>
 <h2 id="flying-kernel"><a href="#flying-kernel" class="headerlink" title="flying-kernel"></a><del>flying-kernel</del></h2><p>很好, 又发现他用的是字符设备的kernel module, 继续看kernel module文档(在上面).</p>
 <p>现在又发现CTF-wiki上有内核的知识, 一大堆东西接着pwn.college后面, 所以还得先学掉那些东西…. 不然什么smap smep保护都不知道怎么用. (<del>还有我怎么看到UAF一点都不敏感.</del>)</p>
 <p>smap明明在pwn.college上见到过了, 看来过一遍概念还是没法留下深刻的印象, 之前的再复习复习.</p>
 <h2 id="Kernel-Mode"><a href="#Kernel-Mode" class="headerlink" title="Kernel Mode"></a>Kernel Mode</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Read-copy-update">Read-copy-update</a> </li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Read-copy-update">Read-copy-update</a> : RCU <ul>
 <li>in kernel code may use <code>__rcu</code> before variable to indicate the use of RCU.</li>
+</ul>
+</li>
 <li>kallsym file info type: <a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/53679">link</a> </li>
 </ul>
 <h3 id="Privilege-escalation"><a href="#Privilege-escalation" class="headerlink" title="Privilege escalation"></a>Privilege escalation</h3><h4 id="change-self-改变自身权限"><a href="#change-self-改变自身权限" class="headerlink" title="change self: 改变自身权限."></a>change self: 改变自身权限.</h4><ul>
@@ -324,7 +330,7 @@
 <ul>
 <li><p><code>call_usermodehelper</code> 只能说是告诉了我有这么一种方式, 但是更具体的细节还得搜其他的东西.<br><a target="_blank" rel="noopener" href="https://lkmidas.github.io/posts/20210223-linux-kernel-pwn-modprobe/">post</a> | <a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/236126">another post with several exp.</a> </p>
 </li>
-<li><p><code>poweroff_cmd</code> when exec <code>init</code> or <code>poweroff</code> command in shell.</p>
+<li><p><code>poweroff_cmd</code> when exec <code>init</code> or <code>poweroff</code> command in shell. </p>
 </li>
 </ul>
 <p><strong>CHANGE CODE</strong> : </p>
@@ -361,11 +367,57 @@
 <h5 id="Attack-SMEP"><a href="#Attack-SMEP" class="headerlink" title="Attack SMEP"></a>Attack SMEP</h5><p>把 <code>CR4</code> 寄存器中的第 20 位置为 0 后，我们就可以执行用户态的代码。一般而言，我们会使用 0x6f0 来设置 CR4，这样 SMAP 和 SMEP 都会被关闭。 </p>
 <p>内核中修改 cr4 的代码最终会调用到 <code>native_write_cr4</code>，当我们能够劫持控制流后，我们可以执行内核中的 gadget 来修改 CR4。从另外一个维度来看，内核中存在固定的修改 cr4 的代码，比如在 <code>refresh_pce</code> 函数、<code>set_tsc_mode</code> 等函数里都有。</p>
 <p><code>copy_from/to_user</code> : 在劫持控制流后，攻击者可以调用 <code>copy_from_user</code> 和 <code>copy_to_user</code> 来访问用户态的内存。这两个函数会临时清空禁止访问用户态内存的标志。</p>
-<h4 id="KPTI-Kernel-Page-Table-Isolation-¶"><a href="#KPTI-Kernel-Page-Table-Isolation-¶" class="headerlink" title="KPTI - Kernel Page Table Isolation ¶"></a>KPTI - Kernel Page Table Isolation <a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/kernel-mode/defense/isolation/user-kernel/kpti/#_4">¶</a></h4><h4 id="Internal-Isolation"><a href="#Internal-Isolation" class="headerlink" title="Internal Isolation"></a>Internal Isolation</h4><blockquote>
-<p><code>kmem-cache-create()</code>: <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/E86824_01/html/E54779/kmem-cache-create-9f.html">link</a> </p>
+<h4 id="KPTI-Kernel-Page-Table-Isolation-¶"><a href="#KPTI-Kernel-Page-Table-Isolation-¶" class="headerlink" title="KPTI - Kernel Page Table Isolation ¶"></a>KPTI - Kernel Page Table Isolation <a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/kernel-mode/defense/isolation/user-kernel/kpti/#_4">¶</a></h4><p>utilization method</p>
+<h4 id="Internal-Isolation-WiKi"><a href="#Internal-Isolation-WiKi" class="headerlink" title="Internal Isolation WiKi"></a>Internal Isolation <a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/kernel-mode/defense/isolation/inner-kernel/heap-chunk/">WiKi</a></h4><ul>
+<li>Key: <strong>a cache with SLAB_ACCOUNT <u>cannot</u> be merged with a cache w/o SLAB_ACCOUNT</strong>, that is, used for dedicated purpose.</li>
+</ul>
+<blockquote>
+<p>__GFP_ACCOUNT: <a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/v5.8/core-api/memory-allocation.html#:~:text=Untrusted%20allocations%20triggered%20from%20userspace">Kernel doc</a> (GFP -&gt; Get Free Pages)</p>
+<ul>
+<li>Untrusted allocations triggered from userspace should be a subject of kmem accounting and must have <code>__GFP_ACCOUNT</code> bit set. There is the handy <code>GFP_KERNEL_ACCOUNT</code> shortcut for <code>GFP_KERNEL</code> allocations that should be accounted.</li>
+</ul>
 </blockquote>
-<h3 id="Info-Disclosure"><a href="#Info-Disclosure" class="headerlink" title="Info Disclosure"></a>Info Disclosure</h3><p><a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/kernel-mode/defense/access-control/information-disclosure/">https://ctf-wiki.org/pwn/linux/kernel-mode/defense/access-control/information-disclosure/</a></p>
-<p>…</p>
+<blockquote>
+<p><em><strong>memcg(memory cgroup) &amp; cgroups</strong></em>: <a target="_blank" rel="noopener" href="https://www.ibm.com/docs/en/spectrum-symphony/7.3.0?topic=limits-control-groups-cgroups-limiting-resource-usage-linux">IBM doc</a> </p>
+<p>The memory subsystem of the cgroups feature <strong>isolates the memory behavior of a group of processes (tasks) from the rest of the system</strong>. It reports on memory resources used by the processes in a cgroup, and sets limits on memory used by those processes.</p>
+</blockquote>
+<blockquote>
+<p><code>kmem-cache-create()</code>: <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/E86824_01/html/E54779/kmem-cache-create-9f.html">link</a> </p>
+<p><em><strong>What is cache in Linux?</strong></em> </p>
+<p>… not clear, only know that it is used by <code>kmem_cache_create</code>. </p>
+<p><em><strong>What functions use this feature?</strong></em> </p>
+<p><code>kmem_cache_create()</code> <code>kmem_cache_alloc()</code> </p>
+<p>It will allocate objects from a dedicated <strong>slab</strong> cache created by <code>kmem_cache_create</code>. If you specifically want a better slab cache management dedicated to your module only, use <code>kmem_cache_create</code> followed by <code>kmem_cache_alloc</code>. USB/SCSI drivers use this. <code>kmem_cache_create</code> takes sizeof your object you want to create slab of, a name which appears in /proc/slabinfo and flags to govern behavior of your slab cache.</p>
+<blockquote>
+<p><code>kmalloc()</code> malloc an aligned space, start from 32 bytes. -&gt; <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v3.9.11/source/mm/slab.c#L325">src is here</a> &lt;- | -&gt; <a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/latest/core-api/memory-allocation.html#:~:text=The%20maximal%20size%20of%20a%20chunk%20that%20can%20be%20allocated%20with%20kmalloc%20is%20limited.%20The%20actual%20limit%20depends%20on%20the%20hardware%20and%20the%20kernel%20configuration%2C%20but%20it%20is%20a%20good%20practice%20to%20use%20kmalloc%20for%20objects%20smaller%20than%20page%20size.">doc is here</a> &lt;-</p>
+</blockquote>
+</blockquote>
+<h3 id="Info-Disclosure-WiKi"><a href="#Info-Disclosure-WiKi" class="headerlink" title="Info Disclosure WiKi"></a>Info Disclosure <a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/kernel-mode/defense/access-control/information-disclosure/">WiKi</a></h3><p>dmesg_restrict | kptr_restrict</p>
+<h3 id="Randomization"><a href="#Randomization" class="headerlink" title="Randomization"></a>Randomization</h3><p>KASLR</p>
+<p><a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/kernel-mode/defense/randomization/fgkaslr/">FG-KASLR</a> : 主要是在FG-KASLR的环境下还有哪些可利用的地方.</p>
+<h3 id="Exp"><a href="#Exp" class="headerlink" title="Exp"></a>Exp</h3><h4 id="kernel-UAF¶"><a href="#kernel-UAF¶" class="headerlink" title="kernel UAF¶"></a>kernel UAF<a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/kernel-mode/exploitation/uaf/#kernel-uaf">¶</a></h4><p>主要是内核中内存分配管理的利用, 即普通堆块释放后被cred结构体的malloc分配(因为大小一致), 然后使用另一程序对原指针的操作修改cred为root权限. 这个内存管理特性和上面的linux cache有关系.</p>
+<h4 id="Kernel-ROP"><a href="#Kernel-ROP" class="headerlink" title="Kernel ROP"></a>Kernel ROP</h4><blockquote>
+<p><strong>强网杯2018-pwn-kernel-core</strong> </p>
+<p>看到skr师傅早在18年的wp, 一步一步来很详细, 参考见-&gt;<a target="_blank" rel="noopener" href="https://eternalsakura13.com/2018/03/31/b_core/">这里</a>, WiKi上也有相应内容. 我自己试一试.</p>
+</blockquote>
+<ul>
+<li>extract <code>vmlinux</code> from command line. <a target="_blank" rel="noopener" href="https://github.com/torvalds/linux/blob/master/scripts/extract-vmlinux">script</a> </li>
+<li>ROP <a target="_blank" rel="noopener" href="https://github.com/sashs/Ropper">searcher</a> </li>
+</ul>
+<p>首先下载.tar文件, 然后解压:</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">pc wget &quot;https://github.com/eternalsakura/ctf_pwn/raw/master/%E5%BC%BA%E7%BD%91%E6%9D%AF2018/core_give.tar&quot;<br>ll<br><br>┌──(root💀kali)-[/mnt/hgfs/LearingList/CTF/QWB-core]<br>└─# ll<br>total 46653<br>-rwxrwxrwx 1 root root  7029056 Mar 23  2018 bzImage<br>drwxrwxrwx 1 root root     4096 Jul 16 20:39 core<br>-rwxrwxrwx 1 root root      233 Jul 16 20:25 start.sh<br>-rwxrwxrwx 1 root root 40738712 Mar 24  2018 vmlinux<br></code></pre></div></td></tr></table></figure>
+
+<p>core是使用<code>cpio -idm &lt; core.cpio</code>命令extract之后的文件夹, 并没有重命名之后再使用gunzip, 嗯, 我也不知道为什么, 反而用那种方法gunzip会告诉我无法识别文件格式. </p>
+<p>start.sh:</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br><span class="hljs-meta">#</span><span class="bash"> line 7 kaslr can be removed when debugging.</span><br>qemu-system-x86_64 \<br>-m 128M\<br>-kernel ./bzImage \<br>-initrd  ./core.cpio \<br>-append &quot;root=/dev/ram rw console=ttyS0 oops=panic panic=1 quiet kaslr&quot; \ #boot config.<br>-s  \ #means open a gdbserver on TCP port 1234 at default.<br>-netdev user,id=t0, -device e1000,netdev=t0,id=nic0 \<br>-nographic  \<br></code></pre></div></td></tr></table></figure>
+<p>.cpio中包含以下文件:</p>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">┌──(root💀kali)-[/mnt/…/LearingList/CTF/QWB-core/core]<br>└─# l <br>bin/  core.cpio*  core.ko*  etc/  gen_cpio.sh*  init*  lib/  lib64/  proc/  root/  sbin/  sys/  tmp/  usr/  vmlinux*<br></code></pre></div></td></tr></table></figure>
+
+<p><strong>core.ko</strong> is kernel module, <strong>gen_cpio.sh</strong> can be used to regenerate the archive after revision. <strong>vmlinux</strong> is the kernel image. init is (????) init file. but i dont know when it will be executed.</p>
+<p>居然手贱在主机里执行了init, 给我执行了一堆奇怪命令….我还没弄快照…..还好没啥事.</p>
+<p>现在修改init文件, 重新打包后运行系统直接init执行错误. 真是神奇啊.</p>
+<p>总不能是权限问题吧…. 从各种意义上来说, 这很离谱.</p>
+<p>突然又成功了, 玄学的环境.. 哦我知道为什么了, <strong>在共享文件夹下无法创建符号链接</strong>, 所以重新打包之前/bin下面没有busybox的配置.</p>
 
             </div>
             <hr>

@@ -54,7 +54,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220625205927958.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/13160I313S.jpg">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-07-14T14:55:48.562Z">
+<meta property="article:modified_time" content="2022-07-16T13:00:23.045Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -290,7 +290,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年7月14日 晚上
+                  不可视境界线最后变动于：2022年7月16日 晚上
                 
               </p>
             
@@ -2210,7 +2210,7 @@
 <h4 id="level10-5"><a href="#level10-5" class="headerlink" title="level10"></a>level10</h4><p>I cannt figure out the difference between this and previous level…..</p>
 <h4 id="level11-5"><a href="#level11-5" class="headerlink" title="level11"></a>level11</h4><p>have user land program with seccomp constraint(write). </p>
 <p>and the pwncollege proc <strong>cannt be read</strong> by user:hacker. we can use write to do privilege escalation.</p>
-<h4 id="level12-3"><a href="#level12-3" class="headerlink" title="level12"></a>level12</h4><p>first fork a child to read the flag into bss segment, then delete the flag.<br>Next read shellcode which can only use write syscall.<br>the shellcode use write() to communicate with pwncollege kernel module for privilege escalation.<br>then use write() to print the bss segment content.</p>
+<h4 id="level12-3"><a href="#level12-3" class="headerlink" title="level12"></a>level12</h4><p>first fork a child to read the flag into bss segment, then delete the flag.<br>Next read shellcode which can only use write syscall.<br>the shellcode use write() to communicate with pwncollege kernel module for privilege escalation purpose.<br>then use write() to print out the bss segment content.</p>
 <h1 id="module-E-advance"><a href="#module-E-advance" class="headerlink" title="module E-advance"></a>module E-advance</h1><h4 id="key-point-1"><a href="#key-point-1" class="headerlink" title="key point:"></a>key point:</h4><ul>
 <li>Core concept: security checks that do not properly use mutexes are ineffective in a multithreaded environment!</li>
 <li>keeps track of what do you know about the process and the program, what do you need to know, what you can do.</li>
