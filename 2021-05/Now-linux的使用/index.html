@@ -24,7 +24,7 @@
 <meta property="og:description" content="搭环境要人命,">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-05-06T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-07-19T11:53:52.346Z">
+<meta property="article:modified_time" content="2022-07-20T07:38:06.325Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary_large_image">
@@ -209,7 +209,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      6.7k 字
+      7.4k 字
     </span>
   
 
@@ -218,7 +218,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      84 分钟
+      92 分钟
     </span>
   
 
@@ -259,7 +259,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年7月19日 晚上
+                  不可视境界线最后变动于：2022年7月20日 下午
                 
               </p>
             
@@ -292,13 +292,10 @@
 <li>修改命令行终端字体大小: ~/.config/qterminal.org/qterminal.ini 里的fontsize或fontfamily并将其改为只读文件(<strong>新版完全没这个问题</strong>)</li>
 <li>要显示隐藏文件夹直接到工具栏上的视图里去找</li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Cappuccino_jay/article/details/105474581">延长</a>锁屏时间</li>
-<li>终端补全只要方向键</li>
-<li>关机命令 init 0 重启 reboot</li>
 <li>chorme里<a target="_blank" rel="noopener" href="https://jingyan.baidu.com/article/75ab0bcb8547fed6864db2f8.html">添加</a>搜索引擎</li>
 <li>vim无法打开文件, <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38238114/article/details/78524043">改为</a>下载GVIM</li>
 <li>啥玩意儿啊, kali2021干吗搞没了图形界面clash弄半天也没成<a target="_blank" rel="noopener" href="https://dcrelay.me/#/knowledge">[0]</a></li>
 <li>main函数的两个参数: 一个是命令参数的个数, 另一个是命令参数数组,argv[0]是程序本身的文件名</li>
-<li>快照管理其中的保留是防止自动保存的快照被删除</li>
 <li>**Typora里使用中文状态下的Ctrl+A, 文件直接丢失!!!!**太特么蠢了.</li>
 <li>/usr/share/vim/vim82/colors/有vim的主题<ul>
 <li>industry 全黑,  evening 还行, koel 超级黑的背景, morning 灰白很不错, murpy又是黑的字体细点,  peachpuff 桃色背景, shine 亮瞎狗眼 颜色太浅, slate 字体太紧, zellner 平平无奇的白底, 剩下的不用考虑</li>
@@ -321,6 +318,15 @@
 <li>像seccomp ltrace的路径必须是相对路径, 如果只写个文件名是不行的.</li>
 <li><a target="_blank" rel="noopener" href="https://www.shellscript.sh/test.html">shell scriping tutorial</a> </li>
 <li>为了shelltools又装了一个apt install gcc-i686-linux-gnu, 不知道有没用.</li>
+<li>zsh_hist:</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">%</span><span class="bash">s/^\s*\d\+.\=\s\+//g 	<span class="hljs-comment">#trim `history -i 0` lineno in vim</span></span><br>history -i -n 0 	#print all history in timeformat<br>awk &#x27;match($0,/: ([[:digit:]]+):/, a) &#123;if(a[1]&gt;1658275200) print $0;&#125;&#x27; .zsh_history &gt; /mnt/hgfs/LearingList/configFile/zsh_hist/new 	#add new history<br>awk &#x27;match($0,/: ([[:digit:]]+):/, a) &#123;if(a[1]&gt;$1) print $0;&#125;&#x27; .zsh_history &gt; /mnt/hgfs/LearingList/configFile/zsh_hist/$(date +&quot;%y%m%d&quot;)	#in script<br>cat .zsh_history | sort -k2.14 -u &gt; ~/.zsh_history.tmp			#remove duplicate<br></code></pre></div></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><br></code></pre></div></td></tr></table></figure>
+
+
+
+<ul>
 <li></li>
 </ul>
 <h2 id="vim进阶"><a href="#vim进阶" class="headerlink" title="vim进阶"></a>vim进阶</h2><ul>
@@ -395,38 +401,62 @@
 <li></li>
 </ul>
 <h2 id="各种命令-软件包"><a href="#各种命令-软件包" class="headerlink" title="各种命令+软件包"></a>各种命令+软件包</h2><ul>
-<li><em>ldd</em>  <em>strace(刚刚装的)</em> <em>head打印前n行</em>  <em>du显示文件大小</em>   <em>ps打印进程信息</em>  <ul>
+<li><p><em>ldd</em>  <em>strace(刚刚装的)</em> <em>head打印前n行</em>  <em>du显示文件大小</em>   <em>ps打印进程信息</em>  </p>
+<ul>
 <li>ldd: print shared object dependencies</li>
 <li>ps aux  –  BSD参数风格</li>
 </ul>
 </li>
-<li>Linux下<code>!</code>的<a target="_blank" rel="noopener" href="https://www.cnblogs.com/wxywxy/p/7756596.html">用法</a>, 主要是传递最后执行的命令的参数，以方便的运行新命令(非常实用)</li>
-<li><a target="_blank" rel="noopener" href="http://c.biancheng.net/linux/ln.html">ln命令|symbolic_link</a> </li>
-<li>scp &amp; mkdir &amp; mv(linux中重命名的唯一方法)</li>
-<li><em><strong>screen</strong></em>: window manager, 好多快捷键, 复制了一份<a target="_blank" rel="noopener" href="https://gist.github.com/joaopizani/2718397">.screenrc</a>, 还挺有趣的.<ul>
+<li><p>Linux下<code>!</code>的<a target="_blank" rel="noopener" href="https://www.cnblogs.com/wxywxy/p/7756596.html">用法</a>, 主要是传递最后执行的命令的参数，以方便的运行新命令(非常实用)</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/linux/ln.html">ln命令|symbolic_link</a> </p>
+</li>
+<li><p>scp &amp; mkdir &amp; mv(linux中重命名的唯一方法)</p>
+</li>
+<li><p><em><strong>screen</strong></em>: window manager, 好多快捷键, 复制了一份<a target="_blank" rel="noopener" href="https://gist.github.com/joaopizani/2718397">.screenrc</a>, 还挺有趣的.</p>
+<ul>
 <li>screen这玩意儿也太强了.<code>Ctrl + A + [</code>进入copy模式才能使用滚轮或者Ctrl+F/B等等来翻页(已经改成&lt;C-/&gt;)</li>
 </ul>
 </li>
-<li><del>看到一个cscope包可以用来解析C/C++项目, 有空再研究怎么玩</del>(谁玩啊</li>
-<li>vim-gtk是vim的一个GUI版本, 装了之后才能vim -g</li>
-<li>新命令: <code>tput</code>好像是用一个通用命令做参数,  然后在当前终端的数据库中找到正确的命令并发送</li>
-<li><strong>ipython: System shell with !</strong> interactive Python也挺神奇的, 具体见pwn-modulesj里的帮助.<ul>
+<li><p><del>看到一个cscope包可以用来解析C/C++项目, 有空再研究怎么玩</del>(谁玩啊</p>
+</li>
+<li><p>vim-gtk是vim的一个GUI版本, 装了之后才能vim -g</p>
+</li>
+<li><p>新命令: <code>tput</code>好像是用一个通用命令做参数,  然后在当前终端的数据库中找到正确的命令并发送</p>
+</li>
+<li><p><strong>ipython: System shell with !</strong> interactive Python也挺神奇的, 具体见pwn-modulesj里的帮助.</p>
+<ul>
 <li><a target="_blank" rel="noopener" href="https://blog.51cto.com/essun/1712322">ipython用法</a> </li>
 </ul>
 </li>
-<li>发现grep有拓展正则和普通正则的区别, 又是一大堆东西, 有缘再看吧.</li>
-<li>新东西: <strong>sed</strong>, stream editor.  还有一个ed, 根本不知道怎么用. <del>这东西这两天把菜鸟教程上所有的命令全看一边就行了</del> 上面没有.<br><em><strong>rev nl</strong></em>  perror<ul>
+<li><p>发现grep有拓展正则和普通正则的区别, 又是一大堆东西, 有缘再看吧.</p>
+</li>
+<li><p>新东西: <strong>sed</strong>, stream editor.  还有一个ed, 根本不知道怎么用. <del>这东西这两天把菜鸟教程上所有的命令全看一边就行了</del> 上面没有.<br><em><strong>rev nl</strong></em>  perror</p>
+<ul>
 <li>真不错, 用了sed来改c.c中的题目标号, 再方便一点.</li>
 </ul>
 </li>
-<li><code>find</code>的功能真的很多, 又是一个相当强大的工具. e.g. <code>find . -name Makefile</code> </li>
-<li><code>wc</code> 命令, 计数文件字节数 行数等等.</li>
-<li><code>uniq</code> report repeated lines.</li>
-<li><code>ls -ARl *</code> 递归展示文件并且不显示.和.. 还能显示符号链接 以及<code>tree</code>命令</li>
-<li><code>shuf</code> generate random permutation.</li>
-<li><code>sleep infinity</code> 手册里完全没看见这个infinity, 不过作用也显而易见了.</li>
-<li><code>xargs</code> build and exec commands from standard input.</li>
-<li><code>bat</code> cat(1) clone with syntax highlighting and git integration.</li>
+<li><p><code>find</code>的功能真的很多, 又是一个相当强大的工具. e.g. <code>find . -name Makefile</code> </p>
+</li>
+<li><p><code>wc</code> 命令, 计数文件字节数 行数等等.</p>
+</li>
+<li><p><code>uniq</code> report repeated lines.</p>
+</li>
+<li><p><code>ls -ARl *</code> 递归展示文件并且不显示.和.. 还能显示符号链接 以及<code>tree</code>命令</p>
+</li>
+<li><p><code>shuf</code> generate random permutation.</p>
+</li>
+<li><p><code>sleep infinity</code> 手册里完全没看见这个infinity, 不过作用也显而易见了.</p>
+</li>
+<li><p><code>xargs</code> build and exec commands from standard input.</p>
+</li>
+<li><p><code>bat</code> cat(1) clone with syntax highlighting and git integration.</p>
+</li>
+<li><p><code>awk</code> <a target="_blank" rel="noopener" href="https://www.ibm.com/docs/zh/aix/7.2?topic=awk-command">IBM doc</a> </p>
+</li>
+<li><p><code>sort</code> : -k 可以指定跳过前面几个字符. </p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">KEYDEF is F[.C][OPTS][,F[.C][OPTS]] <span class="hljs-keyword">for</span> start and stop position, <span class="hljs-built_in">where</span> F is a field number and C<br>       a character position <span class="hljs-keyword">in</span> the field; both are origin 1, and the stop position defaults to the<br>       line<span class="hljs-string">&#x27;s end.</span><br></code></pre></div></td></tr></table></figure></li>
+<li></li>
 </ul>
 <h2 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h2><ul>
 <li>How to exit the running container? <a target="_blank" rel="noopener" href="https://linuxhandbook.com/exit-docker-container/">here</a> : that is pressing <code>ctrl+p &amp;&amp; ctrl+q</code>.</li>
