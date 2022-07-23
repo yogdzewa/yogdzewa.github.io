@@ -27,7 +27,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/CTF_newly_start/architecture.svg">
 <meta property="og:image" content="https://yogdzewa.github.io/image/CTF_newly_start/smep.jpg">
 <meta property="article:published_time" content="2021-05-27T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-07-23T00:21:27.521Z">
+<meta property="article:modified_time" content="2022-07-23T05:56:28.618Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -223,7 +223,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      289 分钟
+      290 分钟
     </span>
   
 
@@ -264,7 +264,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年7月23日 早上
+                  不可视境界线最后变动于：2022年7月23日 下午
                 
               </p>
             
@@ -626,7 +626,8 @@
 <p>写了几行自动反汇编指定地址的shell, 放在pwnsh里面. vmlinux-disasm</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br>vm=./vmlinux<br>len=40<br>if [ $# -eq 0 ]; then<br>    echo &#x27;Need Address Argument!&#x27;<br>    exit 1<br>fi<br>if [ $2 ]; then<br>    len=$2<br>fi<br>objdump $vm -d -Mintel --start-address=$1 --stop-address=$(printf 0x%x $(($1+$len))) <br></code></pre></div></td></tr></table></figure>
 </blockquote>
-<h3 id="Double-Fetch-2018-0CTF-Finals-Baby-Kernel"><a href="#Double-Fetch-2018-0CTF-Finals-Baby-Kernel" class="headerlink" title="Double Fetch-2018 0CTF Finals Baby Kernel"></a>Double Fetch-2018 0CTF Finals Baby Kernel</h3><p>驱动主要注册了一个 <code>baby_ioctl</code> 函数，其中包含两个功能。当 ioctl 中 cmd 参数为 0x6666 时，驱动将输出 flag 的加载地址。当 ioctl 中 cmd 参数为 0x1337 时，首先进行三个校验，接着对用户输入的内容与硬编码的 flag 进行逐字节比较，当一致时通过 <code>printk</code> 将 flag 输出出来。</p>
+<h3 id="Double-Fetch-2018-0CTF-Finals-Baby-Kernel"><a href="#Double-Fetch-2018-0CTF-Finals-Baby-Kernel" class="headerlink" title="Double Fetch-2018 0CTF Finals Baby Kernel"></a>Double Fetch-2018 0CTF Finals Baby Kernel</h3><p>这题的init调用了<code>misc_register()</code>, 作用: Register a miscellaneous device with the kernel. 所以这个设备会在/dev下, 名称为baby.</p>
+<p>驱动主要注册了一个 <code>baby_ioctl</code> 函数，其中包含两个功能。当 ioctl 中 cmd 参数为 0x6666 时，驱动将输出 flag 的加载地址。当 ioctl 中 cmd 参数为 0x1337 时，首先进行三个校验，接着对用户输入的内容与硬编码的 flag 进行逐字节比较，当一致时通过 <code>printk</code> 将 flag 输出出来。</p>
 <p>而分析其检查函数，其中 <code>_chk_range_not_ok</code> 为检查指针及长度范围是否指向用户空间。通过对驱动文件功能的分析，可以得到用户输入的数据结构体如下：</p>
 <figure class="highlight basic"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs basic"><span class="hljs-symbol">00000000 </span>attr            struc ; (sizeof=<span class="hljs-number">0</span>x10, mappedto_3)<br><span class="hljs-symbol">00000000 </span>flag_str        dq ?<br><span class="hljs-symbol">00000008 </span>flag_len        dq ?<br><span class="hljs-symbol">00000010 </span>attr            ends<br></code></pre></div></td></tr></table></figure>
 
