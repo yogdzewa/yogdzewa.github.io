@@ -27,7 +27,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/CTF_newly_start/architecture.svg">
 <meta property="og:image" content="https://yogdzewa.github.io/image/CTF_newly_start/smep.jpg">
 <meta property="article:published_time" content="2021-05-27T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-07-25T09:19:02.867Z">
+<meta property="article:modified_time" content="2022-07-25T16:23:40.563Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -223,7 +223,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      385 分钟
+      388 分钟
     </span>
   
 
@@ -264,7 +264,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年7月25日 下午
+                  不可视境界线最后变动于：2022年7月26日 凌晨
                 
               </p>
             
@@ -626,7 +626,8 @@
 <p>写了几行自动反汇编指定地址的shell, 放在pwnsh里面. vmlinux-disasm</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br>vm=./vmlinux<br>len=40<br>if [ $# -eq 0 ]; then<br>    echo &#x27;Need Address Argument!&#x27;<br>    exit 1<br>fi<br>if [ $2 ]; then<br>    len=$2<br>fi<br>objdump $vm -d -Mintel --start-address=$1 --stop-address=$(printf 0x%x $(($1+$len))) <br></code></pre></div></td></tr></table></figure>
 </blockquote>
-<h3 id="Double-Fetch-2018-0CTF-Finals-Baby-Kernel"><a href="#Double-Fetch-2018-0CTF-Finals-Baby-Kernel" class="headerlink" title="Double Fetch-2018 0CTF Finals Baby Kernel"></a>Double Fetch-2018 0CTF Finals Baby Kernel</h3><p>这题的init调用了<code>misc_register()</code>, 作用: Register a miscellaneous device with the kernel. 所以这个设备会在/dev下, 名称为baby.</p>
+<h3 id="Double-Fetch"><a href="#Double-Fetch" class="headerlink" title="Double Fetch"></a>Double Fetch</h3><h4 id="2018-0CTF-Finals-Baby-Kernel"><a href="#2018-0CTF-Finals-Baby-Kernel" class="headerlink" title="2018 0CTF Finals Baby Kernel"></a>2018 0CTF Finals Baby Kernel</h4><p><em><strong>USING RACE CONDITION</strong></em> :</p>
+<p>这题的init调用了<code>misc_register()</code>, 作用: Register a miscellaneous device with the kernel. 所以这个设备会在/dev下, 名称为baby.</p>
 <p>驱动主要注册了一个 <code>baby_ioctl</code> 函数，其中包含两个功能。当 ioctl 中 cmd 参数为 0x6666 时，驱动将输出 flag 的加载地址。当 ioctl 中 cmd 参数为 0x1337 时，首先进行三个校验，接着对用户输入的内容与硬编码的 flag 进行逐字节比较，当一致时通过 <code>printk</code> 将 flag 输出出来。</p>
 <p>而分析其检查函数，其中 <code>_chk_range_not_ok</code> 为检查指针及长度范围是否指向用户空间。通过对驱动文件功能的分析，可以得到用户输入的数据结构体如下：</p>
 <figure class="highlight basic"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs basic"><span class="hljs-symbol">00000000 </span>attr            struc ; (sizeof=<span class="hljs-number">0</span>x10, mappedto_3)<br><span class="hljs-symbol">00000000 </span>flag_str        dq ?<br><span class="hljs-symbol">00000008 </span>flag_len        dq ?<br><span class="hljs-symbol">00000010 </span>attr            ends<br></code></pre></div></td></tr></table></figure>
@@ -714,7 +715,7 @@
 </blockquote>
 <p>保护情况: kaslr, smep, smap, 2 cores and 2 threads loglevel=3 + dmesg(已关, 实际不可用) kptr</p>
 <blockquote>
-<p>启动的时候耗时17秒, 结果查了半天发现是<code>init</code>里面一行<code>ifup eth0 &gt; /dev/null 2&gt;/dev/null</code>导致系统hang up. 不知道这清空stdout和stderr的意义何在, 他的输出如下:</p>
+<p>启动的时候耗时17秒, 结果查了半天发现是<code>init</code>里面一行<code>ifup eth0 &gt; /dev/null 2&gt;/dev/null</code>导致系统hang up. 不知道这清空stdout和stderr的意义是何在, 他的输出如下:</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> ifup eth0</span>                                                 <br>Waiting for interface eth0 to appear............... timeout!  <br>run-parts: /etc/network/if-pre-up.d/wait_iface: exit status 1 <br></code></pre></div></td></tr></table></figure>
 
 <p>就在这儿硬等. linux网络设置不太懂, 先不管了.</p>
@@ -722,14 +723,14 @@
 <p>在init中初始化了一个读写锁. 可能有点用处.</p>
 <p>还有一个note结构体数组notebook, 由一个指向内容的指针和大小两个变量组成, 每个四字. 有16个, 并且有检查越界.</p>
 <ul>
-<li>read: 读取size字节, 会检查地址真实性 heap或stack块完整性 是否在kernel text area里</li>
+<li>read: 读取size字节, 会检查note地址真实性 heap或stack块完整性 是否在kernel text area里</li>
 <li>write: 写入size字节, 检查同上.</li>
 <li>ioctl: 参数为3个size_t类型的结构体. 分别是<code>idx, size, buf</code>.<ul>
 <li>0x100: note_add size小于0x60, 复制buf到name(??), note为NULL则重新kmalloc, 有<strong>读者锁</strong>.</li>
 <li>0x64: note_gift 复制整个notebook(0x100bytes)到buf中</li>
-<li>0x200: note_del 释放note + 如果size为0则清空结构体, <strong>写者锁</strong>包围.</li>
+<li>0x200: note_del 释放note + 如果size为0则清空结构体, <strong>写者锁</strong>.</li>
 <li>0x300: note_edit 调整note空间大小, <strong>读者锁</strong>.<ul>
-<li>size没变化, 退出.</li>
+<li>size没变化, 退出. </li>
 <li>如果size为0则认为是已经free, 退出. </li>
 <li>现在使用<code>realloc</code>一块chunk, 赋值给note, 然后unlock读者锁.</li>
 </ul>
@@ -737,8 +738,15 @@
 </ul>
 </li>
 </ul>
-<p>提供了notebook内核模块的基址. 在<code>/tmp/moduleaddr</code>里.</p>
-
+<p>提供了notebook内核模块的基址. 在<code>/tmp/moduleaddr</code>里. </p>
+<p>两个有读者锁的函数都没有检查size, 因此可以等于0. </p>
+<p>所以方法是: </p>
+<ul>
+<li>先add一个, 然后在edit中执行完krealloc后卡住, 并且newsize为0, 也就是直接释放这一块, 然后在add中修改size为0x60后卡住, 这样就能UAF一个任意大小的块(要先通过add再edit一个大chunk, 这样才能继续进行上面的操作), 不过只能操纵前0x60个字节. </li>
+</ul>
+<p>UAF之后可以使用之前介绍过的tty_struct方法来构造ROP提权, 返回用户态执行shell. </p>
+<p>还有一种方法, work_for_cpu函数, 总结: 看麻了.</p>
+<h2 id="flying-kernel-1"><a href="#flying-kernel-1" class="headerlink" title="flying-kernel"></a>flying-kernel</h2>
             </div>
             <hr>
             <div>
