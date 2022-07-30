@@ -27,7 +27,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/glibc_malloc_srcCode/KHlB5YwzDnq1pmZ.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/glibc_malloc_srcCode/unsorted_bin_attack_order.png">
 <meta property="article:published_time" content="2021-08-09T02:07:00.000Z">
-<meta property="article:modified_time" content="2022-06-03T12:54:49.399Z">
+<meta property="article:modified_time" content="2022-07-28T14:51:37.401Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="glibc_malloc">
 <meta property="article:tag" content="源码分析">
@@ -264,7 +264,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年6月3日 晚上
+                  不可视境界线最后变动于：2022年7月28日 晚上
                 
               </p>
             
@@ -568,7 +568,7 @@ b--&gt;|32 &amp; != 16|largebin_index_32
 <div class="hljs code-wrapper"><pre><code>如此，当这两个note都被释放时，两个note的note chunk会放置进相同索引的fast bin链里，而另外两个content chunk则会放置进 **另一个索引** 的fast bin链里。 note chunk 和 content chunk 在fast bin链中互不干扰
 </code></pre></div>
 <ol start="2">
-<li>q第二步就是新建一个新的note2，注意该note的content size要&lt;=12分配到<strong>fastbin上note1</strong>的空间，成为note2的content chunk</li>
+<li>第二步就是新建一个新的note2，注意该note的content size要&lt;=12分配到<strong>fastbin上note1</strong>的空间，成为note2的content chunk</li>
 <li><strong>注意</strong>：当程序可以执行system函数时，注意传入的地址为note2的地址，所以<code>[system addr]</code> 以及其后4个字节都会被解释成字符串尝试执行。但[system addr]又必须保留，那该如何get shell呢？<br> 这里有个小技巧，我们可以在最后四个字节构造<code>&quot;||sh&quot;</code>。这样便会执行<code>system(&quot;[system addr]||sh&quot;)</code><br> 由于<code>[system addr]</code>肯定执行失败，所以便会执行到后面的<code>sh</code>。这样便可以get shell</li>
 </ol>
 </li>
