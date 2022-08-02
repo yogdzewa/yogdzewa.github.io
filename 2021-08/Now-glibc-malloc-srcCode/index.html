@@ -19,7 +19,7 @@
     <meta name="description" content="glibc malloc version2.26 src code analysis">
 <meta property="og:type" content="article">
 <meta property="og:title" content="glibc_malloc(2.27&#x2F;28) &amp; techniques">
-<meta property="og:url" content="https://yogdzewa.github.io/2021-08/pwn-start-glibc-malloc-srcCode/index.html">
+<meta property="og:url" content="https://yogdzewa.github.io/2021-08/Now-glibc-malloc-srcCode/index.html">
 <meta property="og:site_name" content="Yogdzewa">
 <meta property="og:description" content="glibc malloc version2.26 src code analysis">
 <meta property="og:locale" content="zh_CN">
@@ -27,7 +27,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/glibc_malloc_srcCode/KHlB5YwzDnq1pmZ.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/glibc_malloc_srcCode/unsorted_bin_attack_order.png">
 <meta property="article:published_time" content="2021-08-09T02:07:00.000Z">
-<meta property="article:modified_time" content="2022-07-30T14:55:53.832Z">
+<meta property="article:modified_time" content="2022-08-01T16:13:54.993Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="glibc_malloc">
 <meta property="article:tag" content="源码分析">
@@ -214,7 +214,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      81k 字
+      82k 字
     </span>
   
 
@@ -223,7 +223,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1018 分钟
+      1024 分钟
     </span>
   
 
@@ -264,7 +264,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年7月30日 晚上
+                  不可视境界线最后变动于：2022年8月2日 凌晨
                 
               </p>
             
@@ -703,7 +703,8 @@ b--&gt;|32 &amp; != 16|largebin_index_32
 <p>这样就可以获得 <code>main_arena</code> 与基地址的偏移了。</p>
 <h3 id="实现-Leak-的方法"><a href="#实现-Leak-的方法" class="headerlink" title="实现 Leak 的方法"></a>实现 Leak 的方法</h3><p>一般来说，要实现 leak，需要有 <code>UAF</code>，将一个 <code>chunk</code> 放入 <code>Unsorted Bin</code> 中后再打出其 <code>fd</code>。一般的笔记管理题都会有 <code>show</code> 的功能，对处于链表尾的节点 <code>show</code> 就可以获得 <code>libc</code> 的基地址了。</p>
 <p>特别的，<code>CTF</code> 中的利用，堆往往是刚刚初始化的，所以 <code>Unsorted Bin</code> 一般都是干净的，当里面只存在一个 <code>bin</code> 的时候，该 <code>bin</code> 的 <code>fd</code> 和 <code>bk</code> 都会指向 <code>main_arena</code> 中。</p>
-<p>另外，如果我们无法做到访问链表尾，但是可以访问链表头，那么在 32 位的环境下，对链表头进行 <code>printf</code> 等往往可以把 <code>fd</code> 和 <code>bk</code> 一起输出出来，这个时候同样可以实现有效的 leak。然而在 64 位下，由于高地址往往为 <code>\x00</code>，很多输出函数会被截断，这个时候可能就难以实现有效 leak。</p>
+<p>另外，如果我们无法做到访问链表尾，但是可以访问链表头，那么在 32 位的环境下，对链表头进行 <code>printf</code> 等往往可以把 <code>fd</code> 和 <code>bk</code> 一起输出出来，这个时候同样可以实现有效的 leak。</p>
+<p>然而在 64 位下，由于高地址往往为 <code>\x00</code>，很多输出函数会被截断，这个时候可能就难以实现有效 leak。</p>
 <h2 id="Unsorted-Bin-Attack-原理"><a href="#Unsorted-Bin-Attack-原理" class="headerlink" title="Unsorted Bin Attack 原理"></a>Unsorted Bin Attack 原理</h2><p>在 <a target="_blank" rel="noopener" href="https://code.woboq.org/userspace/glibc/">glibc</a>/<a target="_blank" rel="noopener" href="https://code.woboq.org/userspace/glibc/malloc/">malloc</a>/<a target="_blank" rel="noopener" href="https://code.woboq.org/userspace/glibc/malloc/malloc.c.html">malloc.c</a> 中的 <code>_int_malloc</code> 有这么一段代码，当将一个 unsorted  bin 取出的时候，会将 <code>bck-&gt;fd</code> 的位置写入本 Unsorted Bin 的位置。</p>
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">/* remove from unsorted list */</span><br><span class="hljs-keyword">if</span> (__glibc_unlikely (bck-&gt;fd != victim))<br>  malloc_printerr (<span class="hljs-string">&quot;malloc(): corrupted unsorted chunks 3&quot;</span>);<br>unsorted_chunks (av)-&gt;bk = bck;<br>bck-&gt;fd = unsorted_chunks (av);<br></code></pre></div></td></tr></table></figure>
 
@@ -735,7 +736,7 @@ b--&gt;|32 &amp; != 16|largebin_index_32
 <li>unsorted_chunks(av)-&gt;bk = bck=target addr-16</li>
 <li>bck-&gt;fd = *(target addr -16+16) = unsorted_chunks(av);</li>
 </ul>
-<p><strong>可以看出，在将 unsorted bin 的最后一个 chunk 拿出来的过程中，victim 的 fd 并没有发挥作用，所以即使我们修改了其为一个不合法的值也没有关系。</strong>然而，需要注意的是，unsorted bin 链表可能就此破坏，在插入 chunk 时，可能会出现问题。</p>
+<p><strong>可以看出，在将 unsorted bin 的最后一个 chunk 拿出来的过程中，victim 的 fd 并没有发挥作用，所以即使我们修改了其为一个不合法的值也没有关系。</strong>然而，需要注意的是，unsorted bin 链表可能<strong>就此破坏</strong>，在插入 chunk 时，可能会出现问题。</p>
 <p><strong>即修改 target 处的值为 unsorted bin 的链表头部 0x7f1c705ffb78，也就是之前输出的信息。</strong> </p>
 <figure class="highlight apache"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">We</span> free the first chunk now and it will be inserted in the unsorted bin with its bk pointer point to <span class="hljs-number">0</span>x<span class="hljs-number">7</span>f<span class="hljs-number">1</span>c<span class="hljs-number">705</span>ffb<span class="hljs-number">78</span><br><span class="hljs-attribute">Now</span> emulating a vulnerability that can overwrite the victim-&gt;bk pointer<br><span class="hljs-attribute">And</span> we write it with the target address-<span class="hljs-number">16</span> (in <span class="hljs-number">32</span>-bits machine, it should be target address-<span class="hljs-number">8</span>):<span class="hljs-number">0</span>x<span class="hljs-number">7</span>ffe<span class="hljs-number">0</span>d<span class="hljs-number">232508</span><br><br><span class="hljs-attribute">Let</span>&#x27;s malloc again to get the chunk we just free. During this time, target should has already been rewrite:<br><span class="hljs-attribute">0x7ffe0d232518</span>: <span class="hljs-number">0</span>x<span class="hljs-number">7</span>f<span class="hljs-number">1</span>c<span class="hljs-number">705</span>ffb<span class="hljs-number">78</span><br></code></pre></div></td></tr></table></figure>
 
@@ -745,8 +746,20 @@ b--&gt;|32 &amp; != 16|largebin_index_32
 <li>通过修改循环的次数来使得程序可以执行多次循环。</li>
 <li>修改 heap 中的 <code>global_max_fast</code> 来使得更大的 chunk 可以被视为 fast bin，这样我们就可以去执行一些 fast bin attack 了。</li>
 </ul>
+<h1 id="largebin-attack"><a href="#largebin-attack" class="headerlink" title="largebin attack"></a>largebin attack</h1><p><a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/user-mode/heap/ptmalloc2/large-bin-attack/">Wiki</a> </p>
+<blockquote>
+<h5 id="关于指定libc调试"><a href="#关于指定libc调试" class="headerlink" title="关于指定libc调试:"></a>关于指定libc调试:</h5><ol>
+<li>修改elf文件使用指定libc: <code>./chlibc ctest 2.27</code> </li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/bash</span><br>if [ $# -ne 2 ]; then<br> echo Need two arguments!<br> exit 128<br>fi<br>version=$2<br>binary=$1<br>libc_path=`find /glibs -type d -regex &quot;/glibs/$version.*amd64&quot;`<br><span class="hljs-meta">#</span><span class="bash"><span class="hljs-built_in">echo</span> <span class="hljs-variable">$libc_path</span></span><br><span class="hljs-meta">#</span><span class="bash"><span class="hljs-built_in">exit</span></span><br><br>patchelf --set-interpreter &quot;$libc_path/ld-linux-x86-64.so.2&quot; $binary<br>patchelf --set-rpath $libc_path $binary<br><br>echo ldd output:<br>ldd $binary<br></code></pre></div></td></tr></table></figure>
+
+<ol start="2">
+<li>gdb中直接打开, 使用list查看源代码所对应文件, 一般设置为<code>dir /glibs/glibc-2.27/stdio-common/</code>即可.</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://sourceware.org/gdb/download/onlinedocs/gdb/Source-Path.html#Source-Path">GDB Source-path Doc</a> or <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/1a966b62b3d4">make glibc from src</a> </p>
+</blockquote>
 <h1 id="bin-attack-总结"><a href="#bin-attack-总结" class="headerlink" title="bin attack 总结"></a>bin attack 总结</h1><ul>
-<li>主要就是将bin的fd指针指向我们想要的位置, 从而在下次malloc中获得目标位置的chunk, 进一步修改目标地址<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>与上条类似，我们同样将分配作为content的chunk称为content chunk
+<li>主要就是将bin的fd指针指向我们想要的位置, 从而在下次malloc中获得目标位置的chunk, 进一步修改目标地址r<section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>与上条类似，我们同样将分配作为content的chunk称为content chunk
 <a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span>为了方便，我们将分配作为note的chunk称为note chunk
 <a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section></li>
 </ul>
@@ -780,7 +793,7 @@ b--&gt;|32 &amp; != 16|largebin_index_32
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021-08/pwn-start-Assembly/">
+                      <a href="/2021-08/pwn-Assembly/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Assembly Language</span>
                         <span class="visible-mobile">上一篇</span>
@@ -790,7 +803,7 @@ b--&gt;|32 &amp; != 16|largebin_index_32
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021-07/pwn-start-BUUOJ-writeup/">
+                      <a href="/2021-07/pwn-BUUOJ-writeup/">
                         <span class="hidden-mobile">BUUOJ_Writeup</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -816,7 +829,7 @@ b--&gt;|32 &amp; != 16|largebin_index_32
         var options = Object.assign(
           {"clientID":"312db7ebbc085de5d28d","clientSecret":"85ea3cefd13c73a6d85c1813adfde4f1550bfbda","repo":"yogdzewa.github.io","owner":"yogdzewa","admin":["yogdzewa"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: 'cdec3bed276d605f4311bdf08a9f99cf'
+            id: '51aaaae29064c5f94f24b9ee2f842039'
           }
         )
         var gitalk = new Gitalk(options);
