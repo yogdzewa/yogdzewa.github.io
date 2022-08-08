@@ -27,7 +27,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/glibc_malloc_srcCode/KHlB5YwzDnq1pmZ.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/glibc_malloc_srcCode/unsorted_bin_attack_order.png">
 <meta property="article:published_time" content="2021-08-09T02:07:00.000Z">
-<meta property="article:modified_time" content="2022-08-04T09:14:01.485Z">
+<meta property="article:modified_time" content="2022-08-06T07:27:52.557Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="源码分析">
 <meta property="article:tag" content="ptmalloc">
@@ -223,7 +223,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1051 分钟
+      1050 分钟
     </span>
   
 
@@ -264,7 +264,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年8月4日 下午
+                  不可视境界线最后变动于：2022年8月6日 下午
                 
               </p>
             
@@ -794,7 +794,7 @@ b--&gt;|32 &amp; != 16|largebin_index_32
 <li>开头一个<code>mallopt(M_MXFAST, 0)</code>(在malloc.h)禁用了fastbin, 也就是将fastbin处理的块大小上限设置为0. </li>
 <li>mmap 0x13370000处的一个page, 在0x13370800写入0x18(3 qword)字节的随机数. 0x13370818后赋值为第三个qword. 结尾在0x0820.<br>从0x0820开始, 连续16个0x10字节被赋值成第一个和第二个qword. </li>
 </ul>
-<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-number">0x13370800</span>:     a1      a2<br><span class="hljs-number">0x13370810</span>:     a3      a3<br><span class="hljs-comment">//每行tx不一定相等.</span><br><span class="hljs-number">0x13370820</span>:     t1      t2<br><span class="hljs-number">0x13370830</span>:     t1      t2<br>	...<br><span class="hljs-number">0x13370900</span>:     t1      t2<br><span class="hljs-number">0x13370910</span>:     t1      t2<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-number">0x13370800</span>:     a1      a2<br><span class="hljs-number">0x13370810</span>:     a3      a3<br><span class="hljs-comment">//每行tx不一定相等. </span><br></code></pre></div></td></tr></table></figure>
 
 
 
