@@ -26,9 +26,13 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/glibc_malloc_srcCode/sbzY4vrhU2wZypm.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/glibc_malloc_srcCode/KHlB5YwzDnq1pmZ.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/ptmalloc_exp/largebin-struct.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/ptmalloc_exp/image-20220810113456363.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/ptmalloc_exp/image-20220810200039356.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/ptmalloc_exp/image-20220810201642255.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/ptmalloc_exp/image-20220810201820968.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/glibc_malloc_srcCode/unsorted_bin_attack_order.png">
 <meta property="article:published_time" content="2021-08-09T02:07:00.000Z">
-<meta property="article:modified_time" content="2022-08-09T08:12:17.145Z">
+<meta property="article:modified_time" content="2022-08-10T12:48:32.760Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="源码分析">
 <meta property="article:tag" content="ptmalloc">
@@ -215,7 +219,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      86k 字
+      88k 字
     </span>
   
 
@@ -224,7 +228,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1077 分钟
+      1101 分钟
     </span>
   
 
@@ -265,7 +269,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年8月9日 下午
+                  不可视境界线最后变动于：2022年8月10日 晚上
                 
               </p>
             
@@ -444,6 +448,14 @@ b--&gt;|32 &amp; != 16|largebin_index_32
 
 <h3 id="use-top"><a href="#use-top" class="headerlink" title="use_top"></a>use_top</h3><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">use_top:<br>    <span class="hljs-comment">/*   没看懂写了啥(replenished,fenceposts)</span><br><span class="hljs-comment">         If large enough, split off the chunk bordering the end of memory</span><br><span class="hljs-comment">         (held in av-&gt;top). Note that this is in accord with the best-fit</span><br><span class="hljs-comment">         search rule.  In effect, av-&gt;top is treated as larger (and thus</span><br><span class="hljs-comment">         less well fitting) than any other available chunk since it can</span><br><span class="hljs-comment">         be extended to be as large as necessary (up to system</span><br><span class="hljs-comment">         limitations).</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">         We require that av-&gt;top always exists (i.e., has size &gt;=</span><br><span class="hljs-comment">         MINSIZE) after initialization, so if it would otherwise be</span><br><span class="hljs-comment">         exhausted by current request, it is replenished. (The main</span><br><span class="hljs-comment">         reason for ensuring it exists is that we may need MINSIZE space</span><br><span class="hljs-comment">         to put in fenceposts in sysmalloc.)</span><br><span class="hljs-comment">       */</span><br><br>    victim = av-&gt;top;<br>    size = chunksize(victim);<br><br>    <span class="hljs-keyword">if</span> ((<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>)(size) &gt;= (<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>)(nb + MINSIZE))<br>    &#123;<span class="hljs-comment">//如果top足够大, 就分割</span><br>        remainder_size = size - nb;<br>        remainder = chunk_at_offset(victim, nb);<br>        av-&gt;top = remainder;<br>        set_head(victim, nb | PREV_INUSE |<br>                             (av != &amp;main_arena ? NON_MAIN_ARENA : <span class="hljs-number">0</span>));<br>        set_head(remainder, remainder_size | PREV_INUSE);<br>		<span class="hljs-comment">//详细的检查, 只有在MALLOC_DEBUG为1时启用</span><br>        check_malloced_chunk(av, victim, nb);<br>        <span class="hljs-keyword">void</span> *p = chunk2mem(victim);<br>        alloc_perturb(p, bytes);<br>        <span class="hljs-keyword">return</span> p;<br>    &#125;<br>    <span class="hljs-comment">/* When we are using atomic ops to free fast chunks we can get</span><br><span class="hljs-comment">         here for all block sizes.  */</span><br>    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (have_fastchunks(av))<br>    &#123;<span class="hljs-comment">//如果不够大且当前arena有fastchunk, 再次malloc_consolidate()等待下一次循环是否可行</span><br>        malloc_consolidate(av);<br>        <span class="hljs-comment">/* restore original bin index */</span><br>        <span class="hljs-keyword">if</span> (in_smallbin_range(nb))<br>            idx = smallbin_index(nb);<br>        <span class="hljs-keyword">else</span><br>            idx = largebin_index(nb);<br>    &#125;<br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">         Otherwise, relay to handle system-dependent cases</span><br><span class="hljs-comment">       */</span><br>    <span class="hljs-keyword">else</span><br>    &#123;<span class="hljs-comment">//啥都没有, 直接sysmalloc()增加topchunk,并且return跳出循环</span><br>        <span class="hljs-keyword">void</span> *p = sysmalloc(nb, av);<br>        <span class="hljs-keyword">if</span> (p != <span class="hljs-literal">NULL</span>)<br>            alloc_perturb(p, bytes);<br>        <span class="hljs-keyword">return</span> p;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
 
+<h3 id="补充-更大的内存分配–sysmalloc"><a href="#补充-更大的内存分配–sysmalloc" class="headerlink" title="补充: 更大的内存分配–sysmalloc"></a>补充: 更大的内存分配–sysmalloc</h3><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">/*</span><br><span class="hljs-comment">   sysmalloc handles malloc cases requiring more memory from the system.</span><br><span class="hljs-comment">   On entry, it is assumed that av-&gt;top does not have enough</span><br><span class="hljs-comment">   space to service request for nb bytes, thus requiring that av-&gt;top</span><br><span class="hljs-comment">   be **extended** or **replaced**.</span><br><span class="hljs-comment"> */</span><br></code></pre></div></td></tr></table></figure>
+
+<h4 id="第一种情况-使用mmap"><a href="#第一种情况-使用mmap" class="headerlink" title="第一种情况: 使用mmap"></a>第一种情况: 使用mmap</h4><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">/*</span><br><span class="hljs-comment">   If have mmap, and the request size meets the mmap threshold, and</span><br><span class="hljs-comment">   the system supports mmap, and there are few enough currently</span><br><span class="hljs-comment">   allocated mmapped regions, try to directly map this request</span><br><span class="hljs-comment">   rather than expanding top.</span><br><span class="hljs-comment"> */</span><br></code></pre></div></td></tr></table></figure>
+
+<p>主要是根据mp_里的mmap控制变量来决定是否使用mmap. </p>
+<p>因为mmap的chunk没有下一个chunk的prevsize可以使用, 所以overhead还要加上一个size_t, 然后最终大小再和pageSize对齐.</p>
+<p>然后进行一些检查和mp_参数的更新, 返回可用的chunk.</p>
+<h4 id="第二种-替换或拓展top"><a href="#第二种-替换或拓展top" class="headerlink" title="第二种: 替换或拓展top"></a>第二种: 替换或拓展top</h4><p>这种方法用到了其他线程的arena和morecore之类的macro, 看不懂先跳过了. </p>
 <h1 id="释放内存块"><a href="#释放内存块" class="headerlink" title="释放内存块"></a>释放内存块</h1><h2 id="libc-free"><a href="#libc-free" class="headerlink" title="__libc_free"></a>__libc_free</h2><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">void</span> __libc_free(<span class="hljs-keyword">void</span> *mem) &#123;<br>    mstate    ar_ptr;<br>    mchunkptr p; <span class="hljs-comment">/* chunk corresponding to mem */</span><br>    <span class="hljs-comment">// 判断是否有钩子函数 __free_hook</span><br>    <span class="hljs-keyword">void</span> (*hook)(<span class="hljs-keyword">void</span> *, <span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *) = atomic_forced_read(__free_hook);<br>    <span class="hljs-keyword">if</span> (__builtin_expect(hook != <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>)) &#123;<br>        (*hook)(mem, RETURN_ADDRESS(<span class="hljs-number">0</span>));<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-comment">// free NULL没有作用</span><br>    <span class="hljs-keyword">if</span> (mem == <span class="hljs-number">0</span>) <span class="hljs-comment">/* free(0) has no effect */</span><br>        <span class="hljs-keyword">return</span>;<br>    <span class="hljs-comment">// 将mem转换为chunk状态</span><br>    p = mem2chunk(mem);<br>    <span class="hljs-comment">// 如果该块内存是mmap得到的</span><br>    <span class="hljs-keyword">if</span> (chunk_is_mmapped(p)) <span class="hljs-comment">/* release mmapped memory. */</span><br>    &#123;<br>        <span class="hljs-comment">/* See if the dynamic brk/mmap threshold needs adjusting.</span><br><span class="hljs-comment">       Dumped fake mmapped chunks do not affect the threshold.  */</span><br>        <span class="hljs-keyword">if</span> (!mp_.no_dyn_threshold &amp;&amp; chunksize_nomask(p) &gt; mp_.mmap_threshold &amp;&amp;<br>            chunksize_nomask(p) &lt;= DEFAULT_MMAP_THRESHOLD_MAX &amp;&amp;<br>            !DUMPED_MAIN_ARENA_CHUNK(p)) &#123;<br>            mp_.mmap_threshold = chunksize(p);<br>            mp_.trim_threshold = <span class="hljs-number">2</span> * mp_.mmap_threshold;<br>            LIBC_PROBE(memory_mallopt_free_dyn_thresholds, <span class="hljs-number">2</span>,<br>                       mp_.mmap_threshold, mp_.trim_threshold);<br>        &#125;<br>        munmap_chunk(p);<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    MAYBE_INIT_TCACHE (); <span class="hljs-comment">//唯一的tcache</span><br>    <br>    <span class="hljs-comment">// 根据chunk获得分配区的指针</span><br>    ar_ptr = arena_for_chunk(p);<br>    <span class="hljs-comment">// 执行释放</span><br>    _int_free(ar_ptr, p, <span class="hljs-number">0</span>);<br>&#125;<br></code></pre></div></td></tr></table></figure>
 
 <h2 id="int-free"><a href="#int-free" class="headerlink" title="_int_free"></a>_int_free</h2><h3 id="变量定义-1"><a href="#变量定义-1" class="headerlink" title="变量定义"></a>变量定义</h3><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span><br>_int_free (mstate av, mchunkptr p, <span class="hljs-keyword">int</span> have_lock)<br>&#123;<br>  INTERNAL_SIZE_T size;        <span class="hljs-comment">/* its size */</span><br>  mfastbinptr *fb;             <span class="hljs-comment">/* associated fastbin */</span><br>  mchunkptr nextchunk;         <span class="hljs-comment">/* next contiguous chunk */</span><br>  INTERNAL_SIZE_T nextsize;    <span class="hljs-comment">/* its size */</span><br>  <span class="hljs-keyword">int</span> nextinuse;               <span class="hljs-comment">/* true if nextchunk is used */</span><br>  INTERNAL_SIZE_T prevsize;    <span class="hljs-comment">/* size of previous contiguous chunk */</span><br>  mchunkptr bck;               <span class="hljs-comment">/* misc temp for linking */</span><br>  mchunkptr fwd;               <span class="hljs-comment">/* misc temp for linking */</span><br><br>  <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *errstr = <span class="hljs-literal">NULL</span>;<br>  <span class="hljs-keyword">int</span> locked = <span class="hljs-number">0</span>;<br><br>  size = chunksize (p);<br></code></pre></div></td></tr></table></figure>
@@ -622,11 +634,50 @@ b--&gt;|32 &amp; != 16|largebin_index_32
 <p>我们可以控制 fd_nextsize 指向堆上的任意地址，可以容易地使之指向一个 fastbin + 0x10 - 0x18，而 fastbin 中的 fd 也会指向堆上的一个地址，通过部分覆写该指针也可以使该指针指向之前的 large bin + 0x10，这样就可以通过 <code>fd-&gt;bk == p</code> 的检测。</p>
 <p>由于 bk_nextsize 我们无法修改，所以 bk-&gt;fd 必然在原先的 large bin chunk 的 fd 指针处（这个 fd 被我们破坏了）。通过 fastbin 的链表特性可以做到修改这个指针且不影响其他的数据，再部分覆写之就可以通过 <code>bk-&gt;fd==p</code> 的检测了。</p>
 <p>然后通过 off-by-one 向低地址合并就可以实现 chunk overlapping 了，之后可以 leak libc_base 和 堆地址，tcache 打 <code>__free_hook</code> 即可。</p>
-<h2 id="示例-Asis-CTF-2016-b00ks"><a href="#示例-Asis-CTF-2016-b00ks" class="headerlink" title="示例: Asis CTF 2016 b00ks"></a>示例: Asis CTF 2016 b00ks</h2><p>一进入程序先要求设置author name, 还可以通过change功能来更改, 最长为32. 不过在stdin_read函数中边界检查不正确导致结尾空字符溢出. </p>
-<p>通过查看data中变量布局可以看到author name在slot_array上方, 这个array存的是一堆book类型的指针, 这个结构体使用malloc来分配空间:</p>
-<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">book</span>&#123;</span><br>    <span class="hljs-keyword">int</span> id;<br>    <span class="hljs-keyword">char</span>* name;<br>    <span class="hljs-keyword">char</span>* description;<br>    <span class="hljs-keyword">int</span> size;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+<h2 id="示例-Asis-CTF-2016-b00ks"><a href="#示例-Asis-CTF-2016-b00ks" class="headerlink" title="示例: Asis CTF 2016 b00ks"></a>示例: Asis CTF 2016 b00ks</h2><p>先patch成glibc 2.27的版本. 只要小于2.29都一个样. </p>
+<img src="../../image/ptmalloc_exp/image-20220810113456363.png" srcset="/img/loading.gif" lazyload alt="image-20220810113456363" style="zoom:80%;" />
+
+<p>一进入程序先要求设置author name, 还可以通过change功能来更改, 最长为32. 不过在stdin_read函数中边界检查不正确导致结尾空字符溢出. </p>
+<p>create里malloc流程: name-&gt;description-&gt;book. 前两个为自己设定, 最后一个为0x20字节. </p>
+<p>通过查看data中变量布局可以看到author name在slot_array上方, 这个array存的是一堆book类型的指针, 这个结构体使用malloc来分配空间: </p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">book</span>&#123;</span><br>    <span class="hljs-keyword">int</span> id;		<span class="hljs-comment">//占8字节, 对齐</span><br>    <span class="hljs-keyword">char</span>* name;<br>    <span class="hljs-keyword">char</span>* description;<br>    <span class="hljs-keyword">int</span> size;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
 
 <p>所以先让author name的结尾空字符溢出到book1的指针最低字节, 然后读取出detail就会连带打印出book1的指针, 这样就泄露出了一个<strong>堆地址</strong>. </p>
+<p>还可以通过清空最低字节来使指针指向我们控制的一个堆块(比如说通过edit修改的desc), 这样会自动认为那是一个book结构体, 从而在print时解引用name和desc指针, 打印出相应地址上的值. 还可以在edit中修改desc指向的地址, 从而达到了任意地址读写的能力. </p>
+<p>具体过程如下:</p>
+<ul>
+<li>程序刚开始, 第一个malloc会从0x5633ca39c260开始. 注意到最后三位是0x260. </li>
+<li>为了实现利用, 要让book1的desc mem ptr(和chunk ptr相对, 联系chunk2mem)的最低字节为0x00.</li>
+<li>最近的地址肯定是0x300, 所以desc chunk ptr为0x2f0, 留给name chunk的大小为0x90. </li>
+<li>0x90需要我们申请0x80的空间. 即<code>create(0x80, &#39;a&#39;, 0x50, &#39;a&#39;)</code> </li>
+</ul>
+<p>gdb中查看, 一通操作后book1的指针最低字节清空后刚好是book1的desc用户指针:</p>
+<img src="../../image/ptmalloc_exp/image-20220810200039356.png" srcset="/img/loading.gif" lazyload alt="image-20220810200039356" style="zoom:80%;" />
+
+<ul>
+<li>然后在desc里面伪造一个book结构体, name和desc均可用来任意读, desc能用来任意写(通过edit). </li>
+</ul>
+<p>通过一个堆地址可以推断出elf基地址和<strong>其他chunk的相对位置</strong>, 接下来的方法比如说<code>__free_hook</code>, free_got(因为FULL RELRO导致不可用). 需要libc基地址, 有两种方法:</p>
+<ol>
+<li>通过mmap, 这样分配的chunk会和libc有固定偏移. </li>
+<li>通过largebin的fd_nextsize. 只有一组大小相同的元素时会指向libc中的large head.</li>
+</ol>
+<p>只有在topchunk(一般是这样, 题目刚开始的时候top chunk是最大的chunk, 只要申请比这大的chunk即可实现mmap分配)不够用的时候才会使用mmap, 通过gdb看到topchunk一开始是0x21000. 由于开头两个chunk被用来存管理heap的结构体, 所以<strong>直接申请0x21000的堆块即可</strong>. 还要将name或desc写成<code>&#39;/bin/sh&#39;</code> </p>
+<p>申请后:</p>
+<img src="../../image/ptmalloc_exp/image-20220810201642255.png" srcset="/img/loading.gif" lazyload alt="image-20220810201642255" style="zoom:80%;" />
+
+<p>name和desc分别分到了这两个位置:</p>
+<img src="../../image/ptmalloc_exp/image-20220810201820968.png" srcset="/img/loading.gif" lazyload alt="image-20220810201820968" style="zoom:80%;" />
+
+<p>注意到申请的是0x21000, 实际大小是0x22000, 这是因为加上header的0x10字节后进行page对齐的结果.</p>
+<p>到这里的流程如下:</p>
+<ul>
+<li>对book1的desc fake chunk进行修改, 进行一次任意读, 读取book2的name的值. 这个地址用之前leak的book1地址加上一个偏移即可</li>
+<li>两个book的chunk紧挨着的, 这个偏移为0x38, 和0x40, 即可定位到book2的name和desc指针的地址. </li>
+<li>然后找到<code>__free_hook = book2_name_chunk - 0x250718</code>, <strong>注意这里的chunk指针和上面任意读到的用户指针的区别</strong> </li>
+<li>使用desc任意写覆盖<code>__free_hook</code>为<code>system</code>, 其中<code>system = book2_name_chunk - 0x5eebc0</code>. </li>
+<li>执行delete 2. 成功shell. </li>
+</ul>
 <h1 id="Fastbin-Attack"><a href="#Fastbin-Attack" class="headerlink" title="Fastbin Attack"></a>Fastbin Attack</h1><p>几乎全为<a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/user-mode/heap/ptmalloc2/fastbin-attack/">CTF-WiKi</a>, 做了些修改以及添加了一点个人想法</p>
 <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>fastbin attack 是一类漏洞的利用方法，是指所有基于 fastbin 机制的漏洞利用方法。这类利用的前提是：</p>
 <ul>
