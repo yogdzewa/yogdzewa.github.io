@@ -27,7 +27,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/CTF_newly_start/architecture.svg">
 <meta property="og:image" content="https://yogdzewa.github.io/image/CTF_newly_start/smep.jpg">
 <meta property="article:published_time" content="2021-05-27T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-08-08T08:43:20.575Z">
+<meta property="article:modified_time" content="2022-08-30T01:39:22.122Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -214,7 +214,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      37k 字
+      40k 字
     </span>
   
 
@@ -223,7 +223,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      459 分钟
+      500 分钟
     </span>
   
 
@@ -264,7 +264,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年8月8日 下午
+                  不可视境界线最后变动于：2022年8月30日 上午
                 
               </p>
             
@@ -809,8 +809,91 @@
 
 
 
-<h3 id="malloc-hook"><a href="#malloc-hook" class="headerlink" title="malloc_hook"></a>malloc_hook</h3><blockquote>
+<h3 id="malloc-hook"><a href="#malloc-hook" class="headerlink" title="malloc_hook"></a>malloc_hook</h3><p>和free_hook一个东西, 一般都是在获取任意写的能力之后覆盖掉这个地址, 然后在进行malloc/free达到执行任意地址处的代码的目的. </p>
+<h2 id="ret2dlresolve"><a href="#ret2dlresolve" class="headerlink" title="ret2dlresolve"></a>ret2dlresolve</h2><h3 id="相关背景知识"><a href="#相关背景知识" class="headerlink" title="相关背景知识"></a>相关背景知识</h3><p><strong>Lazy bind</strong>: 第一次调用read</p>
+<ul>
+<li>先call read@plt. </li>
+<li>第一条指令就是jmp GOT[], 再jmp到got里的地址</li>
+<li>实际上存的是read@plt+6, 相当于继续执行下一条指令</li>
+<li>push一个参数，也就是rel_offset</li>
+<li>之后跳转到pre_resolve, 在plt[0]中, 总共两条指令. </li>
+<li>又push一个参数(link_map).  </li>
+<li>跳转到_dl_runtime_resolve</li>
+</ul>
+<hr>
+<p><strong>ELF</strong>: 原版来自:<a target="_blank" rel="noopener" href="https://github.com/ReAbout/pwn-exercise-iot/blob/main/linux_x86_stack_overflow/pwn5_ret2dlresolve/pwn5.md">link</a> </p>
+<blockquote>
+<p><code>.dynamic</code><br>这个section的用处就是他包含了很多动态链接所需的关键信息，我们现在只关心<code>DT_STRTAB</code>, <code>DT_SYMTAB</code>, <code>DT_JMPREL</code>这三项，这三个东西分别包含了指向.<code>dynstr</code>, <code>.dynsym</code>, .<code>rel.plt</code>这3个section的指针。 <code>readelf -S</code> (Section Headers)</p>
 </blockquote>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span><br>    Elf32_Sword d_tag;<br>    <span class="hljs-class"><span class="hljs-keyword">union</span> &#123;</span><br>        Elf32_Word d_val;<br>        Elf32_Addr d_ptr;<br>    &#125; d_un;<br>&#125; Elf32_Dyn;<br><br>Dynamic section at offset <span class="hljs-number">0x21b0</span> contains <span class="hljs-number">24</span> entries:<br>  Tag        Type                         Name/Value<br> ...<br> <span class="hljs-number">0x00000005</span> (STRTAB)                     <span class="hljs-number">0x804828c</span>  <br> <span class="hljs-number">0x00000006</span> (SYMTAB)                     <span class="hljs-number">0x80481ec</span>   即为 `.dynsym`<br> ...<br> <span class="hljs-number">0x00000017</span> (JMPREL)                     <span class="hljs-number">0x8048344</span>   即为 `.rel.plt`<br> ...<br></code></pre></div></td></tr></table></figure>
+
+<blockquote>
+<p><code>.dynstr</code> 一个字符串表，<strong>index为0的地方永远是0</strong>，然后后面是动态链接所需的字符串，0结尾，包括导入函数名。到时候，相关数据结构引用一个字符串时，用的是相对这个section头的偏移。</p>
+</blockquote>
+<blockquote>
+<p><code>.dynsym</code> 是一个符号表（结构体数组），<strong>表示动态链接这些模块之间的符号导入导出关系</strong>。我们这里只关心函数符号。结构体定义如下:</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span></span><br><span class="hljs-class">&#123;</span><br>  Elf32_Word    st_name; <span class="hljs-comment">//符号名，是相对.dynstr起始的偏移</span><br>  Elf32_Addr    st_value;<br>  Elf32_Word    st_size;  <span class="hljs-comment">//如果是导入函数, 上面两个都是零, 因为是在别的文件中定义的. </span><br>  <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span> st_info; <span class="hljs-comment">//对于 导入 函数 符号而言，它是0x12</span><br>  <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span> st_other; <span class="hljs-comment">//other字段都是0</span><br>  Elf32_Section st_shndx; <span class="hljs-comment">//符号所在的段下标, 有ABS COMMON UNDEF三个特殊值. </span><br>&#125;Elf32_Sym;<br></code></pre></div></td></tr></table></figure>
+
+<blockquote>
+<p><code>.rel.plt</code> 是重定位表，也是一个结构体数组，每个项对应一个导入函数。相对于段起始的偏移结构体定义如下：</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span><br>    Elf32_Addr r_offset;    <span class="hljs-comment">// 对于可重定位文件, 该重定位入口所要修正的位置的第一个字节, </span><br>    					  <span class="hljs-comment">// 对于可执行文件，此值为虚拟地址</span><br>    Elf32_Word r_info;      <span class="hljs-comment">// 在`.symtab`或者`.dyntab`中索引 | 类型</span><br>                            <span class="hljs-comment">// TYPE一般CPU相关, 例如R_386_PC32(静态), R_386_JUMP_SLOT(dyn)</span><br>&#125; Elf32_Rel;<br><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> ELF32_R_SYM(info) ((info)&gt;&gt;8)</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> ELF32_R_TYPE(info) ((unsigned char)(info))</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> ELF32_R_INFO(sym, type) (((sym)&lt;&lt;8)+(unsigned char)(type))</span><br></code></pre></div></td></tr></table></figure>
+
+
+
+<hr>
+<p>简单说来, 所有的符号会出现在<code>.symtab</code>段中, 需要动态链接的符号会出现在<code>.dynsym</code>中, 加上<code>.dynstr</code>, 记录的是所有导入符号的名称(除此之外也没啥有用信息了), <code>.rel.plt/.rel.dyn</code>有进行重定位时需要的位置+类型信息. 需要重定位时在其中遍历即可. </p>
+<p>在 Linux 中，程序使用 <code>_dl_runtime_resolve(link_map_obj, reloc_offset)</code> 来对动态链接的函数进行重定位。那么如果我们可以控制相应的参数及其对应地址的内容是不是就可以控制解析的函数了呢？答案是肯定的。这也是 ret2dlresolve 攻击的核心所在。<br>具体的，动态链接器在解析符号地址时所使用的重定位表项、动态符号表、动态字符串表都是从目标文件中的动态节 .dynamic 索引得到的。所以如果我们能够修改其中的某些内容使得最后动态链接器解析的符号是我们想要解析的符号，那么攻击就达成了。</p>
+<blockquote>
+<p><code>_dl_runtime_resolve(link_map_obj, reloc_offset)</code> 执行流程:</p>
+</blockquote>
+<ol>
+<li>用<code>link_map</code>访问<code>.dynamic</code>，取出<code>.dynstr</code>, <code>.dynsym</code>, <code>.rel.plt</code>的指针</li>
+<li><code>.rel.plt</code> + 第二个参数求出当前函数的重定位表项<code>Elf32_Rel</code>的指针，记作reloc</li>
+<li><code>reloc-&gt;r_info &gt;&gt; 8</code>作为<code>.dynsym</code>的下标，求出当前函数的符号表项<code>Elf32_Sym</code>的指针，记作sym</li>
+<li><code>.dynstr + sym-&gt;st_name</code>得出符号名字符串指针</li>
+<li>在动态链接库查找这个函数的地址，并且把地址赋值给<code>*rel-&gt;r_offset</code>，即GOT表</li>
+<li>调用这个函数</li>
+</ol>
+<h3 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h3><blockquote>
+<ul>
+<li>No RELRO - Link Map、GOT 可写, <code>.dynamic</code>可写</li>
+<li>Partial RELRO - Link Map 不可写、GOT 可写, <code>.dynamic</code>不可写 </li>
+<li>Full RELRO - 全不可写</li>
+</ul>
+</blockquote>
+<p>分成四种情况:</p>
+<ul>
+<li>32, No RELRO</li>
+<li>32, Patial RELRO</li>
+<li>64, No RELRO</li>
+<li>64, Patial RELRO</li>
+</ul>
+<p>下面每一种都分成手动和工具两部分:</p>
+<p>示例代码源码:</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;string.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">vuln</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">char</span> buf[<span class="hljs-number">100</span>];<br>    setbuf(<span class="hljs-built_in">stdin</span>, buf);<br>    read(<span class="hljs-number">0</span>, buf, <span class="hljs-number">256</span>);<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">char</span> buf[<span class="hljs-number">100</span>] = <span class="hljs-string">&quot;Welcome to XDCTF2015~!\n&quot;</span>;<br><br>    setbuf(<span class="hljs-built_in">stdout</span>, buf);<br>    write(<span class="hljs-number">1</span>, buf, <span class="hljs-built_in">strlen</span>(buf));<br>    vuln();<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<h4 id="32-No-RELRO"><a href="#32-No-RELRO" class="headerlink" title="32, No RELRO"></a>32, No RELRO</h4><figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">gcc -fno-stack-protector -m32 -z norelro -no-pie pwn5.c -o norelro_32<br></code></pre></div></td></tr></table></figure>
+
+<p>在这种情况下，修改 <code>.dynamic</code> 会简单些。因为我们只需要修改 <code>.dynamic</code> 节中的字符串表的地址为伪造的字符串表的地址，并且相应的位置为目标字符串基本就行了。具体思路如下</p>
+<ol>
+<li>修改 .dynamic 节中字符串表的地址为伪造的地址</li>
+<li>在伪造的地址处构造好字符串表，将 read 字符串替换为 system 字符串。</li>
+<li>在特定的位置读取 /bin/sh 字符串。</li>
+<li>调用 read 函数的 plt 的第二条指令，触发 <code>_dl_runtime_resolve</code> 进行函数解析，从而执行 system 函数。</li>
+</ol>
+<h4 id="32-Partial-RELRO"><a href="#32-Partial-RELRO" class="headerlink" title="32, Partial RELRO"></a>32, Partial RELRO</h4><p>这个时候.dynamic不可写, 于是我们需要构造整个需要的信息链条, 而: (再写一遍加深印象)</p>
+<ol>
+<li>dlresolve函数第二个参数表示重定位条目在.rel.plt中的偏移</li>
+<li>.rel.plt中有符号在.dyntab中的索引</li>
+<li>.dyntab有符号名称在.dynstr中的偏移</li>
+<li>利用偏移找到符号名字符串, 然后利用名称找到其地址(解析所要做的事情), 找到后修改GOT条目, 然后调用此函数</li>
+</ol>
+<p>从而得知需要一步步构造1-3所表示的链条. </p>
+<ol>
+<li></li>
+</ol>
 
             </div>
             <hr>
