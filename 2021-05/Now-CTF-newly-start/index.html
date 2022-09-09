@@ -16,18 +16,18 @@
   <meta name="author" content="Yogdzewa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="kernel + IO_FILE + hook">
+    <meta name="description" content="kernel + IO_FILE + hook + ret2dlresolve">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CTF再开始">
 <meta property="og:url" content="https://yogdzewa.github.io/2021-05/Now-CTF-newly-start/index.html">
 <meta property="og:site_name" content="Yogdzewa">
-<meta property="og:description" content="kernel + IO_FILE + hook">
+<meta property="og:description" content="kernel + IO_FILE + hook + ret2dlresolve">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yogdzewa.github.io/image/CTF_newly_start/image-20220710173158610.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/CTF_newly_start/architecture.svg">
 <meta property="og:image" content="https://yogdzewa.github.io/image/CTF_newly_start/smep.jpg">
 <meta property="article:published_time" content="2021-05-27T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-09-06T16:01:02.562Z">
+<meta property="article:modified_time" content="2022-09-08T12:55:15.524Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -264,7 +264,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年9月7日 凌晨
+                  不可视境界线最后变动于：2022年9月8日 晚上
                 
               </p>
             
@@ -415,7 +415,7 @@
 <p>.cpio中包含以下文件:</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">┌──(root💀kali)-[/mnt/…/LearingList/CTF/QWB-core/core]<br>└─# l <br>bin/  core.cpio*  core.ko*  etc/  gen_cpio.sh*  init*  lib/  lib64/  proc/  root/  sbin/  sys/  tmp/  usr/  vmlinux*<br></code></pre></div></td></tr></table></figure>
 
-<p><strong>core.ko</strong> is kernel module, <strong>gen_cpio.sh</strong> can be used to regenerate the archive after revision. <strong>vmlinux</strong> is the kernel image. <strong>init</strong> is (????) init file. but i dont know when it will be executed. </p>
+<p><strong>core.ko</strong> is kernel module, <strong>gen_cpio.sh</strong> can be used to regenerate the archive after revision. <strong>vmlinux</strong> is the kernel image. <strong>init</strong> is (????) init file. <del>but i dont know when it will be executed.</del>  </p>
 <p>init file:</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash">!/bin/sh</span><br>mount -t proc proc /proc<br>mount -t sysfs sysfs /sys<br>mount -t devtmpfs none /dev<br>/sbin/mdev -s<br>mkdir -p /dev/pts<br>mount -vt devpts -o gid=4,mode=620 none /dev/pts<br>chmod 666 /dev/ptmx<br>cat /proc/kallsyms &gt; /tmp/kallsyms    # notice this line. I can get ksyms address from here.<br>echo 1 &gt; /proc/sys/kernel/kptr_restrict<br>echo 1 &gt; /proc/sys/kernel/dmesg_restrict<br>ifconfig eth0 up<br>udhcpc -i eth0<br>ifconfig eth0 10.0.2.15 netmask 255.255.255.0<br>route add default gw 10.0.2.2.<br>insmod /core.ko<br><span class="hljs-meta"></span><br><span class="hljs-meta">#</span><span class="bash">poweroff -d 120 -f &amp;       <span class="hljs-comment"># comment this line to disable auto timer shutdown</span></span><br>                         # but i dont know how that happends, it only show `Too many arguments`<br>                         # on my kali linux 2022.2<br>setsid /bin/cttyhack setuidgid 1000 /bin/sh<br>echo &#x27;sh end!\n&#x27;<br>umount /proc<br>umount /sys<br><span class="hljs-meta"></span><br><span class="hljs-meta">#</span><span class="bash">poweroff -d 0  -f</span><br></code></pre></div></td></tr></table></figure>
 
@@ -503,14 +503,14 @@
 <li>长文件读取分析的中间要输出点东西, 不然一开始我还以为是分析太慢了. 不能低估电脑的这点计算能力, 一定是死循环.</li>
 </ul>
 </li>
-<li>还有一个symbol: <code>amd_uncore_read</code>干扰了<code>core_read</code>的字符串判断. 还是换成了<code>strcmp</code>.</li>
+<li>还有一个symbol: <code>amd_uncore_read</code>也匹配上了<code>core_read</code>的字符串判断. 还是从<code>strstr</code>换成了<code>strcmp</code>.</li>
 <li>内核的函数好像都不会破坏用户区的rbp, 或者说只用rsp来索引栈上的数值.</li>
 <li>读取栈上的数据出来后不需要strtoll, 已经是小端法存储的size_t了, 只要转换指针类型然后赋值即可.</li>
 </ul>
 <h4 id="接下来是swapgs的科普"><a href="#接下来是swapgs的科普" class="headerlink" title="接下来是swapgs的科普:"></a>接下来是swapgs的科普:</h4><ul>
 <li>结合pwn.college中kernel部分时的查找, 多了几个概念: <a target="_blank" rel="noopener" href="https://wiki.osdev.org/Model_Specific_Registers">MSR</a>(Model Specific Registers), <a target="_blank" rel="noopener" href="https://wiki.osdev.org/SWAPGS">swapgs的超详细doc</a> |<br><a target="_blank" rel="noopener" href="https://akkadia.org/drepper/tls.pdf">ELF Handling For Thread-Local Storage</a> | </li>
 <li>(P2873 in Intel manual) one kind of MSR: Instruction-specific support (for example: SYSENTER, SYSEXIT, SWAPGS, etc.).<br>and P1866 fro swapgs instruction: SWAPGS exchanges the current GS base register value with the value contained in MSR address C0000102H(IA32_KERNEL_GS_BASE)</li>
-<li>To acquire the kernel space stack <strong>after <code>swapgs</code></strong>, in entry_SYSCALL_64:F4<br><code>mov rsp, PER_CPU_VAR(cpu_current_top_of_stack)</code>,<br>expanding to <code>mov rsp, %gs:cpu_current_top_of_stack</code>,<br>GS register stores the base address for per-cpu data area. </li>
+<li>To acquire the kernel space stack <strong>after <code>swapgs</code></strong>, in entry_SYSCALL_64:<br><code>mov rsp, PER_CPU_VAR(cpu_current_top_of_stack)</code>,<br>expanding to <code>mov rsp, %gs:cpu_current_top_of_stack</code>,<br>GS register stores the base address for per-cpu data area. </li>
 <li>由上面来个总结:  kernel stores the address of the <strong>per-CPU structure</strong> in MSR. </li>
 </ul>
 <p>和pwn.college不一样的地方在于这里破坏了内核栈帧, 对上一个函数的栈帧造成了未知的影响, 所以选用了iret直接退出内核态. 而在pwn.college中shellcode被存放到了另一块区域, 而且通过<code>__x86_indirect_thunk_rax</code>这个函数里<code>jmp rax</code>直接跳过去. 在code中使用ret回到了device_read等函数中, 正常走内核的流程退回到用户态, 所以我就没有关心过swapgs这个知识点. </p>
@@ -582,12 +582,12 @@
 <img src="../../image/CTF_newly_start/smep.jpg" srcset="/img/loading.gif" lazyload alt="smep" style="zoom:80%;" />
 
 <p>例如，当</p>
-<figure class="highlight yaml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs yaml"><span class="hljs-string">$CR4</span> <span class="hljs-string">=</span> <span class="hljs-number">0x1407f0</span> <span class="hljs-string">=</span> <span class="hljs-number">000</span> <span class="hljs-number">1</span> <span class="hljs-number">0100 </span><span class="hljs-number">0000 </span><span class="hljs-number">0111 </span><span class="hljs-number">1111 </span><span class="hljs-number">0000</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs assembly">$CR4 = 0x1407f0 = 000 1 0100 0000 0111 1111 0000<br></code></pre></div></td></tr></table></figure>
 
 <p>时，smep 保护开启。而 CR4 寄存器是可以通过 mov 指令修改的，因此只需要</p>
-<figure class="highlight apache"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">mov</span> cr<span class="hljs-number">4</span>, <span class="hljs-number">0</span>x<span class="hljs-number">1407</span>e<span class="hljs-number">0</span><br><span class="hljs-comment"># 0x1407e0 = 101 0 0000 0011 1111 00000</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs assembly">mov cr4, 0x1407e0<br># 0x1407e0 = 101 0 0000 0011 1111 00000<br></code></pre></div></td></tr></table></figure>
 
-<p>即可关闭 smep 保护。</p>
+<p>即可关闭 smep 保</p>
 <p>搜索一下从 <code>vmlinux</code> 中提取出的 gadget，很容易就能达到这个目的。</p>
 <p>如何查看 CR4 寄存器的值？</p>
 <ul>
