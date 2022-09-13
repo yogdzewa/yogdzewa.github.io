@@ -24,7 +24,7 @@
 <meta property="og:description" content="试一下DEF CON外卡赛的样子">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-09-08T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-09-11T08:27:40.485Z">
+<meta property="article:modified_time" content="2022-09-12T07:16:52.439Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -210,7 +210,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      359 字
+      841 字
     </span>
   
 
@@ -219,7 +219,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      5 分钟
+      11 分钟
     </span>
   
 
@@ -260,7 +260,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年9月11日 下午
+                  不可视境界线最后变动于：2022年9月12日 下午
                 
               </p>
             
@@ -274,10 +274,22 @@
 <p>xadd是Exchange and Add. </p>
 </blockquote>
 <ul>
-<li>还有mutex的结构体…. </li>
+<li>还有mutex的结构体…. 大小为32个字节. 包含了啥我就不看了</li>
+<li><code>__fentry__</code>到底是个<a target="_blank" rel="noopener" href="https://www.brendangregg.com/blog/2019-10-15/kernelrecipes-kernel-ftrace-internals.html">啥</a> | <a target="_blank" rel="noopener" href="https://www.eet-china.com/mp/a41923.html">中文文章</a> </li>
+<li><code>char (*names)[3]</code> pointer to an array of 3 chars. </li>
 </ul>
-<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><br></code></pre></div></td></tr></table></figure>
-
+<p>好吧看不懂, linux/spark.h又是什么东西. </p>
+<p>艰难的继续看代码, spark.h应该是没给的… </p>
+<ul>
+<li>**fget()**函数的功能是通过文件描述符查找并返回file结构体</li>
+</ul>
+<p>ioctl:</p>
+<ul>
+<li>Link (<code>0x4008d900</code>): takes two node descriptors A and B, and a edge weight, and creates the edges A-&gt;B and B-&gt;A;</li>
+<li>Info (<code>0x8018d901</code>): provides information about the node;</li>
+<li>Finalize (<code>0xd902</code>): finalizes the graph rooted in the node, preparing it for queries;</li>
+<li>Query (<code>0xc010d903</code>): takes two node descriptors and calculates the total weight of the shortest path between them.</li>
+</ul>
 
             </div>
             <hr>
