@@ -24,7 +24,7 @@
 <meta property="og:description" content="搭环境要人命,">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-05-06T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-08-02T08:31:59.456Z">
+<meta property="article:modified_time" content="2022-10-06T02:10:46.558Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary_large_image">
@@ -259,7 +259,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年8月2日 下午
+                  不可视境界线最后变动于：2022年10月6日 上午
                 
               </p>
             
@@ -326,42 +326,22 @@
 <li></li>
 </ul>
 <h2 id="vim进阶"><a href="#vim进阶" class="headerlink" title="vim进阶"></a>vim进阶</h2><ul>
-<li><p>自动提示： <code>&lt;C-n&gt;</code> 和 <code>&lt;C-p&gt;</code> </p>
-</li>
-<li><p>vim<a target="_blank" rel="noopener" href="https://blog.easwy.com/archives/advanced-vim-skills-auto-complete/">路径补全</a> </p>
-</li>
-<li><p>vim添加tab切换快捷键, 以及单界面多文件<a target="_blank" rel="noopener" href="https://linuxhint.com/opening_switching_multiple_files_vim/">操作</a>.</p>
-<figure class="highlight asciidoc"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs asciidoc"><span class="hljs-meta">:map ^[OR :tabp&lt;CR&gt;</span><br><span class="hljs-meta">:map ^[OS :tabn&lt;CR&gt;</span><br></code></pre></div></td></tr></table></figure></li>
-<li><p>折叠:  <strong>zM</strong>: close all            <strong>zr</strong>: open all      <strong>za</strong>: openOrClose   <strong>zA</strong>: sameBut<strong>Recursively</strong> </p>
-</li>
-<li><p>颜色<a target="_blank" rel="noopener" href="https://alvinalexander.com/linux/vi-vim-editor-color-scheme-syntax/">option</a> </p>
-</li>
-<li><p><code>autocmd BufNewFile,BufRead gdb* set filetype=gdb</code> 设置默认的语法高亮.</p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://vimhelp.org/cmdline.txt.html#%5Brange%5D">vim range</a> and <a target="_blank" rel="noopener" href="https://vimhelp.org/usr_10.txt.html#10.3">this</a> </p>
-</li>
-<li><p>vim先输入数字然后进入插入模式后输入几个字符, 再返回普通模式会重复输入</p>
-</li>
-<li><p>:e =&gt; reload file</p>
-</li>
-<li><p>vim plug list -&gt; <a target="_blank" rel="noopener" href="https://vimawesome.com/">link</a> | 装上了tabcompletion. + python completion </p>
-</li>
-<li><p><code>gt gT nnngt</code>: switch tabs.</p>
-</li>
-<li><p>Ctrl-O: enter <code>insert select</code> mode, can exec one command then.</p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://vimhelp.org/motion.txt.html#CTRL-M">motions(many details)</a> | </p>
-</li>
-<li><p><code>; </code>  :  Repeat latest f, t, F or T [count] times.</p>
-</li>
-<li><p><code>echo &amp;var</code> will print out the variable value.</p>
-</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-string">&quot;dl&quot;</span>    <span class="hljs-function"><span class="hljs-keyword">delete</span> <span class="hljs-title">character</span> <span class="hljs-params">(alias: <span class="hljs-string">&quot;x&quot;</span>)</span>           dl</span><br><span class="hljs-function">&quot;diw&quot;   <span class="hljs-keyword">delete</span> inner word                       diw</span><br><span class="hljs-function">&quot;daw&quot;   <span class="hljs-keyword">delete</span> a word                           daw</span><br><span class="hljs-function">&quot;diW&quot;   <span class="hljs-keyword">delete</span> inner <span class="hljs-title">WORD</span> <span class="hljs-params">(see WORD)</span>          	diW</span><br><span class="hljs-function">&quot;daW&quot;   <span class="hljs-keyword">delete</span> a <span class="hljs-title">WORD</span> <span class="hljs-params">(see WORD)</span>              	daW</span><br><span class="hljs-function">&quot;dgn&quot;   <span class="hljs-keyword">delete</span> the next search pattern match    dgn</span><br><span class="hljs-function">&quot;dd&quot;    <span class="hljs-keyword">delete</span> one line                         dd</span><br><span class="hljs-function">&quot;dis&quot;   <span class="hljs-keyword">delete</span> inner sentence                   dis</span><br><span class="hljs-function">&quot;das&quot;   <span class="hljs-keyword">delete</span> a sentence                       das</span><br><span class="hljs-function">&quot;dib&quot;   <span class="hljs-keyword">delete</span> inner &#x27;<span class="hljs-params">(<span class="hljs-string">&#x27; &#x27;</span>)</span>&#x27; block              dib</span><br><span class="hljs-function">&quot;dab&quot;   <span class="hljs-keyword">delete</span> a &#x27;<span class="hljs-params">(<span class="hljs-string">&#x27; &#x27;</span>)</span>&#x27; block                  dab</span><br><span class="hljs-function">&quot;dip&quot;   <span class="hljs-keyword">delete</span> inner paragraph                  dip</span><br><span class="hljs-function">&quot;dap&quot;   <span class="hljs-keyword">delete</span> a paragraph                      dap</span><br><span class="hljs-function">&quot;diB&quot;   <span class="hljs-keyword">delete</span> inner &#x27;</span>&#123;<span class="hljs-string">&#x27; &#x27;</span>&#125;<span class="hljs-string">&#x27; block              diB</span><br><span class="hljs-string">&quot;daB&quot;   delete a &#x27;</span>&#123;<span class="hljs-string">&#x27; &#x27;</span>&#125;<span class="hljs-string">&#x27; block                  daB</span><br></code></pre></div></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">gUU  : Make current line uppercase.<br>guu	 :                   lowercase.<br>gU&#123;motion&#125; <span class="hljs-keyword">and</span> gu&#123;motion&#125;    Make &#123;motion&#125; text uppercase.<br><br>&#123;Visual&#125;CTRL-A 		<span class="hljs-comment"># INC</span><br>&#123;Visual&#125;g CTRL-A 	<span class="hljs-comment"># sequencial add</span><br><span class="hljs-built_in">set</span> nrformats=<span class="hljs-built_in">bin</span>,<span class="hljs-built_in">hex</span> 	<span class="hljs-comment"># this is default. can include `octal` `alpha`</span><br>Use the following<br><br>steps to make a numbered <span class="hljs-built_in">list</span>.<br><span class="hljs-number">1.</span> Create the first list_entry, make sure it starts <span class="hljs-keyword">with</span> a number.<br><span class="hljs-number">2.</span> qa        - start recording into register <span class="hljs-string">&#x27;a&#x27;</span><br><span class="hljs-number">3.</span> Y         - yank the entry<br><span class="hljs-number">4.</span> p         - put a copy of the entry below the first one<br><span class="hljs-number">5.</span> CTRL-A    - increment the number<br><span class="hljs-number">6.</span> q         - stop recording<br><span class="hljs-number">7.</span> &lt;count&gt;@a - repeat the yank, put <span class="hljs-keyword">and</span> increment &lt;count&gt; times<br></code></pre></div></td></tr></table></figure>
-
-<ul>
+<li>自动提示： <code>&lt;C-n&gt;</code> 和 <code>&lt;C-p&gt;</code> </li>
+<li>vim<a target="_blank" rel="noopener" href="https://blog.easwy.com/archives/advanced-vim-skills-auto-complete/">路径补全</a> </li>
+<li>vim添加tab切换快捷键, 以及单界面多文件<a target="_blank" rel="noopener" href="https://linuxhint.com/opening_switching_multiple_files_vim/">操作</a>.<figure class="highlight asciidoc"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs asciidoc"><span class="hljs-meta">:map ^[OR :tabp&lt;CR&gt;</span><br><span class="hljs-meta">:map ^[OS :tabn&lt;CR&gt;</span><br></code></pre></div></td></tr></table></figure></li>
+<li>折叠:  <strong>zM</strong>: close all            <strong>zr</strong>: open all      <strong>za</strong>: openOrClose   <strong>zA</strong>: sameBut<strong>Recursively</strong> </li>
+<li>颜色<a target="_blank" rel="noopener" href="https://alvinalexander.com/linux/vi-vim-editor-color-scheme-syntax/">option</a> </li>
+<li><code>autocmd BufNewFile,BufRead gdb* set filetype=gdb</code> 设置默认的语法高亮.</li>
+<li><a target="_blank" rel="noopener" href="https://vimhelp.org/cmdline.txt.html#%5Brange%5D">vim range</a> and <a target="_blank" rel="noopener" href="https://vimhelp.org/usr_10.txt.html#10.3">this</a> </li>
+<li>vim先输入数字然后进入插入模式后输入几个字符, 再返回普通模式会重复输入</li>
+<li>:e =&gt; reload file</li>
+<li>vim plug list -&gt; <a target="_blank" rel="noopener" href="https://vimawesome.com/">link</a> | 装上了tabcompletion. + python completion </li>
+<li><code>gt gT nnngt</code>: switch tabs.</li>
+<li>Ctrl-O: enter <code>insert select</code> mode, can exec one command then.</li>
+<li><a target="_blank" rel="noopener" href="https://vimhelp.org/motion.txt.html#CTRL-M">motions(many details)</a> | </li>
+<li><code>; </code>  :  Repeat latest f, t, F or T [count] times.</li>
+<li><code>echo &amp;var</code> will print out the variable value.<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-string">&quot;dl&quot;</span>    <span class="hljs-function"><span class="hljs-keyword">delete</span> <span class="hljs-title">character</span> <span class="hljs-params">(alias: <span class="hljs-string">&quot;x&quot;</span>)</span>           dl</span><br><span class="hljs-function">&quot;diw&quot;   <span class="hljs-keyword">delete</span> inner word                       diw</span><br><span class="hljs-function">&quot;daw&quot;   <span class="hljs-keyword">delete</span> a word                           daw</span><br><span class="hljs-function">&quot;diW&quot;   <span class="hljs-keyword">delete</span> inner <span class="hljs-title">WORD</span> <span class="hljs-params">(see WORD)</span>          	diW</span><br><span class="hljs-function">&quot;daW&quot;   <span class="hljs-keyword">delete</span> a <span class="hljs-title">WORD</span> <span class="hljs-params">(see WORD)</span>              	daW</span><br><span class="hljs-function">&quot;dgn&quot;   <span class="hljs-keyword">delete</span> the next search pattern match    dgn</span><br><span class="hljs-function">&quot;dd&quot;    <span class="hljs-keyword">delete</span> one line                         dd</span><br><span class="hljs-function">&quot;dis&quot;   <span class="hljs-keyword">delete</span> inner sentence                   dis</span><br><span class="hljs-function">&quot;das&quot;   <span class="hljs-keyword">delete</span> a sentence                       das</span><br><span class="hljs-function">&quot;dib&quot;   <span class="hljs-keyword">delete</span> inner &#x27;<span class="hljs-params">(<span class="hljs-string">&#x27; &#x27;</span>)</span>&#x27; block              dib</span><br><span class="hljs-function">&quot;dab&quot;   <span class="hljs-keyword">delete</span> a &#x27;<span class="hljs-params">(<span class="hljs-string">&#x27; &#x27;</span>)</span>&#x27; block                  dab</span><br><span class="hljs-function">&quot;dip&quot;   <span class="hljs-keyword">delete</span> inner paragraph                  dip</span><br><span class="hljs-function">&quot;dap&quot;   <span class="hljs-keyword">delete</span> a paragraph                      dap</span><br><span class="hljs-function">&quot;diB&quot;   <span class="hljs-keyword">delete</span> inner &#x27;</span>&#123;<span class="hljs-string">&#x27; &#x27;</span>&#125;<span class="hljs-string">&#x27; block              diB</span><br><span class="hljs-string">&quot;daB&quot;   delete a &#x27;</span>&#123;<span class="hljs-string">&#x27; &#x27;</span>&#125;<span class="hljs-string">&#x27; block                  daB</span><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">gUU  : Make current line uppercase.<br>guu	 :                   lowercase.<br>gU&#123;motion&#125; <span class="hljs-keyword">and</span> gu&#123;motion&#125;    Make &#123;motion&#125; text uppercase.<br><br>&#123;Visual&#125;CTRL-A 		<span class="hljs-comment"># INC</span><br>&#123;Visual&#125;g CTRL-A 	<span class="hljs-comment"># sequencial add</span><br><span class="hljs-built_in">set</span> nrformats=<span class="hljs-built_in">bin</span>,<span class="hljs-built_in">hex</span> 	<span class="hljs-comment"># this is default. can include `octal` `alpha`</span><br>Use the following<br><br>steps to make a numbered <span class="hljs-built_in">list</span>.<br><span class="hljs-number">1.</span> Create the first list_entry, make sure it starts <span class="hljs-keyword">with</span> a number.<br><span class="hljs-number">2.</span> qa        - start recording into register <span class="hljs-string">&#x27;a&#x27;</span><br><span class="hljs-number">3.</span> Y         - yank the entry<br><span class="hljs-number">4.</span> p         - put a copy of the entry below the first one<br><span class="hljs-number">5.</span> CTRL-A    - increment the number<br><span class="hljs-number">6.</span> q         - stop recording<br><span class="hljs-number">7.</span> &lt;count&gt;@a - repeat the yank, put <span class="hljs-keyword">and</span> increment &lt;count&gt; times<br></code></pre></div></td></tr></table></figure></li>
 <li><a target="_blank" rel="noopener" href="https://vimhelp.org/change.txt.html#complex-change">complex changes</a> : toooooo complex.</li>
 <li><a target="_blank" rel="noopener" href="https://vimhelp.org/pattern.txt.html#pattern-overview">regex pattern</a> | and an useful <a target="_blank" rel="noopener" href="http://vimregex.com/">post</a> </li>
 <li><strong>qa记录到a中, @a执行宏, num@a执行num次, @@执行上一个宏</strong>.</li>
@@ -398,67 +378,43 @@
 <li></li>
 </ul>
 <h2 id="各种命令-软件包"><a href="#各种命令-软件包" class="headerlink" title="各种命令+软件包"></a>各种命令+软件包</h2><ul>
-<li><p><em>ldd</em>  <em>strace(刚刚装的)</em> <em>head打印前n行</em>  <em>du显示文件大小</em>   <em>ps打印进程信息</em>  </p>
-<ul>
+<li><em>ldd</em>  <em>strace(刚刚装的)</em> <em>head打印前n行</em>  <em>du显示文件大小</em>   <em>ps打印进程信息</em>  <ul>
 <li>ldd: print shared object dependencies</li>
 <li>ps aux  –  BSD参数风格</li>
 </ul>
 </li>
-<li><p>Linux下<code>!</code>的<a target="_blank" rel="noopener" href="https://www.cnblogs.com/wxywxy/p/7756596.html">用法</a>, 主要是传递最后执行的命令的参数，以方便的运行新命令(非常实用)</p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="http://c.biancheng.net/linux/ln.html">ln命令|symbolic_link</a> </p>
-</li>
-<li><p>scp &amp; mkdir &amp; mv(linux中重命名的唯一方法)</p>
-</li>
-<li><p><em><strong>screen</strong></em>: window manager, 好多快捷键, 复制了一份<a target="_blank" rel="noopener" href="https://gist.github.com/joaopizani/2718397">.screenrc</a>, 还挺有趣的.</p>
-<ul>
+<li>Linux下<code>!</code>的<a target="_blank" rel="noopener" href="https://www.cnblogs.com/wxywxy/p/7756596.html">用法</a>, 主要是传递最后执行的命令的参数，以方便的运行新命令(非常实用)</li>
+<li><a target="_blank" rel="noopener" href="http://c.biancheng.net/linux/ln.html">ln命令|symbolic_link</a> </li>
+<li>scp &amp; mkdir &amp; mv(linux中重命名的唯一方法)</li>
+<li><em><strong>screen</strong></em>: window manager, 好多快捷键, 复制了一份<a target="_blank" rel="noopener" href="https://gist.github.com/joaopizani/2718397">.screenrc</a>, 还挺有趣的.<ul>
 <li>screen这玩意儿也太强了.<code>Ctrl + A + [</code>进入copy模式才能使用滚轮或者Ctrl+F/B等等来翻页(已经改成&lt;C-/&gt;)</li>
 </ul>
 </li>
-<li><p><del>看到一个cscope包可以用来解析C/C++项目, 有空再研究怎么玩</del>(谁玩啊2</p>
-</li>
-<li><p>vim-gtk是vim的一个GUI版本, 装了之后才能vim -g</p>
-</li>
-<li><p>新命令: <code>tput</code>好像是用一个通用命令做参数,  然后在当前终端的数据库中找到正确的命令并发送</p>
-</li>
-<li><p><strong>ipython: System shell with !</strong> interactive Python也挺神奇的, 具体见pwn-modules里的帮助.</p>
-<ul>
+<li><del>看到一个cscope包可以用来解析C/C++项目, 有空再研究怎么玩</del>(谁玩啊2</li>
+<li>vim-gtk是vim的一个GUI版本, 装了之后才能vim -g</li>
+<li>新命令: <code>tput</code>好像是用一个通用命令做参数,  然后在当前终端的数据库中找到正确的命令并发送</li>
+<li><strong>ipython: System shell with !</strong> interactive Python也挺神奇的, 具体见pwn-modules里的帮助.<ul>
 <li><a target="_blank" rel="noopener" href="https://blog.51cto.com/essun/1712322">ipython用法</a> </li>
 </ul>
 </li>
-<li><p>发现grep有拓展正则和普通正则的区别, 又是一大堆东西, 有缘再看吧.</p>
-</li>
-<li><p>新东西: <strong>sed</strong>, stream editor.  还有一个ed, 根本不知道怎么用. <del>这东西这两天把菜鸟教程上所有的命令全看一边就行了</del> 上面没有.<br><em><strong>rev nl</strong></em>  perror</p>
-<ul>
+<li>发现grep有拓展正则和普通正则的区别, 又是一大堆东西, 有缘再看吧.</li>
+<li>新东西: <strong>sed</strong>, stream editor.  还有一个ed, 根本不知道怎么用. <del>这东西这两天把菜鸟教程上所有的命令全看一边就行了</del> 上面没有.<br><em><strong>rev nl</strong></em>  perror<ul>
 <li>真不错, 用了sed来改c.c中的题目标号, 再方便一点.</li>
 </ul>
 </li>
-<li><p><code>find</code>的功能真的很多, 又是一个相当强大的工具. e.g. <code>find . -name Makefile</code> </p>
-</li>
-<li><p><code>wc</code> 命令, 计数文件字节数 行数等等.</p>
-</li>
-<li><p><code>uniq</code> report repeated lines.</p>
-</li>
-<li><p><code>ls -ARl *</code> 递归展示文件并且不显示.和.. 还能显示符号链接 以及<code>tree</code>命令</p>
-</li>
-<li><p><code>shuf</code> generate random permutation.</p>
-</li>
-<li><p><code>sleep infinity</code> 手册里完全没看见这个infinity, 不过作用也显而易见了.</p>
-</li>
-<li><p><code>xargs</code> build and exec commands from standard input.</p>
-</li>
-<li><p><code>bat</code> cat(1) clone with syntax highlighting and git integration.</p>
-</li>
-<li><p><code>awk</code> <a target="_blank" rel="noopener" href="https://www.ibm.com/docs/zh/aix/7.2?topic=awk-command">IBM doc</a> </p>
-</li>
-<li><p><code>sort</code> : -k 可以指定跳过前面几个字符. </p>
-<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">KEYDEF is F[.C][OPTS][,F[.C][OPTS]] <span class="hljs-keyword">for</span> start and stop position, <span class="hljs-built_in">where</span> F is a field number and C<br>       a character position <span class="hljs-keyword">in</span> the field; both are origin 1, and the stop position defaults to the<br>       line<span class="hljs-string">&#x27;s end.</span><br></code></pre></div></td></tr></table></figure></li>
-<li><p><code>du -sh</code> show directory contents size.</p>
-</li>
-<li><p><code>cut</code> : <code>cut -d&#39; &#39; -f1 /proc/uptime</code> 等同于 <code>awk &#39;&#123;print $1;&#125;&#39; /proc/uptime</code> </p>
-</li>
-<li><p><code>xz + tar</code> </p>
-<ul>
+<li><code>find</code>的功能真的很多, 又是一个相当强大的工具. e.g. <code>find . -name Makefile</code> </li>
+<li><code>wc</code> 命令, 计数文件字节数 行数等等.</li>
+<li><code>uniq</code> report repeated lines.</li>
+<li><code>ls -ARl *</code> 递归展示文件并且不显示.和.. 还能显示符号链接 以及<code>tree</code>命令</li>
+<li><code>shuf</code> generate random permutation.</li>
+<li><code>sleep infinity</code> 手册里完全没看见这个infinity, 不过作用也显而易见了.</li>
+<li><code>xargs</code> build and exec commands from standard input.</li>
+<li><code>bat</code> cat(1) clone with syntax highlighting and git integration.</li>
+<li><code>awk</code> <a target="_blank" rel="noopener" href="https://www.ibm.com/docs/zh/aix/7.2?topic=awk-command">IBM doc</a> </li>
+<li><code>sort</code> : -k 可以指定跳过前面几个字符. <figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">KEYDEF is F[.C][OPTS][,F[.C][OPTS]] <span class="hljs-keyword">for</span> start and stop position, <span class="hljs-built_in">where</span> F is a field number and C<br>       a character position <span class="hljs-keyword">in</span> the field; both are origin 1, and the stop position defaults to the<br>       line<span class="hljs-string">&#x27;s end.</span><br></code></pre></div></td></tr></table></figure></li>
+<li><code>du -sh</code> show directory contents size.</li>
+<li><code>cut</code> : <code>cut -d&#39; &#39; -f1 /proc/uptime</code> 等同于 <code>awk &#39;&#123;print $1;&#125;&#39; /proc/uptime</code> </li>
+<li><code>xz + tar</code> <ul>
 <li>compress:<code>tar -cf - SalesData | xz -9ze -T0 &gt;SalesData.tar.xz</code> or cheaper: <code>tar cfJ output.tar.xz inputfiles</code> </li>
 <li>decompress:<code>tar xf archive.tar.xz</code> </li>
 </ul>

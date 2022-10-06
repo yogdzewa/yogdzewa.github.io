@@ -19,15 +19,15 @@
     <meta name="description" content="kernel + IO_FILE + hook + ret2dlresolve">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CTF再开始">
-<meta property="og:url" content="https://yogdzewa.github.io/2021-05/Now-CTF-newly-start/index.html">
+<meta property="og:url" content="https://yogdzewa.github.io/2022-07/Now-CTF-newly-start/index.html">
 <meta property="og:site_name" content="Yogdzewa">
 <meta property="og:description" content="kernel + IO_FILE + hook + ret2dlresolve">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yogdzewa.github.io/image/CTF_newly_start/image-20220710173158610.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/CTF_newly_start/architecture.svg">
 <meta property="og:image" content="https://yogdzewa.github.io/image/CTF_newly_start/smep.jpg">
-<meta property="article:published_time" content="2021-05-27T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-10-04T02:29:23.927Z">
+<meta property="article:published_time" content="2022-07-01T02:00:00.000Z">
+<meta property="article:modified_time" content="2022-10-06T02:11:30.076Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -203,8 +203,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-05-27 10:00" pubdate>
-        2021年5月27日 上午
+      <time datetime="2022-07-01 10:00" pubdate>
+        2022年7月1日 上午
       </time>
     </span>
   
@@ -214,7 +214,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      55k 字
+      56k 字
     </span>
   
 
@@ -223,7 +223,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      692 分钟
+      694 分钟
     </span>
   
 
@@ -264,14 +264,14 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年10月4日 上午
+                  不可视境界线最后变动于：2022年10月6日 上午
                 
               </p>
             
             <div class="markdown-body">
               <ul>
 <li><a target="_blank" rel="noopener" href="https://ccap.udel.edu/2021/10/20/ctf/">CTF types</a> : Jeopardy, Attack-Defence and mixed.</li>
-<li>eehhhhhh, 完全不知道CTFtimes怎么用…</li>
+<li>eehhhhhh, 完全不知道CTFtimes怎么用… 现在大概知道了</li>
 </ul>
 <h2 id="a-new-start-from-SCTF-flying-kernel"><a href="#a-new-start-from-SCTF-flying-kernel" class="headerlink" title="a new start from SCTF-flying_kernel"></a>a new start from SCTF-flying_kernel</h2><p>the following is a few concepts.</p>
 <p><img src="../../image/CTF_newly_start/image-20220710173158610.png" srcset="/img/loading.gif" lazyload alt="image-20220710173158610"></p>
@@ -397,6 +397,12 @@
 <h3 id="Randomization"><a href="#Randomization" class="headerlink" title="Randomization"></a>Randomization</h3><p>KASLR</p>
 <p><a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/kernel-mode/defense/randomization/fgkaslr/">FG-KASLR</a> : 主要是在FG-KASLR的环境下还有哪些可利用的地方.</p>
 <h3 id="kernel-UAF¶"><a href="#kernel-UAF¶" class="headerlink" title="kernel UAF¶"></a>kernel UAF<a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/kernel-mode/exploitation/uaf/#kernel-uaf">¶</a></h3><p>主要是内核中内存分配管理的利用, 即普通堆块释放后被cred结构体的malloc分配(因为大小一致), 然后使用另一程序对原指针的操作修改cred为root权限. 这个内存管理特性和上面的linux cache有关系.</p>
+<p>那么根据 UAF 的思想，思路如下：</p>
+<ol>
+<li>打开两次设备，通过 ioctl 更改其大小为 cred 结构体的大小</li>
+<li>释放其中一个，fork 一个新进程，那么这个新进程的 cred 的空间就会和之前释放的空间重叠</li>
+<li>同时，我们可以通过另一个文件描述符对这块空间写，只需要将 uid，gid 改为 0，即可以实现提权到 root</li>
+</ol>
 <h3 id="Kernel-ROP"><a href="#Kernel-ROP" class="headerlink" title="Kernel ROP"></a>Kernel ROP</h3><blockquote>
 <p><strong>强网杯2018-pwn-kernel-core</strong> </p>
 <p>看到skr师傅早在18年的wp, 一步一步来很详细, 参考见-&gt;<a target="_blank" rel="noopener" href="https://eternalsakura13.com/2018/03/31/b_core/">这里</a>, WiKi上也有相应内容. 我自己试一试.</p>
@@ -609,7 +615,7 @@
 <p>然后就是ops的构造. 首先要看内核是如何调用ops的:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs nasm">  0xffffffff814dc0b6    mov    rax, qword ptr [rbx + 0x18]<br>  0xffffffff814dc0ba    mov    edx, r12d<br>  0xffffffff814dc0bd    mov    rsi, r13<br>  0xffffffff814dc0c0    mov    rdi, rbx<br>► 0xffffffff814dc0c3    call   qword ptr [rax + 0x38]<br><br>  0xffffffff814dc0c6    mov    rdi, r14<br>  0xffffffff814dc0c9    mov    r15d, eax<br>  0xffffffff814dc0cc    call   0xffffffff81817ae0<br></code></pre></div></td></tr></table></figure>
 
-<p>有标记的一行就是对函数指针的使用, 可以看到这里用了rax来存指针数组的基址, 所以在gadget中可以使用<code>mov rsp, rax; ret</code> 这种gadget. 但是这特么也太难找了, exp里面用的那个是<code>mov rsp, rax; dec rbx; jmp ???; ret</code>的组合, 没有哪个工具会自动搜索到这个gadget, 只能把所有的gadget找出来然后再输出文件中搜索. 比如下面这样:</p>
+<p>有标记的一行就是对函数指针的使用, 可以看到这里用了rax来存指针数组的基址, 所以在gadget中可以使用<code>mov rsp, rax; ret</code> 这种gadget. 但是这特么也太难找了, exp里面用的那个是<code>mov rsp, rax; dec rbx; jmp -&gt; ret</code>的组合, 没有哪个工具会自动搜索到这个gadget, 只能把所有的gadget找出来然后再输出文件中搜索. 比如下面这样:</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> ROPgadget --binary vmlinux &gt; gadget</span><br><span class="hljs-meta">#</span><span class="bash"> <span class="hljs-keyword">in</span> gadget</span><br>...<br>459047 0xffffffff8181bfc5 : mov rsp, rax ; dec ebx ; jmp 0xffffffff8181bf7e<br>...<br><span class="hljs-meta">#</span><span class="bash"> <span class="hljs-keyword">in</span> ropper interactive console</span><br><span class="hljs-meta">(vmlinux/ELF/x86_64)&gt;</span><span class="bash"> disasm_address 0xffffffff8181bf7e</span><br>Instructions<br>============<br>0xffffffff8161bf7e: ret<br></code></pre></div></td></tr></table></figure>
 
 <p>这样才算是找到了一个. </p>
@@ -983,9 +989,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021-06/Now-Sky-Learning-Daily/">
+                      <a href="/2022-09/Now-hitcon2020/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Daily</span>
+                        <span class="hidden-mobile">HITCON 2020 pwn</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -993,8 +999,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021-05/Learning-CSAPP-Lab/">
-                        <span class="hidden-mobile">CSAPP_Lab</span>
+                      <a href="/2022-05/Learning-%E9%93%BE%E6%8E%A5%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93/">
+                        <span class="hidden-mobile">《程序员的自我修养-链接装载与库》</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -1019,7 +1025,7 @@
         var options = Object.assign(
           {"clientID":"312db7ebbc085de5d28d","clientSecret":"85ea3cefd13c73a6d85c1813adfde4f1550bfbda","repo":"yogdzewa.github.io","owner":"yogdzewa","admin":["yogdzewa"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: '06e94e4dba87fad0b865326a04f3224a'
+            id: 'db2c78dd042c59c37f15cfd34f0dfb7c'
           }
         )
         var gitalk = new Gitalk(options);
