@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/ptmalloc_exp/image-20220810201820968.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/glibc_malloc_srcCode/unsorted_bin_attack_order.png">
 <meta property="article:published_time" content="2021-08-09T02:07:00.000Z">
-<meta property="article:modified_time" content="2022-09-08T13:24:57.067Z">
+<meta property="article:modified_time" content="2022-10-14T07:08:15.383Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="源码分析">
 <meta property="article:tag" content="ptmalloc">
@@ -219,7 +219,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      96k 字
+      97k 字
     </span>
   
 
@@ -228,7 +228,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1206 分钟
+      1215 分钟
     </span>
   
 
@@ -269,7 +269,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年9月8日 晚上
+                  不可视境界线最后变动于：2022年10月14日 下午
                 
               </p>
             
@@ -500,6 +500,15 @@ b--&gt;|32 &amp; != 16|largebin_index_32
 <li><code>tcache_entry</code> 用单向链表的方式链接了相同大小的处于空闲状态（free 后）的 chunk，这一点上和 fastbin 很像。</li>
 <li><code>counts</code> 记录了 <code>tcache_entry</code> 链上空闲 chunk 的数目，每条链上最多可以有 7 个 chunk。</li>
 </ul>
+<p><strong><mark>注意!!</mark></strong> </p>
+<ul>
+<li>2.29开始tcache_entry的结构发生改变:</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">/* We overlay this structure on the user-data portion of a chunk when</span><br><span class="hljs-comment">   the chunk is stored in the per-thread cache.  */</span><br><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">tcache_entry</span></span><br><span class="hljs-class">&#123;</span><br>  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">tcache_entry</span> *<span class="hljs-title">next</span>;</span><br>  <span class="hljs-comment">/* This field exists to detect double frees.  */</span><br>  <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">tcache_perthread_struct</span> *<span class="hljs-title">key</span>;</span><br>&#125; tcache_entry;<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li>tcache的chunk管理是通过mem指针操作的, 所以有个chunk2mem()函数在开头.</li>
+</ul>
 <h2 id="基本宏定义"><a href="#基本宏定义" class="headerlink" title="基本宏定义"></a>基本宏定义</h2><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">/* We want 64 entries.  This is an arbitrary limit, which tunables can reduce.  */</span><br><span class="hljs-meta"># <span class="hljs-meta-keyword">define</span> TCACHE_MAX_BINS		64</span><br><span class="hljs-meta"># <span class="hljs-meta-keyword">define</span> MAX_TCACHE_SIZE	tidx2usize (TCACHE_MAX_BINS-1)</span><br><br><span class="hljs-comment">/* Only used to pre-fill the tunables.  */</span><br><span class="hljs-meta"># <span class="hljs-meta-keyword">define</span> tidx2usize(idx)	(((size_t) idx) * MALLOC_ALIGNMENT + MINSIZE - SIZE_SZ)</span><br><br><span class="hljs-comment">/* When &quot;x&quot; is from chunksize().  */</span><br><span class="hljs-meta"># <span class="hljs-meta-keyword">define</span> csize2tidx(x) (((x) - MINSIZE + MALLOC_ALIGNMENT - 1) / MALLOC_ALIGNMENT)</span><br><span class="hljs-comment">/* When &quot;x&quot; is a user-provided size.  */</span><br><span class="hljs-meta"># <span class="hljs-meta-keyword">define</span> usize2tidx(x) csize2tidx (request2size (x))</span><br><br><span class="hljs-comment">/* With rounding and alignment, the bins are...</span><br><span class="hljs-comment">   idx 0   bytes 0..24 (64-bit) or 0..12 (32-bit)</span><br><span class="hljs-comment">   idx 1   bytes 25..40 or 13..20</span><br><span class="hljs-comment">   idx 2   bytes 41..56 or 21..28</span><br><span class="hljs-comment">   etc.  */</span><br><br><span class="hljs-comment">/* This is another arbitrary limit, which tunables can change.  Each</span><br><span class="hljs-comment">   tcache bin will hold at most this number of chunks.  */</span><br><span class="hljs-meta"># <span class="hljs-meta-keyword">define</span> TCACHE_FILL_COUNT 7</span><br></code></pre></div></td></tr></table></figure>
 
 <ul>
@@ -532,10 +541,11 @@ b--&gt;|32 &amp; != 16|largebin_index_32
 <p>   (4)  unsorted bin大循环里如果达到放入tcache块达到最大数量，会立即返回。默认是 0，即不存在上限。</p>
 <p>   (5)  在循环处理 unsorted bin 内存块后，如果之前曾放入过 tcache 块，则会取出一个并返回。通过<code>return_cached</code>变量. </p>
 <h3 id="tcache-get"><a href="#tcache-get" class="headerlink" title="tcache_get()"></a>tcache_get()</h3><p>看一下 <code>tcache_get()</code> </p>
-<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">/* Caller must ensure that we know tc_idx is valid and there&#x27;s</span><br><span class="hljs-comment">   available chunks to remove.  */</span><br><span class="hljs-function"><span class="hljs-keyword">static</span> __always_inline <span class="hljs-keyword">void</span> *</span><br><span class="hljs-function"><span class="hljs-title">tcache_get</span> <span class="hljs-params">(<span class="hljs-keyword">size_t</span> tc_idx)</span></span><br><span class="hljs-function"></span>&#123;<br>  tcache_entry *e = tcache-&gt;entries[tc_idx];<br>  assert (tc_idx &lt; TCACHE_MAX_BINS);<br>  assert (tcache-&gt;entries[tc_idx] &gt; <span class="hljs-number">0</span>);<br>  tcache-&gt;entries[tc_idx] = e-&gt;next;<br>  --(tcache-&gt;counts[tc_idx]); <span class="hljs-comment">// 获得一个 chunk，counts 减一</span><br>  <span class="hljs-keyword">return</span> (<span class="hljs-keyword">void</span> *) e;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">/* Caller must ensure that we know tc_idx is valid and there&#x27;s</span><br><span class="hljs-comment">   available chunks to remove.  */</span><br><span class="hljs-function"><span class="hljs-keyword">static</span> __always_inline <span class="hljs-keyword">void</span> *</span><br><span class="hljs-function"><span class="hljs-title">tcache_get</span> <span class="hljs-params">(<span class="hljs-keyword">size_t</span> tc_idx)</span></span><br><span class="hljs-function"></span>&#123;<br>  tcache_entry *e = tcache-&gt;entries[tc_idx];<br>  assert (tc_idx &lt; TCACHE_MAX_BINS);<br>  assert (tcache-&gt;entries[tc_idx] &gt; <span class="hljs-number">0</span>);<br>  tcache-&gt;entries[tc_idx] = e-&gt;next;<br>  --(tcache-&gt;counts[tc_idx]); <span class="hljs-comment">// 获得一个 chunk，counts 减一</span><br>  <span class="hljs-keyword">return</span> (<span class="hljs-keyword">void</span> *) e;<br>&#125;<br><br><span class="hljs-comment">//2.31</span><br><span class="hljs-comment">/* Caller must ensure that we know tc_idx is valid and there&#x27;s</span><br><span class="hljs-comment">   available chunks to remove.  */</span><br><span class="hljs-function"><span class="hljs-keyword">static</span> __always_inline <span class="hljs-keyword">void</span> *</span><br><span class="hljs-function"><span class="hljs-title">tcache_get</span> <span class="hljs-params">(<span class="hljs-keyword">size_t</span> tc_idx)</span></span><br><span class="hljs-function"></span>&#123;<br>  tcache_entry *e = tcache-&gt;entries[tc_idx];<br>  tcache-&gt;entries[tc_idx] = e-&gt;next;<br>  --(tcache-&gt;counts[tc_idx]);<br>  e-&gt;key = <span class="hljs-literal">NULL</span>;<br>  <span class="hljs-keyword">return</span> (<span class="hljs-keyword">void</span> *) e;<br>&#125;<br></code></pre></div></td></tr></table></figure>
 
 <ul>
 <li><code>tcache_get()</code> 就是获得 chunk 的过程了。可以看出这个过程还是很简单的，从 <code>tcache-&gt;entries[tc_idx]</code> 中获得第一个 chunk，<code>tcache-&gt;counts</code> 减一，几乎没有任何保护。</li>
+<li>少掉的两个assert在调用函数之前已经检查过, 写了个appease gcc, 就当是不存在吧.</li>
 </ul>
 <h3 id="libc-free-1"><a href="#libc-free-1" class="headerlink" title="__libc_free()"></a>__libc_free()</h3><p>看完申请，再看看有 tcache 时的释放</p>
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">void</span><br>__libc_free (<span class="hljs-keyword">void</span> *mem)<br>&#123;<br>  ......<br>  ......<br>  MAYBE_INIT_TCACHE ();<br>  ar_ptr = arena_for_chunk (p);<br>  _int_free (ar_ptr, p, <span class="hljs-number">0</span>);<br>&#125;<br></code></pre></div></td></tr></table></figure>
