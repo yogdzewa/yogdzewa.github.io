@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/ptmalloc_exp/image-20220810201820968.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/glibc_malloc_srcCode/unsorted_bin_attack_order.png">
 <meta property="article:published_time" content="2021-08-09T02:07:00.000Z">
-<meta property="article:modified_time" content="2022-10-15T11:48:38.862Z">
+<meta property="article:modified_time" content="2022-10-16T11:18:42.478Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="源码分析">
 <meta property="article:tag" content="ptmalloc">
@@ -228,7 +228,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1215 分钟
+      1217 分钟
     </span>
   
 
@@ -269,7 +269,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年10月15日 晚上
+                  不可视境界线最后变动于：2022年10月16日 晚上
                 
               </p>
             
@@ -563,6 +563,12 @@ b--&gt;|32 &amp; != 16|largebin_index_32
 
 <ul>
 <li><code>tcache_puts()</code> 完成了把释放的 chunk 插入到 <code>tcache-&gt;entries[tc_idx]</code> 链表头部的操作，也几乎没有任何保护。并且 <strong>没有把 p 位置零</strong>。</li>
+</ul>
+<h2 id="利用之处"><a href="#利用之处" class="headerlink" title="利用之处"></a>利用之处</h2><ul>
+<li>tcache poisoning: 就是简单的修改next指针.</li>
+<li>tcache dup: 多次释放</li>
+<li>smallbin unlink: 在smallbin中遍历找到chunk时也会将其他相同大小的chunk放到tcache, 然而缺少检查. 不熟悉</li>
+<li>tcache stashing unlink attack: 不熟悉</li>
 </ul>
 <h1 id="UAF"><a href="#UAF" class="headerlink" title="UAF"></a>UAF</h1><h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>简单的说，Use After Free 就是其字面所表达的意思，当一个内存块被释放之后再次被使用。但是其实这里有以下几种情况</p>
 <ul>
