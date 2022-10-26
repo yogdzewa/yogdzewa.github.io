@@ -23,12 +23,14 @@
 <meta property="og:site_name" content="Yogdzewa">
 <meta property="og:description" content="如题">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yogdzewa.github.io/image/recent_ctf/image-20221026212243834.png">
 <meta property="article:published_time" content="2022-09-08T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-10-26T01:14:23.210Z">
+<meta property="article:modified_time" content="2022-10-26T15:05:20.012Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://yogdzewa.github.io/image/recent_ctf/image-20221026212243834.png">
   
   
   <title>近期题目wp - Yogdzewa</title>
@@ -210,7 +212,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      56k 字
+      57k 字
     </span>
   
 
@@ -219,7 +221,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      704 分钟
+      714 分钟
     </span>
   
 
@@ -260,7 +262,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年10月26日 上午
+                  不可视境界线最后变动于：2022年10月26日 晚上
                 
               </p>
             
@@ -577,14 +579,35 @@
 <p>Flag自动机: 是window程序, 看了看IDA的反编译代码后发现有消息回调函数, 在cheat engine里让x, y变得不随机, 然后改一个变量进入flag生成. </p>
 <h2 id="One-byte-man"><a href="#One-byte-man" class="headerlink" title="One-byte-man"></a>One-byte-man</h2><p>挺神奇的, 代码里面又是还没看的linux概念………</p>
 <ul>
-<li>prctl参数<code>PR_SET_CHILD_SUBREAPER</code>: 设置进程树属性, 使得树中孤儿被收养到最近的<strong>设置了属性的</strong>父进程处.<br>因为该属性<strong>只能通过</strong>execve继承而非fork和clone. </li>
-<li>认真看了下namespace的man page. <code>CLONE_NEW*</code>一系列flag.  </li>
-<li>user_namespace: A process’s user and group IDs can be different inside and outside a user namespace. </li>
+<li><p>prctl参数<code>PR_SET_CHILD_SUBREAPER</code>: 设置进程树属性, 使得树中孤儿被收养到最近的<strong>设置了属性的</strong>父进程处.<br>因为该属性<strong>只能通过</strong>execve继承而非fork和clone. </p>
+</li>
+<li><p>认真看了下namespace的man page. <code>CLONE_NEW*</code>一系列flag.  </p>
+</li>
+<li><p>user_namespace: A process’s user and group IDs can be different inside and outside a user namespace. </p>
+<ul>
+<li>namespace是一个树状继承图. 像是setns和unshare和clone可以开辟新的子namespace</li>
+<li><strong>User and group ID mappings: uid_map and gid_map</strong> <ul>
+<li>root namespace的两个文件中可以见到<code>0          0 4294967295</code>, 第三个是有符号数的-1. </li>
+<li>不同namespace的process访问同一个process的uid_map文件可能会产生不同的结果. </li>
+<li>因为该行是一个映射, 当访问文件在同一个namespace指<code>内部uid -&gt; 父space uid</code>, 当在不同namespace时指<code>内部uid -&gt; 访问进程space uid</code> </li>
 </ul>
-<figure class="highlight apache"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs apache"><span class="hljs-attribute">sudo</span> echo &#x27;<span class="hljs-number">0</span> <span class="hljs-number">1000</span> <span class="hljs-number">1</span>\n<span class="hljs-number">1000</span> <span class="hljs-number">0</span> <span class="hljs-number">1</span>&#x27; &gt; /proc/<span class="hljs-number">121634</span>/uid_map<br></code></pre></div></td></tr></table></figure>
-
-
-
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">sudo echo &#x27;0 1000 1\n1000 0 1&#x27; &gt; /proc/121634/uid_map<br></code></pre></div></td></tr></table></figure></li>
+<li><p>capabilities:</p>
+<ul>
+<li>进程有四个set, 文件有两个set加上一个effective bit.</li>
+<li>四个set看了老半天不知道实际是如何操作的, 只有effective和bounding能看明白. bounding应该是个全集, 不过也能够对其进行删减, 意义不明. permitted set应该为该进程允许获得的caps. ambient更是<strong>完全不懂</strong>. </li>
+<li>下图是执行execve时cap的变化情况. 注意到当文件effective bit为1时文件的permitted加入了effective set, 这也是一些blog演示ping文件的利用之处, 即<code>cap_net_raw+ep</code>; 这和ambient有啥不同?</li>
+</ul>
+<img src="../../image/recent_ctf/image-20221026212243834.png" srcset="/img/loading.gif" lazyload alt="image-20221026212243834" style="zoom:80%;" /></li>
+<li><p>credentials</p>
+<ul>
+<li>看到还有个Filesystem user ID and filesystem group ID, 只能说不知道有什么用, 只看到是和supplementary group IDs一起用于判断文件access permissions.</li>
+<li>Supplementary group IDs: 一个用户属于一个primary group, 同时又属于多个Supplementary group, 这样就不用切换了, 主要是省事. 在<code>id</code>命令第一个group后面跟着的东西就是. </li>
+</ul>
+</li>
+</ul>
 <h2 id="看不见的彼方"><a href="#看不见的彼方" class="headerlink" title="看不见的彼方"></a>看不见的彼方</h2>
             </div>
             <hr>
