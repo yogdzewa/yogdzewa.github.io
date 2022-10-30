@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yogdzewa.github.io/image/recent_ctf/image-20221026212243834.png">
 <meta property="article:published_time" content="2022-09-08T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-10-29T02:40:44.376Z">
+<meta property="article:modified_time" content="2022-10-30T01:56:03.524Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -212,7 +212,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      58k 字
+      59k 字
     </span>
   
 
@@ -221,7 +221,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      724 分钟
+      732 分钟
     </span>
   
 
@@ -262,7 +262,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年10月29日 上午
+                  不可视境界线最后变动于：2022年10月30日 上午
                 
               </p>
             
@@ -628,9 +628,24 @@
 <h2 id="看不见的彼方"><a href="#看不见的彼方" class="headerlink" title="看不见的彼方"></a>看不见的彼方</h2><p>额, 先看rust去了. </p>
 <h1 id="hack-lu-2022"><a href="#hack-lu-2022" class="headerlink" title="hack.lu 2022"></a>hack.lu 2022</h1><h2 id="placemat"><a href="#placemat" class="headerlink" title="placemat"></a>placemat</h2><ul>
 <li>看到一个meson.build文件, 才知道这是一个和cmake同类型的build scripts generation. Wiki<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/List_of_build_automation_software">在此</a> </li>
-<li></li>
 </ul>
 <p>居然是32位程序, 除了PIE其他都开了. </p>
+<p>woc为什么在ubuntu上运行不了?? 2.34用allinone装上之后都没有了符号链接, 这能用???? 在ubuntu2004 22204里运行都给我说no such file or directory. 差不多得了. </p>
+<p>搞不定这个环境. 理解不能, 这c++的库都是用的啥? glibc不能直接用吧. 果然还是放弃这种比赛题比较实际, 大半天啥也没试出来. 又被crazyman叫来看看, 我…还是试试从源码编译吧…</p>
+<ul>
+<li>学了两下meson: <code>meson setup [build directory]</code> <code>cd [build directory] &amp;&amp; meson compile</code> <ul>
+<li>每个build directory都有各自的配置, 分成一个个文件夹便于测试. </li>
+<li><code>meson compile == ninja</code>, 因为meson的默认backend是ninja. </li>
+</ul>
+</li>
+<li>发现缺失<code>bits/c++config.h</code>, 然后准备安装<code>g++-multilib</code>, 然后又发现kali里的libc6-dev版本过低导致依赖的libglib2.0-dev也较低, 结果是libglib2.0-dev无法安装更新版本. 执行<code>pc apt --only-upgrade install libc6-dev</code>后解决. 最终执行<br><code>apt install g++-multilib</code>. </li>
+</ul>
+<p>怎么调试C++里面的类和一些变量布局我还得熟悉下. </p>
+<p>可能有的问题:</p>
+<ul>
+<li>Human::requestName中<code>scanf(&quot;%s&quot;, this-&gt;name);</code>没有限制长度. 鬼知道溢出到了什么地方. </li>
+<li></li>
+</ul>
 
             </div>
             <hr>
