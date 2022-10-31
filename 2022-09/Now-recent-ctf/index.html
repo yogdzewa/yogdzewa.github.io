@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yogdzewa.github.io/image/recent_ctf/image-20221026212243834.png">
 <meta property="article:published_time" content="2022-09-08T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-10-30T01:56:03.524Z">
+<meta property="article:modified_time" content="2022-10-31T01:05:12.345Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -221,7 +221,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      732 分钟
+      741 分钟
     </span>
   
 
@@ -262,7 +262,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年10月30日 上午
+                  不可视境界线最后变动于：2022年10月31日 上午
                 
               </p>
             
@@ -626,7 +626,8 @@
 </li>
 </ul>
 <h2 id="看不见的彼方"><a href="#看不见的彼方" class="headerlink" title="看不见的彼方"></a>看不见的彼方</h2><p>额, 先看rust去了. </p>
-<h1 id="hack-lu-2022"><a href="#hack-lu-2022" class="headerlink" title="hack.lu 2022"></a>hack.lu 2022</h1><h2 id="placemat"><a href="#placemat" class="headerlink" title="placemat"></a>placemat</h2><ul>
+<h1 id="hack-lu-2022"><a href="#hack-lu-2022" class="headerlink" title="hack.lu 2022"></a>hack.lu 2022</h1><h2 id="RIOT"><a href="#RIOT" class="headerlink" title="RIOT"></a>RIOT</h2><p>RIOT src <a target="_blank" rel="noopener" href="https://github.com/RIOT-OS/RIOT/blob/a21f05aeffd9fdf0e61026d85b465c652a9cf8c9/drivers/ethos/ethos.c#L379">off-by-one</a> </p>
+<h2 id="placemat"><a href="#placemat" class="headerlink" title="placemat"></a>placemat</h2><ul>
 <li>看到一个meson.build文件, 才知道这是一个和cmake同类型的build scripts generation. Wiki<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/List_of_build_automation_software">在此</a> </li>
 </ul>
 <p>居然是32位程序, 除了PIE其他都开了. </p>
@@ -641,11 +642,29 @@
 <li>发现缺失<code>bits/c++config.h</code>, 然后准备安装<code>g++-multilib</code>, 然后又发现kali里的libc6-dev版本过低导致依赖的libglib2.0-dev也较低, 结果是libglib2.0-dev无法安装更新版本. 执行<code>pc apt --only-upgrade install libc6-dev</code>后解决. 最终执行<br><code>apt install g++-multilib</code>. </li>
 </ul>
 <p>怎么调试C++里面的类和一些变量布局我还得熟悉下. </p>
+<ul>
+<li>看了看C++17的optional. <a target="_blank" rel="noopener" href="https://devblogs.microsoft.com/cppblog/stdoptional-how-when-and-why/">post</a> 就像是刚刚看的rust里的Option&lt;T&gt;. </li>
+<li>额还得看看c++编译器是怎么实现class的. 找个<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/508050978">文章</a>.  </li>
+</ul>
+<hr>
 <p>可能有的问题:</p>
 <ul>
-<li>Human::requestName中<code>scanf(&quot;%s&quot;, this-&gt;name);</code>没有限制长度. 鬼知道溢出到了什么地方. </li>
+<li>Human::requestName中<code>scanf(&quot;%s&quot;, this-&gt;name);</code>没有限制长度. 鬼知道溢出到了什么地方. 好了现在知道了.</li>
+<li>还有个strcpy有个非常没用的栈溢出. </li>
+<li>flag的获取必须是赢过bot. </li>
+</ul>
+<p>然后队里别人先做出来了(不出所料), 是伪造虚表然后装成bot, 自己赢过自己获取flag. 我先调试看看c++的class<strong>怎么布局</strong>的. </p>
+<ul>
+<li>首先研究构造函数, 发现<code>Human human</code>声明语句即构造函数调用语句, 参数为栈上指针, 大小为ebp-0x20的位置, 这个就是this指针. 然后继续调用父类构造清空name成员, name成员由this来定位. 不过name不是this指向的空间, 前四字节是用来标识子类的一串数字(也许有什么特殊含义). 好吧原来是虚表地址, <em>对象的虚表指针用来指向自己所属类的虚表，虚表中的指针会指向其继承的<strong>最近的</strong>一个类的虚函数</em>. 地址到IDA里看看更多信息.</li>
+<li>Player这个基类的两个函数加析构都是虚函数, 但是析构没有定义, 所以在<strong>虚表里面是NULL</strong>.  </li>
+</ul>
+<p>继续研究:</p>
+<ul>
+<li>在startSingleplayer()函数栈帧里存储有两个玩家的class, 以虚指针开头总共4(vptr)+20(name)=24=0x18字节, 初始name被填满空字符, 输入玩家名称时可以填满20字节达到leak之后的数据的目的. </li>
+<li>human是栈上靠近栈底的变量, 在[ebp-0x20]的位置, 栈底还有个canary, 要写入21字节才能越过canary继续leak ebp. </li>
 <li></li>
 </ul>
+<p>重大发现, 这个程序是32位的, 所以要用32位库. 真是好一个重大发现, 难怪patchelf和ubuntu2204(默认没有32位运行环境)都不行. </p>
 
             </div>
             <hr>
