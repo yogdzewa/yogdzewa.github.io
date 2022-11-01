@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yogdzewa.github.io/image/recent_ctf/image-20221026212243834.png">
 <meta property="article:published_time" content="2022-09-08T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-10-31T01:05:12.345Z">
+<meta property="article:modified_time" content="2022-11-01T03:03:59.713Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -221,7 +221,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      741 分钟
+      742 分钟
     </span>
   
 
@@ -262,7 +262,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年10月31日 上午
+                  不可视境界线最后变动于：2022年11月1日 上午
                 
               </p>
             
@@ -655,16 +655,18 @@
 </ul>
 <p>然后队里别人先做出来了(不出所料), 是伪造虚表然后装成bot, 自己赢过自己获取flag. 我先调试看看c++的class<strong>怎么布局</strong>的. </p>
 <ul>
-<li>首先研究构造函数, 发现<code>Human human</code>声明语句即构造函数调用语句, 参数为栈上指针, 大小为ebp-0x20的位置, 这个就是this指针. 然后继续调用父类构造清空name成员, name成员由this来定位. 不过name不是this指向的空间, 前四字节是用来标识子类的一串数字(也许有什么特殊含义). 好吧原来是虚表地址, <em>对象的虚表指针用来指向自己所属类的虚表，虚表中的指针会指向其继承的<strong>最近的</strong>一个类的虚函数</em>. 地址到IDA里看看更多信息.</li>
+<li>首先研究构造函数, 发现<code>Human human</code>声明语句即构造函数调用语句, 参数为栈上指针, 大小为ebp-0x20的位置, 这个就是this指针. 然后继续调用父类构造清空name成员, name成员由this来定位. 不过name不是this指向的空间, 前四字节是用来标识子类的一串数字(也许有什么特殊含义). 好吧原来是虚表地址, <em>对象的虚表指针用来指向自己所属类的虚表，虚表中的指针会指向其继承的<strong>最近的</strong>一个类的虚函数</em>. 地址到IDA里看看更多信息. </li>
 <li>Player这个基类的两个函数加析构都是虚函数, 但是析构没有定义, 所以在<strong>虚表里面是NULL</strong>.  </li>
 </ul>
 <p>继续研究:</p>
 <ul>
 <li>在startSingleplayer()函数栈帧里存储有两个玩家的class, 以虚指针开头总共4(vptr)+20(name)=24=0x18字节, 初始name被填满空字符, 输入玩家名称时可以填满20字节达到leak之后的数据的目的. </li>
-<li>human是栈上靠近栈底的变量, 在[ebp-0x20]的位置, 栈底还有个canary, 要写入21字节才能越过canary继续leak ebp. </li>
-<li></li>
+<li>human是栈上靠近栈底的变量, 在[ebp-0x20]的位置, 0xc处还有个canary, 栈底八字节没啥用处</li>
+<li>takeTurn中又是%s, 输出长度没有限制. </li>
 </ul>
-<p>重大发现, 这个程序是32位的, 所以要用32位库. 真是好一个重大发现, 难怪patchelf和ubuntu2204(默认没有32位运行环境)都不行. </p>
+<blockquote>
+<p>重大发现, 这个程序是32位的, 所以要用32位库. 真是好一个重大发现, 难怪patchelf和ubuntu2204(默认没有32位运行环境)都不行. 好的下了debian32位2.35libc成功了. </p>
+</blockquote>
 
             </div>
             <hr>
