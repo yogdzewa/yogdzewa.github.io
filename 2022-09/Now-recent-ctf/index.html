@@ -24,8 +24,11 @@
 <meta property="og:description" content="如题">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yogdzewa.github.io/image/recent_ctf/image-20221026212243834.png">
+<meta property="og:image" content="https://itanium-cxx-abi.github.io/cxx-abi/warning.gif">
+<meta property="og:image" content="https://itanium-cxx-abi.github.io/cxx-abi/warning.gif">
+<meta property="og:image" content="https://itanium-cxx-abi.github.io/cxx-abi/warning.gif">
 <meta property="article:published_time" content="2022-09-08T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-11-04T02:55:51.726Z">
+<meta property="article:modified_time" content="2022-11-05T02:54:22.838Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -212,7 +215,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      60k 字
+      66k 字
     </span>
   
 
@@ -221,7 +224,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      753 分钟
+      824 分钟
     </span>
   
 
@@ -262,7 +265,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年11月4日 上午
+                  不可视境界线最后变动于：2022年11月5日 上午
                 
               </p>
             
@@ -680,13 +683,194 @@
 </ul>
 </blockquote>
 <ul>
-<li>在congratulate中看到<a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/language/typeid"><code>typeid</code></a>宏, 对一个多态对象求类型id. 实质上是???? 只查到是查个虚表, 待我看看汇编. 看到了<a target="_blank" rel="noopener" href="https://itanium-cxx-abi.github.io/cxx-abi/abi.html">c++ abi</a>, 然而内容太多我抓不住重点. 又找了一个series <a target="_blank" rel="noopener" href="https://shaharmike.com/cpp/vtable-part1/">blog</a>. 真的太多了, 但我真的想看懂ABI. <ul>
-<li>_ZTV is a prefix for vtable, _ZTS is a prefix for type-string (name) and _ZTI is for type-info.</li>
-<li><a target="_blank" rel="noopener" href="https://itanium-cxx-abi.github.io/cxx-abi/abi.html#vtable-components">vtable components</a> </li>
-<li>子类继承父类时重载了父类函数, 于是子类执行</li>
-<li>构造函数可以不一样</li>
-<li>继承树上多个基类时vtable最后的是VTT, 也就是vtable的table. </li>
+<li>在congratulate中看到<a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/language/typeid"><code>typeid</code></a>宏, 对一个多态对象求类型id. 实质上是???? 只查到是查个虚表, 待我看看汇编. 看到了<a target="_blank" rel="noopener" href="https://itanium-cxx-abi.github.io/cxx-abi/abi.html">c++ abi</a>, 然而内容太多我抓不住重点. 又找了一个series <a target="_blank" rel="noopener" href="https://shaharmike.com/cpp/vtable-part1/">blog</a>. 真的太多了, 但我真的想看懂ABI.<br>不如Stack Overflow里的<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/6258559/what-is-the-vtt-for-a-class">清楚</a> 还是有例子的好些, 一堆文字真的很难看懂. </li>
 </ul>
+<h3 id="c-abi-vtables-amp-RTTI"><a href="#c-abi-vtables-amp-RTTI" class="headerlink" title="c++ abi (vtables &amp; RTTI)"></a>c++ abi (vtables &amp; RTTI)</h3><ul>
+<li><p>_ZTV is a prefix for vtable, _ZTS is a prefix for type-string (name) and _ZTI is for type-info.</p>
+</li>
+<li><p>重要的概念</p>
+<ul>
+<li><em>primary base class</em>: For a dynamic class, the unique base class (if any) with which it shares the virtual pointer at offset 0.</li>
+<li><em>proper base class</em>: 继承树中一个类的所有父类</li>
+<li><em>secondary virtual table</em>: The instance of a virtual table for a base class that is <strong>embedded</strong> in the virtual table of a class derived from it.</li>
+<li><em>The primary virtual table</em> can be viewed as two virtual tables accessed from a shared virtual table pointer. </li>
+<li><em>virtual table group</em>: The primary virtual table for a class along with all of the associated secondary virtual tables for its proper base classes.</li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://itanium-cxx-abi.github.io/cxx-abi/abi.html#vtable-components">vtable components</a> </p>
+<ul>
+<li><em>Virtual Base (vbase) offsets</em> are used to access the virtual bases of an object.</li>
+<li>The <em>offset to top</em> holds the displacement to the top of the object from the location within the object of the virtual table pointer that addresses this virtual table</li>
+<li>The <em>typeinfo pointer</em> points to the typeinfo object used for RTTI</li>
+<li>The virtual table address point <strong>points here</strong> </li>
+<li><em>Virtual function pointers</em>. Each pointer holds either the address of a virtual function of the class, or the address of a secondary entry point that performs certain adjustments before transferring control to a virtual function.</li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://itanium-cxx-abi.github.io/cxx-abi/abi.html#vtable-construction">vtable construction</a> 详细讲了proper base class在各种情况下应该怎样构建vtable. </p>
+<ul>
+<li>比如<br><code>No inherited virtual functions</code><br><code>No virtual base classes</code><br><code>Declares virtual functions</code>时, vtable就是简单的offset-to-top &amp; RTTI fields &amp; virtual function pointers</li>
+<li></li>
+</ul>
+</li>
+<li><p>The elements of the VTT array for a class D:<br>which is declared for each class type that <strong>has indirect or direct virtual base classes</strong>.</p>
+<ul>
+<li><p><strong>Primary virtual pointer</strong></p>
+<p>: address of the primary virtual table for the complete object D.</p>
+</li>
+<li><p><strong>Secondary VTTs</strong></p>
+<p>: for each direct non-virtual proper base class B of D that requires a VTT, in declaration order, a sub-VTT for B-in-D, structured like the main VTT for B, with a primary virtual pointer, secondary VTTs, and secondary virtual pointers, but without virtual VTTs.</p>
+<p><img src="https://itanium-cxx-abi.github.io/cxx-abi/warning.gif" srcset="/img/loading.gif" lazyload alt="&lt;b&gt;NOTE&lt;/b&gt;:"> <em>This construction is applied recursively.</em></p>
+</li>
+<li><p><strong>Secondary virtual pointers</strong></p>
+<p>: for each base class X which (a) has virtual bases or is reachable along a virtual path from D, and (b) is not a non-virtual primary base, the address of the virtual table for X-in-D or an appropriate construction virtual table.</p>
+<p>X is reachable along a virtual path from D if there exists a path X, B1, B2, …, BN, D in the inheritance graph such that at least one of X, B1, B2, …, or BN is a virtual base class.</p>
+<p>The order in which the virtual pointers appear in the VTT is inheritance graph preorder.</p>
+<p><img src="https://itanium-cxx-abi.github.io/cxx-abi/warning.gif" srcset="/img/loading.gif" lazyload alt="&lt;b&gt;NOTE&lt;/b&gt;:"> <em>There are virtual pointers for direct and indirect base classes. Although primary non-virtual bases do not get secondary virtual pointers, they do not otherwise affect the ordering.</em></p>
+<p><em>Primary virtual bases require a secondary virtual pointer in the VTT because the derived class with which they will share a virtual pointer is determined by the most derived class in the hierarchy.</em></p>
+<p><em>Secondary virtual pointers may be required for base classes that do not require secondary VTTs. A virtual base with no virtual bases of its own does not require a VTT, but does require a virtual pointer entry in the VTT.</em> </p>
+</li>
+<li><p><strong>Virtual VTTs</strong></p>
+<p>: For each proper virtual base classes in inheritance graph preorder, construct a sub-VTT as in (2) above.</p>
+<p><img src="https://itanium-cxx-abi.github.io/cxx-abi/warning.gif" srcset="/img/loading.gif" lazyload alt="&lt;b&gt;NOTE&lt;/b&gt;:"> <em>The virtual VTT addresses come last because they are only passed to the virtual base class constructors for the complete object.</em></p>
+</li>
+</ul>
+</li>
+<li><p>单继承</p>
+<ul>
+<li>子类虚表如下, 注意子类内存中虚表指针指向下表第三项. 即跳过前两项. </li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Address</th>
+<th>Value</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x400b40</td>
+<td>0x0</td>
+<td><code>top_offset</code> (more on this later)</td>
+</tr>
+<tr>
+<td>0x400b48</td>
+<td>0x400b90</td>
+<td>Pointer to <code>typeinfo for Derived</code> (also part of the above memory dump)</td>
+</tr>
+<tr>
+<td>0x400b50</td>
+<td>0x400a80</td>
+<td>Pointer to <code>Derived::Foo()</code>3. <strong><code>Derived</code>’s _vptr points here.</strong></td>
+</tr>
+<tr>
+<td>0x400b58</td>
+<td>0x400a90</td>
+<td>Pointer to <code>Parent::FooNotOverridden()</code> (same as <code>Parent</code>’s)</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>多继承</p>
+<ul>
+<li>多继承时最下层的子类的内存中有多个指针, 如下表所示. 为什么内存中还有两个vptr? 因为child可能被转换为<code>Father*</code>或者<code>Mother*</code>类型的指针当做参数传递, 此时接收参数的函数不需要知道child的存在也能够访问下面内存布局中的Father部分. data显然在要其中, 而Father的虚表指针自然也会在这里, 指向child vtable以提供虚函数的信息. </li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>_vptr$Mother</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mother_data (+ padding)(这是什么padding??)</td>
+</tr>
+<tr>
+<td>_vptr$Father = non-virtual thunk to Child::FatherFoo(void)</td>
+</tr>
+<tr>
+<td>father_data</td>
+</tr>
+<tr>
+<td>child_data1</td>
+</tr>
+</tbody></table>
+<ul>
+<li>值得注意的是现在child vtable里实际上装下了<strong>两个table</strong>. 如下vtable的第二部分. </li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs nasm">; `vtable for&#x27;Child<br>  _ZTV5Child       dq 0                    ; offset to this<br>                   dq offset _ZTI5Child    ; `typeinfo for&#x27;Child<br>  off_555555557D48 dq offset _ZN6Mother9MotherFooEv<br>                                          ; DATA XREF: main+8↑o<br>                                          ; Mother::MotherFoo(void)<br>                   dq offset _ZN5Child9FatherFooEv ; Child::FatherFoo(void)<br>                   dq -8                   ; offset to this<br>                   dq offset _ZTI5Child    ; `typeinfo for&#x27;Child<br>  off_555555557D68 dq offset _ZThn8_N5Child9FatherFooEv<br>  									 ; `non-virtual thunk to&#x27;Child::FatherFoo(void)<br></code></pre></div></td></tr></table></figure></li>
+<li><p><strong>但是</strong>, 当子类继承父类时<strong>重载了</strong>父类函数, 为了要使 利用多态将<code>child* this</code>的指针转换为<code>father* this</code>然后<code>ptr-&gt;FatherFoo()</code>的函数能够执行<strong>child</strong>::FatherFoo(), 编译器会识别到重载的存在, 并生成上表的child class结构, 并且生成一个thunk代码片段代替Father::Foo()来调整this指针使得其变成child的class ptr. 其中<code>_vptr$Father</code>指向的secondary virtual table中会是这个thunk的地址. </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs nasm">.text:0000555555555227 ; __int64 __fastcall `non-virtual thunk to&#x27;Child::FatherFoo(Child *__hidden this)<br>.text:0000555555555227                 public _ZThn8_N5Child9FatherFooEv<br>.text:0000555555555227 _ZThn8_N5Child9FatherFooEv proc near<br>.text:0000555555555227                 sub     rdi, 8          ; this<br>.text:000055555555522B                 jmp     short _ZN5Child9FatherFooEv ; Child::FatherFoo(void)<br>.text:000055555555522B _ZThn8_N5Child9FatherFooEv endp<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li>vtable中top_offset即为-8的那一行,  看起来只是提供一个信息提示, 指child内存中Father部分到内存top的距离.<br>thunk代码中直接使用<code>sub rdi, 8</code>并未引用该处数据. </li>
+</ul>
+</li>
+<li><p>三重多继承, 虚继承Grandparent class.</p>
+<ul>
+<li>新东西: <code>construction vtable for Parent1-in-Child</code> <code>VTT for Child</code> <code>virtual-base offset</code> </li>
+<li><code>virtual-base offset</code>是针对Child::Child()中Patent1初始化时要访问Grandpatent数据时, this指针(此时指向Child内存中Parent1部分, 也就是Child开头)到child内存中Grandpatent部分的偏移量. </li>
+<li>IDA中<code>construction vtable for Patent1-in-Child</code>和<code>vtable for Parent</code>基本重叠, 除了前者开头的<code>virtual-base offset</code>在后者上方.</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs nasm">; `construction vtable for&#x27; Parent1-in-Child<br>	_ZTC5Child0_7Parent1 dq 20h 	; that is virtual-base offset<br>; `vtable for&#x27; Parent1<br>	...<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li>为什么<code>vtable for&#39; Parent1</code>也有两个vtable? </li>
+<li>VTT</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Address</th>
+<th>Value</th>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x4009a0</td>
+<td>0x400950</td>
+<td><code>vtable for Child + 24</code></td>
+<td><code>Parent1</code>’s entries in <code>Child</code>’s vtable</td>
+</tr>
+<tr>
+<td>0x4009a8</td>
+<td>0x4009f8</td>
+<td><code>construction vtable for Parent1-in-Child + 24</code></td>
+<td><code>Parent1</code>’s methods in <code>Parent1-in-Child</code></td>
+</tr>
+<tr>
+<td>0x4009b0</td>
+<td>0x400a18</td>
+<td><code>construction vtable for Parent1-in-Child + 56</code></td>
+<td><code>Grandparent&#39;s methods for Parent1-in-Child</code></td>
+</tr>
+<tr>
+<td>0x4009b8</td>
+<td>0x400a98</td>
+<td><code>construction vtable for Parent2-in-Child + 24</code></td>
+<td><code>Parent2&#39;s methods in Parent2-in-Child</code></td>
+</tr>
+<tr>
+<td>0x4009c0</td>
+<td>0x400ab8</td>
+<td><code>construction vtable for Parent2-in-Child + 56</code></td>
+<td>`Grandparent’s methods for Parent2-in-Child</td>
+</tr>
+<tr>
+<td>0x4009c8</td>
+<td>0x400998</td>
+<td><code>vtable for Child + 96</code></td>
+<td>`Grandparent’s entries in Child’s vtable</td>
+</tr>
+<tr>
+<td>0x4009d0</td>
+<td>0x400978</td>
+<td><code>vtable for Child + 64</code></td>
+<td>`Parent2’s entries in Child’s vtable</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>构造函数可以不一样</p>
+</li>
+<li><p>继承树上多个基类时vtable最后的是VTT, 也就是vtable的table. </p>
 </li>
 </ul>
 
