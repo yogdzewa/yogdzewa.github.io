@@ -28,7 +28,7 @@
 <meta property="og:image" content="https://itanium-cxx-abi.github.io/cxx-abi/warning.gif">
 <meta property="og:image" content="https://itanium-cxx-abi.github.io/cxx-abi/warning.gif">
 <meta property="article:published_time" content="2022-09-08T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-11-14T02:22:23.076Z">
+<meta property="article:modified_time" content="2022-11-14T16:17:21.039Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -224,7 +224,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      885 分钟
+      889 分钟
     </span>
   
 
@@ -265,7 +265,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年11月14日 上午
+                  不可视境界线最后变动于：2022年11月15日 凌晨
                 
               </p>
             
@@ -465,7 +465,13 @@
 <p>ptrace真的fail了, 返回了一个-1. 继续查查errno看是什么. 是not implement. 不知道了. 只能一问队友. </p>
 <p>crazyman说ubuntu18能行, 但是docker里面改成18.04并不可行. emmmmm?难道不是这样么?</p>
 <p>22/11/14<strong>在编译linux时发现有一个选项是x32 ABI for 64 bit mode</strong>, 勾上了重新编译, 尝试了下能不能运行. </p>
-<p>修改HOME路径, 再把readme重新编译成静态文件, 放到HOME中设置成其他用户只读, 忽略run.c(因为他只是限制了一下可用的系统调用, )</p>
+<p>修改HOME路径, 再把readme重新编译成静态文件, 放到HOME中设置成其他用户只读, 忽略run.c(因为他只是限制了一下可用的系统调用)</p>
+<p>还是遇到了很多问题. </p>
+<ul>
+<li>使用busybox的linux还是有很多限制, 每个文件都得编译成静态文件, 使得本来是PIE的readme变成静态链接文件, 然后mmap调用似乎消失了, ptrace根本截取不到(???), 也没有strace看到底发生了什么. </li>
+<li>而且静态链接也使得文件变得很大, 仅输出前面0x2000字节还是不够, 还得调整. </li>
+</ul>
+<p>不过好在发现了这个方法<strong>确实可行</strong>, 不过docker里面的系统似乎都没有加上这一个选项, 想来当时比赛时的环境可以吧. 不过明明都是同一个Dockerfile怎么还不一样呢. </p>
 <h3 id="solution-2-intended-one"><a href="#solution-2-intended-one" class="headerlink" title="solution 2 - intended one"></a>solution 2 - intended one</h3><blockquote>
 <p>given by the author</p>
 </blockquote>
@@ -633,12 +639,17 @@
 <h2 id="看不见的彼方"><a href="#看不见的彼方" class="headerlink" title="看不见的彼方"></a>看不见的彼方</h2><p>额, 先看rust去了. </p>
 <h1 id="hack-lu-2022"><a href="#hack-lu-2022" class="headerlink" title="hack.lu 2022"></a>hack.lu 2022</h1><h2 id="ordersystem"><a href="#ordersystem" class="headerlink" title="ordersystem"></a>ordersystem</h2><p>一眼看到python中<code>socket.socket()</code> 先查一下以前没注意的东西.</p>
 <ul>
-<li><code>setsockopt</code>: <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/77023584">link</a> </li>
+<li><code>setsockopt</code>使用场景: <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/77023584">link</a> </li>
 <li>reuseaddr/reuseport: <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/9cc2b5b9ad4d">查询过程源码</a> <a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000020524323">reuseport版本演进</a> </li>
 <li>bind到 0.0.0.0, 127.0.0.1 localhost 有何<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/20778771">区别</a> </li>
+<li>在docker环境上遇到一点小问题, 重新build了一下. woc为什么链接没反应?? 好吧重启解决问题了. <code>service docker restart</code> </li>
 <li></li>
 </ul>
 <h2 id="RIOT"><a href="#RIOT" class="headerlink" title="RIOT"></a>RIOT</h2><p>RIOT src <a target="_blank" rel="noopener" href="https://github.com/RIOT-OS/RIOT/blob/a21f05aeffd9fdf0e61026d85b465c652a9cf8c9/drivers/ethos/ethos.c#L379">off-by-one</a> </p>
+<ul>
+<li></li>
+<li></li>
+</ul>
 <h2 id="placemat"><a href="#placemat" class="headerlink" title="placemat"></a>placemat</h2><ul>
 <li>看到一个meson.build文件, 才知道这是一个和cmake同类型的build scripts generation. Wiki<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/List_of_build_automation_software">在此</a> </li>
 </ul>
