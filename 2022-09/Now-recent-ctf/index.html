@@ -28,7 +28,7 @@
 <meta property="og:image" content="https://itanium-cxx-abi.github.io/cxx-abi/warning.gif">
 <meta property="og:image" content="https://itanium-cxx-abi.github.io/cxx-abi/warning.gif">
 <meta property="article:published_time" content="2022-09-08T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-11-16T02:59:22.503Z">
+<meta property="article:modified_time" content="2022-11-17T02:48:01.519Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -215,7 +215,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      72k 字
+      73k 字
     </span>
   
 
@@ -224,7 +224,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      896 分钟
+      912 分钟
     </span>
   
 
@@ -265,7 +265,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年11月16日 上午
+                  不可视境界线最后变动于：2022年11月17日 上午
                 
               </p>
             
@@ -659,12 +659,33 @@
 </ul>
 <p>bytecode relevant:</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/3299648/python-compilation-interpretation-process">bytecode instance</a> | <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/19916729/how-exactly-is-python-bytecode-run-in-cpython">theory</a>. 一篇巨长的<a target="_blank" rel="noopener" href="https://towardsdatascience.com/understanding-python-bytecode-e7edaae8734d">文章</a>, 连指令都全部列出来. </li>
-<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Stack_machine">stack machine</a> vs. register machine<ul>
-<li>Stack machines extend <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Push-down_automata">push-down automata</a> with additional load/store operations or multiple stacks and hence are <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Turing-complete">Turing-complete</a>.</li>
-<li></li>
+<li><p>stackoverflow: <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/3299648/python-compilation-interpretation-process">bytecode instance</a> | <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/19916729/how-exactly-is-python-bytecode-run-in-cpython">theory</a>. 一篇巨长的<a target="_blank" rel="noopener" href="https://towardsdatascience.com/understanding-python-bytecode-e7edaae8734d">文章</a>, 连指令都全部列出来. </p>
+</li>
+<li><p>Wiki: <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Stack_machine">stack machine</a> vs. register machine</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/computer-organization-instruction-formats-zero-one-two-three-address-instruction/">Instruction formats</a> are classified into different types depending upon the CPU organization. <a target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/introduction-of-stack-based-cpu-organization/">CPU organization</a> is again classified into three types based on internal storage: <strong>Stack machine</strong>, Accumulator machine, General purpose organization or General register.</li>
+<li>Stack machines extend <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Push-down_automata">push-down automata</a>(下推自动机) with additional load/store operations or multiple stacks and hence are Turing-complete. </li>
+<li>开始看到上下文无关语法等等, 快死去的记忆开始攻击我. 一时看不完wiki, 找点浅显易懂的文章来. <a target="_blank" rel="noopener" href="https://users.ece.cmu.edu/~koopman/stack_computers/sec3_2.html">stackmachine book</a> | <a target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/stack-machine-in-computer-organisation/">Geek</a> </li>
 </ul>
 </li>
+<li><p><a target="_blank" rel="noopener" href="https://devguide.python.org/internals/compiler/index.html">python compiler design</a> : 这里面好多, 但是看起挺有用…..不知道要不要看. </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://tech.blog.aknin.name/category/my-projects/pythons-innards/">python innards</a> : 讲解ceval.c内容. </p>
+</li>
+<li><p>The function definition’s body is compiled into a <strong>code object.</strong> Then the function definition itself is compiled into code (inside the enclosing function body, module, etc.) that, when executed, builds a function object from that code object. (Once you think about how closures must work, it’s obvious why it works that way. Each instance of the closure is a separate function object with the same code object.)</p>
+</li>
+<li><p>dis module: <a target="_blank" rel="noopener" href="https://docs.python.org/3.10/library/dis.html#python-bytecode-instructions">bytecode instructions</a> </p>
+<ul>
+<li><p><em>Changed in version 3.6:</em> Use 2 bytes for each instruction. Previously the number of bytes varied by instruction.</p>
+<p><em>Changed in version 3.10:</em> The argument of jump, exception handling and loop instructions is now the <strong>instruction offset</strong> rather than the byte offset.</p>
+</li>
+</ul>
+</li>
+<li><p>get information about live objects: <a target="_blank" rel="noopener" href="https://docs.python.org/3/library/inspect.html#module-inspect">Inspect</a> </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.python.org/3/library/inspect.html#types-and-members">Types and members</a> :<code>function.__code__.co_code</code> or <code>inspect.getmembers([func/module/class])</code> to see all members.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>dis.dis(func) <span class="hljs-comment"># def func(a): b=&#x27;what&#x27;;return b[a]+8;</span><br>  <span class="hljs-number">2</span>           <span class="hljs-number">0</span> LOAD_CONST               <span class="hljs-number">1</span> (<span class="hljs-string">&#x27;what&#x27;</span>)<br>              <span class="hljs-number">2</span> STORE_FAST               <span class="hljs-number">1</span> (b)<br><br>  <span class="hljs-number">3</span>           <span class="hljs-number">4</span> LOAD_FAST                <span class="hljs-number">1</span> (b)<br>              <span class="hljs-number">6</span> LOAD_FAST                <span class="hljs-number">0</span> (a)<br>              <span class="hljs-number">8</span> BINARY_SUBSCR<br>             <span class="hljs-number">10</span> LOAD_CONST               <span class="hljs-number">2</span> (<span class="hljs-number">8</span>)<br>             <span class="hljs-number">12</span> BINARY_ADD<br>             <span class="hljs-number">14</span> RETURN_VALUE<br></code></pre></div></td></tr></table></figure></li>
 </ul>
 <h2 id="RIOT"><a href="#RIOT" class="headerlink" title="RIOT"></a>RIOT</h2><p>RIOT src <a target="_blank" rel="noopener" href="https://github.com/RIOT-OS/RIOT/blob/a21f05aeffd9fdf0e61026d85b465c652a9cf8c9/drivers/ethos/ethos.c#L379">off-by-one</a> </p>
 <ul>
