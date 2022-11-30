@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/11/15/AlBoJu85kTGY1FX.png">
 <meta property="article:published_time" content="2021-10-03T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-11-28T08:53:01.436Z">
+<meta property="article:modified_time" content="2022-11-30T02:32:39.695Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="complier">
 <meta name="twitter:card" content="summary_large_image">
@@ -211,7 +211,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      13k 字
+      15k 字
     </span>
   
 
@@ -220,7 +220,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      160 分钟
+      188 分钟
     </span>
   
 
@@ -261,7 +261,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年11月28日 下午
+                  不可视境界线最后变动于：2022年11月30日 上午
                 
               </p>
             
@@ -415,14 +415,29 @@ SymtabEntry .. SymbolTable
 
 
 <h2 id="1-lexer-词法分析"><a href="#1-lexer-词法分析" class="headerlink" title="1. lexer - 词法分析"></a>1. lexer - 词法分析</h2><ul>
-<li><p>这一实验看上去就是逐字分析然后根据flex的语法返回token就完事了, 但要知道的是flex的内部原理仍然是有穷自动机finite automate, 具体概念可以看看课程PDF, flex的代码分析可见 <a target="_blank" rel="noopener" href="https://github.com/pcy190/CompilerAnalysis/blob/master/flex_analysis.md">这里</a>, 肖哥的分析在 <a target="_blank" rel="noopener" href="https://github.com/Kiprey/Skr_Learning/tree/master/week3-6#1-lexer---%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90">这里</a> </p>
-</li>
-<li><p>文件关系:</p>
+<li>这一实验看上去就是逐字分析然后根据flex的语法返回token就完事了, 但要知道的是flex的内部原理仍然是有穷自动机finite automate, 具体概念可以看看课程PDF, flex的代码分析可见 <a target="_blank" rel="noopener" href="https://github.com/pcy190/CompilerAnalysis/blob/master/flex_analysis.md">这里</a>, 肖哥的分析在 <a target="_blank" rel="noopener" href="https://github.com/Kiprey/Skr_Learning/tree/master/week3-6#1-lexer---%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90">这里</a> </li>
+<li>字符串用到了stringtable. 具体见cool文档: We provide you with a string table implementation, which is discussed in detail in A Tour of the Cool<br>Support Code and in documentation in the code. For the moment, you only need to know that the type of string table entries is Symbol.</li>
+</ul>
+<p>flex <a target="_blank" rel="noopener" href="https://ftp.gnu.org/old-gnu/Manuals/flex-2.5.4/html_mono/flex.html">document</a> </p>
 <ul>
-<li>lexertest.cc是main函数所在文件, 我们写完cool.flex后flex使用此文件和众多依赖文件编译成lexer(executable)</li>
-<li>cool-lex.cc即为flex自动生成的词法扫描自动机</li>
+<li><code>yylex()</code>是<a target="_blank" rel="noopener" href="https://ftp.gnu.org/old-gnu/Manuals/flex-2.5.4/html_mono/flex.html#SEC10">扫描例程</a>. </li>
+<li>Actions中<code>yyless()</code> and <code>yymore()</code>可以把yytext的字符放到或者取出自input stream中. </li>
+<li><code>#define yylval cool_yylval</code>: 返回semantic value.</li>
+<li><a target="_blank" rel="noopener" href="https://ftp.gnu.org/old-gnu/Manuals/flex-2.5.4/html_mono/flex.html#SEC10:~:text=Start%20conditions%20are%20declared%20in%20the%20definitions%20(first)%20section">Start conditions</a>: 这个就是匹配成对注释符的条件. <code>&lt;QUOTE_COMMENT&gt;&quot;*)&quot;         &#123; ... &#125;</code> <ul>
+<li><code>%x QUOTE_COMMENT</code>: <em>exclusive</em>声明.  If it is <em>exclusive</em>, then <em>only</em> rules qualified with the start condition will be active. </li>
+<li><code>BEGIN(INITIAL);</code>: `BEGIN(0/INITIAL)’ returns to the original state where only the rules with no start conditions are active. </li>
 </ul>
 </li>
+</ul>
+<p>文件:</p>
+<ul>
+<li>lexertest.cc是main函数所在文件, 我们写完cool.flex后flex使用此文件和众多依赖文件编译成lexer(executable)<ul>
+<li>开头一个handle_flags函数处理命令行参数. 具体见文件. </li>
+<li>调用cool_yylex来每次得到一个token, 然后dump打印出来. </li>
+</ul>
+</li>
+<li>cool-lex.cc即为flex自动生成的词法扫描自动机</li>
+<li>include中的cool-parser.h是一些宏定义, 比如token type.</li>
 </ul>
 <h2 id="2-parser-语法分析"><a href="#2-parser-语法分析" class="headerlink" title="2.parser - 语法分析"></a>2.parser - 语法分析</h2><ul>
 <li>此阶段主要任务是构建AST树</li>
@@ -432,7 +447,29 @@ SymtabEntry .. SymbolTable
 <li>cool.y为我们要编写的bison文件, cool-parse.cc为bison自动生成的源文件, parser为可执行文件</li>
 </ul>
 </li>
-<li> If no parent is specified, the class inherits from the Object class. </li>
+<li>If no parent is specified, the class inherits from the Object class. </li>
+</ul>
+<p>bison:</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://web.archive.org/web/20210621041953/https://happyers.top/compiler/bison-parser/">生成代码分析</a> | <a target="_blank" rel="noopener" href="https://www.cs.uic.edu/~spopuri/cparser.html">英文</a> | <a target="_blank" rel="noopener" href="https://www.gnu.org/software/bison/manual/bison.html">语法</a> </p>
+</li>
+<li><p><code>bison</code>所使用的是自底向上，左递归的分析方式。</p>
+</li>
+<li><p>在语法分析这个过程中，可以过滤出一些不符合语法的错误，例如token排列不符合条件，无法规约。<br>在这种情况下必须进行错误处理程序，将token弹出栈（或者其他操作）。</p>
+</li>
+<li><p>一个简单的例子</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-comment">/* If no parent is specified, the class inherits from the Object class. */</span><br><span class="hljs-comment">/* 定义：以下token规约后的符号名称为&quot;class&quot; */</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> :</span><br>  <span class="hljs-comment">/* 若当前栈中的token满足下面这条式子 */</span><br>  CLASS TYPEID <span class="hljs-string">&#x27;&#123;&#x27;</span> dummy_feature_list <span class="hljs-string">&#x27;&#125;&#x27;</span> <span class="hljs-string">&#x27;;&#x27;</span> <span class="hljs-comment">/* &#x27; */</span><br>    <span class="hljs-comment">/* 进行规约。在规约的同时执行以下这条式子 */</span><br>    <span class="hljs-comment">/* 注意，赋给$$的值，就是规约后新生成&quot;class&quot;的值 */</span><br>    &#123; $$ = <span class="hljs-built_in">class_</span>($<span class="hljs-number">2</span>,idtable.<span class="hljs-built_in">add_string</span>(<span class="hljs-string">&quot;Object&quot;</span>), $<span class="hljs-number">4</span>, stringtable.<span class="hljs-built_in">add_string</span>(curr_filename)); &#125;<br>  | <span class="hljs-comment">/* 或者，如果满足以下式子 */</span><br>  CLASS TYPEID INHERITS TYPEID <span class="hljs-string">&#x27;&#123;&#x27;</span> dummy_feature_list <span class="hljs-string">&#x27;&#125;&#x27;</span> <span class="hljs-string">&#x27;;&#x27;</span><br>    &#123; $$ = <span class="hljs-built_in">class_</span>($<span class="hljs-number">2</span>,$<span class="hljs-number">4</span>,$<span class="hljs-number">6</span>,stringtable.<span class="hljs-built_in">add_string</span>(curr_filename)); &#125;<br>  | <span class="hljs-comment">/* 或者，如果捕获到了错误 */</span><br>  error <span class="hljs-string">&#x27;;&#x27;</span><br>    &#123;&#125;<br>;<br></code></pre></div></td></tr></table></figure></li>
+</ul>
+<p>语法点</p>
+<ul>
+<li>You must declare bison “types” for your non-terminals and terminals that have attributes. <code>%type &lt;program&gt; program</code> This declaration says that the non-terminal program has type <code>&lt;program&gt;</code>. The use of the word “type” is misleading here; what it really means is that the attribute for the non-terminal program is stored in the program member of the union declaration in cool.y, which has type Program. By specifying the type<br><code>%type &lt;member_name&gt; X Y Z ...</code><br>you instruct bison that the attributes of non-terminals (or terminals) X, Y, and Z have a type appropriate for the member member name of the union.</li>
+<li>All the union members and their types have similar names by design. It is a coincidence in the example above that the non-terminal program has the same name as a union member.</li>
+<li>APS:<ul>
+<li>The Cool abstract syntax is specified in a language called APS</li>
+<li>the various kinds of abstract syntax tree nodes (let, +, etc.) are called <strong>constructors</strong>.</li>
+<li></li>
+</ul>
+</li>
 </ul>
 <h2 id="3-semantic-语义分析"><a href="#3-semantic-语义分析" class="headerlink" title="3.semantic - 语义分析"></a>3.semantic - 语义分析</h2><ul>
 <li>semant.h结构</li>
