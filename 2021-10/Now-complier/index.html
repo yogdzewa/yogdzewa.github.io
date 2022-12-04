@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://i.loli.net/2021/11/15/AlBoJu85kTGY1FX.png">
 <meta property="article:published_time" content="2021-10-03T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-12-01T11:44:01.246Z">
+<meta property="article:modified_time" content="2022-12-04T02:48:25.081Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="complier">
 <meta name="twitter:card" content="summary_large_image">
@@ -211,7 +211,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      19k 字
+      21k 字
     </span>
   
 
@@ -220,7 +220,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      237 分钟
+      258 分钟
     </span>
   
 
@@ -261,7 +261,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年12月1日 晚上
+                  不可视境界线最后变动于：2022年12月4日 上午
                 
               </p>
             
@@ -295,14 +295,18 @@
 </ul>
 </li>
 </ul>
-<h3 id="CS143实验文件结构"><a href="#CS143实验文件结构" class="headerlink" title="CS143实验文件结构"></a>CS143实验文件结构</h3><h4 id="list-h"><a href="#list-h" class="headerlink" title="list.h:"></a>list.h:</h4><figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">List</span> &#123;</span><br><span class="hljs-keyword">private</span>:<br>    <span class="hljs-comment">//可以看到这个list的head是一个元素T, 而另一个是指向List&lt;T&gt;类的指针</span><br>    <span class="hljs-comment">//和平常的单链表是一样的结构</span><br>	T *head;<br>    List&lt;T&gt;* tail;<br>    ...<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h3 id="CS143实验文件结构"><a href="#CS143实验文件结构" class="headerlink" title="CS143实验文件结构"></a>CS143实验文件结构</h3><h4 id="list-h"><a href="#list-h" class="headerlink" title="list.h:"></a>list.h:</h4><ul>
+<li>注意到head是这个节点存储的数据, 而tail指向下一个节点, 构造节点时在这一串链表的头部添加新的节点. </li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-keyword">template</span> &lt;<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">T</span>&gt;</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">List</span> &#123;</span><br><span class="hljs-keyword">private</span>:<br>  T *head;<br>  List&lt;T&gt;* tail;<br><span class="hljs-keyword">public</span>:<br>  <span class="hljs-built_in">List</span>(T *h,List&lt;T&gt;* t = <span class="hljs-literal">NULL</span>): <span class="hljs-built_in">head</span>(h), <span class="hljs-built_in">tail</span>(t) &#123; &#125;<br><br>  <span class="hljs-function">T *<span class="hljs-title">hd</span><span class="hljs-params">()</span> <span class="hljs-keyword">const</span>       </span>&#123; <span class="hljs-keyword">return</span> head; &#125;  <br>  <span class="hljs-function">List&lt;T&gt;* <span class="hljs-title">tl</span><span class="hljs-params">()</span> <span class="hljs-keyword">const</span> </span>&#123; <span class="hljs-keyword">return</span> tail; &#125;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
 
 
 
 <h4 id="tree-h-cool-tree-h"><a href="#tree-h-cool-tree-h" class="headerlink" title="tree.h+cool-tree.h:"></a>tree.h+cool-tree.h:</h4><ul>
 <li>All APS nodes are derived from tree_node.</li>
 <li>Lists of APS objects are implemented by the “list_node” template.</li>
-<li>Class_, Feature, Expression等等都是指向constructor的指针</li>
+<li>Class_, Feature, Expression等等都是指向constructor(第二层)的指针. 前者是因为Class是c++关键字, 所以加上一个下划线.</li>
+<li>属实很抽象, 我觉得三层结构的原因是为了把第二层作成一个通用class, 因为全是**<u>纯虚</u>**函数. 就像Feature那样.</li>
 </ul>
 <pre><code class=" mermaid">classDiagram
 class tree_node&#123;
@@ -318,13 +322,13 @@ class list_node&#123;
 	实现了三个
 	返回下标的迭代器
 &#125;
-class append_node&#123;
+class node相关&#123;
+	append_node
 	nil_node
 	single_list_node
-	以上三个实现了取出第n个node()
 &#125;
 tree_node --|&gt; list_node
-list_node --|&gt; append_node
+list_node --|&gt; node相关
 
 
 class Class__class&#123;
@@ -375,14 +379,14 @@ tree_node --|&gt; Expression_class
 </code></pre>
 
 <h4 id="stringtable"><a href="#stringtable" class="headerlink" title="stringtable:"></a>stringtable:</h4><ul>
-<li>Symbol是指向<strong>Entry</strong>的指针</li>
+<li>Symbol是指向<strong>Entry</strong>的指针 <code>typedef Entry* Symbol;</code> </li>
 </ul>
 <pre><code class=" mermaid">classDiagram
 direction RL
 class Entry&#123;
-   Symbol name;
-   Symbol type_decl;
-   Expression init;
+  char *str;    
+  int  len;   
+  int index;
 &#125;
 Entry --|&gt; StringEntry
 Entry --|&gt; IntEntry
@@ -393,26 +397,6 @@ class StringTable~Elem~&#123;
 &#125;
 StringTable .. Entry
 </code></pre>
-
-<h4 id="symtab"><a href="#symtab" class="headerlink" title="symtab:"></a>symtab:</h4><pre><code class=" mermaid">classDiagram
-class SymtabEntry&#123;
-    SYM id;    // the key field
-    DAT *info;
-    get_id()
-    get_info()
-&#125;
-
-class SymbolTable~SYM, DAT~&#123;
-    SymtabEntry~SYM, DAT~=ScopeEntry;
-    List~ScopeEntry~=Scope;
-    List~Scope~=ScopeList;
-private:
-    ScopeList *tbl;
-&#125;
-SymtabEntry .. SymbolTable
-</code></pre>
-
-
 
 <h2 id="1-lexer-词法分析"><a href="#1-lexer-词法分析" class="headerlink" title="1. lexer - 词法分析"></a>1. lexer - 词法分析</h2><ul>
 <li>这一实验看上去就是逐字分析然后根据flex的语法返回token就完事了, 但要知道的是flex的内部原理仍然是有穷自动机finite automate, 具体概念可以看看课程PDF, flex的代码分析可见 <a target="_blank" rel="noopener" href="https://github.com/pcy190/CompilerAnalysis/blob/master/flex_analysis.md">这里</a>, 肖哥的分析在 <a target="_blank" rel="noopener" href="https://github.com/Kiprey/Skr_Learning/tree/master/week3-6#1-lexer---%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90">这里</a> </li>
@@ -476,7 +460,7 @@ SymtabEntry .. SymbolTable
 <li><p>APS: 在cool_tour.pdf里</p>
 <ul>
 <li>The Cool abstract syntax is specified in a language called APS</li>
-<li>Phyla are really just <strong>types</strong>. That is, instead of having one large group of undifferentiated constructors, the constructors are grouped together <strong>according to function</strong> </li>
+<li>Phyla are really just <strong>types</strong>. That is, instead of having one large group of undifferentiated constructors, the constructors are grouped together <strong>according to function</strong>, 这个意思应该<strong>根据功能</strong>. </li>
 <li>the various kinds of abstract syntax tree nodes (let, +, etc.) are called <strong>constructors</strong>.</li>
 <li>Each <strong>constructor</strong> takes <strong>typed</strong> arguments and returns a <strong>typed</strong> result. The types may either be phyla or any ordinary C++ type.</li>
 <li>In fact, the <strong>phyla</strong> declarations are themselves compiled into <strong>C++ class declarations</strong> by an <strong>APS compiler</strong>.</li>
@@ -486,37 +470,73 @@ SymtabEntry .. SymbolTable
 <li>基本同上: cool-tree.h结尾处定义了在cool.y里用到的constructor, 实际上返回的是对应的class构造函数. 比如<code>class__class()</code> <code>method_class()</code>等等.</li>
 </ul>
 </li>
-<li>真的是太多了. 哪里看的过来. </li>
+<li>真的是太多了. 哪里看的过来.</li>
 </ul>
 </li>
 <li><p>a terminal (<code>CLASS</code>), a non-terminal (<code>class</code>), a constructor (<code>class_</code>), and a phylum (<code>Class_</code>). </p>
 <figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-keyword">typedef</span> Class__class *Class_;<br><span class="hljs-function">Class_ <span class="hljs-title">class__class::copy_Class_</span><span class="hljs-params">()</span></span>&#123;   <br>	<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">class__class</span>(<span class="hljs-built_in">copy_Symbol</span>(name), <span class="hljs-built_in">copy_Symbol</span>(parent), features-&gt;<span class="hljs-built_in">copy_list</span>(), <span class="hljs-built_in">copy_Symbol</span>(filename)); &#125;<br></code></pre></div></td></tr></table></figure></li>
+<li><p><strong>反正bison只管推导, 至于分析出结果之后用什么结构存储管理就是我们在定义的部分和其他文件里所写的那样</strong>. </p>
+</li>
 <li><p>如果要看更多可能要分析bison的输出文件, 暂时不看了. 接下来是语义分析. </p>
 </li>
 </ul>
-<h2 id="3-semantic-语义分析"><a href="#3-semantic-语义分析" class="headerlink" title="3.semantic - 语义分析"></a>3.semantic - 语义分析</h2><ul>
-<li>semant.h结构</li>
+<h2 id="3-semantic-语义分析"><a href="#3-semantic-语义分析" class="headerlink" title="3.semantic - 语义分析"></a>3.semantic - 语义分析</h2><ol>
+<li>Look at all classes and build an inheritance graph.</li>
+<li>Check that the graph is well-formed.</li>
+<li>For each class<br>(a) Traverse the AST, gathering all visible declarations in a symbol table.<br>(b) Check each expression for type correctness.<br>(c) Annotate the AST with types.</li>
+</ol>
+<ul>
+<li>semant.h结构如下</li>
+<li>注意到symboltable中有三个typedef, 其中SymtabEntry里存储了id和info.<br>tbl指向当前的最里面一层的scope, 当然他是一个list, 可以通过<code>tl()</code>继续找到上一层scope的list节点. </li>
+<li>InheritanceNode就是在class_class的基础之上添加了父子类的指针, 还有reachability basic_status+env这些信息. 因为很明显需要存储该类的所有子类以便于继承树检查. </li>
+<li>而ClassTable以InheritanceNode的形式存储了所有的class, 文件中所有class检查完之后进入ClassTable的构造函数, 调用private functions例如install_class, build_inheritance_tree等来分析判断继承树的合法性. </li>
+<li>创建这三个class的目的也很明显, 语法分析得到的无语法错误的AST树节点由<code>Program_class</code>一类class组成, 但是节点能够存储的信息不够用于继承树和类型检查, 所以在class的基础上添加一些信息继承出InheritanceNode, 再由ClassTable管理, 最终所有的method class var都由一个最大的Environment class管理. </li>
 </ul>
 <pre><code class=" mermaid">classDiagram
 class InheritanceNode
-class ClassTable
-InheritanceNode &lt;|-- class__class
-ClassTable &lt;|-- SymbolTable~Symbol, InheritanceNode~
+class ClassTable&#123;
+   -List&lt;InheritanceNode&gt; *nds
+   -install_class()
+   -check_improper_inheritance()
+   -build_inheritance_tree()
+   some_other_funcs()
+&#125;
+class SymbolTable~Symbol, InheritanceNode~&#123;
+   typedef SymtabEntry&lt;SYM,DAT&gt; ScopeEntry;
+   typedef List&lt;ScopeEntry&gt; Scope;
+   typedef List&lt;Scope&gt; ScopeList;
+   -ScopeList *tbl;
+   +enterscope() void
+   +exitscope() void
+   +addid() ScopeEntry*
+   +lookup() DAT*
+   +probe() DAT*
+   +dump() void
+&#125;
+InheritanceNode &lt;|-- class__class : Inheritance
+ClassTable &lt;|-- SymbolTable~Symbol, InheritanceNode~ : Inheritance
 class Environment&#123;
-    SymbolTable~Symbol, method_class~ method_table;
-    SymbolTable~Symbol, Entry~  var_table;
-    ClassTableP class_table;
-    Class_      self_class;
+    -SymbolTable~Symbol, method_class~ method_table;
+    -SymbolTable~Symbol, Entry~  var_table;
+    -ClassTableP class_table;
+    -Class_      self_class;
     method表操作函数
     variable表操作函数
-    type操作函数
+    type操作函数get_self_type等等
 &#125;
 InheritanceNode : 该class的信息和environment
-class ClassTable &#123; 文件中所有class检查完之后进
-入ClassTable的构造函数,&#125;
-
+class SymtabEntry &#123;
+  -SYM id;        // the key field
+  -DAT *info;     // associated information for the symbol
+  +get_id() SYM
+  +get_info() DAT *
+&#125;
+SymbolTable~Symbol, InheritanceNode~ &lt;|-- SymtabEntry : Inheritance
 </code></pre>
 
+<blockquote>
+<p>要我写这些东西只能一点点加成员函数啥的, 现在勉强理清楚了结构感觉也能体会到怎么想出这样的程序逻辑. </p>
+</blockquote>
 <p>先看semant-parse.cc入口main函数</p>
 <figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-keyword">extern</span> Program ast_root;      <span class="hljs-comment">// root of the abstract syntax tree</span><br>FILE *ast_file = stdin;       <span class="hljs-comment">// we read the AST from standard input</span><br><span class="hljs-function"><span class="hljs-keyword">extern</span> <span class="hljs-keyword">int</span> <span class="hljs-title">ast_yyparse</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span>; <span class="hljs-comment">// entry point to the AST parser</span><br><span class="hljs-keyword">int</span> cool_yydebug;     <span class="hljs-comment">// not used, but needed to link with handle_flags</span><br><span class="hljs-keyword">char</span> *curr_filename;<br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">handle_flags</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> *argv[])</span></span>;<br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> *argv[])</span> </span>&#123;<br>  <span class="hljs-built_in">handle_flags</span>(argc,argv);<br>  <span class="hljs-built_in">ast_yyparse</span>();<br>  ast_root-&gt;<span class="hljs-built_in">semant</span>();<br>  ast_root-&gt;<span class="hljs-built_in">dump_with_types</span>(cout,<span class="hljs-number">0</span>);<br>&#125;<br></code></pre></div></td></tr></table></figure>
 
@@ -527,18 +547,25 @@ class ClassTable &#123; 文件中所有class检查完之后进
 <p>可以想到在ClassTable的构造函数中完成检查AST树, 其中一个流程如下:</p>
 <ul>
 <li>This file implements the semantic checks for Cool.  There are three<br>  passes:<ul>
-<li>Pass 1: This is not a true pass, as only the classes are inspected.<br>  The inheritance graph is built and checked for errors.  There are<br>  two “sub”-passes: check that classes are not redefined and inherit<br>  only from defined classes, and check for cycles in the inheritance<br>  graph.  Compilation is halted if an error is detected between the<br>  sub-passes.</li>
-<li>Pass 2: Symbol tables are built for each class.  This step is done<br>  separately because methods and attributes have global<br>  scope—therefore, bindings for all methods and attributes must be<br>  known before type checking can be done.</li>
-<li>Pass 3: The inheritance graph—which is known to be a tree if<br>  there are no cycles—is traversed again, starting from the root<br>  class Object.  For each class, each attribute and method is<br>  <strong>typechecked</strong>.  Simultaneously, identifiers are checked for correct<br>  definition/use and for multiple definitions.  <strong>An invariant is<br>  maintained that all parents of a class are checked before a class<br>  is checked.</strong> </li>
+<li>  Pass 1: This is not a true pass, as only the classes are inspected. The inheritance graph is built and checked for errors.  There are two “sub”-passes: check that classes are not redefined and inherit only from defined classes, and check for cycles in the inheritance graph.  Compilation is halted if an error is detected between the sub-passes.</li>
+<li>  Pass 2: Symbol tables are built for each class.  This step is done separately because methods and attributes have global scope—therefore, bindings for all methods and attributes must be known before type checking can be done.</li>
+<li>  Pass 3: The inheritance graph—which is known to be a tree if there are no cycles—is traversed again, starting from the root class Object.  For each class, each attribute and method is <strong>typechecked</strong>.  Simultaneously, identifiers are checked for correct definition/use and for multiple definitions.  <strong>An invariant is maintained that all parents of a class are checked before a class is checked.</strong> </li>
 </ul>
 </li>
 </ul>
 <p>相应的构造函数为:</p>
-<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++">ClassTable::<span class="hljs-built_in">ClassTable</span>(Classes classes) : <span class="hljs-built_in">nds</span>(<span class="hljs-literal">NULL</span>), <br>                                          <span class="hljs-built_in">semant_errors</span>(<span class="hljs-number">0</span>),<br>                                          <span class="hljs-built_in">error_stream</span>(cerr)<br>&#123;<br>  <span class="hljs-built_in">enterscope</span>();             <span class="hljs-comment">// initially the symbol table is empty</span><br>  <span class="hljs-built_in">install_basic_classes</span>();  <span class="hljs-comment">// predefined basic classes, 这个预设的写得差不多了</span><br>  <span class="hljs-keyword">if</span> (semant_debug)  cerr &lt;&lt; <span class="hljs-string">&quot;Installed basic classes.&quot;</span> &lt;&lt; endl;<br>  <span class="hljs-built_in">install_classes</span>(classes); <span class="hljs-comment">// user defined classes, attach it to the tail of symbolTableList</span><br>  <span class="hljs-keyword">if</span> (semant_debug) <br>    &#123; cerr &lt;&lt; <span class="hljs-string">&quot;Installed user-defined classes&quot;</span> &lt;&lt; endl; <span class="hljs-built_in">dump</span>(); &#125;<br>                                              <br>  <span class="hljs-built_in">check_improper_inheritance</span>();  <span class="hljs-comment">// check for undefined class and `CantInherit` class</span><br>  <span class="hljs-keyword">if</span> (semant_debug) &#123; cerr &lt;&lt; <span class="hljs-string">&quot;Checked for simple inheritance errors.&quot;</span> &lt;&lt; endl; &#125;<br>  <span class="hljs-comment">//遇到上面这种fatal_error的时候就不能往下继续semant了， 必须报错并退出程序</span><br>  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">errors</span>()) <span class="hljs-keyword">return</span>;<br>                                              <br>  <span class="hljs-comment">//经过了install【basic】classes和check-improper-inheritance，</span><br>  <span class="hljs-comment">//可以保证所建立的继承树每个节点都有valid parent，所以直接使用set_relations</span><br>  <span class="hljs-built_in">build_inheritance_tree</span>(); <span class="hljs-comment">// set class-nodes&#x27; parent and added to parent&#x27;s children list</span><br>  <span class="hljs-keyword">if</span> (semant_debug) &#123; cerr &lt;&lt; <span class="hljs-string">&quot;Built inheritance tree.&quot;</span> &lt;&lt; endl; &#125;<br>  <span class="hljs-built_in">root</span>()-&gt;<span class="hljs-built_in">mark_reachable</span>(); <span class="hljs-comment">// find all classes reachable from root class</span><br>  <span class="hljs-keyword">if</span> (semant_debug) &#123; cerr &lt;&lt; <span class="hljs-string">&quot;Marked reachable classes.&quot;</span> &lt;&lt; endl; &#125;                                           <br>  <span class="hljs-comment">// This method should be run only after mark_reachable has executed.</span><br>  <span class="hljs-comment">// **If there are any unreachable classes in the inheritance graph and</span><br>  <span class="hljs-comment">// all of the local checks of check_improper_inheritance succeeded,</span><br>  <span class="hljs-comment">// then there is a cycle in the inheritance graph**.</span><br>  <span class="hljs-built_in">check_for_cycles</span>();       <br>  <span class="hljs-keyword">if</span> (semant_debug) &#123; cerr &lt;&lt; <span class="hljs-string">&quot;Checked for cycles.&quot;</span> &lt;&lt; endl; &#125;<br>  <span class="hljs-comment">//遇到cycles的时候同理 必须报错并退出程序</span><br>  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">errors</span>()) <span class="hljs-keyword">return</span>;<br>                                              <br>  <span class="hljs-comment">//首先检查完feature每一项, 然后向env的meth_table或var_table加入该feature</span><br>  <span class="hljs-comment">//然后copy the parent&#x27;s environment to children&#x27;s env</span><br>  <span class="hljs-built_in">build_feature_tables</span>();   <span class="hljs-comment">// build symbol tables of features for each class</span><br>  <span class="hljs-keyword">if</span> (semant_debug) &#123; cerr &lt;&lt; <span class="hljs-string">&quot;Built feature tables.&quot;</span> &lt;&lt; endl; &#125;<br>  <span class="hljs-built_in">check_main</span>();             <span class="hljs-comment">// check for Main class and main method</span><br>  <span class="hljs-keyword">if</span> (semant_debug) &#123; cerr &lt;&lt; <span class="hljs-string">&quot;Checked Main class and method.&quot;</span> &lt;&lt; endl; &#125;<br>                                              <br>  <span class="hljs-comment">// type check all expressions, first root, then all the way down to its children</span><br>  <span class="hljs-built_in">root</span>()-&gt;<span class="hljs-built_in">type_check_features</span>(); <br>&#125;<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++">ClassTable::<span class="hljs-built_in">ClassTable</span>(Classes classes) : <span class="hljs-built_in">nds</span>(<span class="hljs-literal">NULL</span>), <br>                                          <span class="hljs-built_in">semant_errors</span>(<span class="hljs-number">0</span>),<br>                                          <span class="hljs-built_in">error_stream</span>(cerr)<br>&#123;<br>  <span class="hljs-built_in">enterscope</span>();             <span class="hljs-comment">// initially the symbol table is empty</span><br>  <span class="hljs-built_in">install_basic_classes</span>();  <span class="hljs-comment">// predefined basic classes, 这个预设的写得差不多了,不过真是套娃结构,也许可以更优雅一点.</span><br>  <span class="hljs-keyword">if</span> (semant_debug)  cerr &lt;&lt; <span class="hljs-string">&quot;Installed basic classes.&quot;</span> &lt;&lt; endl;<br>  <span class="hljs-comment">//最后程序语法分析出来的最上层的类型是Program,由classes组成</span><br>  <span class="hljs-built_in">install_classes</span>(classes); <span class="hljs-comment">// user defined classes, attach it to the tail of symbolTableList</span><br>  <span class="hljs-keyword">if</span> (semant_debug) <br>    &#123; cerr &lt;&lt; <span class="hljs-string">&quot;Installed user-defined classes&quot;</span> &lt;&lt; endl; <span class="hljs-built_in">dump</span>(); &#125;<br>                                              <br>  <span class="hljs-built_in">check_improper_inheritance</span>();  <span class="hljs-comment">// check for undefined class and `CantInherit` class</span><br>  <span class="hljs-keyword">if</span> (semant_debug) &#123; cerr &lt;&lt; <span class="hljs-string">&quot;Checked for simple inheritance errors.&quot;</span> &lt;&lt; endl; &#125;<br>  <span class="hljs-comment">//遇到上面这种fatal_error的时候就不能往下继续semant了， 必须报错并退出程序</span><br>  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">errors</span>()) <span class="hljs-keyword">return</span>;<br>                                              <br>  <span class="hljs-comment">//经过了install【basic】classes和check-improper-inheritance，</span><br>  <span class="hljs-comment">//可以保证所建立的继承树每个节点都有valid parent，所以直接使用set_relations</span><br>  <span class="hljs-built_in">build_inheritance_tree</span>(); <span class="hljs-comment">// set class-nodes&#x27; parent and added to parent&#x27;s children list</span><br>  <span class="hljs-keyword">if</span> (semant_debug) &#123; cerr &lt;&lt; <span class="hljs-string">&quot;Built inheritance tree.&quot;</span> &lt;&lt; endl; &#125;<br>  <span class="hljs-built_in">root</span>()-&gt;<span class="hljs-built_in">mark_reachable</span>(); <span class="hljs-comment">// find all classes reachable from root class</span><br>  <span class="hljs-keyword">if</span> (semant_debug) &#123; cerr &lt;&lt; <span class="hljs-string">&quot;Marked reachable classes.&quot;</span> &lt;&lt; endl; &#125;                                           <br>  <span class="hljs-comment">// This method should be run only after mark_reachable has executed.</span><br>  <span class="hljs-comment">// **If there are any unreachable classes in the inheritance graph and</span><br>  <span class="hljs-comment">// all of the local checks of check_improper_inheritance succeeded,</span><br>  <span class="hljs-comment">// then there is a cycle in the inheritance graph**.</span><br>  <span class="hljs-built_in">check_for_cycles</span>();       <br>  <span class="hljs-keyword">if</span> (semant_debug) &#123; cerr &lt;&lt; <span class="hljs-string">&quot;Checked for cycles.&quot;</span> &lt;&lt; endl; &#125;<br>  <span class="hljs-comment">//遇到cycles的时候同理 必须报错并退出程序</span><br>  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">errors</span>()) <span class="hljs-keyword">return</span>;<br>                                              <br>  <span class="hljs-comment">//首先检查完feature每一项, 然后向env的meth_table或var_table加入该feature</span><br>  <span class="hljs-comment">//然后copy the parent&#x27;s environment to children&#x27;s env</span><br>  <span class="hljs-built_in">build_feature_tables</span>();   <span class="hljs-comment">// build symbol tables of features for each class</span><br>  <span class="hljs-keyword">if</span> (semant_debug) &#123; cerr &lt;&lt; <span class="hljs-string">&quot;Built feature tables.&quot;</span> &lt;&lt; endl; &#125;<br>  <span class="hljs-built_in">check_main</span>();             <span class="hljs-comment">// check for Main class and main method</span><br>  <span class="hljs-keyword">if</span> (semant_debug) &#123; cerr &lt;&lt; <span class="hljs-string">&quot;Checked Main class and method.&quot;</span> &lt;&lt; endl; &#125;<br>                                              <br>  <span class="hljs-comment">// type check all expressions, first root, then all the way down to its children</span><br>  <span class="hljs-built_in">root</span>()-&gt;<span class="hljs-built_in">type_check_features</span>(); <br>&#125;<br></code></pre></div></td></tr></table></figure>
 
 <p>然后各种细节细到难以置信, 都不敢想象我自己写到底要用掉多少时间</p>
+<p>再次回头看感觉没有那么复杂了. 希望到时中间代码优化也是如此. </p>
+<ul>
+<li><h2 id="What-requirements-do-I-need-to-check"><a href="#What-requirements-do-I-need-to-check" class="headerlink" title="What requirements do I need to check?"></a>What requirements do I need to check?</h2></li>
+<li><h2 id="When-do-I-need-to-check-a-requirement"><a href="#When-do-I-need-to-check-a-requirement" class="headerlink" title="When do I need to check a requirement?"></a>When do I need to check a requirement?</h2></li>
+<li><h2 id="When-is-the-information-needed-to-check-a-requirement-generated"><a href="#When-is-the-information-needed-to-check-a-requirement-generated" class="headerlink" title="When is the information needed to check a requirement generated?"></a>When is the information needed to check a requirement generated?</h2></li>
+<li><h2 id="Where-is-the-information-I-need-to-check-a-requirement"><a href="#Where-is-the-information-I-need-to-check-a-requirement" class="headerlink" title="Where is the information I need to check a requirement?"></a>Where is the information I need to check a requirement?</h2></li>
+</ul>
 <h2 id="4-codeGenerate-代码生成"><a href="#4-codeGenerate-代码生成" class="headerlink" title="4.codeGenerate - 代码生成"></a>4.codeGenerate - 代码生成</h2><p>代码生成框架:</p>
-<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++">CgenClassTable::<span class="hljs-built_in">CgenClassTable</span>(Classes classes, ostream&amp; s) : <span class="hljs-built_in">nds</span>(<span class="hljs-literal">NULL</span>) , <span class="hljs-built_in">str</span>(s)<br>&#123;<br>   <span class="hljs-comment">//stringclasstag = 0 /* Change to your String class tag here */;</span><br>   <span class="hljs-comment">//intclasstag =    0 /* Change to your Int class tag here */;</span><br>   <span class="hljs-comment">//boolclasstag =   0 /* Change to your Bool class tag here */;</span><br><br>   <span class="hljs-keyword">if</span> (cgen_debug) cout &lt;&lt; <span class="hljs-string">&quot;Building CgenClassTable&quot;</span> &lt;&lt; endl;<br>   num_classes = <span class="hljs-number">0</span>;<br>   <span class="hljs-comment">// make sure the various tables have a scope</span><br>   class_to_tag_table.<span class="hljs-built_in">enterscope</span>();<br>   class_to_max_child_tag_table.<span class="hljs-built_in">enterscope</span>();c<br>   tag_to_class_table.<span class="hljs-built_in">enterscope</span>();<br>   table_of_method_tables.<span class="hljs-built_in">enterscope</span>();<br><br><br>   <span class="hljs-built_in">enterscope</span>();	<span class="hljs-comment">//init a new Scope to ScopeList</span><br>   <span class="hljs-built_in">install_basic_classes</span>();		<span class="hljs-comment">//the same as PA4</span><br>   <span class="hljs-built_in">install_classes</span>(classes);	<br>    <br>   <span class="hljs-built_in">build_inheritance_tree</span>();	<span class="hljs-comment">//building complete</span><br><br>   <span class="hljs-comment">// 递归，将每个CgenNode的attr/method数据</span><br>   <span class="hljs-comment">// 都填入CgenNode和CgenClassTable中的table中</span><br>   <span class="hljs-built_in">root</span>()-&gt;<span class="hljs-built_in">init</span>(<span class="hljs-number">0</span>	<span class="hljs-comment">//root() returns CgenNode class</span><br>               ,*(<span class="hljs-keyword">new</span> SymbolTable&lt;Symbol,<span class="hljs-keyword">int</span>&gt;)<br>               ,*(<span class="hljs-keyword">new</span> SymbolTable&lt;<span class="hljs-keyword">int</span>,MethodBinding&gt;)<br>               ,<span class="hljs-number">0</span><br>               ,*(<span class="hljs-keyword">new</span> SymbolTable&lt;Symbol,VarBinding&gt;)<br>               ,*(<span class="hljs-keyword">new</span> SymbolTable&lt;<span class="hljs-keyword">int</span>,Entry&gt;));<br>   <span class="hljs-comment">// 生成代码</span><br>   <span class="hljs-built_in">code</span>();<br>   <span class="hljs-built_in">exitscope</span>();<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++">CgenClassTable::<span class="hljs-built_in">CgenClassTable</span>(Classes classes, ostream&amp; s) : <span class="hljs-built_in">nds</span>(<span class="hljs-literal">NULL</span>) , <span class="hljs-built_in">str</span>(s)<br>&#123;<br>   <span class="hljs-comment">//stringclasstag = 0 /* Change to your String class tag here */;</span><br>   <span class="hljs-comment">//intclasstag =    0 /* Change to your Int class tag here */;</span><br>   <span class="hljs-comment">//boolclasstag =   0 /* Change to your Bool class tag here */;</span><br><br>   <span class="hljs-keyword">if</span> (cgen_debug) cout &lt;&lt; <span class="hljs-string">&quot;Building CgenClassTable&quot;</span> &lt;&lt; endl;<br>   num_classes = <span class="hljs-number">0</span>;<br>   <span class="hljs-comment">// make sure the various tables have a scope</span><br>   class_to_tag_table.<span class="hljs-built_in">enterscope</span>();<br>   class_to_max_child_tag_table.<span class="hljs-built_in">enterscope</span>();<br>   tag_to_class_table.<span class="hljs-built_in">enterscope</span>();<br>   table_of_method_tables.<span class="hljs-built_in">enterscope</span>();<br><br><br>   <span class="hljs-built_in">enterscope</span>();	<span class="hljs-comment">//init a new Scope to ScopeList</span><br>   <span class="hljs-built_in">install_basic_classes</span>();		<span class="hljs-comment">//the same as PA4</span><br>   <span class="hljs-built_in">install_classes</span>(classes);	<br>    <br>   <span class="hljs-built_in">build_inheritance_tree</span>();	<span class="hljs-comment">//building complete</span><br><br>   <span class="hljs-comment">// 递归，将每个CgenNode的attr/method数据</span><br>   <span class="hljs-comment">// 都填入CgenNode和CgenClassTable中的table中</span><br>   <span class="hljs-built_in">root</span>()-&gt;<span class="hljs-built_in">init</span>(<span class="hljs-number">0</span>	<span class="hljs-comment">//root() returns CgenNode class</span><br>               ,*(<span class="hljs-keyword">new</span> SymbolTable&lt;Symbol,<span class="hljs-keyword">int</span>&gt;)<br>               ,*(<span class="hljs-keyword">new</span> SymbolTable&lt;<span class="hljs-keyword">int</span>,MethodBinding&gt;)<br>               ,<span class="hljs-number">0</span><br>               ,*(<span class="hljs-keyword">new</span> SymbolTable&lt;Symbol,VarBinding&gt;)<br>               ,*(<span class="hljs-keyword">new</span> SymbolTable&lt;<span class="hljs-keyword">int</span>,Entry&gt;));<br>   <span class="hljs-comment">// 生成代码</span><br>   <span class="hljs-built_in">code</span>();<br>   <span class="hljs-built_in">exitscope</span>();<br>&#125;<br></code></pre></div></td></tr></table></figure>
 
 <ul>
 <li>在生成目标代码前，需要先读入<strong>AST</strong>的相关信息，**重建继承图<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="因为此时已经通过了semant, 可以确定AST是正确的从而无需检查
