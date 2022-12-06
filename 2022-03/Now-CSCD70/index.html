@@ -28,7 +28,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/CSCD70/image-20220315185203276.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/CSCD70/image-20220315183948503.png">
 <meta property="article:published_time" content="2022-03-08T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-10-06T02:05:24.956Z">
+<meta property="article:modified_time" content="2022-12-05T14:34:40.561Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="complier">
 <meta name="twitter:card" content="summary_large_image">
@@ -214,7 +214,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      5.1k 字
+      5.7k 字
     </span>
   
 
@@ -223,7 +223,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      65 分钟
+      71 分钟
     </span>
   
 
@@ -264,7 +264,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年10月6日 上午
+                  不可视境界线最后变动于：2022年12月5日 晚上
                 
               </p>
             
@@ -292,18 +292,25 @@
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">opt -load ./FunctionInfo.so -function-info ./test/Loop.bc \<br>-disable-output | FileCheck --check-prefix=SAMPLE ./test/Loop.c<br></code></pre></div></td></tr></table></figure>
 
-<ul>
-<li><h2 id="class-architecture"><a href="#class-architecture" class="headerlink" title="class architecture"></a>class architecture</h2></li>
+<h2 id="Code-Representation-IR"><a href="#Code-Representation-IR" class="headerlink" title="Code Representation: IR"></a>Code Representation: IR</h2><ul>
+<li>LLVM is strongly typed with a simple type system. such as <code>i32</code> type.</li>
+<li>the calling convention is abstracted through <code>call</code> and <code>ret</code> instructions and explicit arguments</li>
+<li> it uses <strong>an infinite set of temporaries</strong> named with a % character instead of specific named registers. </li>
+<li>LLVM IR is actually defined in <strong>three</strong> isomorphic forms: the <strong>textual</strong> format above, an <strong>in-memory data structure</strong> inspected and modified by optimizations themselves, and an efficient and dense on-disk binary “<strong>bitcode</strong>“ format.<ul>
+<li><code>.bc</code> is bitcode, <code>.ll</code> is textual format.</li>
 </ul>
-<h3 id="IR所有头文件"><a href="#IR所有头文件" class="headerlink" title="IR所有头文件"></a><a target="_blank" rel="noopener" href="https://llvm.org/doxygen/dir_c3e93f23a4a31c717998b98ce143b7c0.html">IR所有头文件</a></h3><h3 id="Value"><a href="#Value" class="headerlink" title="Value"></a><a target="_blank" rel="noopener" href="https://llvm.org/docs/ProgrammersManual.html#the-value-class">Value</a></h3><p>就和名字一个意思, It represents a typed value that may be used (among other things) as an operand to an instruction. To keep track of this relationship, the <code>Value</code> class keeps a list of all of the <code>User</code>s that is using it( 就是<code>Use *UseList;</code>)</p>
+</li>
+<li></li>
+</ul>
+<h2 id="Class-Architecture"><a href="#Class-Architecture" class="headerlink" title="Class Architecture"></a>Class Architecture</h2><h3 id="IR所有头文件"><a href="#IR所有头文件" class="headerlink" title="IR所有头文件"></a><a target="_blank" rel="noopener" href="https://llvm.org/doxygen/dir_c3e93f23a4a31c717998b98ce143b7c0.html">IR所有头文件</a></h3><h3 id="Value"><a href="#Value" class="headerlink" title="Value"></a><a target="_blank" rel="noopener" href="https://llvm.org/docs/ProgrammersManual.html#the-value-class">Value</a></h3><p>就和名字一个意思, It represents a typed value that may be used (among other things) as an operand to an instruction. To keep track of this relationship, the <code>Value</code> class keeps a list of all of the <code>User</code>s that is using it( 就是<code>Use *UseList;</code>)</p>
 <p>有一些getType, getValue, use_list_iterator之类的成员函数.</p>
 <img src="../../image/CSCD70/image-20220315181757882.png" srcset="/img/loading.gif" lazyload alt="image-20220315181757882" style="zoom: 80%;" />
 
 <h3 id="BB"><a href="#BB" class="headerlink" title="BB"></a><a target="_blank" rel="noopener" href="https://llvm.org/docs/ProgrammersManual.html#the-basicblock-class">BB</a></h3><p>没啥好说的. 查就完事了.</p>
-<h3 id="User"><a href="#User" class="headerlink" title="User!!!"></a>User!!!</h3><p>It exposes a list of “Operands” that are all of the <code>Value</code>s that the User is referring to.</p>
+<h3 id="User"><a href="#User" class="headerlink" title="User!!!"></a><a target="_blank" rel="noopener" href="https://llvm.org/docs/ProgrammersManual.html#the-user-class">User</a>!!!</h3><p>It exposes a list of “Operands” that are all of the <code>Value</code>s that the User is referring to.</p>
 <p>Because LLVM uses <strong>Static Single Assignment (SSA)</strong> form, there can only be one definition referred to, allowing this direct connection. This connection provides the use-def information in LLVM. 真巧, 因为采用了SSA所以实现了一一对应的指针.</p>
 <p>有一些<code>getOperand</code>, <code>getNumOperands</code>之类的函数(显而易见了). 像这种的都会有迭代器.</p>
-<p>派生类包括==Constant, Instruction, Operator==之类的(图片过长).</p>
+<p>派生类包括==Constant, Instruction, Operator==之类的(因inst operator有很多种子类所以图片过长).</p>
 <p><strong>几个重要的问题: User为什么继承于Value? User和Use有什么关系?</strong> </p>
 <ul>
 <li><p>第一个问题, 比如说Instruction class(假设是<code>%add1 : x = y + z</code>)继承链为<code>Value&lt;-User&lt;-Instruction</code>, 既有value的definition(x), 也有use(y和z). </p>
@@ -317,12 +324,12 @@
 
 <h3 id="Instruction"><a href="#Instruction" class="headerlink" title="Instruction"></a><a target="_blank" rel="noopener" href="https://llvm.org/doxygen/classllvm_1_1Instruction.html">Instruction</a></h3><p>真的是一堆派生类.</p>
 <p>To represent a specific type of instruction, one of many subclasses of <code>Instruction</code> are used. 真的非常多, 比如说二元运算符和UnaryInstruction(又分成UnaryOperator和LoadInstruction之类的).</p>
-<p>继承图: Value&lt;-User&lt;-Instruction</p>
+<p>继承图: Value&lt;(继承自)-User&lt;-Instruction</p>
 <p><strong>写个代码又发现之前看文档没看懂的地方(还是得拿源码出来)</strong> </p>
-<p><code>llvm/Instruction.def</code> file. This file contains some meta-data about <strong>the various different types</strong> of instructions in LLVM. </p>
-<p>在instruction.h中有下面这个enum, 而Instruction.def中是一大串没有实例化的#define, 在enum中实例化所需的操作后include那个文件就可以实现在enum里面通过预处理后显示<code>ADD = 13( OPC = N )</code>了. 不过这种写法doxygen并不能识别出来.</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/llvm/llvm-project/blob/main/llvm/include/llvm/IR/Instruction.def#L126"><code>llvm/Instruction.def</code></a> file. This file contains some meta-data about <strong>the various different types</strong> of instructions in LLVM. </p>
+<p>在instruction.h中有下面这个enum, 而Instruction.def中是一大串没有实例化的#define, 在enum中实例化所需的操作后include那个文件就可以实现在enum里面通过预处理后显示<code>ADD = 13(即 OPC = N )</code>了. 不过这种写法doxygen并不能识别出来.</p>
 <p>写成 <code>Instruction::ADD</code> 就可以使用这个枚举变量了.</p>
-<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">BinaryOps</span> &#123;</span><br>  <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>  FIRST_BINARY_INST(N)             BinaryOpsBegin = N,</span><br>  <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> HANDLE_BINARY_INST(N, OPC, CLASS) OPC = N,</span><br>  <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>   LAST_BINARY_INST(N)             BinaryOpsEnd = N+1</span><br>  <span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;llvm/IR/Instruction.def&quot;</span></span><br>&#125;;<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Instruction</span> :</span> ... &#123; ...<br>  <span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">BinaryOps</span> &#123;</span><br>    <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>  FIRST_BINARY_INST(N)             BinaryOpsBegin = N,</span><br>    <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> HANDLE_BINARY_INST(N, OPC, CLASS) OPC = N,</span><br>    <span class="hljs-meta">#<span class="hljs-meta-keyword">define</span>   LAST_BINARY_INST(N)             BinaryOpsEnd = N+1</span><br>    <span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&quot;llvm/IR/Instruction.def&quot;</span></span><br>  &#125;;<br>  ...<br>&#125;;<br></code></pre></div></td></tr></table></figure>
 
 <h3 id="Constant"><a href="#Constant" class="headerlink" title="Constant"></a>Constant</h3><p>Constant represents a base class for different types of constants.</p>
 <p>It is subclassed by <strong>ConstantInt</strong>, <strong>ConstantArray</strong>, etc. for representing the various types of Constants. </p>
