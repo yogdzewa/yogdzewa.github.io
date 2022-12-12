@@ -16,21 +16,21 @@
   <meta name="author" content="Yogdzewa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="知识补充">
+    <meta name="description" content="来一把sql">
 <meta property="og:type" content="article">
-<meta property="og:title" content="《程序员的自我修养-链接装载与库》">
-<meta property="og:url" content="https://yogdzewa.github.io/2022-05/Learning-%E9%93%BE%E6%8E%A5%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93/index.html">
+<meta property="og:title" content="database_system">
+<meta property="og:url" content="https://yogdzewa.github.io/2021-10/Archive-database/index.html">
 <meta property="og:site_name" content="Yogdzewa">
-<meta property="og:description" content="知识补充">
+<meta property="og:description" content="来一把sql">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-05-09T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-10-06T04:53:51.065Z">
+<meta property="article:published_time" content="2021-10-21T02:00:00.000Z">
+<meta property="article:modified_time" content="2022-01-05T15:47:49.130Z">
 <meta property="article:author" content="Yogdzewa">
-<meta property="article:tag" content="CS">
+<meta property="article:tag" content="database">
 <meta name="twitter:card" content="summary_large_image">
   
   
-  <title>《程序员的自我修养-链接装载与库》 - Yogdzewa</title>
+  <title>database_system - Yogdzewa</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -188,7 +188,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="《程序员的自我修养-链接装载与库》">
+            <span class="h2" id="subtitle" title="database_system">
               
             </span>
 
@@ -198,8 +198,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2022-05-09 22:00" pubdate>
-        2022年5月9日 晚上
+      <time datetime="2021-10-21 10:00" pubdate>
+        2021年10月21日 上午
       </time>
     </span>
   
@@ -209,7 +209,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.1k 字
+      1.1k 字
     </span>
   
 
@@ -218,7 +218,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      26 分钟
+      14 分钟
     </span>
   
 
@@ -255,96 +255,64 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">《程序员的自我修养-链接装载与库》</h1>
+            <h1 style="display: none">database_system</h1>
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年10月6日 下午
+                  不可视境界线最后变动于：2022年1月5日 晚上
                 
               </p>
             
             <div class="markdown-body">
-              <h2 id="1-2"><a href="#1-2" class="headerlink" title="1-2"></a>1-2</h2><p>没啥特别的</p>
-<h2 id="3-ELF"><a href="#3-ELF" class="headerlink" title="3 ELF"></a>3 ELF</h2><blockquote>
-<p>COFF 是由 Unix System V Release 3 首先提出并且使用的格式规范，后来微软公司基 于 COFF 格式，制定了 PE 格式标准，并将其用于当时的 Windows NT 系统。 System V Release 4 在 COFF 的基础上引入了 ELF 格式，目前流行的 Linux 系统也以 ELF 作 为基本可执行文件格式。这也就是为什么目前 PE 和 ELF 如此相似的主要原因</p>
-</blockquote>
-<p>段 section：</p>
-<ul>
-<li>另外值得一提的是，有时候编译器会把宁符串常量放到 “.data” 段，而不会单独放在”.rodata” 段。</li>
-<li>” .note.GNU-stack” 段虽然有 “ CONTENTS”, 但它的长度为 0, 这是个很古怪的段</li>
-<li>应用程序也可以使用一些非系统保留的名字作为段名 。 比如我们可以在 ELF 文件中插入一个 “music” 的 段，里面存放了一首 MP3 音乐，节 ELF 文件运行起来以后可以读取这个段播放这首 MP3. 但是应用程序自定义的段名不能使用“.”作为前缀，否则容易跟系统保留段名冲突。</li>
-<li>比如一个 ELF 文件中可能有两个或两个以上叫做 “.text” 的段</li>
-<li>自定义段<ul>
-<li><code>_attribute_( (section( &quot;FOO&quot;))) int global= 42;</code> </li>
+              <p>这篇主要是记录一下用过的语句, 毕竟文档是在太多只能用到了再去记下来 </p>
+<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><ul>
+<li>alter语句<ul>
+<li>这个吧直接查文档就行</li>
+</ul>
+</li>
+<li>DATE DATETIME ……<ul>
+<li>三种形式: 有引号有分隔符 | 有引号无分隔符 | 纯数字</li>
+<li>STR_TO_DATE()就如字面意思</li>
+</ul>
+</li>
+<li>PRIMARY KEY()定义联合主键, <strong>联合主键就是由1个以上的字段构成的唯一标识.</strong> </li>
+<li>查看表的约束和其他信息<ul>
+<li>select * from information_schema.table_constraints; 查询所有表的约束</li>
+<li>show create tabel [table_name]</li>
+</ul>
+</li>
+<li>mysql清屏: <code>system cls</code> 只在cmd powershell 和 Cmd Client中起作用</li>
+<li>WITH关键字生成一个临时表</li>
+<li>GROUP BY后面的HAVING字句如果按照SQL的标准只能引用GROUP BY中的字段名称, 但是MySQL(较新版)做了一个拓展: HAVING字句中可以包含<strong>聚集函数</strong>、<strong>SELECT</strong>中的字段名称、<strong>外层子查询中的字段名</strong> </li>
+<li>MySQL不支持<strong>EXCEPT</strong>和<strong>INTERCECT</strong> </li>
+<li>内置函数: IFNULL()</li>
+<li>WITH CLAUSE</li>
+<li>HAVING 字句在投影运算之前</li>
+<li>MySQL变量不需要事先定义, 如果不需要用了直接<code>set @n = null</code> </li>
+<li>自然连接时后加进来的表的外键如果在待连接表之中, 则选择条件应为所有外键值对都相等</li>
+<li>NATURAL JOIN 不能乱用, 它见到相同的字段名称就拿去匹配, 会出现意料之外的Empty Set<ul>
+<li>破案了, 每张表的字段名称最好特别一点, 不要只是name这种通用名称, 最好是EmpName之类的</li>
+</ul>
+</li>
+<li>COALESCE() 返回第一个非空值</li>
+<li>VALUES statement(?</li>
+<li>IF() and compound statement syntax</li>
+<li></li>
+</ul>
+<h2 id="报错信息"><a href="#报错信息" class="headerlink" title="报错信息"></a>报错信息</h2><ul>
+<li>1822 - Failed to add the foreign key constraint. Missing index for constraint ‘booking_ibfk_3’ in the referenced table ‘guest’<ul>
+<li>原因：表A如果没有设置主键，那么表A里面的字段是不能作为表B的外键的。</li>
+</ul>
+</li>
+<li>3813 - Column check constraint ‘customer_details_chk_2’ references other column<ul>
+<li>硬搬书上的什么<code>check(value in(‘sldfkj’, ‘ksdjf’))</code>导致错误, 应该把value改成字段名称</li>
+</ul>
+</li>
+<li>1248 - Every derived table must have its own alias<ul>
+<li>用进行嵌套查询的时候，子查询执行出来的的结果是需要作为一个派生表来给上一级进行查询使用的，所以子查询的结果必须要有一个别名</li>
 </ul>
 </li>
 </ul>
-<p>ELF:</p>
-<ul>
-<li>ELF 段表的这个数组的第一个元素是无效的段描述符，它的类型为 ‘,NULL”, 除此之外每个段 描述符都对应一个段</li>
-<li>主要决定段的属性的是段的类型 (<strong>sb_type</strong>) 和段的标志位 (<strong>sh_flags</strong>) P100</li>
-<li>对于变量和函数来说，符号值就是它们的地址</li>
-<li>P108 符号表详细介绍<ul>
-<li>链接器特殊符号! 用extern声明. 在ucore中也见过.</li>
-</ul>
-</li>
-</ul>
-<p>编译器行为:</p>
-<ul>
-<li>符号修饰与函数签名, 加不加下划线的区别.<ul>
-<li>P111 C++函数签名.</li>
-<li>binutils中<code>c++filt</code>命令解析函数签名, 真行</li>
-<li>extern “C”的作用!</li>
-<li>确实是涨知识.</li>
-</ul>
-</li>
-<li>强弱引用:<ul>
-<li>通过使用 <code>&quot;_attribute_((weakref))&quot; </code>这个扩展关键字来声明对一 个外部函数的引用为弱引用</li>
-<li>这种弱符号和弱引用对于库来说十分有用，比如库中定义的弱符号可以被用户定义的强 符号所覆盖，从而使得程序可以使用自定义版本的库函数；或者程序可以对某些扩展功能模块的引用定义为弱引用，当我们将扩展模块与程序链接在一起时，功能模块就可以正常使用； 如果我们去掉了某些功能模块，那么程序也可以正常链接，只是缺少了相应的功能，这使得程序的功能更加容易裁剪和组合。</li>
-</ul>
-</li>
-<li><strong>DWARF</strong> ( Debug With Arbitrary Record Format)</li>
-</ul>
-<h2 id="静态链接"><a href="#静态链接" class="headerlink" title="静态链接"></a>静态链接</h2><p>对于多个输入目标文件，链接器将相似段合并</p>
-<p>整个链接过程分两步:</p>
-<ul>
-<li>扫描所有的输入目标文件，并且获得它们的各个段的长度、 属性和位置，并且将输入目标文件中的符号表中所有的符号定义和符号引用收集起来，统— 放到一个全局符号表。</li>
-<li>使用上面第一步中收集到的所有信息，读取输入文件中段的数据、重定位信息，井且进行符号解析与重定位、调整代码中的地址等</li>
-</ul>
-<p>也就是:</p>
-<ul>
-<li>链接器按照前面介绍的空间分配方法进行分配，这时候输入文 件中的各个段在链接后的<strong>虚拟地址</strong>就已经确定了</li>
-<li>当前面一步完成之后，链接器开始计算各个符号的虚拟地址</li>
-</ul>
-<p>我现在的知识似乎还停留在静态链接的框架里面. 还是继续看吧, 书里也有动态链接的细节. 在CSAPP里也没提及.</p>
-<p><strong>4.3 COMMON 块</strong> </p>
-<ul>
-<li>COMMON 类型的链接规则是针对符号都是弱符号的情况， 如果其中有一个符号 为强符号，那么最终输出结果中的符号所占空间与强符号相同, 如果有弱符号的大小大于强符号的大小, 那么连接器会给出警告.</li>
-<li>直接导致需要COMMON 机制的原因是编译器和链接器允许不同类型的弱符号存在，但最本质的原因还是 链接器不支持符号类型，即链接器无法判断各个符号的类型是否一致。</li>
-<li>编译器在链接前无法为弱符号在BSS 段分配空间，因为所须要空间的大小未知。如果只使用<code>gcc -c</code>的话会发现未初始化的全局变量没有出现在bss段. 但是链接器在链接过程中可以确定弱符号的大小.</li>
-<li><code>-fno-common</code> or <code>__attribute__((nocommon));</code> 禁用common处理.</li>
-<li>一旦一个未初始化的全局变蜇不是以 COMMON 块的形式存在，那么它就相当于一个强符号，如果其他目标文件中还有同一个变量的强符号定义，链接时就会发生符号重复定义错误。</li>
-</ul>
-<p><strong>4.4 C+＋相关问题</strong> P135</p>
-<p><strong>4.4.2 全局构造与析构</strong> </p>
-<ul>
-<li>Linux 系统下一般程序的入口是 “_start”. 这个函数是 Linux 系统库 (Glibc) 的一部分</li>
-<li>利用<code>.init和.fini段</code>的特性， C++的全局构造和析构函数就由此实现</li>
-</ul>
-<p><strong>4.4.3 C+＋与 ABI</strong>  </p>
-<ul>
-<li>其中我们把符号修饰 标准、变量内存布局、函数调用方式等这些跟可执行代码二进制兼容性相关的内容称为 ABI (Application Binary Interface).</li>
-<li>影响ABI的因素. P139</li>
-</ul>
-<p>静态库链接:</p>
-<ul>
-<li>VIsual C+＋也提供了与 Lmux下的ar类似的工具，叫lib.exe，这个程序可以用来创建,提取,列举lib文件中的内容。</li>
-<li>P143 链接的一个示例过程</li>
-</ul>
-<p>4.6.2 最“小＂的程序</p>
-<blockquote>
-<p>做着做着就做到思维导图上去了…</p>
-</blockquote>
 
             </div>
             <hr>
@@ -362,35 +330,12 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/CS/">CS</a>
+                      <a class="hover-with-bg" href="/tags/database/">database</a>
                     
                   </div>
                 
               </div>
               
-              
-                <div class="post-prevnext">
-                  <article class="post-prev col-6">
-                    
-                    
-                      <a href="/2022-07/Now-CTF-supplement/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">CTF离散的知识点</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/2022-04/Learning-ucore-makefile/">
-                        <span class="hidden-mobile">ucore makefile分析</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
               
             </div>
 
@@ -409,7 +354,7 @@
         var options = Object.assign(
           {"clientID":"312db7ebbc085de5d28d","clientSecret":"85ea3cefd13c73a6d85c1813adfde4f1550bfbda","repo":"yogdzewa.github.io","owner":"yogdzewa","admin":["yogdzewa"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: '12c5334318740a7c675d1bfbca6b6880'
+            id: '9a4db71cdc50b96cdb98a39382f4506a'
           }
         )
         var gitalk = new Gitalk(options);

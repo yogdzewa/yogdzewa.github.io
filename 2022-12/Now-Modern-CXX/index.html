@@ -1,0 +1,596 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Yogdzewa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="学一学现代C++, 混个眼熟">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Modern CXX">
+<meta property="og:url" content="https://yogdzewa.github.io/2022-12/Now-Modern-CXX/index.html">
+<meta property="og:site_name" content="Yogdzewa">
+<meta property="og:description" content="学一学现代C++, 混个眼熟">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-12-10T02:07:00.000Z">
+<meta property="article:modified_time" content="2022-12-10T11:40:23.739Z">
+<meta property="article:author" content="Yogdzewa">
+<meta property="article:tag" content="programming_language">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>Modern CXX - Yogdzewa</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/obsidian.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yogdzewa.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>(￣.￣)</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/image/edit2.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Modern CXX">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-12-10 10:07" pubdate>
+        2022年12月10日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.6k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      20 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Modern CXX</h1>
+            
+              <p class="note note-info">
+                
+                  不可视境界线最后变动于：2022年12月10日 晚上
+                
+              </p>
+            
+            <div class="markdown-body">
+              <p><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/">Online Book</a> </p>
+<h3 id="Language-Usability-Enhancements"><a href="#Language-Usability-Enhancements" class="headerlink" title="Language Usability Enhancements"></a>Language Usability Enhancements</h3><p>2.1 Constants </p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#nullptr">nullptr</a> </p>
+<ul>
+<li>no implicit conversion from <code>void*</code> to other types | conflict with C++ overloading</li>
+<li>so replace NULL with nullptr. </li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#constexpr">constexpr</a> </p>
+<ul>
+<li>same declaration position as <code>const</code>, introduced in C++11.</li>
+<li>modern compilers will do most of optimizations, such as <code>alloca()</code>, so this is not a problem to use variable in declarations. </li>
+<li>C++11 provides <code>constexpr</code> to let the user <strong>explicitly declare</strong> that the function or object constructor will become a constant expression at compile time. </li>
+<li>Starting with C++14, the constexpr <strong><u>function</u></strong> <strong>can use simple statements</strong> such as local variables, loops, and branches internally. But in C++11 only return statement is allowed.</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">constexpr</span> <span class="hljs-keyword">int</span> <span class="hljs-title">fibonacci</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> n)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> n == <span class="hljs-number">1</span> || n == <span class="hljs-number">2</span> ? <span class="hljs-number">1</span> : <span class="hljs-built_in">fibonacci</span>(n<span class="hljs-number">-1</span>) + <span class="hljs-built_in">fibonacci</span>(n<span class="hljs-number">-2</span>);<br>&#125;<br></code></pre></div></td></tr></table></figure></li>
+</ul>
+<p>2.2 Variables and initialization </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#if-switch">if-switch</a> <ul>
+<li>define temporary variable in if statement like for. </li>
+</ul>
+</li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Initializer-list">Initializer list</a> <ul>
+<li>Different initialization methods are specific to each other and <strong>cannot be generic</strong>.</li>
+<li>C++11 first binds the <strong>concept of the initialization list</strong> to the <strong><u>type</u></strong> and calls it <code>std::initializer_list</code>.<br>Just a language formation -&gt; a specific type can be used as var.</li>
+<li>new form: <code>Foo foo2 &#123;3, 4&#125;;</code> </li>
+</ul>
+</li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Structured-binding">Structured binding</a> <ul>
+<li><code>auto [x, y, z] = f();</code>  where <code>f()</code> returns a tuple. No need to use <code>std::tie()</code> </li>
+</ul>
+</li>
+</ul>
+<p>2.3 Type inference </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#auto">auto</a> : <del>needless to say</del>.<ul>
+<li>Since C++ 20, <code>auto</code> can even be used as <strong>function arguments</strong>.</li>
+</ul>
+</li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#decltype">decltype</a> : Its usage is very similar to <code>typeof</code> | <code>std::is_same&lt;T, U&gt;</code> </li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#tail-type-inference">tail type inference</a> </li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#decltype-auto">decltype</a> </li>
+</ul>
+<p>2.4 Control flow </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#if-constexpr">if constexpr</a> </li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Range-based-for-loop">Range-based for loop</a> </li>
+</ul>
+<p>2.5 Templates </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Extern-templates">Extern templates</a> </li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#The-quot-gt-quot">The “&gt;”</a> </li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Type-alias-templates">Type alias templates</a> </li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Variadic-templates">Variadic templates</a> </li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Fold-expression">Fold expression</a> </li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Non-type-template-parameter-deduction">Non-type template parameter deduction</a> </li>
+</ul>
+<p>2.6 Object-oriented </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Delegate-constructor">Delegate constructor</a> </li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Inheritance-constructor">Inheritance constructor</a> </li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Explicit-virtual-function-overwrite">Explicit virtual function overwrite</a> </li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#override">override</a> </li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#final">final</a> </li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Explicit-delete-default-function">Explicit delete default function</a> </li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Strongly-typed-enumerations">Strongly typed enumerations</a> </li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/programming-language/">programming_language</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/programming-language/">programming_language</a>
+                    
+                  </div>
+                
+              </div>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022-11/CVE-dirtypipe/">
+                        <span class="hidden-mobile">dirtypipe漏洞分析</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"312db7ebbc085de5d28d","clientSecret":"85ea3cefd13c73a6d85c1813adfde4f1550bfbda","repo":"yogdzewa.github.io","owner":"yogdzewa","admin":["yogdzewa"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
+          {
+            id: '2d928fa16eb2b144f3e5ad5963239274'
+          }
+        )
+        var gitalk = new Gitalk(options);
+        gitalk.render('gitalk-container');
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-x-md">
+    <div class="container custom post-custom mx-auto">
+      <img src="https://octodex.github.com/images/jetpacktocat.png" srcset="/img/loading.gif" lazyload class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;">
+    </div>
+  </div>
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js" ></script>
+  <script>
+    if (window.mermaid) {
+      mermaid.initialize({"theme":"default"});
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
