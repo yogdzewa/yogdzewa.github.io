@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>Malware Analysis</title>
+    <link href="/2022-12/Now-Malware-Analysis/"/>
+    <url>/2022-12/Now-Malware-Analysis/</url>
+    
+    <content type="html"><![CDATA[<ul><li><a href="https://blog.csdn.net/qq_43633973/article/details/102378477">PE结构分析</a> </li></ul><p>使用软件工具</p><ul><li>安装的<ul><li>Resource Hacker</li><li>IDA Free</li><li>PEBrowse64 Professional</li><li></li></ul></li><li>免安装<ul><li>PEView</li><li>Dependency walk</li><li>Process Monitor | Process Explorer</li><li>RegShot</li><li></li></ul></li></ul><p>IDA</p><ul><li>Use Standard Symbolic Constant<ul><li>在Type Libraries里查看常量所在库是否被加载. 通常 mssdk和 vc6win会自动被加载, 要获取本地API的符号常量 , 加载ntapi<br>（微软Windows NT 4 . 0本地API), 分析一个 Linux二进制时，你可能需要手动加载 gnuunx (GNU C++ UNIX ) 库 .</li></ul></li><li>脚本<ul><li>IDC, IDAPython</li><li>IDC即我在pwncollege里面用到的断点代码.</li><li>IDAPython提供了一大堆IDA Pro的SDK功能,提供了远比IDC强大许多的脚本化能力。IDAPython提供3个模块来访问IDAAPl (idaapi)、IDC接口（idc）以及IDAPython工具函数（idautils)。</li><li></li></ul></li></ul><p><a href="https://www.52pojie.cn/thread-1494490-1-1.html">Win7精简带工具</a>  </p><p><a href="https://www.52pojie.cn/thread-661779-1-1.html">Winxp 32精简带工具</a> </p>]]></content>
+    
+    
+    <categories>
+      
+      <category>practice</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>practice</tag>
+      
+      <tag>malware</tag>
+      
+      <tag>reverse engineering</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Modern CXX</title>
     <link href="/2022-12/Now-Modern-CXX/"/>
     <url>/2022-12/Now-Modern-CXX/</url>
