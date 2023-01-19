@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yogdzewa.github.io/image/linux的使用/architecture.png">
 <meta property="article:published_time" content="2021-05-06T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-12-08T14:42:52.868Z">
+<meta property="article:modified_time" content="2023-01-18T04:50:32.848Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary_large_image">
@@ -211,7 +211,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      9k 字
+      9.2k 字
     </span>
   
 
@@ -220,7 +220,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      113 分钟
+      115 分钟
     </span>
   
 
@@ -261,7 +261,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年12月8日 晚上
+                  不可视境界线最后变动于：2023年1月18日 下午
                 
               </p>
             
@@ -446,7 +446,12 @@
 <li>remove used data: <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/32723111/how-to-remove-old-and-unused-docker-images/32723127#32723127">prune</a> </li>
 <li><a target="_blank" rel="noopener" href="https://docs.docker.com/engine/reference/commandline/run/"><code>docker run</code></a> </li>
 <li><code>service docker restart</code> </li>
-<li></li>
+<li>docker-compose<ul>
+<li>up = start container, down = remove container</li>
+<li>only after removing container can it rm image. maybe <code>dc container prune</code> </li>
+<li><code>dcc up -d</code> + <code>dcc exec [service name] bash</code>: setup a interactive shell</li>
+</ul>
+</li>
 </ul>
 <ul>
 <li><strong>docker desktop</strong>: BIG FAILURE, gnome desktop environment | KVM in kali is not supported | ubuntu 22.04 wired problem | kali root account cant open docker desktop | kali normal account cant open settings. there are so many problems.</li>
