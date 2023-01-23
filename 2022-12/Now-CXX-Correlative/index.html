@@ -23,11 +23,16 @@
 <meta property="og:site_name" content="Yogdzewa">
 <meta property="og:description" content="现代C++和STL源码都在这">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yogdzewa.github.io/image/CXX_Correlative/image-20230121184607672.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/CXX_Correlative/image-20230121190308943.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/CXX_Correlative/image-20230121233157488.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/CXX_Correlative/image-20230121233222146.png">
 <meta property="article:published_time" content="2022-12-10T02:07:00.000Z">
-<meta property="article:modified_time" content="2023-01-21T09:13:16.372Z">
+<meta property="article:modified_time" content="2023-01-21T15:32:35.083Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="programming_language - 源码分析 - C++">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://yogdzewa.github.io/image/CXX_Correlative/image-20230121184607672.png">
   
   
   <title>CXX Correlative - Yogdzewa</title>
@@ -209,7 +214,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.6k 字
+      1.9k 字
     </span>
   
 
@@ -218,7 +223,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      21 分钟
+      24 分钟
     </span>
   
 
@@ -259,13 +264,13 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2023年1月21日 下午
+                  不可视境界线最后变动于：2023年1月21日 晚上
                 
               </p>
             
             <div class="markdown-body">
               <p><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/">Online Book</a> </p>
-<h1 id="Modern-CXX"><a href="#Modern-CXX" class="headerlink" title="Modern CXX"></a>Modern CXX</h1><h3 id="Language-U3sability-Enhancements"><a href="#Language-U3sability-Enhancements" class="headerlink" title="Language U3sability Enhancements"></a>Language U3sability Enhancements</h3><p>2.1 Constants </p>
+<h1 id="Modern-CXX"><a href="#Modern-CXX" class="headerlink" title="Modern CXX"></a>Modern CXX</h1><h2 id="Language-U3sability-Enhancements"><a href="#Language-U3sability-Enhancements" class="headerlink" title="Language U3sability Enhancements"></a>Language U3sability Enhancements</h2><p>2.1 Constants </p>
 <ul>
 <li><p><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#nullptr">nullptr</a> </p>
 <ul>
@@ -334,7 +339,53 @@
 <li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Strongly-typed-enumerations">Strongly typed enumerations</a> </li>
 </ul>
 <hr>
-<h1 id="SGI-STL-Src"><a href="#SGI-STL-Src" class="headerlink" title="SGI STL Src"></a>SGI STL Src</h1>
+<h1 id="SGI-STL-Src"><a href="#SGI-STL-Src" class="headerlink" title="SGI STL Src"></a>SGI STL Src</h1><p>书中源码: <a target="_blank" rel="noopener" href="https://github.com/yogdzewa/STLSourceCodeNote">https://github.com/yogdzewa/STLSourceCodeNote</a> (更全)</p>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>六大组件</p>
+<ul>
+<li>containers</li>
+<li>algorithms</li>
+<li>iterators</li>
+<li>functors(仿函数)</li>
+<li>adapters(配接器)</li>
+<li>allocators(配置器)</li>
+</ul>
+<img src="../../image/CXX_Correlative/image-20230121184607672.png" srcset="/img/loading.gif" lazyload alt="image-20230121184607672" style="zoom:80%;" />
+
+<h2 id="allocator"><a href="#allocator" class="headerlink" title="allocator"></a><a target="_blank" rel="noopener" href="https://github.com/steveLauwh/SGI-STL/tree/master/The%20Annotated%20STL%20Sources%20V3.3/allocator">allocator</a></h2><ul>
+<li>为了精密分工， STL allocator 决定将这两阶段操作区分开来。 内存配置操作由 alloc:allocate () 负责， 内存释放操作由 alloc: :deallocate() 负责；对象构造操作由 : : construct() 负责，对象析构操作由 : : destroy() 负责。</li>
+<li><img src="../../image/CXX_Correlative/image-20230121190308943.png" srcset="/img/loading.gif" lazyload alt="image-20230121190308943" style="zoom:80%;" /></li>
+<li> SGI 正是以 malloc(）和 free() 完成内存的配置与释放。</li>
+<li><img src="../../image/CXX_Correlative/image-20230121233157488.png" srcset="/img/loading.gif" lazyload alt="image-20230121233157488" style="zoom:80%;" /></li>
+</ul>
+<img src="../../image/CXX_Correlative/image-20230121233222146.png" srcset="/img/loading.gif" lazyload alt="image-20230121233222146" style="zoom:80%;" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             </div>
             <hr>
             <div>
