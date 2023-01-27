@@ -33,9 +33,9 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/recent_ctf/image-20230102183226852.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/recent_ctf/range-rbegin-rend.svg">
 <meta property="og:image" content="https://yogdzewa.github.io/image/recent_ctf/image-20230124221604604.png">
-<meta property="og:image" content="https://yogdzewa.github.io/image/recent_ctf/image-20230124221607881.png">
+<meta property="og:image" content="https://yogdzewa.github.io/image/recent_ctf/image-20230125112558204.png">
 <meta property="article:published_time" content="2022-09-08T02:00:00.000Z">
-<meta property="article:modified_time" content="2023-01-25T02:44:13.207Z">
+<meta property="article:modified_time" content="2023-01-26T15:30:56.579Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -231,7 +231,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1565 分钟
+      1568 分钟
     </span>
   
 
@@ -272,7 +272,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2023年1月25日 上午
+                  不可视境界线最后变动于：2023年1月26日 晚上
                 
               </p>
             
@@ -1484,7 +1484,7 @@
 <li>map的erase中对value的空间进行了destroy, 意味着调用了类(如果是的话)的析构函数. </li>
 </ul>
 <blockquote>
-<p>接下来是额外补充</p>
+<p>然后是看了源码后的分析</p>
 </blockquote>
 <h4 id="deque"><a href="#deque" class="headerlink" title="deque"></a>deque</h4><blockquote>
 <p>足足有80字节. </p>
@@ -1498,14 +1498,14 @@
 <p>多了first last node. </p>
 <img src="../../image/recent_ctf/image-20230124221604604.png" srcset="/img/loading.gif" lazyload alt="image-20230124221604604" style="zoom:80%;" />
 
-<img src="../../image/recent_ctf/image-20230124221607881.png" srcset="/img/loading.gif" lazyload alt="image-20230124221607881" style="zoom:80%;" />
+<img src="../../image/recent_ctf/image-20230125112558204.png" srcset="/img/loading.gif" lazyload alt="image-20230125112558204" style="zoom:80%;" />
 
 <ul>
 <li><p>它的迭代器比较直接. 逆向迭代如下, 如果是正向迭代则只要第五行即可. 直接初始化<code>*__x = this-&gt;_M_impl._M_finish</code> </p>
 <figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp">std::deque&lt;<span class="hljs-keyword">int</span>&gt;::reverse_iterator *__cdecl std::deque&lt;<span class="hljs-keyword">int</span>&gt;::<span class="hljs-built_in">rbegin</span>(std::deque&lt;<span class="hljs-keyword">int</span>&gt;::reverse_iterator *retstr, std::deque&lt;<span class="hljs-keyword">int</span>&gt; *<span class="hljs-keyword">const</span> <span class="hljs-keyword">this</span>)<br>&#123;<br>  std::_Deque_iterator&lt;<span class="hljs-keyword">int</span>,<span class="hljs-keyword">int</span>&amp;,<span class="hljs-keyword">int</span>*&gt; __x; <span class="hljs-comment">// [rsp+20h] [rbp-20h] BYREF</span><br><br>  std::_Deque_iterator&lt;<span class="hljs-keyword">int</span>,<span class="hljs-keyword">int</span> &amp;,<span class="hljs-keyword">int</span> *&gt;::_Deque_iterator(&amp;__x, &amp;<span class="hljs-keyword">this</span>-&gt;_M_impl._M_finish);<br>  std::reverse_iterator&lt;std::_Deque_iterator&lt;<span class="hljs-keyword">int</span>,<span class="hljs-keyword">int</span> &amp;,<span class="hljs-keyword">int</span> *&gt;&gt;::<span class="hljs-built_in">reverse_iterator</span>(retstr, &amp;__x);<br>  <span class="hljs-keyword">return</span> retstr;<br>&#125;<br></code></pre></div></td></tr></table></figure></li>
-<li><p>它的push_back-&gt;move-&gt;emplace_back. 注意emplace的参数是std::move的返回值, 实际上啥也没做. push_front非常相似.<br>第一次我还是看到了<code>_M_push_back_aux</code>中的一个报错字符串才发现这个是deque. </p>
+<li><p>它的push_back-&gt;move+emplace_back. 注意emplace的参数是std::move的返回值, move实际上啥也没做. push_front非常相似.<br>第一次我还是看到了<code>_M_push_back_aux</code>中的一个报错字符串才发现这个是deque. </p>
 <figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">void</span> __fastcall std::deque&lt;<span class="hljs-keyword">int</span>&gt;::emplace_back&lt;<span class="hljs-keyword">int</span>&gt;(std::deque&lt;<span class="hljs-keyword">int</span>&gt; *<span class="hljs-keyword">const</span> <span class="hljs-keyword">this</span>, <span class="hljs-keyword">int</span> *a2, <span class="hljs-keyword">int</span> *__args_0)<br>&#123;<br>  <span class="hljs-keyword">int</span> *v3; <span class="hljs-comment">// rax</span><br>  <span class="hljs-keyword">int</span> *v4; <span class="hljs-comment">// r9</span><br>  <span class="hljs-keyword">int</span> *v5; <span class="hljs-comment">// rax</span><br>  <span class="hljs-keyword">int</span> *v6; <span class="hljs-comment">// r8</span><br>  <span class="hljs-comment">// +48 == +64</span><br>  <span class="hljs-keyword">if</span> ( <span class="hljs-keyword">this</span>-&gt;_M_impl._M_finish._M_cur == <span class="hljs-keyword">this</span>-&gt;_M_impl._M_finish._M_last - <span class="hljs-number">1</span> )<br>  &#123; <span class="hljs-comment">// if space is not enough</span><br>    v5 = std::forward&lt;<span class="hljs-keyword">int</span>&gt;(a2); <br>    std::deque&lt;<span class="hljs-keyword">int</span>&gt;::_M_push_back_aux&lt;<span class="hljs-keyword">int</span>&gt;(<span class="hljs-keyword">this</span>, v5, v6); <br>  &#125;<br>  <span class="hljs-keyword">else</span><br>  &#123;<br>    v3 = std::forward&lt;<span class="hljs-keyword">int</span>&gt;(a2);<br>    std::allocator_traits&lt;std::allocator&lt;<span class="hljs-keyword">int</span>&gt;&gt;::construct&lt;<span class="hljs-keyword">int</span>,<span class="hljs-keyword">int</span>&gt;(<br>      <span class="hljs-keyword">this</span>,<br>      <span class="hljs-keyword">this</span>-&gt;_M_impl._M_finish._M_cur,<br>      v3,<br>      v4); <span class="hljs-comment">//v4是可变参数列表导致的</span><br>    ++<span class="hljs-keyword">this</span>-&gt;_M_impl._M_finish._M_cur;<br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure></li>
-<li><p>erase: 一个if, 一个else语句还是比较明显的, 要注意有两层wrap, 和vector差不多.<br>有趣的是它会根据要擦除元素的位置左右元素个数来决定移动左边或者右边, 也就是下面if和else的逻辑.<br>不过有一样的问题, 会对front或者end(根据执行if还是else语句)执行<code>destroy()</code> </p>
+<li><p>erase: 一个if, 一个else语句还是比较明显的, 要注意有两层wrap, 和vector差不多. 还有一个重载版本是擦除区间.<br>有趣的是它会根据要擦除元素的位置左右元素个数来决定移动左边或者右边, 也就是下面if和else的逻辑.<br>不过有一样的问题, 会对front或者end(根据执行if还是else语句)执行<code>destroy()</code> </p>
 <figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> _Tp, <span class="hljs-keyword">typename</span> _Alloc&gt;<br><span class="hljs-keyword">typename</span> deque&lt;_Tp, _Alloc&gt;::iterator<br>	deque&lt;_Tp, _Alloc&gt;::<br>	_M_erase(iterator __position)<br>&#123;<br>	iterator __next = __position;<br>	++__next;<br>	<span class="hljs-keyword">const</span> difference_type __index = __position - <span class="hljs-built_in">begin</span>();<br>	<span class="hljs-keyword">if</span> (<span class="hljs-keyword">static_cast</span>&lt;size_type&gt;(__index) &lt; (<span class="hljs-built_in">size</span>() &gt;&gt; <span class="hljs-number">1</span>))<br>	&#123;<br>		<span class="hljs-keyword">if</span> (__position != <span class="hljs-built_in">begin</span>())<br>			_GLIBCXX_MOVE_BACKWARD3(<span class="hljs-built_in">begin</span>(), __position, __next);<br>		<span class="hljs-built_in">pop_front</span>();<br>	&#125;<br>	<span class="hljs-keyword">else</span><br>	&#123;<br>		<span class="hljs-keyword">if</span> (__next != <span class="hljs-built_in">end</span>())<br>			_GLIBCXX_MOVE3(__next, <span class="hljs-built_in">end</span>(), __position);<br>		<span class="hljs-built_in">pop_back</span>();<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-built_in">begin</span>() + __index;<br>&#125;<br></code></pre></div></td></tr></table></figure></li>
 </ul>
 <h3 id="DIARY-BIN"><a href="#DIARY-BIN" class="headerlink" title="DIARY BIN"></a>DIARY BIN</h3><p>回到题目中. </p>
@@ -1584,9 +1584,11 @@
 </ul>
 <p>转到ubuntu2004虚拟机上继续. 主要就是想知道heap环境是否和我想的一样. 果然不一样, 忘记了0x300和0x200的区别. </p>
 <ul>
-<li>注意到substr中构造了新的string, 使用了operator *也就是malloc函数, 这是和普通的c程序(而且禁用了IO缓冲区的那种)不一样的地方, 多了很多意料之外的heap操作, 要谨慎选择布局中使用的chunk大小. </li>
-<li>free_hook最终调用了main函数里面的string析构函数, 而析构函数中对字符串的位置</li>
+<li>注意到substr中构造了新的string, 使用了<code>operator *</code>也就是malloc函数, 这是和普通的c程序(而且禁用了IO缓冲区的那种)不一样的地方, 多了很多意料之外的heap操作, 要谨慎选择布局中使用的chunk大小. </li>
+<li>其中54行的减去0xd是指add后最开始四个空格加上<code>;/bin/sh;</code>的长度, 好让line93的system地址能够放在<code>__free_hook</code>上</li>
+<li>free_hook最终被main函数<strong>最后</strong>的string析构函数调用, 而析构的正是我们输入的命令字符串, 所以exp执行完会出现<br><code>sh : 1 : add#a#b#... not a command</code>这样的提示, 之后就可以快乐<code>cat /flag</code>了. </li>
 </ul>
+<p>主要卡在了xor实际上是一种任意写, 只要和循环使用的随机数字配合好(指循环查找相同数值)即可. 然后<code>__free_hook</code>可以被析构函数调用. </p>
 <h2 id="BFC"><a href="#BFC" class="headerlink" title="BFC"></a>BFC</h2><blockquote>
 <p>仍然是C++逆向</p>
 </blockquote>
