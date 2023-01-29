@@ -35,7 +35,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/recent_ctf/image-20230124221604604.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/recent_ctf/image-20230125112558204.png">
 <meta property="article:published_time" content="2022-09-08T02:00:00.000Z">
-<meta property="article:modified_time" content="2023-01-26T15:30:56.579Z">
+<meta property="article:modified_time" content="2023-01-29T02:37:44.643Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -222,7 +222,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      125k 字
+      126k 字
     </span>
   
 
@@ -231,7 +231,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1568 分钟
+      1569 分钟
     </span>
   
 
@@ -272,7 +272,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2023年1月26日 晚上
+                  不可视境界线最后变动于：2023年1月29日 上午
                 
               </p>
             
@@ -1486,6 +1486,11 @@
 <blockquote>
 <p>然后是看了源码后的分析</p>
 </blockquote>
+<ul>
+<li>也没啥, map要实现的操作在rb_tree中都有实现, 所以做一个转接调用即可. </li>
+<li>注意到源码中的rb_tree还继承了一个base然而书中没有, 只有一个node_base. </li>
+<li></li>
+</ul>
 <h4 id="deque"><a href="#deque" class="headerlink" title="deque"></a>deque</h4><blockquote>
 <p>足足有80字节. </p>
 </blockquote>
@@ -1496,6 +1501,7 @@
 <figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-number">00000000</span> std::_Deque_base&lt;<span class="hljs-keyword">int</span>&gt;::iterator struc ; (<span class="hljs-keyword">sizeof</span>=<span class="hljs-number">0x20</span>, align=<span class="hljs-number">0x8</span>, copyof_139)<br><span class="hljs-number">00000000</span>                                         ; XREF: std::_Deque_base&lt;<span class="hljs-keyword">int</span>&gt;::_Deque_impl/r<br><span class="hljs-number">00000000</span> st fi                                   ; std::_Deque_base&lt;<span class="hljs-keyword">int</span>&gt;::_Deque_impl/r<br><span class="hljs-number">00000000</span> <span class="hljs-number">16</span> <span class="hljs-number">48</span> _M_cur          dq ?                    ; offset<br><span class="hljs-number">00000008</span> <span class="hljs-number">24</span> <span class="hljs-number">56</span> _M_first        dq ?                    ; offset<br><span class="hljs-number">00000010</span> <span class="hljs-number">32</span> <span class="hljs-number">64</span> _M_last         dq ?                    ; offset<br><span class="hljs-number">00000018</span> <span class="hljs-number">40</span> <span class="hljs-number">72</span> _M_node         dq ?                    ; offset<br><span class="hljs-number">00000020</span> std::_Deque_base&lt;<span class="hljs-keyword">int</span>&gt;::iterator ends<br></code></pre></div></td></tr></table></figure>
 
 <p>多了first last node. </p>
+<p>注意指针的位置, cur指向第一个元素或者<strong>最后一个元素之后</strong>. </p>
 <img src="../../image/recent_ctf/image-20230124221604604.png" srcset="/img/loading.gif" lazyload alt="image-20230124221604604" style="zoom:80%;" />
 
 <img src="../../image/recent_ctf/image-20230125112558204.png" srcset="/img/loading.gif" lazyload alt="image-20230125112558204" style="zoom:80%;" />
@@ -1595,6 +1601,11 @@
 <ul>
 <li>7.5版本老是自动识别不了switch跳转表. 换成新版反编译又有点慢. 挺难受的.</li>
 <li>出现了deque双端队列的使用. 写在Diary中. </li>
+</ul>
+<p>流程: </p>
+<ul>
+<li>输入字符串编码成指令, 前几个都是跳转指令, 到方括号就有条件跳转.</li>
+<li></li>
 </ul>
 
             </div>
