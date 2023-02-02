@@ -36,7 +36,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/recent_ctf/image-20230125112558204.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/recent_ctf/image-20230129185730706.png">
 <meta property="article:published_time" content="2022-09-08T02:00:00.000Z">
-<meta property="article:modified_time" content="2023-01-30T15:43:16.005Z">
+<meta property="article:modified_time" content="2023-02-01T15:03:59.027Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -223,7 +223,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      122k 字
+      124k 字
     </span>
   
 
@@ -232,7 +232,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1527 分钟
+      1551 分钟
     </span>
   
 
@@ -273,7 +273,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2023年1月30日 晚上
+                  不可视境界线最后变动于：2023年2月1日 晚上
                 
               </p>
             
@@ -1496,7 +1496,7 @@
 <p>足足有80字节. </p>
 </blockquote>
 <p>布局如下: </p>
-<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-number">00000000</span> std::_Deque_base&lt;<span class="hljs-keyword">int</span>&gt;::_Deque_impl struc ; (<span class="hljs-keyword">sizeof</span>=<span class="hljs-number">0x50</span>, align=<span class="hljs-number">0x8</span>, copyof_137)<br><span class="hljs-number">00000000</span>                                         ; XREF: std::_Deque_base&lt;<span class="hljs-keyword">int</span>&gt;/r<br><span class="hljs-number">00000000</span> _M_map          dq ?                    ; offset<br><span class="hljs-number">00000008</span> _M_map_size     dq ?<br><span class="hljs-number">00000010</span> <span class="hljs-number">16</span> _M_start        std::_Deque_base&lt;<span class="hljs-keyword">int</span>&gt;::iterator ?<br><span class="hljs-number">00000030</span> <span class="hljs-number">48</span> _M_finish       std::_Deque_base&lt;<span class="hljs-keyword">int</span>&gt;::iterator ?<br><span class="hljs-number">00000050</span> std::_Deque_base&lt;<span class="hljs-keyword">int</span>&gt;::_Deque_impl ends<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-number">00000000</span> std::_Deque_base&lt;<span class="hljs-keyword">int</span>&gt;::_Deque_impl struc ; (<span class="hljs-keyword">sizeof</span>=<span class="hljs-number">0x50</span>, align=<span class="hljs-number">0x8</span>, copyof_137)<br><span class="hljs-number">00000000</span>                                         ; XREF: std::_Deque_base&lt;<span class="hljs-keyword">int</span>&gt;/r<br><span class="hljs-number">00000000</span> _M_map          dq ?                    ; offset<br><span class="hljs-number">00000008</span> _M_map_size     dq ?<br><span class="hljs-number">00000010</span> <span class="hljs-number">16</span> _M_start        std::_Deque_base&lt;<span class="hljs-keyword">int</span>&gt;::iterator ? <br><span class="hljs-number">00000030</span> <span class="hljs-number">48</span> _M_finish       std::_Deque_base&lt;<span class="hljs-keyword">int</span>&gt;::iterator ?<br><span class="hljs-number">00000050</span> std::_Deque_base&lt;<span class="hljs-keyword">int</span>&gt;::_Deque_impl ends<br></code></pre></div></td></tr></table></figure>
 
 <p>其中start finish意思显而易见. 但是注意到一个iterator有0x20字节, 和vector的8字节明显不同. 下面是iterator:</p>
 <figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-number">00000000</span> std::_Deque_base&lt;<span class="hljs-keyword">int</span>&gt;::iterator struc ; (<span class="hljs-keyword">sizeof</span>=<span class="hljs-number">0x20</span>, align=<span class="hljs-number">0x8</span>, copyof_139)<br><span class="hljs-number">00000000</span>                                         ; XREF: std::_Deque_base&lt;<span class="hljs-keyword">int</span>&gt;::_Deque_impl/r<br><span class="hljs-number">00000000</span> st fi                                   ; std::_Deque_base&lt;<span class="hljs-keyword">int</span>&gt;::_Deque_impl/r<br><span class="hljs-number">00000000</span> <span class="hljs-number">16</span> <span class="hljs-number">48</span> _M_cur          dq ?                    ; offset<br><span class="hljs-number">00000008</span> <span class="hljs-number">24</span> <span class="hljs-number">56</span> _M_first        dq ?                    ; offset<br><span class="hljs-number">00000010</span> <span class="hljs-number">32</span> <span class="hljs-number">64</span> _M_last         dq ?                    ; offset<br><span class="hljs-number">00000018</span> <span class="hljs-number">40</span> <span class="hljs-number">72</span> _M_node         dq ?                    ; offset<br><span class="hljs-number">00000020</span> std::_Deque_base&lt;<span class="hljs-keyword">int</span>&gt;::iterator ends<br></code></pre></div></td></tr></table></figure>
@@ -1610,6 +1610,8 @@
 <li>看init函数的时候查着查着又看到ABI, 因为<a target="_blank" rel="noopener" href="https://refspecs.linuxbase.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/baselib---cxa-atexit.html"><code>__cxa_atexit</code></a>对应着<a target="_blank" rel="noopener" href="https://itanium-cxx-abi.github.io/cxx-abi/abi.html#dso-dtor-runtime-api">标准的这里</a>:<br><code>int __cxa_atexit(void (*func) (void *), void * arg, void * dso_handle);</code><br>那么有个<code>atexit()</code>又是个啥? <code>atexit()</code> does not deal at all with the ability in most implementations to remove [Dynamic Shared Objects] from a running program image by calling <code>dlclose</code> prior to program termination.</li>
 <li>差点忘了create function. </li>
 <li>终于知道IDA里rodata段的函数为什么会是<code>call    near ptr sub_5555555591E0+1</code>这种操作了, 因为被当做字符串了, 几个函数之间有空字符充当结束符和对齐字节. </li>
+<li>2.34+的libc无法使用pwndbg的heap等指令, 因为一个宏定义被修改了. <a target="_blank" rel="noopener" href="https://github.com/pwndbg/pwndbg/pull/953/files">issue</a>在这里</li>
+<li><code>probeleak</code> <code>xinfo</code>神奇pwndbg命令. </li>
 </ul>
 <h3 id="经验总结"><a href="#经验总结" class="headerlink" title="经验总结:"></a>经验总结:</h3><ul>
 <li>被deque卡住. 看了STL之后熟悉了很多. 下次遇到set mutiset hashmap又得卡. 算了到时候再说. </li>
@@ -1696,8 +1698,26 @@
 <p>行吧, 预期解是house of apple. 难怪用2.35, 有用到IO chain. </p>
 <p>但是nu1l的是tcache相关. </p>
 </blockquote>
-<p>1.读堆地址<br>2.修改tcache_struct，分配出tcache_struct<br>3.修改tcache_struct，随意分配，使tcache_struct被free并进⼊unsorted bin<br>4.泄漏libc地址，修改tcache_struct，分配⾄environ，此时栈地址应该被放⼊了堆中，泄漏栈地址<br>5.修改tcache_struct，分配到栈上，写rop</p>
-<p>见pdf. </p>
+<p>1.读堆地址<br>2.修改tcache_struct，分配出tcache_struct<br>3.修改tcache_struct，随意分配，使tcache_struct被free并进⼊unsorted bin<br>4.泄漏libc地址，修改tcache_struct，分配⾄environ，此时栈地址应该被放⼊了堆中，泄漏栈地址<br>5.修改tcache_struct，分配到栈上，写ropd</p>
+<p>但是实操第一步leak就卡住了. 诶算了, 借鉴个开头. </p>
+<figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">import</span> re<br><span class="hljs-keyword">import</span> os<br><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>ss = <span class="hljs-keyword">lambda</span> data :p.send(data)<br>sa = <span class="hljs-keyword">lambda</span> delim,data :p.sendafter(delim, data)<br>sl = <span class="hljs-keyword">lambda</span> data :p.sendline(data)<br>sla = <span class="hljs-keyword">lambda</span> delim,data :p.sendlineafter(delim, data)<br>ra = <span class="hljs-keyword">lambda</span> :p.recv()<br>rc = <span class="hljs-keyword">lambda</span> numb=<span class="hljs-number">4096</span> :p.recv(numb)<br>ru = <span class="hljs-keyword">lambda</span> delims, drop=<span class="hljs-literal">True</span> :p.recvuntil(delims, drop)<br>uu32 = <span class="hljs-keyword">lambda</span> data :u32(data.ljust(<span class="hljs-number">4</span>, <span class="hljs-string">b&#x27;\0&#x27;</span>))<br>uu64 = <span class="hljs-keyword">lambda</span> data :u64(data.ljust(<span class="hljs-number">8</span>, <span class="hljs-string">b&#x27;\0&#x27;</span>))<br>itt = <span class="hljs-keyword">lambda</span> :p.interactive()<br>lg = <span class="hljs-keyword">lambda</span> name,data : p.success(name + <span class="hljs-string">&#x27;: \033[1;36m 0x%x \033[0m&#x27;</span> % data)<br><span class="hljs-comment">#offset from zero</span><br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">debug</span>(<span class="hljs-params"><span class="hljs-built_in">breakpoint</span>=<span class="hljs-string">&#x27;&#x27;</span></span>):</span><br>    glibc_dir = <span class="hljs-string">&#x27;/glibs/glibc-2.35/&#x27;</span><br>    gdbscript = <span class="hljs-string">&#x27;directory %smalloc/\n&#x27;</span> % glibc_dir<br>    gdbscript += <span class="hljs-string">&#x27;directory %sstdio-common/\n&#x27;</span> % glibc_dir<br>    gdbscript += <span class="hljs-string">&#x27;directory %sstdlib/\n&#x27;</span> % glibc_dir<br>    gdbscript += <span class="hljs-string">&#x27;directory %slibio/\n&#x27;</span> % glibc_dir<br>    gdbscript += <span class="hljs-string">&#x27;directory %self/\n&#x27;</span> % glibc_dir<br>    elf_base = <span class="hljs-built_in">int</span>(os.popen(<span class="hljs-string">&#x27;pmap &#123;&#125;| awk \x27&#123;&#123;print\x241&#125;&#125;\x27&#x27;</span>.<span class="hljs-built_in">format</span>(p.pid)).readlines()[<span class="hljs-number">1</span>], <span class="hljs-number">16</span>) <span class="hljs-keyword">if</span> elf.pie <span class="hljs-keyword">else</span> <span class="hljs-number">0</span><br>    gdbscript += <span class="hljs-string">&#x27;b *&#123;:#x&#125;\n&#x27;</span>.<span class="hljs-built_in">format</span>(<span class="hljs-built_in">int</span>(<span class="hljs-built_in">breakpoint</span>) + elf_base) <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(<span class="hljs-built_in">breakpoint</span>, <span class="hljs-built_in">int</span>) <span class="hljs-keyword">else</span> <span class="hljs-built_in">breakpoint</span><br>    gdb.attach(p, gdbscript+<span class="hljs-string">&#x27;init-pwndbg\nni\n&#x27;</span>)<br>    time.sleep(<span class="hljs-number">1</span>)<br>binary = <span class="hljs-string">&#x27;./bfc&#x27;</span><br>elf = ELF(binary)<br>p = process(binary, aslr=<span class="hljs-literal">False</span>)<br>context(binary = elf ,log_level = <span class="hljs-string">&#x27;debug&#x27;</span>, terminal = [<span class="hljs-string">&#x27;tmux&#x27;</span>, <span class="hljs-string">&#x27;splitw&#x27;</span>,<span class="hljs-string">&#x27;-hp&#x27;</span>,<span class="hljs-string">&#x27;62&#x27;</span>])<br>debug()<br></code></pre></div></td></tr></table></figure>
+
+
+
+<h2 id="GAME"><a href="#GAME" class="headerlink" title="GAME"></a>GAME</h2><blockquote>
+<p>本来是文件系统的题目, 结果有一个很简单的非预期<a target="_blank" rel="noopener" href="https://github.com/maple3142/My-CTF-Challenges/tree/master/ImaginaryCTF/Round%2026/not_a_kernel_pwn">类似题目</a>. 就是init里面unmount放在了shell退出之后, 于是利用shell来覆盖unmount文件达到pop root shell的目的. 然后看看他的预期解. 是作者自己找的CVE, 嗯…………</p>
+</blockquote>
+<ul>
+<li>看到内核模块的参数设置, 还有<code>file-&gt;private_data</code>这个随意使用的指针. </li>
+<li></li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Maind</span>&#123;</span><br>	<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> id;<br>	<span class="hljs-keyword">char</span> username[<span class="hljs-number">0x20</span>];<br>	<span class="hljs-keyword">void</span> *cur;<br>	<span class="hljs-keyword">void</span> *prv;<br>	<span class="hljs-keyword">int</span> random;<br>&#125;;<br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">mycdev</span> &#123;</span><br>    <span class="hljs-keyword">int</span> len;<br>    <span class="hljs-keyword">unsigned</span>   <span class="hljs-keyword">char</span> buffer[<span class="hljs-number">50</span>];<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span>   <span class="hljs-title">cdev</span> <span class="hljs-title">cdev</span>;</span><br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<p>module操作</p>
+<ul>
+<li>open: kzmalloc一个Maind结构体放到<code>file-&gt;private_data</code>里面</li>
+<li>read: </li>
+</ul>
 
             </div>
             <hr>
