@@ -28,7 +28,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/CTF_newly_start/smep.jpg">
 <meta property="og:image" content="https://yogdzewa.github.io/image/CTF_supplement/pci-system.gif">
 <meta property="article:published_time" content="2022-07-01T02:00:00.000Z">
-<meta property="article:modified_time" content="2023-02-05T14:45:47.713Z">
+<meta property="article:modified_time" content="2023-02-06T09:55:54.277Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -224,7 +224,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      704 分钟
+      705 分钟
     </span>
   
 
@@ -265,12 +265,13 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2023年2月5日 晚上
+                  不可视境界线最后变动于：2023年2月6日 下午
                 
               </p>
             
             <div class="markdown-body">
-              <ul>
+              <p>这个写的挺糟糕的, 只有ret2dlresolve能看一看. kernel pwn的部分直接看<a href="../pwn_new/pwn_kernel_basic.md">另外一篇</a>. </p>
+<ul>
 <li><a target="_blank" rel="noopener" href="https://ccap.udel.edu/2021/10/20/ctf/">CTF types</a> : Jeopardy, Attack-Defence and mixed.</li>
 <li>eehhhhhh, 完全不知道CTFtimes怎么用… 现在大概知道了</li>
 </ul>
@@ -374,7 +375,7 @@
 <p>如果是使用 qemu 启动的内核，我们可以在 <code>-append</code> 选项中添加 <code>nosmep</code> 来关闭 SMEP。</p>
 <h5 id="查看"><a href="#查看" class="headerlink" title="查看"></a>查看</h5><figure class="highlight gradle"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs gradle"><span class="hljs-keyword">grep</span> smep <span class="hljs-regexp">/proc/</span>cpuinfo<br></code></pre></div></td></tr></table></figure>
 
-<h5 id="Attack-SMEP"><a href="#Attack-SMEP" class="headerlink" title="Attack SMEP"></a>Attack SMEP</h5><p>把 <code>CR4</code> 寄存器中的第 20 位置为 0 后，我们就可以执行用户态的代码。一般而言，我们会使用 0x6f0 来设置 CR4，这样 SMAP 和 SMEP 都会被关闭。 </p>
+<h5 id="Attack-SMEP"><a href="#Attack-SMEP" class="headerlink" title="Attack SMEP"></a>Attack SMEP</h5><p>把 <code>CR4</code> 寄存器中的第 20 位 置为 0 后，我们就可以执行用户态的代码。一般而言，我们会使用 0x6f0 来设置 CR4，这样 SMAP 和 SMEP 都会被关闭。 </p>
 <p>内核中修改 cr4 的代码最终会调用到 <code>native_write_cr4</code>，当我们能够劫持控制流后，我们可以执行内核中的 gadget 来修改 CR4。从另外一个维度来看，内核中存在固定的修改 cr4 的代码，比如在 <code>refresh_pce</code> 函数、<code>set_tsc_mode</code> 等函数里都有。</p>
 <p><code>copy_from/to_user</code> : 在劫持控制流后，攻击者可以调用 <code>copy_from_user</code> 和 <code>copy_to_user</code> 来访问用户态的内存。这两个函数会临时清空禁止访问用户态内存的标志。</p>
 <h4 id="KPTI-Kernel-Page-Table-Isolation-¶"><a href="#KPTI-Kernel-Page-Table-Isolation-¶" class="headerlink" title="KPTI - Kernel Page Table Isolation ¶"></a>KPTI - Kernel Page Table Isolation <a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/kernel-mode/defense/isolation/user-kernel/kpti/#_4">¶</a></h4><p>utilization method</p>
@@ -402,6 +403,7 @@
 <p><code>kmalloc()</code> malloc an aligned space, start from 32 bytes. -&gt; <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v3.9.11/source/mm/slab.c#L325">src is here</a> &lt;- | -&gt; <a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/latest/core-api/memory-allocation.html#:~:text=The%20maximal%20size%20of%20a%20chunk%20that%20can%20be%20allocated%20with%20kmalloc%20is%20limited.%20The%20actual%20limit%20depends%20on%20the%20hardware%20and%20the%20kernel%20configuration%2C%20but%20it%20is%20a%20good%20practice%20to%20use%20kmalloc%20for%20objects%20smaller%20than%20page%20size.">doc is here</a> &lt;-</p>
 </blockquote>
 </blockquote>
+<p>有关于kmalloc记录在另外一篇. </p>
 <h3 id="Info-Disclosure-WiKi"><a href="#Info-Disclosure-WiKi" class="headerlink" title="Info Disclosure WiKi"></a>Info Disclosure <a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/kernel-mode/defense/access-control/information-disclosure/">WiKi</a></h3><p>dmesg_restrict | kptr_restrict</p>
 <h3 id="Randomization"><a href="#Randomization" class="headerlink" title="Randomization"></a>Randomization</h3><p>KASLR</p>
 <p><a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/kernel-mode/defense/randomization/fgkaslr/">FG-KASLR</a> : 主要是在FG-KASLR的环境下还有哪些可利用的地方.</p>
@@ -774,7 +776,7 @@
 <li>command = 0x7777时：调用printk输出，存在格式化字符串漏洞</li>
 </ul>
 <p>一共两个漏洞点：0x80的UAF，和一个格式化字符串漏洞</p>
-<p>这一题没有利用tty, 而是另外一个结构体.</p>
+<p>这一题没有利用tty, 而是另外一个结构体. work_for_cpu. </p>
 <p><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/264563">出题总结</a> </p>
 <h2 id="IO-FILE-Exploitation"><a href="#IO-FILE-Exploitation" class="headerlink" title="_IO_FILE Exploitation"></a>_IO_FILE Exploitation</h2><p>具体见<a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/user-mode/io-file/fake-vtable-exploit/">Wiki</a>. ;</p>
 <p>_IO_FILE的结构体:</p>
