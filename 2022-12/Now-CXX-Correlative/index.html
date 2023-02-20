@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/CXX_Correlative/image-20230121233222146.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/CXX_Correlative/image-20230123113720206.png">
 <meta property="article:published_time" content="2022-12-10T02:07:00.000Z">
-<meta property="article:modified_time" content="2023-01-26T07:08:10.221Z">
+<meta property="article:modified_time" content="2023-02-16T02:00:14.409Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="programming_language - 源码分析 - C++">
 <meta name="twitter:card" content="summary_large_image">
@@ -215,7 +215,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2k 字
+      4.4k 字
     </span>
   
 
@@ -224,7 +224,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      26 分钟
+      56 分钟
     </span>
   
 
@@ -265,82 +265,129 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2023年1月26日 下午
+                  不可视境界线最后变动于：2023年2月16日 上午
                 
               </p>
             
             <div class="markdown-body">
               <p><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/">Online Book</a> </p>
-<h1 id="Modern-CXX"><a href="#Modern-CXX" class="headerlink" title="Modern CXX"></a>Modern CXX</h1><h2 id="Language-U3sability-Enhancements"><a href="#Language-U3sability-Enhancements" class="headerlink" title="Language U3sability Enhancements"></a>Language U3sability Enhancements</h2><p>2.1 Constants </p>
-<ul>
-<li><p><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#nullptr">nullptr</a> </p>
-<ul>
+<h1 id="Modern-CXX"><a href="#Modern-CXX" class="headerlink" title="Modern CXX"></a>Modern CXX</h1><h2 id="Language-U3sability-Enhancements"><a href="#Language-U3sability-Enhancements" class="headerlink" title="Language U3sability Enhancements"></a>Language U3sability Enhancements</h2><h3 id="2-1-Constants"><a href="#2-1-Constants" class="headerlink" title="2.1 Constants"></a>2.1 Constants</h3><h4 id="nullptr"><a href="#nullptr" class="headerlink" title="nullptr"></a><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#nullptr">nullptr</a></h4><ul>
 <li>no implicit conversion from <code>void*</code> to other types | conflict with C++ overloading</li>
 <li>so replace NULL with nullptr. </li>
 </ul>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#constexpr">constexpr</a> </p>
-<ul>
-<li>same declaration position as <code>const</code>, introduced in C++11.</li>
+<h4 id="constexpr"><a href="#constexpr" class="headerlink" title="constexpr"></a><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#constexpr">constexpr</a></h4><ul>
+<li>same declaration position as <code>const</code>, introduced in C++11. </li>
 <li>modern compilers will do most of optimizations, such as <code>alloca()</code>, so this is not a problem to use variable in declarations. </li>
 <li>C++11 provides <code>constexpr</code> to let the user <strong>explicitly declare</strong> that the function or object constructor will become a constant expression at compile time. </li>
 <li>Starting with C++14, the constexpr <strong><u>function</u></strong> <strong>can use simple statements</strong> such as local variables, loops, and branches internally. But in C++11 only return statement is allowed.</li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">constexpr</span> <span class="hljs-keyword">int</span> <span class="hljs-title">fibonacci</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> n)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> n == <span class="hljs-number">1</span> || n == <span class="hljs-number">2</span> ? <span class="hljs-number">1</span> : <span class="hljs-built_in">fibonacci</span>(n<span class="hljs-number">-1</span>) + <span class="hljs-built_in">fibonacci</span>(n<span class="hljs-number">-2</span>);<br>&#125;<br></code></pre></div></td></tr></table></figure></li>
+<figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">constexpr</span> <span class="hljs-keyword">int</span> <span class="hljs-title">fibonacci</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> n)</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> n == <span class="hljs-number">1</span> || n == <span class="hljs-number">2</span> ? <span class="hljs-number">1</span> : <span class="hljs-built_in">fibonacci</span>(n<span class="hljs-number">-1</span>) + <span class="hljs-built_in">fibonacci</span>(n<span class="hljs-number">-2</span>);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="2-2-Variables-and-initialization"><a href="#2-2-Variables-and-initialization" class="headerlink" title="2.2 Variables and initialization"></a>2.2 Variables and initialization</h3><h4 id="if-switch"><a href="#if-switch" class="headerlink" title="if-switch"></a><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#if-switch">if-switch</a></h4><ul>
+<li>define temporary variable in <code>if</code> statement like <code>for</code>. </li>
 </ul>
-<p>2.2 Variables and initialization </p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#if-switch">if-switch</a> <ul>
-<li>define temporary variable in if statement like for. </li>
-</ul>
-</li>
-<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Initializer-list">Initializer list</a> <ul>
+<h4 id="Initializer-list"><a href="#Initializer-list" class="headerlink" title="Initializer list"></a><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Initializer-list">Initializer list</a></h4><ul>
 <li>Different initialization methods are specific to each other and <strong>cannot be generic</strong>.</li>
 <li>C++11 first binds the <strong>concept of the initialization list</strong> to the <strong><u>type</u></strong> and calls it <code>std::initializer_list</code>.<br>Just a language formation -&gt; a specific type can be used as var.</li>
 <li>new form: <code>Foo foo2 &#123;3, 4&#125;;</code> </li>
 </ul>
-</li>
-<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Structured-binding">Structured binding</a> <ul>
+<h4 id="Structured-binding"><a href="#Structured-binding" class="headerlink" title="Structured binding"></a><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Structured-binding">Structured binding</a></h4><ul>
 <li><code>auto [x, y, z] = f();</code>  where <code>f()</code> returns a tuple. No need to use <code>std::tie()</code> </li>
 </ul>
-</li>
-</ul>
-<p>2.3 Type inference </p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#auto">auto</a> : <del>needless to say</del>.<ul>
+<h3 id="2-3-Type-inference"><a href="#2-3-Type-inference" class="headerlink" title="2.3 Type inference"></a>2.3 Type inference</h3><h4 id="auto-needless-to-say"><a href="#auto-needless-to-say" class="headerlink" title="auto : needless to say."></a><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#auto">auto</a> : <del>needless to say</del>.</h4><ul>
 <li>Since C++ 20, <code>auto</code> can even be used as <strong>function arguments</strong>.</li>
 </ul>
+<h4 id="decltype"><a href="#decltype" class="headerlink" title="decltype :"></a><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#decltype">decltype</a> :</h4><p>Its usage is very similar to <code>typeof</code> | <code>std::is_same&lt;T, U&gt;</code> </p>
+<h4 id="tail-type-inference"><a href="#tail-type-inference" class="headerlink" title="tail type inference :"></a><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#tail-type-inference">tail type inference</a> :</h4><figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-comment">//cpp 11+</span><br><span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">typename</span> U&gt;</span><br><span class="hljs-function"><span class="hljs-keyword">auto</span> <span class="hljs-title">add2</span><span class="hljs-params">(T x, U y)</span> -&gt; <span class="hljs-title">decltype</span><span class="hljs-params">(x+y)</span></span>&#123;<br>    <span class="hljs-keyword">return</span> x + y;<br>&#125;<br><span class="hljs-comment">//cpp 14+</span><br><span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">typename</span> U&gt;</span><br><span class="hljs-function"><span class="hljs-keyword">auto</span> <span class="hljs-title">add3</span><span class="hljs-params">(T x, U y)</span></span>&#123;<br>    <span class="hljs-keyword">return</span> x + y;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<h4 id="decltype-auto"><a href="#decltype-auto" class="headerlink" title="decltype(auto) :"></a><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#decltype-auto">decltype(auto)</a> :</h4><p>a slightly more complicated use of C++14. used to derive the return type of a forwarding function or package</p>
+<h3 id="2-4-Control-flow"><a href="#2-4-Control-flow" class="headerlink" title="2.4 Control flow"></a>2.4 Control flow</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#if-constexpr">if constexpr</a> : C++17 <code>if constexpr (std::is_integral&lt;T&gt;::value) &#123;</code> put branch judgement in compile time. </li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Range-based-for-loop">Range-based for loop</a> : <code>for (auto element : vec)</code> </li>
+</ul>
+<h3 id="2-5-Templates"><a href="#2-5-Templates" class="headerlink" title="2.5 Templates"></a>2.5 Templates</h3><ul>
+<li><p><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Extern-templates">Extern templates</a> :  C++11 tell the compiler not to trigger the instantiation of the template.<br>  <code>extern template class std::vector&lt;double&gt;; // should not instantiation in current file</code> </p>
 </li>
-<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#decltype">decltype</a> : Its usage is very similar to <code>typeof</code> | <code>std::is_same&lt;T, U&gt;</code> </li>
-<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#tail-type-inference">tail type inference</a> </li>
-<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#decltype-auto">decltype</a> </li>
+<li><p><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#The-quot-gt-quot">The “&gt;”</a> : 也就是<code>&gt;&gt;</code>的编译问题</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Type-alias-templates">Type alias templates</a> : C++11 typedef now can define a new name for template(the following <code>vector&lt;T&gt;</code>)<br>  <code>using TrueDarkMagic = MagicType&lt;std::vector&lt;T&gt;, std::string&gt;;</code> </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Variadic-templates">Variadic templates</a> :  C++11 和 if constexp配套使用. 还有一些细节点击链接. </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Fold-expression">Fold expression</a> : ?</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Non-type-template-parameter-deduction">Non-type template parameter deduction</a> : </p>
+<figure class="highlight cpp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs cpp"><span class="hljs-comment">//after cpp 11</span><br><span class="hljs-keyword">buffer_t</span>&lt;<span class="hljs-keyword">int</span>, <span class="hljs-number">100</span>&gt; buf; <span class="hljs-comment">// 100 as template parameter, `template &lt;class T, int BufSize&gt;`</span><br><span class="hljs-comment">//after cpp 17</span><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">auto</span> value&gt; <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">foo</span><span class="hljs-params">()</span> </span>&#123;<br>    std::cout &lt;&lt; value &lt;&lt; std::endl;<br>    <span class="hljs-keyword">return</span>;<br>&#125;<br><span class="hljs-keyword">int</span> tmp = foo&lt;<span class="hljs-number">10</span>&gt;();<br></code></pre></div></td></tr></table></figure></li>
 </ul>
-<p>2.4 Control flow </p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#if-constexpr">if constexpr</a> </li>
-<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Range-based-for-loop">Range-based for loop</a> </li>
+<h3 id="2-6-Object-oriented"><a href="#2-6-Object-oriented" class="headerlink" title="2.6 Object-oriented"></a>2.6 Object-oriented</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Delegate-constructor">委托构造Delegate constructor</a> : allows a constructor to call another constructor in a constructor in the same class. </li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Inheritance-constructor">Inheritance constructor</a> : 继承构造 C++11 思维导图已经记过了. </li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Explicit-virtual-function-overwrite">Explicit virtual function overwrite</a> : ….</li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#override">override</a> : self-evident </li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#final">final</a> : can’t be override and derived</li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Explicit-delete-default-function">Explicit delete default function</a> : </li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Strongly-typed-enumerations">Strongly typed enumerations</a> : <code>enum class [enum_name] : type &#123; ... &#125;;</code> </li>
 </ul>
-<p>2.5 Templates </p>
+<h2 id="Chapter-03-Language-Runtime-Enhancements"><a href="#Chapter-03-Language-Runtime-Enhancements" class="headerlink" title="Chapter 03: Language Runtime Enhancements"></a>Chapter 03: Language Runtime Enhancements</h2><p><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/03-runtime/#3-1-Lambda-Expression">3.1 Lambda Expression</a> </p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Extern-templates">Extern templates</a> </li>
-<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#The-quot-gt-quot">The “&gt;”</a> </li>
-<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Type-alias-templates">Type alias templates</a> </li>
-<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Variadic-templates">Variadic templates</a> </li>
-<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Fold-expression">Fold expression</a> </li>
-<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Non-type-template-parameter-deduction">Non-type template parameter deduction</a> </li>
+<li><ul>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/03-runtime/#Basics">Basics</a> : C++14 expr capture?</li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/03-runtime/#Generic-Lambda">Generic Lambda</a> : C++14 use auto in parameter list. </li>
 </ul>
-<p>2.6 Object-oriented </p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/03-runtime/#3-2-Function-Object-Wrapper">3.2 Function Object Wrapper</a> </p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Delegate-constructor">Delegate constructor</a> </li>
-<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Inheritance-constructor">Inheritance constructor</a> </li>
-<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Explicit-virtual-function-overwrite">Explicit virtual function overwrite</a> </li>
-<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#override">override</a> </li>
-<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#final">final</a> </li>
-<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Explicit-delete-default-function">Explicit delete default function</a> </li>
-<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/02-usability/#Strongly-typed-enumerations">Strongly typed enumerations</a> </li>
+<li><ul>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/03-runtime/#std-function">std::function</a> : </li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/03-runtime/#std-bind-and-std-placeholder">std::bind and std::placeholder</a> : </li>
+</ul>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/03-runtime/#3-3-rvalue-Reference">3.3 rvalue Reference</a></p>
+<ul>
+<li><ul>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/03-runtime/#lvalue-rvalue-prvalue-xvalue">lvalue, rvalue, prvalue, xvalue</a> <ul>
+<li>pure rvalue就是传统cpp的右值, 而将亡值(expire value)是指函数返回值那样的东西, C++11之后会使用一个效果等同于隐式转换的操作来将返回值变成一个右值. 实际上通过反编译可以看出函数<strong>多传入了上级栈帧的一个临时变量</strong>作为返回值的接收者, rax逻辑上没有存任何东西. 如果在新变量定义阶段接收这样的返回值, 那么这个新变量就是上面的临时变量. </li>
+</ul>
+</li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/03-runtime/#rvalue-reference-and-lvalue-reference">rvalue reference and lvalue reference</a> : 有些细节, 不过不写代码也没必要知道. </li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/03-runtime/#Move-semantics">Move semantics</a> : <ul>
+<li>说的花里胡哨, 什么延长了生存周期, 其实就是多了个参数. 只要记住: <strong>将亡值是一个右值</strong> </li>
+<li><code>v.push_back(std::move(str));</code> 这一句完全不知道哪里清空的str, 反编译没看明白. 记着逻辑上清空了就完了. </li>
+</ul>
+</li>
+<li><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/03-runtime/#Perfect-forwarding">Perfect forwarding</a> : <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/8526598#answer-8527373">https://stackoverflow.com/questions/8526598#answer-8527373</a><ul>
+<li>右值引用的变量本身是左值</li>
+<li>对于左右值引用<strong>的引用</strong>来说适用于reference collapse. 之前是不允许这样的操作的. </li>
+<li>在模板函数参数中使用右值引用, 然后<ul>
+<li>当传入左值时模板参数自动推导成左值引用, 使用上面的规则得到右值引用的左值引用为左值引用. 这个变量确实也是左值, forward其实无作用</li>
+<li>传入右值时还是右值引用, 但是变量本身是左值, 需要forward成右值保持不变. </li>
+</ul>
+</li>
+<li>所以使用右值引用做函数参数, 加上个forward就解决了两种情况. </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/03-runtime/#Conclusion">Conclusion</a></p>
+<p><a target="_blank" rel="noopener" href="https://changkun.de/modern-cpp/en-us/03-runtime/#Further-Readings">Further Readings</a> </p>
+<h2 id="看了半天都写不全-还是cppreference吧"><a href="#看了半天都写不全-还是cppreference吧" class="headerlink" title="看了半天都写不全, 还是cppreference吧"></a>看了半天都写不全, 还是cppreference吧</h2><p><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/11">C++ 11的全部新特性</a>, <a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/14">Cpp14</a>, <a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/17">Cpp17</a>, <a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/20">Cpp20</a>.</p>
+<h3 id="11"><a href="#11" class="headerlink" title="11"></a>11</h3><p>除了语言特性还看到了一些有趣的东西. 比如 ratio library, Concurrency support library等等</p>
+<ul>
+<li>user-defined literal</li>
+<li>attributes</li>
+<li>noexcept : <ul>
+<li>If a function modified with <code>noexcept</code> is thrown, the compiler will use <code>std::terminate()</code> to immediately terminate the program. </li>
+<li> can also be used as an operator to manipulate an expression</li>
+<li><code>noexcept</code> 修饰完一个函数之后能够起到封锁异常扩散的功效，如果内部产生异常，外部也不会触发</li>
+</ul>
+</li>
+<li></li>
 </ul>
 <hr>
-<h1 id="SGI-STL-Src"><a href="#SGI-STL-Src" class="headerlink" title="SGI STL Src"></a>SGI STL Src</h1><p>书中源码: <a target="_blank" rel="noopener" href="https://github.com/yogdzewa/STLSourceCodeNote">https://github.com/yogdzewa/STLSourceCodeNote</a> (更全)</p>
+<h1 id="SGI-STL-Src"><a href="#SGI-STL-Src" class="headerlink" title="SGI STL Src"></a>SGI STL Src</h1><p>书中源码: <a target="_blank" rel="noopener" href="https://github.com/yogdzewa/STLSourceCodeNote">https://github.com/yogdzewa/STLSourceCodeNote</a> (更全) </p>
 <p>标题为别人的笔记, 感觉没必要再做一个. </p>
 <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>六大组件</p>
 <ul>
