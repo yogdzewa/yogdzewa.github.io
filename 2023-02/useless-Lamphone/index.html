@@ -1,0 +1,521 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Yogdzewa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Lamphone相关: 什么是傅里叶变换. 还是得要从时域&amp;频域讲起能听懂, 看了几个讲公式的真费劲. 还有这个也行 什么是谱减法: 估计出噪声的能量谱, 用含噪能量减去噪声能量即可, 然后取平方根.   $$|X(\omega)|^2 &#x3D; |Y(\omega)|^2 - |N(\omega)|^2$$  什么是normalization.   nsf5检测论文: JPEG压缩原理 左上角">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Yogdzewa">
+<meta property="og:url" content="https://yogdzewa.github.io/2023-02/useless-Lamphone/index.html">
+<meta property="og:site_name" content="Yogdzewa">
+<meta property="og:description" content="Lamphone相关: 什么是傅里叶变换. 还是得要从时域&amp;频域讲起能听懂, 看了几个讲公式的真费劲. 还有这个也行 什么是谱减法: 估计出噪声的能量谱, 用含噪能量减去噪声能量即可, 然后取平方根.   $$|X(\omega)|^2 &#x3D; |Y(\omega)|^2 - |N(\omega)|^2$$  什么是normalization.   nsf5检测论文: JPEG压缩原理 左上角">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2023/03/03/QwMqFvbgtTKhDVE.jpg">
+<meta property="article:published_time" content="2023-02-28T14:04:29.550Z">
+<meta property="article:modified_time" content="2023-03-05T17:42:07.506Z">
+<meta property="article:author" content="Yogdzewa">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2023/03/03/QwMqFvbgtTKhDVE.jpg">
+  
+  
+  <title>Yogdzewa</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/obsidian.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yogdzewa.github.io","root":"/","version":"1.8.13","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>(￣.￣)</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/image/edit2.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-02-28 22:04" pubdate>
+        2023年2月28日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      643 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      9 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none"></h1>
+            
+              <p class="note note-info">
+                
+                  不可视境界线最后变动于：2023年3月6日 凌晨
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h1 id="Lamphone相关"><a href="#Lamphone相关" class="headerlink" title="Lamphone相关:"></a>Lamphone相关:</h1><ul>
+<li>什么是<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/19714540/answer/1119070975">傅里叶变换</a>. 还是得要从时域&amp;频域讲起能听懂, 看了几个讲公式的真费劲. 还有<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/19714540/answer/334686351">这个也行</a></li>
+<li>什么是<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/db50b1cc2f65">谱减法</a>: 估计出噪声的能量谱, 用含噪能量减去噪声能量即可, 然后取平方根. </li>
+</ul>
+<p>$$<br>|X(\omega)|^2 = |Y(\omega)|^2 - |N(\omega)|^2<br>$$</p>
+<ul>
+<li>什么是<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Normalization_(statistics)#:~:text=Some%20types%20of%20normalization%20involve%20only%20a%20rescaling">normalization</a>. </li>
+</ul>
+<h1 id="nsf5检测论文"><a href="#nsf5检测论文" class="headerlink" title="nsf5检测论文:"></a>nsf5检测论文:</h1><ul>
+<li>JPEG压缩<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0d0361fca2ab">原理</a> 左上角的DCT系数是DC系数. 其余都是AC. </li>
+<li><a target="_blank" rel="noopener" href="https://www.datacenters.com/news/what-is-a-vcpu-and-how-do-you-calculate-vcpu-to-cpu">vCPU</a>  <code>(Threads x Cores) x Physical CPU = Number vCPU</code> </li>
+<li><a target="_blank" rel="noopener" href="https://aws.amazon.com/what-is/neural-network/#:~:text=A%20neural%20network%20is%20a,that%20resembles%20the%20human%20brain.">neural network</a> | <a target="_blank" rel="noopener" href="https://www.quora.com/What-is-the-difference-between-deep-learning-and-shallow-learning">shallow learning</a> | <a target="_blank" rel="noopener" href="https://monkeylearn.com/blog/what-is-a-classifier/">classifier</a> | <a target="_blank" rel="noopener" href="https://analyticsindiamag.com/a-complete-understanding-of-dense-layers-in-neural-networks/">dense_layer</a> | <a target="_blank" rel="noopener" href="https://towardsdatascience.com/combine-your-machine-learning-models-with-voting-fa1b42790d84">voting</a> | <a target="_blank" rel="noopener" href="https://towardsdatascience.com/batch-normalization-in-3-levels-of-understanding-14c2da90a338">BN</a> | </li>
+</ul>
+<img src="https://s2.loli.net/2023/03/03/QwMqFvbgtTKhDVE.jpg" srcset="/img/loading.gif" lazyload alt="img" style="zoom:67%;" />
+
+<ul>
+<li><a target="_blank" rel="noopener" href="https://machinelearningmastery.com/batch-normalization-for-training-of-deep-neural-networks/">Dense-BatchNormalization structure used by paper</a> </li>
+<li>发现一个google的<a target="_blank" rel="noopener" href="https://developers.google.com/machine-learning/crash-course/descending-into-ml/training-and-loss#:~:text=Loss%20is%20the%20penalty%20for,otherwise%2C%20the%20loss%20is%20greater.">ML网站</a>, 很不错的样子.  crash course, 即速成课. </li>
+<li><a target="_blank" rel="noopener" href="https://keras.io/api/">keras</a>, 一个python AI框架. </li>
+</ul>
+<p>资源: </p>
+<ul>
+<li>DCTR<a target="_blank" rel="noopener" href="http://dde.binghamton.edu/download/feature_extractors/">源码网站</a>, xyw发过上面的代码. </li>
+<li>论文<a target="_blank" rel="noopener" href="https://www.kaggle.com/datasets/h2020simargl/jpeg-stegochecker-dataset?resource=download&select=nsf5_dctr_stego_04.csv">dataset</a>, 含有dctr数据集. 我来瞧瞧能不能直接用. 是通过<a target="_blank" rel="noopener" href="http://agents.fel.cvut.cz/boss/">BOSS</a>数据集来得到的. </li>
+<li>另外一个<a target="_blank" rel="noopener" href="https://github.com/YangzlTHU/IStego100K">dataset</a>, 仅供参考, 正确率没有那么高. </li>
+</ul>
+<p>matlab:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/matlabcentral/answers/1599749-create-a-datastore-from-a-table">table in memory to datastore</a> </li>
+<li><a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/matlabcentral/answers/522086-how-can-i-train-multi-input-deep-network-without-datastore">https://ww2.mathworks.cn/matlabcentral/answers/522086-how-can-i-train-multi-input-deep-network-without-datastore</a></li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"312db7ebbc085de5d28d","clientSecret":"85ea3cefd13c73a6d85c1813adfde4f1550bfbda","repo":"yogdzewa.github.io","owner":"yogdzewa","admin":["yogdzewa"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
+          {
+            id: '93f80fdd0f86f08af6555aa50e8e0402'
+          }
+        )
+        var gitalk = new Gitalk(options);
+        gitalk.render('gitalk-container');
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-x-md">
+    <div class="container custom post-custom mx-auto">
+      <img src="https://octodex.github.com/images/jetpacktocat.png" srcset="/img/loading.gif" lazyload class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;">
+    </div>
+  </div>
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
