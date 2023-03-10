@@ -16,16 +16,17 @@
   <meta name="author" content="Yogdzewa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Lamphone相关: 什么是傅里叶变换. 还是得要从时域&amp;频域讲起能听懂, 看了几个讲公式的真费劲. 还有这个也行 什么是谱减法: 估计出噪声的能量谱, 用含噪能量减去噪声能量即可, 然后取平方根.   $$|X(\omega)|^2 &#x3D; |Y(\omega)|^2 - |N(\omega)|^2$$  什么是normalization.   nsf5检测论文: JPEG压缩原理 左上角">
+    <meta name="description" content="Lamphone相关: 什么是傅里叶变换. 还是得要从时域&amp;频域讲起能听懂, 看了几个讲公式的真费劲. 还有这个也行 DCT变换 :  什么是谱减法: 估计出噪声的能量谱, 用含噪能量减去噪声能量即可, 然后取平方根.   $$|X(\omega)|^2 &#x3D; |Y(\omega)|^2 - |N(\omega)|^2$$  什么是normalization.   nsf5检测论文: JPE">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Yogdzewa">
 <meta property="og:url" content="https://yogdzewa.github.io/2023-02/useless-Lamphone/index.html">
 <meta property="og:site_name" content="Yogdzewa">
-<meta property="og:description" content="Lamphone相关: 什么是傅里叶变换. 还是得要从时域&amp;频域讲起能听懂, 看了几个讲公式的真费劲. 还有这个也行 什么是谱减法: 估计出噪声的能量谱, 用含噪能量减去噪声能量即可, 然后取平方根.   $$|X(\omega)|^2 &#x3D; |Y(\omega)|^2 - |N(\omega)|^2$$  什么是normalization.   nsf5检测论文: JPEG压缩原理 左上角">
+<meta property="og:description" content="Lamphone相关: 什么是傅里叶变换. 还是得要从时域&amp;频域讲起能听懂, 看了几个讲公式的真费劲. 还有这个也行 DCT变换 :  什么是谱减法: 估计出噪声的能量谱, 用含噪能量减去噪声能量即可, 然后取平方根.   $$|X(\omega)|^2 &#x3D; |Y(\omega)|^2 - |N(\omega)|^2$$  什么是normalization.   nsf5检测论文: JPE">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.loli.net/2023/03/03/QwMqFvbgtTKhDVE.jpg">
+<meta property="og:image" content="https://s2.loli.net/2023/03/07/UuCBKElehpYrwL1.gif">
 <meta property="article:published_time" content="2023-02-28T14:04:29.550Z">
-<meta property="article:modified_time" content="2023-03-05T17:42:07.506Z">
+<meta property="article:modified_time" content="2023-03-07T10:19:21.012Z">
 <meta property="article:author" content="Yogdzewa">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://s2.loli.net/2023/03/03/QwMqFvbgtTKhDVE.jpg">
@@ -210,7 +211,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      643 字
+      779 字
     </span>
   
 
@@ -219,7 +220,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      9 分钟
+      10 分钟
     </span>
   
 
@@ -260,13 +261,14 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2023年3月6日 凌晨
+                  不可视境界线最后变动于：2023年3月7日 晚上
                 
               </p>
             
             <div class="markdown-body">
               <h1 id="Lamphone相关"><a href="#Lamphone相关" class="headerlink" title="Lamphone相关:"></a>Lamphone相关:</h1><ul>
 <li>什么是<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/19714540/answer/1119070975">傅里叶变换</a>. 还是得要从时域&amp;频域讲起能听懂, 看了几个讲公式的真费劲. 还有<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/19714540/answer/334686351">这个也行</a></li>
+<li>DCT<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/85299446">变换</a> : </li>
 <li>什么是<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/db50b1cc2f65">谱减法</a>: 估计出噪声的能量谱, 用含噪能量减去噪声能量即可, 然后取平方根. </li>
 </ul>
 <p>$$<br>|X(\omega)|^2 = |Y(\omega)|^2 - |N(\omega)|^2<br>$$</p>
@@ -284,6 +286,10 @@
 <li><a target="_blank" rel="noopener" href="https://machinelearningmastery.com/batch-normalization-for-training-of-deep-neural-networks/">Dense-BatchNormalization structure used by paper</a> </li>
 <li>发现一个google的<a target="_blank" rel="noopener" href="https://developers.google.com/machine-learning/crash-course/descending-into-ml/training-and-loss#:~:text=Loss%20is%20the%20penalty%20for,otherwise%2C%20the%20loss%20is%20greater.">ML网站</a>, 很不错的样子.  crash course, 即速成课. </li>
 <li><a target="_blank" rel="noopener" href="https://keras.io/api/">keras</a>, 一个python AI框架. </li>
+<li><a target="_blank" rel="noopener" href="https://d2l.ai/chapter_convolutional-neural-networks/conv-layer.html">Dive into Deep learning</a> : 链接为卷积层相关定义. 搜Undecimated DCT看到的. 疑是非抽样DCT. </li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/22298352">理解卷积</a> : 卷积是为了表示一个函数对另一个函数所有微量的响应的总叠加效果</li>
+<li><a target="_blank" rel="noopener" href="https://towardsdatascience.com/you-should-understand-sub-sampling-layers-within-deep-learning-b51016acd551">subsampling</a> | </li>
+<li></li>
 </ul>
 <p>资源: </p>
 <ul>
@@ -295,8 +301,10 @@
 <ul>
 <li><a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/matlabcentral/answers/1599749-create-a-datastore-from-a-table">table in memory to datastore</a> </li>
 <li><a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/matlabcentral/answers/522086-how-can-i-train-multi-input-deep-network-without-datastore">https://ww2.mathworks.cn/matlabcentral/answers/522086-how-can-i-train-multi-input-deep-network-without-datastore</a></li>
+<li><a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/help/parallel-computing/choosing-a-parallel-computing-solution.html">parallel</a> </li>
+<li>string是一个字符串数组. </li>
 </ul>
-
+<img src="https://s2.loli.net/2023/03/07/UuCBKElehpYrwL1.gif" srcset="/img/loading.gif" lazyload alt="img" style="zoom:50%;" />
             </div>
             <hr>
             <div>
