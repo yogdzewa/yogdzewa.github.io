@@ -16,20 +16,24 @@
   <meta name="author" content="Yogdzewa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Lamphone相关: 什么是傅里叶变换. 还是得要从时域&amp;频域讲起能听懂, 看了几个讲公式的真费劲. 还有这个也行 DCT变换 :  什么是谱减法: 估计出噪声的能量谱, 用含噪能量减去噪声能量即可, 然后取平方根.   $$|X(\omega)|^2 &#x3D; |Y(\omega)|^2 - |N(\omega)|^2$$  什么是normalization.   nsf5检测论文: JPE">
+    <meta name="description" content="实验目的阅读 Lamphone: Real-Time Passive Sound Recovery from Light Bulb Vibrations 论文中还原算法伪代码后, 编写实际代码将给定光电传感器数据序列还原成人耳能够辨别的声音.  实验环境MATLAB R2022b Windows 实验流程论文流程 威胁模型     首先测量灯泡在各种声音情况下的振动情况, 包括在不主动发声的室内,">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Yogdzewa">
-<meta property="og:url" content="https://yogdzewa.github.io/2023-02/useless-Lamphone/index.html">
+<meta property="og:url" content="https://yogdzewa.github.io/2023-03/useless-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/index.html">
 <meta property="og:site_name" content="Yogdzewa">
-<meta property="og:description" content="Lamphone相关: 什么是傅里叶变换. 还是得要从时域&amp;频域讲起能听懂, 看了几个讲公式的真费劲. 还有这个也行 DCT变换 :  什么是谱减法: 估计出噪声的能量谱, 用含噪能量减去噪声能量即可, 然后取平方根.   $$|X(\omega)|^2 &#x3D; |Y(\omega)|^2 - |N(\omega)|^2$$  什么是normalization.   nsf5检测论文: JPE">
+<meta property="og:description" content="实验目的阅读 Lamphone: Real-Time Passive Sound Recovery from Light Bulb Vibrations 论文中还原算法伪代码后, 编写实际代码将给定光电传感器数据序列还原成人耳能够辨别的声音.  实验环境MATLAB R2022b Windows 实验流程论文流程 威胁模型     首先测量灯泡在各种声音情况下的振动情况, 包括在不主动发声的室内,">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s2.loli.net/2023/03/03/QwMqFvbgtTKhDVE.jpg">
-<meta property="og:image" content="https://s2.loli.net/2023/03/07/UuCBKElehpYrwL1.gif">
-<meta property="article:published_time" content="2023-02-28T14:04:29.550Z">
-<meta property="article:modified_time" content="2023-03-18T16:08:56.156Z">
+<meta property="og:image" content="c:/Users/L/AppData/Roaming/Typora/typora-user-images/image-20230312204909777.png">
+<meta property="og:image" content="https://s2.loli.net/2023/03/12/UrLg5ItAWav4RNj.png">
+<meta property="og:image" content="https://s2.loli.net/2023/03/12/TdwSGOAfs9oz2ul.png">
+<meta property="og:image" content="https://s2.loli.net/2023/03/12/6q2DNPohmJKXt4S.png">
+<meta property="og:image" content="https://s2.loli.net/2023/03/12/nvLBuidjsy3FlqP.png">
+<meta property="og:image" content="https://s2.loli.net/2023/03/12/n5P9JSCcDmANfIQ.png">
+<meta property="article:published_time" content="2023-03-12T12:28:45.005Z">
+<meta property="article:modified_time" content="2023-03-14T06:22:50.711Z">
 <meta property="article:author" content="Yogdzewa">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://s2.loli.net/2023/03/03/QwMqFvbgtTKhDVE.jpg">
+<meta name="twitter:image" content="c:/Users/L/AppData/Roaming/Typora/typora-user-images/image-20230312204909777.png">
   
   
   <title>Yogdzewa</title>
@@ -200,8 +204,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2023-02-28 22:04" pubdate>
-        2023年2月28日 晚上
+      <time datetime="2023-03-12 20:28" pubdate>
+        2023年3月12日 晚上
       </time>
     </span>
   
@@ -211,7 +215,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.6k 字
+      2.7k 字
     </span>
   
 
@@ -220,7 +224,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      20 分钟
+      34 分钟
     </span>
   
 
@@ -261,61 +265,60 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2023年3月19日 凌晨
+                  不可视境界线最后变动于：2023年3月14日 下午
                 
               </p>
             
             <div class="markdown-body">
-              <h1 id="Lamphone相关"><a href="#Lamphone相关" class="headerlink" title="Lamphone相关:"></a>Lamphone相关:</h1><ul>
-<li>什么是<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/19714540/answer/1119070975">傅里叶变换</a>. 还是得要从时域&amp;频域讲起能听懂, 看了几个讲公式的真费劲. 还有<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/19714540/answer/334686351">这个也行</a></li>
-<li>DCT<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/85299446">变换</a> : </li>
-<li>什么是<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/db50b1cc2f65">谱减法</a>: 估计出噪声的能量谱, 用含噪能量减去噪声能量即可, 然后取平方根. </li>
+              <h2 id="实验目的"><a href="#实验目的" class="headerlink" title="实验目的"></a>实验目的</h2><p>阅读 <em>Lamphone: Real-Time Passive Sound Recovery from Light Bulb Vibrations</em> 论文中还原算法伪代码后, 编写实际代码将给定光电传感器数据序列还原成人耳能够辨别的声音. </p>
+<h2 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h2><p>MATLAB R2022b Windows</p>
+<h2 id="实验流程"><a href="#实验流程" class="headerlink" title="实验流程"></a>实验流程</h2><h3 id="论文流程"><a href="#论文流程" class="headerlink" title="论文流程"></a>论文流程</h3><ul>
+<li>威胁模型</li>
 </ul>
-<p>$$<br>|X(\omega)|^2 = |Y(\omega)|^2 - |N(\omega)|^2<br>$$</p>
-<ul>
-<li>什么是<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Normalization_(statistics)#:~:text=Some%20types%20of%20normalization%20involve%20only%20a%20rescaling">normalization</a>. </li>
-</ul>
-<h1 id="nsf5检测论文"><a href="#nsf5检测论文" class="headerlink" title="nsf5检测论文:"></a>nsf5检测论文:</h1><ul>
-<li>JPEG压缩<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0d0361fca2ab">原理</a> 左上角的DCT系数是DC系数. 其余都是AC. </li>
-<li><a target="_blank" rel="noopener" href="https://www.datacenters.com/news/what-is-a-vcpu-and-how-do-you-calculate-vcpu-to-cpu">vCPU</a>  <code>(Threads x Cores) x Physical CPU = Number vCPU</code> </li>
-<li>深度学习概念: <a target="_blank" rel="noopener" href="https://aws.amazon.com/what-is/neural-network/#:~:text=A%20neural%20network%20is%20a,that%20resembles%20the%20human%20brain.">neural network</a> | <a target="_blank" rel="noopener" href="https://www.quora.com/What-is-the-difference-between-deep-learning-and-shallow-learning">shallow learning</a> | <a target="_blank" rel="noopener" href="https://monkeylearn.com/blog/what-is-a-classifier/">classifier</a> | <a target="_blank" rel="noopener" href="https://analyticsindiamag.com/a-complete-understanding-of-dense-layers-in-neural-networks/">dense_layer</a> | <a target="_blank" rel="noopener" href="https://towardsdatascience.com/combine-your-machine-learning-models-with-voting-fa1b42790d84">voting</a> | <a target="_blank" rel="noopener" href="https://towardsdatascience.com/batch-normalization-in-3-levels-of-understanding-14c2da90a338">BN</a> | <a target="_blank" rel="noopener" href="https://towardsdatascience.com/you-should-understand-sub-sampling-layers-within-deep-learning-b51016acd551">subsampling</a> | <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Convex_optimization">凸优化</a> | <a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/help/deeplearning/ref/trainingoptions.html#bu59f0q_sep_mw_6dcd8e56-4de5-497d-a48e-0f6f804f57f6_head">SGDM</a> |<br>wiki: <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Machine_learning">Machine Learning</a> | <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Stochastic_gradient_descent#Background">SGD</a> | </li>
-</ul>
-<img src="https://s2.loli.net/2023/03/03/QwMqFvbgtTKhDVE.jpg" srcset="/img/loading.gif" lazyload alt="img" style="zoom:67%;" />
+<img src="C:\Users\L\AppData\Roaming\Typora\typora-user-images\image-20230312204909777.png" srcset="/img/loading.gif" lazyload alt="image-20230312204909777" style="zoom:67%;" />
 
 <ul>
-<li><p><a target="_blank" rel="noopener" href="https://machinelearningmastery.com/batch-normalization-for-training-of-deep-neural-networks/">Dense-BatchNormalization structure used by paper</a> </p>
-</li>
-<li><p>发现一个google的<a target="_blank" rel="noopener" href="https://developers.google.com/machine-learning/crash-course/descending-into-ml/training-and-loss#:~:text=Loss%20is%20the%20penalty%20for,otherwise%2C%20the%20loss%20is%20greater.">ML网站</a>, 很不错的样子.  crash course, 即速成课. </p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://keras.io/api/">keras</a>, 一个python AI框架. </p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://d2l.ai/chapter_convolutional-neural-networks/conv-layer.html">Dive into Deep learning</a> : 链接为卷积层相关定义. 搜Undecimated DCT看到的. 疑是非抽样DCT. </p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/22298352">理解卷积</a> : 卷积是为了表示一个函数对另一个函数所有微量的响应的总叠加效果</p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://medium.com/towards-data-science/how-to-choose-the-optimal-learning-rate-for-neural-networks-362111c5c783">how to choose the optimal learning rate for neural network</a>: optimizer用来选取loss空间上的direction &amp;&amp; magnitude, 以进一步降低loss function的数值. 可用随机梯度下降和Adam等optimizer. 然后损失曲线的横坐标是参数向量. </p>
-</li>
-<li><p>Mean squared error (MSE) is a common loss function used for regression problems. It calculates the average squared difference between the predicted values and the actual values. The goal of the training process is to minimize this value.</p>
-<p>Cross-entropy is a loss function commonly used for classification problems. It measures the dissimilarity between the predicted probability distribution and the true distribution.</p>
-<p>Hinge loss is another loss function used for classification problems, particularly for support vector machines (SVMs). It penalizes predictions that are not only incorrect but also far from the correct class. </p>
-</li>
-<li></li>
+<li>首先测量灯泡在各种声音情况下的振动情况, 包括在不主动发声的室内, 使用的是陀螺仪. </li>
+<li>使用光电二极管, ADC等器件采集到光信号在距离, 声音频率, 灯泡型号不同组合下的变化值, 以确定ADC等器件所需要的输入精度. </li>
+<li>在安静环境下, 正弦声波, 不同频率声波的作用下测量光电二极管的FFT结果和SNR信噪比, 分析了白炽灯, LED灯和荧光灯的区别. </li>
+<li>还原算法(如下一节)</li>
+<li>评估表现. </li>
 </ul>
-<p>资源: </p>
+<h3 id="理解算法伪代码"><a href="#理解算法伪代码" class="headerlink" title="理解算法伪代码"></a>理解算法伪代码</h3><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-comment">//Algorithm 1 Recovering Audio from Optical Signal</span><br><span class="hljs-comment">//INPUT: optical-stream, fs, equalizer-function</span><br> bulbFs = <span class="hljs-number">100</span><br> <span class="hljs-keyword">while</span> (!isEmpty(optical-stream) <span class="hljs-keyword">do</span>)<br> <span class="hljs-comment">/*Read from optical-stream to a buffer*/</span><br> opt[] = read(optical-stream,fs)<br> snd* = opt<br> <span class="hljs-comment">/*Filtering side effects*/</span><br> <span class="hljs-keyword">for</span> (i = bulbFs; i &lt; fs/<span class="hljs-number">2</span>; i+=bulbFs) <span class="hljs-keyword">do</span><br> snd* = bandstop(i,snd*)<br> <span class="hljs-comment">/*Scaling to [-1,1]*/</span><br> min = min(snd*), max = max(snd*)<br> <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len(snd*); i+=<span class="hljs-number">1</span>) <span class="hljs-keyword">do</span><br> snd*[i] = <span class="hljs-number">-1</span> + (snd∗[i]−min)∗<span class="hljs-number">2</span>/(max−min)<br> <span class="hljs-comment">/*Noise reduction*/</span><br> snd* = spectral-subtraction(snd*)<br> <span class="hljs-comment">/*Balancing*/</span><br> snd* = equalizer(snd*,equalizer-function)<br> play (snd*)<br></code></pre></div></td></tr></table></figure>
+
+<ol>
+<li>Filtering Side Effects: 使用bandstop函数来过滤灯光本身的频率(100Hz)以及他的谐波(100*n Hz, n为正整数). 这些频率和要还原的目标声音本身无关. </li>
+<li>Speech Enhancement: 通过将剩余数据归一化处理之后来实现语音增强, 以提高声音的辨识度. </li>
+<li>Noise Reduction: 使用谱减法(spectral subtraction)来降噪. 因为此方法速度较快, 能够较好的应用于实时还原声音. </li>
+<li>Equalizer: 使用Audacity软件来压制50Hz以下, 1000Hz以上的声音, 并提高中间频段的人声, 进一步提高</li>
+</ol>
+<h3 id="算法代码"><a href="#算法代码" class="headerlink" title="算法代码"></a>算法代码</h3><figure class="highlight matlab"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs matlab">fs = <span class="hljs-number">10000</span>;<br>optical_signal = csvread(<span class="hljs-string">&quot;optical\EM_rawData.csv&quot;</span>);<br><span class="hljs-comment">%% raw signal</span><br><span class="hljs-built_in">figure</span>; CreateSpec(optical_signal,fs); title(<span class="hljs-string">&#x27;Raw signal&#x27;</span>);<br>audiowrite(<span class="hljs-string">&#x27;EM_rawData_recon\EM_rawData.wav&#x27;</span>,optical_signal,fs);<br><span class="hljs-comment">%% bandstops</span><br>optical_signal = bandstops(optical_signal,fs);<br><span class="hljs-built_in">figure</span>; CreateSpec(optical_signal,fs); title(<span class="hljs-string">&#x27;EM_rawData Bandstop signal&#x27;</span>);<br>audiowrite(<span class="hljs-string">&#x27;EM_rawData_recon\EM_rawData_bandstop.wav&#x27;</span>,optical_signal,fs);<br><span class="hljs-comment">%% normalization</span><br>optical_signal = Normalize_signal(optical_signal);<br><span class="hljs-built_in">figure</span>; CreateSpec(optical_signal,fs); title(<span class="hljs-string">&#x27;EM_rawData Normalized signal&#x27;</span>);<br>audiowrite(<span class="hljs-string">&#x27;EM_rawData_recon\EM_rawData_normalize.wav&#x27;</span>,optical_signal,fs);<br><span class="hljs-comment">%% noise reduction</span><br>optical_signal = v_specsub(optical_signal,fs);<br><span class="hljs-built_in">figure</span>; CreateSpec(optical_signal,fs); title(<span class="hljs-string">&#x27;EM_rawData Noise Reduction signal&#x27;</span>);<br>audiowrite(<span class="hljs-string">&#x27;EM_rawData_recon\EM_rawData_noisereduc.wav&#x27;</span>,optical_signal,fs);<br></code></pre></div></td></tr></table></figure>
+
+<p>参照算法容易写出顶层代码, 在每一步骤结束之后绘制相应FFT图像, 并保存相应音频文件. 最后一步的均衡器由于使用后没有明显区别并且是在另一个软件进行处理所以没有涉及. </p>
 <ul>
-<li>DCTR<a target="_blank" rel="noopener" href="http://dde.binghamton.edu/download/feature_extractors/">源码网站</a>, xyw发过上面的代码. </li>
-<li>论文<a target="_blank" rel="noopener" href="https://www.kaggle.com/datasets/h2020simargl/jpeg-stegochecker-dataset?resource=download&select=nsf5_dctr_stego_04.csv">dataset</a>, 含有dctr数据集. 我来瞧瞧能不能直接用. 是通过<a target="_blank" rel="noopener" href="http://agents.fel.cvut.cz/boss/">BOSS</a>数据集来得到的. </li>
-<li>另外一个<a target="_blank" rel="noopener" href="https://github.com/YangzlTHU/IStego100K">dataset</a>, 仅供参考, 正确率没有那么高. </li>
+<li><p>在bandstop中直接使用该函数即可, 最后加上一个高通滤波过滤低于55Hz的声音</p>
+<figure class="highlight matlab"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs matlab"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">s</span> = <span class="hljs-title">bandstops</span><span class="hljs-params">(s1,fs)</span></span><br>    <span class="hljs-keyword">for</span> bs = <span class="hljs-number">100</span>:<span class="hljs-number">100</span>:<span class="hljs-number">800</span><br>        s1 = bandstop(s1,[bs<span class="hljs-number">-2</span> bs+<span class="hljs-number">2</span>],fs);<br>    <span class="hljs-keyword">end</span><br>    s = highpass(s1,<span class="hljs-number">55</span>,fs);<br><span class="hljs-keyword">end</span><br></code></pre></div></td></tr></table></figure></li>
+<li><p>归一化代码</p>
+<figure class="highlight matlab"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs matlab"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">S</span> = <span class="hljs-title">Normalize_signal</span><span class="hljs-params">(A)</span></span><br>    S = A;<br>    maxsx = <span class="hljs-built_in">max</span>(S);<br>    minsx = <span class="hljs-built_in">min</span>(S);<br>    <span class="hljs-keyword">if</span>(maxsx~=<span class="hljs-number">1.0</span> || minsx ~= <span class="hljs-number">-1.0</span>)<br>        range = maxsx-minsx;<br>        S = <span class="hljs-number">2</span>*S/range;<br>        newmx = <span class="hljs-built_in">max</span>(S);<br>        offset = newmx<span class="hljs-number">-1.0</span>;<br>        S = S-offset;<br>    <span class="hljs-keyword">end</span><br><span class="hljs-keyword">end</span><br></code></pre></div></td></tr></table></figure></li>
+<li><p>谱减法使用VOICEBOX中函数<code>v_specsub()</code>. </p>
+</li>
+<li><p>得到最终文件: <code>EM_rawData_noisereduc.wav</code> </p>
+</li>
 </ul>
-<p>matlab:</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/matlabcentral/answers/1599749-create-a-datastore-from-a-table">table in memory to datastore</a> </li>
-<li><a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/matlabcentral/answers/522086-how-can-i-train-multi-input-deep-network-without-datastore">https://ww2.mathworks.cn/matlabcentral/answers/522086-how-can-i-train-multi-input-deep-network-without-datastore</a></li>
-<li><a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/help/parallel-computing/choosing-a-parallel-computing-solution.html">parallel</a> </li>
-<li>string是一个字符串数组. </li>
-<li>可以自定义regression layer中的损失函数, 默认是均方根误差. </li>
-</ul>
-<img src="https://s2.loli.net/2023/03/07/UuCBKElehpYrwL1.gif" srcset="/img/loading.gif" lazyload alt="img" style="zoom:50%;" />
+<p>附: 示例Audacity的均衡器, 应用后保存即可, 但听感上并无明显区别. 可能是由于源数据质量较好. </p>
+<img src="https://s2.loli.net/2023/03/12/UrLg5ItAWav4RNj.png" srcset="/img/loading.gif" lazyload alt="image-20230312220709687" style="zoom:50%;" />
+
+<p>生成的四张FFT频谱图:</p>
+<img src="https://s2.loli.net/2023/03/12/TdwSGOAfs9oz2ul.png" srcset="/img/loading.gif" lazyload alt="image-20230312213913438" style="zoom:50%;" />
+
+<img src="https://s2.loli.net/2023/03/12/6q2DNPohmJKXt4S.png" srcset="/img/loading.gif" lazyload alt="image-20230312213937313" style="zoom:50%;" />
+
+<img src="https://s2.loli.net/2023/03/12/nvLBuidjsy3FlqP.png" srcset="/img/loading.gif" lazyload alt="image-20230312214000244" style="zoom:50%;" />
+
+<img src="https://s2.loli.net/2023/03/12/n5P9JSCcDmANfIQ.png" srcset="/img/loading.gif" lazyload alt="image-20230312214015214" style="zoom:50%;" />
+
+<h2 id="实验总结"><a href="#实验总结" class="headerlink" title="实验总结"></a>实验总结</h2><p>通过这次实验学习了matlab的安装使用, 以及论文的阅读理解和复现动手能力, 算法部分并不复杂, 唯一没有弄明白的是谱减法的实现, 但这一步骤已经有现成的库函数所以直接调用. 原音频质量较高所以缺少一些步骤也可以清晰的听出话语声音. </p>
+
             </div>
             <hr>
             <div>
@@ -342,7 +345,7 @@
         var options = Object.assign(
           {"clientID":"312db7ebbc085de5d28d","clientSecret":"85ea3cefd13c73a6d85c1813adfde4f1550bfbda","repo":"yogdzewa.github.io","owner":"yogdzewa","admin":["yogdzewa"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
           {
-            id: '93f80fdd0f86f08af6555aa50e8e0402'
+            id: '4b1ffa71b15528698e0647028001f2b2'
           }
         )
         var gitalk = new Gitalk(options);

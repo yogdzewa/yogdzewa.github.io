@@ -28,7 +28,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/CSCD70/image-20220315185203276.png">
 <meta property="og:image" content="https://yogdzewa.github.io/image/CSCD70/image-20220315183948503.png">
 <meta property="article:published_time" content="2022-03-08T14:00:00.000Z">
-<meta property="article:modified_time" content="2022-12-09T03:56:06.044Z">
+<meta property="article:modified_time" content="2023-03-19T03:18:38.349Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="complier">
 <meta name="twitter:card" content="summary_large_image">
@@ -214,7 +214,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      6k 字
+      6.4k 字
     </span>
   
 
@@ -223,7 +223,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      75 分钟
+      80 分钟
     </span>
   
 
@@ -264,7 +264,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2022年12月9日 中午
+                  不可视境界线最后变动于：2023年3月19日 上午
                 
               </p>
             
@@ -295,12 +295,17 @@
 <h2 id="Code-Representation-IR"><a href="#Code-Representation-IR" class="headerlink" title="Code Representation: IR"></a>Code Representation: IR</h2><ul>
 <li>LLVM is strongly typed with a simple type system. such as <code>i32</code> type.</li>
 <li>the calling convention is abstracted through <code>call</code> and <code>ret</code> instructions and explicit arguments</li>
-<li> it uses <strong>an infinite set of temporaries</strong> named with a % character instead of specific named registers. </li>
+<li>it uses <strong>an infinite set of temporaries</strong> named with a % character instead of specific named registers. </li>
 <li>LLVM IR is actually defined in <strong>three</strong> isomorphic forms: the <strong>textual</strong> format above, an <strong>in-memory data structure</strong> inspected and modified by optimizations themselves, and an efficient and dense on-disk binary “<strong>bitcode</strong>“ format.<ul>
 <li><code>.bc</code> is bitcode, <code>.ll</code> is textual format.</li>
 </ul>
 </li>
-<li></li>
+</ul>
+<p>SSA: </p>
+<ul>
+<li>all memory accesses are explicit with <strong>load/store</strong> instructions. </li>
+<li>SSA construction requires non-trivial algorithms and data structures. While LLVM does require all register values to be in SSA form, it does not require (or permit) memory objects to be in SSA form</li>
+<li>the LLVM optimizer has a highly-tuned optimization pass named “<a target="_blank" rel="noopener" href="https://llvm.org/docs/tutorial/MyFirstLanguageFrontend/LangImpl07.html#memory-in-llvm"><strong>mem2reg</strong></a>” that handles this case, promoting allocas like this into SSA registers, inserting Phi nodes as appropriate. </li>
 </ul>
 <h2 id="Class-Architecture"><a href="#Class-Architecture" class="headerlink" title="Class Architecture"></a>Class Architecture</h2><h3 id="IR所有头文件"><a href="#IR所有头文件" class="headerlink" title="IR所有头文件"></a><a target="_blank" rel="noopener" href="https://llvm.org/doxygen/dir_c3e93f23a4a31c717998b98ce143b7c0.html">IR所有头文件</a></h3><h3 id="Value"><a href="#Value" class="headerlink" title="Value"></a><a target="_blank" rel="noopener" href="https://llvm.org/docs/ProgrammersManual.html#the-value-class">Value</a></h3><p>就和名字一个意思, It represents a typed value that may be used (among other things) as an operand to an instruction. To keep track of this relationship, the <code>Value</code> class keeps a list of all of the <code>User</code>s that is using it( 就是<code>Use *UseList;</code>)</p>
 <p>有一些getType, getValue, use_list_iterator之类的成员函数.</p>

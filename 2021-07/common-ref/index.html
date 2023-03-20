@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.loli.net/2023/02/17/vapgX2rdiM5hObR.png">
 <meta property="article:published_time" content="2021-07-10T02:00:00.000Z">
-<meta property="article:modified_time" content="2023-02-17T06:51:52.174Z">
+<meta property="article:modified_time" content="2023-03-17T12:57:03.181Z">
 <meta property="article:author" content="Yogdzewa">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://s2.loli.net/2023/02/17/vapgX2rdiM5hObR.png">
@@ -210,7 +210,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.7k 字
+      3.1k 字
     </span>
   
 
@@ -219,7 +219,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      34 分钟
+      39 分钟
     </span>
   
 
@@ -260,7 +260,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2023年2月17日 下午
+                  不可视境界线最后变动于：2023年3月17日 晚上
                 
               </p>
             
@@ -382,6 +382,48 @@
 <li>注意到创建socket后已经分配了port, 而bind一个<code>地址:端口</code>则是通常服务器的做法, 然后再将这个port告知Client, 这样就可以通过<code>connect()</code>连接. </li>
 </ul>
 <p><img src="https://s2.loli.net/2023/02/17/vapgX2rdiM5hObR.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="调用约定"><a href="#调用约定" class="headerlink" title="调用约定"></a>调用约定</h2><blockquote>
+<p>MS doc</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="left">Keyword</th>
+<th align="left">Stack cleanup</th>
+<th align="left">Parameter passing</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/cpp/cpp/cdecl?view=msvc-170">__cdecl</a></td>
+<td align="left">Caller</td>
+<td align="left">Pushes parameters on the stack, in reverse order (right to left)</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/cpp/cpp/fastcall?view=msvc-170">__fastcall</a></td>
+<td align="left">Callee</td>
+<td align="left">Stored in registers, then pushed on stack</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/cpp/cpp/stdcall?view=msvc-170">__stdcall</a></td>
+<td align="left">Callee</td>
+<td align="left">Pushes parameters on the stack, in reverse order (right to left)</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/cpp/cpp/clrcall?view=msvc-170">__clrcall</a></td>
+<td align="left">n/a</td>
+<td align="left">Load parameters onto CLR expression stack in order (left to right).</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/cpp/cpp/thiscall?view=msvc-170">__thiscall</a></td>
+<td align="left">Callee</td>
+<td align="left">Pushed on stack; <strong><code>this</code></strong> pointer stored in ECX</td>
+</tr>
+<tr>
+<td align="left"><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/cpp/cpp/vectorcall?view=msvc-170">__vectorcall</a></td>
+<td align="left">Callee</td>
+<td align="left">Stored in registers, then pushed on stack in reverse order (right to left)</td>
+</tr>
+</tbody></table>
 
             </div>
             <hr>
