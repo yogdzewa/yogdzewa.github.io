@@ -4,6 +4,62 @@
   
   
   <entry>
+    <title>Linux kernel漏洞学习</title>
+    <link href="/2023-03/CVE-linux-kernel/"/>
+    <url>/2023-03/CVE-linux-kernel/</url>
+    
+    <content type="html"><![CDATA[<p><a href="https://kiprey.github.io/2021/11/syzkaller_1/">syzkaller环境</a> | </p><h1 id="CVE-2022-0435-Remote-Stack-Overflow"><a href="#CVE-2022-0435-Remote-Stack-Overflow" class="headerlink" title="CVE-2022-0435: Remote Stack Overflow"></a>CVE-2022-0435: <em>Remote</em> Stack Overflow</h1><p>看到好多熟悉的词汇, 算了当个练手吧.</p><p><a href="https://blog.immunityinc.com/p/a-remote-stack-overflow-in-the-linux-kernel/">原始blog</a> | 更早的<a href="https://www.sentinelone.com/labs/tipc-remote-linux-kernel-heap-overflow-allows-arbitrary-code-execution/">local bug</a>:CVE-2021-43267,已写在下面 | <a href="https://tipc.sourceforge.net/getting_started.html">TIPC Guide</a> | </p><h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><ul><li>Appgate Threat Advisory Services (CANVAS) discovered a stack overflow vulnerability in the <strong>TIPC</strong> module of the Linux Kernel</li><li>Local or remote exploitation can lead to denial of service and code execution</li><li>Exploitation requires the TIPC module to be loaded on the target</li><li>Affected versions include 4.8 through 5.17-rc3</li><li>Patch released on February 10, 2022</li></ul><h2 id="Vulnerability"><a href="#Vulnerability" class="headerlink" title="Vulnerability"></a>Vulnerability</h2><p>具体TIPC见上方Guide. </p><p>简单来说就是有这么一个结构体</p><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">tipc_peer</span> &#123;</span><br>    u32 addr;<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">tipc_mon_domain</span> *<span class="hljs-title">domain</span>;</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">hlist_node</span> <span class="hljs-title">hash</span>;</span><br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">list_head</span> <span class="hljs-title">list</span>;</span><br>    u8 applied;<br>    u8 down_cnt;<br>    <span class="hljs-keyword">bool</span> is_up;<br>    <span class="hljs-keyword">bool</span> is_head;<br>    <span class="hljs-keyword">bool</span> is_local;<br>&#125;;<br></code></pre></div></td></tr></table></figure><p>其中tipc_mon_domain为:</p><figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> MAX_MON_DOMAIN 64</span><br><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">tipc_mon_domain</span> &#123;</span><br>    u16 len;<br>    u16 gen;<br>    u16 ack_gen;<br>    u16 member_cnt;<br>    u64 up_map;<br>    u32 members[MAX_MON_DOMAIN];<br>&#125;;<br></code></pre></div></td></tr></table></figure><p>在tipc_mon_rcv函数里使用到了</p><ul><li><code>dlen</code>:header中定义的domain record长度</li><li><code>new_dlen</code>:使用member_cnt算出的data length</li><li><code>arrv_dlen</code>:使用len直接得到的长度. </li></ul><p><strong>但是</strong>合法性检查(sanity check)的时候只要求了: <code>dlen == new_dlen</code> &amp;&amp;  <code>arrv_dlen == new_dlen</code> &amp;&amp; <code>dlen &gt; minimum</code> </p><p>前两个就会没有一样, 更多的只是在检查是不是真domain record. 而后者…万一dlen超过了<code>MAX_MON_DOMAIN</code>呢? 一点也没管, 所以会导致cache的时候发生栈溢出. 最大值不超过MTU或者bearer media type的限制. </p><p>修复也很简单, 在<a href="https://blog.immunityinc.com/p/a-remote-stack-overflow-in-the-linux-kernel/#patch">这里</a> </p><h2 id="Exploitation"><a href="#Exploitation" class="headerlink" title="Exploitation"></a>Exploitation</h2><p><a href="https://blog.immunityinc.com/p/writing-a-linux-kernel-remote-in-2022/">Blog</a> : 作者作为新员工打算整点少见的remote exploitation出来而不仅是LPE, 所以写了这一篇. 还分享了一点远程攻击技巧</p><p>We also need to factor in the execution context we’ll be hijacking if we successfully overwrite the return address with our remote stack overflow and gain control of execution. Unlike most local exploit scenarios, we won’t be operating in the <strong>process context</strong>, but instead we will find ourselves in the <strong>interrupt context</strong>.</p><p>remote KASLR leaks, let alone canary leaks, is fairly <strong>sparse</strong>. recent paper: <a href="https://arxiv.org/pdf/1906.10478.pdf">https://arxiv.org/pdf/1906.10478.pdf</a></p><p>总结起来就是挺难的, 直接先假设KASLR + HARDEN_STACK都不存在. </p><p>为了能够干净的返回(?), We need to:</p><ul><li>Analyze the stack pre/post overflow; which function’s stack frames are we clobbering?</li><li>Determine what is the closest unclobbered stack frame we can return to</li><li>Determine if any <strong>locks</strong> are released in the functions we skip returning to. If so, we need to release these ourselves</li><li>After we pick a return address, make sure <code>$RSP</code>, <code>$RBP</code> and any other required registers are correct</li></ul><p>这样就能够多次执行. 几次之后就可以直接设置rsp以缩短shellcode长度. </p><p>接下来就是syscall hooking来pivot到user space进行一个pwn</p><h1 id="CVE-2021-43267-Heap-Overflow-of-TIPC"><a href="#CVE-2021-43267-Heap-Overflow-of-TIPC" class="headerlink" title="CVE-2021-43267: Heap Overflow of TIPC"></a>CVE-2021-43267: Heap Overflow of TIPC</h1><p><a href="https://thesecmaster.com/how-to-fix-cve-2021-43267-a-heap-overflow-vulnerability-in-linux-kernels-tipc-module/">Blog</a> | <a href="https://www.sentinelone.com/labs/tipc-remote-linux-kernel-heap-overflow-allows-arbitrary-code-execution/">Finder’s Blog</a> | </p>]]></content>
+    
+    
+    <categories>
+      
+      <category>CVE</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>源码分析</tag>
+      
+      <tag>CVE</tag>
+      
+      <tag>kernel bug</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Fuzzing start</title>
+    <link href="/2023-03/Fuzzing-fuzz-start/"/>
+    <url>/2023-03/Fuzzing-fuzz-start/</url>
+    
+    <content type="html"><![CDATA[<h2 id="资源的查"><a href="#资源的查" class="headerlink" title="资源的查"></a>资源的查</h2><ul><li>afl_training: <a href="https://github.com/mykter/afl-training">https://github.com/mykter/afl-training</a></li><li>Fuzzing101: <a href="https://github.com/antonio-morales/Fuzzing101">https://github.com/antonio-morales/Fuzzing101</a></li><li><a href="https://tttang.com/archive/1595/">AFL源码分析</a> | <a href="https://blog.csdn.net/qq_32464719/article/details/80592902">AFL技术实现分析</a> | <a href="https://kiprey.github.io/2020/07/AFL-LLVM-Mode/">AFL的LLVM_mode</a> | </li><li><a href="https://github.com/AFLplusplus/AFLplusplus/blob/stable/docs/fuzzing_in_depth.md#4-triaging-crashes">fuzz_in_depth</a> : 还挺多东西, 主要就是三步走. </li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>Fuzz</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Fuzz</tag>
+      
+      <tag>AFLplusplus</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Linux Kernel Pwn in all</title>
     <link href="/2023-02/pwn-new-pwn-kernel-basic/"/>
     <url>/2023-02/pwn-new-pwn-kernel-basic/</url>
