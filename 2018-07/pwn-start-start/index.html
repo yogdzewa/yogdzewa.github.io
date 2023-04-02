@@ -16,19 +16,38 @@
   <meta name="author" content="Yogdzewa">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="website">
-<meta property="og:title" content="归档">
-<meta property="og:url" content="https://yogdzewa.github.io/archives/2022/01/index.html">
+    <meta name="description" content="dddd">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一点提示">
+<meta property="og:url" content="https://yogdzewa.github.io/2018-07/pwn-start-start/index.html">
 <meta property="og:site_name" content="Yogdzewa">
+<meta property="og:description" content="dddd">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-07-10T02:00:00.000Z">
+<meta property="article:modified_time" content="2023-04-02T13:53:11.450Z">
 <meta property="article:author" content="Yogdzewa">
 <meta name="twitter:card" content="summary_large_image">
   
   
-  <title>归档 - Yogdzewa</title>
+  <title>一点提示 - Yogdzewa</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/obsidian.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
 
 
 <!-- 主题依赖的图标库，不要自行修改 -->
@@ -55,7 +74,7 @@
 
 
 <body>
-  <header style="height: 60vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
@@ -168,9 +187,51 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="归档">
+            <span class="h2" id="subtitle" title="一点提示">
               
             </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2018-07-10 10:00" pubdate>
+        2018年7月10日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      952 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      12 分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
 
             
           </div>
@@ -183,46 +244,160 @@
 
   <main>
     
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
-
-<div class="list-group">
-  <p class="h4">共计 23 篇文章</p>
-  <hr>
-  
-  
-    
       
-      <p class="h5">2022</p>
-    
-    <a href="/2022-01/Now-pwn-modules/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">pwn modules的一点笔记</span>
-      <time style="float: right;">01-16</time>
-    </a>
-  
-    
-    <a href="/2022-01/Archive-Computer-Networking/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Computer Networking</span>
-      <time style="float: right;">01-16</time>
-    </a>
-  
-</div>
 
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">一点提示</h1>
+            
+              <p class="note note-info">
+                
+                  不可视境界线最后变动于：2023年4月2日 晚上
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h2 id="基本内容"><a href="#基本内容" class="headerlink" title="基本内容"></a>基本内容</h2><ul>
+<li><p>做之前最好学习了计算机系统课程. 基本内容包括汇编, 链接, 虚拟地址三个章节. 不过可以先从题目尝试下入手. </p>
+<ul>
+<li><p>在真正做出并理解一个 pwn 题前，你可能需要的技能：</p>
+<ol>
+<li>了解基本的 Linux 命令</li>
+<li>能编写基本的 C 语言代码</li>
+<li>调试能力</li>
+</ol>
+<p>会用 gdb 或 ida remote debugger 调试 linux 下的程序</p>
+<ol>
+<li>基本的逆向能力</li>
+</ol>
+<p>通常来说，pwn 题只会给编译好的二进制程序。需要通过逆向搞清程序的逻辑。</p>
+<ol>
+<li>能用 python 编写简单的脚本</li>
+</ol>
+<p>在 ctf 中，编写 exp（漏洞利用脚本）时一般都会用到 pwntools 框架。</p>
+<ol>
+<li>上网</li>
+<li>热情与耐心</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>pwn从零开始, 题目有用到才过来看看也行: <a target="_blank" rel="noopener" href="https://www.wangan.com/docs/pwn-base">https://www.wangan.com/docs/pwn-base</a></p>
+</li>
+</ul>
+<p>下面算参考, 不用全看.</p>
+<ul>
+<li>传统pwn方面更多的内容: <a target="_blank" rel="noopener" href="https://ctf-wiki.org/pwn/linux/user-mode/stackoverflow/x86/stack-intro">https://ctf-wiki.org/pwn/linux/user-mode/stackoverflow/x86/stack-intro</a> </li>
+<li>python学习直接菜鸟吧: <a target="_blank" rel="noopener" href="https://www.runoob.com/python3/python3-intro.html">https://www.runoob.com/python3/python3-intro.html</a> </li>
+<li>python模块pwntools的学习: <a target="_blank" rel="noopener" href="https://pwntoolsdocinzh-cn.readthedocs.io/en/master/intro.html">https://pwntoolsdocinzh-cn.readthedocs.io/en/master/intro.html</a></li>
+<li>群文件中ctf-all-in-one. </li>
+<li>还想写更多的, 但是真的写不下了, 也看不完. </li>
+</ul>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>虚拟机kali系统环境安装: <a target="_blank" rel="noopener" href="https://ch4r1l3.github.io/2018/06/21/pwn%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83%E7%AC%AC%E4%B8%80%E7%AB%A0%E2%80%94%E2%80%94%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/">点这里</a> </li>
+<li>IDA官方free版本, 够用了: <a target="_blank" rel="noopener" href="https://out7.hex-rays.com/files/idafree82_windows.exe">https://out7.hex-rays.com/files/idafree82_windows.exe</a><br>IDA旧版破解下载链接, 爱来自吾爱破解: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1ZhhDevWxlNJZBT2Q4LxGQQ?pwd=52pj">https://pan.baidu.com/s/1ZhhDevWxlNJZBT2Q4LxGQQ?pwd=52pj</a></li>
+</ul>
+<h2 id="题目相关"><a href="#题目相关" class="headerlink" title="题目相关"></a>题目相关</h2><ul>
+<li>本次就做攻防世界的 <a target="_blank" rel="noopener" href="https://adworld.xctf.org.cn/challenges/list">https://adworld.xctf.org.cn/challenges/list</a> 的题目, 不会就直接看wp, 自带的, 看其他的也行:<ul>
+<li>get shell</li>
+<li>level0: 我演示过的. 直接看writeup学习</li>
+<li>guess sum</li>
+<li>以下要懂ELF中got+plt</li>
+<li>level2</li>
+<li>level3</li>
+</ul>
+</li>
+</ul>
+<p>二进制之肖神的学习路线: <a target="_blank" rel="noopener" href="https://github.com/Kiprey/Skr_Learning">https://github.com/Kiprey/Skr_Learning</a> </p>
+<p>仅供参考, 因为dddd</p>
 
-
-
-
-              </div>
             </div>
-          </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021-05/Now-CheatSheet/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">CheatSheet</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="gitalk-container"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#gitalk-container', function() {
+      Fluid.utils.createCssLink('/css/gitalk.css')
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', function() {
+        var options = Object.assign(
+          {"clientID":"312db7ebbc085de5d28d","clientSecret":"85ea3cefd13c73a6d85c1813adfde4f1550bfbda","repo":"yogdzewa.github.io","owner":"yogdzewa","admin":["yogdzewa"],"language":"zh-CN","labels":["Gitalk"],"perPage":10,"pagerDirection":"last","distractionFreeMode":false,"createIssueManually":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token"},
+          {
+            id: 'a5ae7521bd6928c28c4cef8064a2ddb8'
+          }
+        )
+        var gitalk = new Gitalk(options);
+        gitalk.render('gitalk-container');
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
         </div>
       </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-x-md">
+    <div class="container custom post-custom mx-auto">
+      <img src="https://octodex.github.com/images/jetpacktocat.png" srcset="/img/loading.gif" lazyload class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;">
+    </div>
+  </div>
+
+
     
 
     
@@ -329,6 +504,19 @@
   
 
 
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
 
 
 
