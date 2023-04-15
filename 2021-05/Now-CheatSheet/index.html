@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yogdzewa.github.io/image/linux的使用/architecture.png">
 <meta property="article:published_time" content="2021-05-06T02:00:00.000Z">
-<meta property="article:modified_time" content="2023-03-30T04:34:08.951Z">
+<meta property="article:modified_time" content="2023-04-15T09:16:42.104Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary_large_image">
@@ -211,7 +211,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      10k 字
+      11k 字
     </span>
   
 
@@ -220,7 +220,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      125 分钟
+      137 分钟
     </span>
   
 
@@ -261,7 +261,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2023年3月30日 下午
+                  不可视境界线最后变动于：2023年4月15日 下午
                 
               </p>
             
@@ -328,6 +328,8 @@
 <li><p>使用ssh pubkey连接到虚拟机中时遇到问题, 总是显示<code>permission denied</code>, 搜了两三个小时无果后终于发现在kali里面查看auth日志<code>tail -f /var/log/auth.log</code>可以看到是/root文件夹的grouping write权限导致ssh server拒绝连接. 直接一个<code>chmod 700 /root</code>解决问题. </p>
 </li>
 <li><p>vscode可以使用<code>move terminal to editor area</code>命令, 含义就是字面意思.</p>
+</li>
+<li><p>没想到mnt文件夹下我没有修改权限, 怕是vmware认定成共享文件夹专用地, 导致其他文件不能mount到/mnt下面. 又新建了一个<code>/_mnt</code>用着. 感觉大部分脚本都会用到<code>/mnt</code>文件夹. 诶算了用到了再说吧. </p>
 </li>
 <li></li>
 </ul>
@@ -470,34 +472,91 @@
 </ul>
 </li>
 </ul>
-<h2 id="Shell"><a href="#Shell" class="headerlink" title="Shell"></a>Shell</h2><h3 id="Shell-programming"><a href="#Shell-programming" class="headerlink" title="Shell programming"></a>Shell programming</h3><p>好多东西, 看了下感觉更会用shell了.</p>
+<h2 id="Shell"><a href="#Shell" class="headerlink" title="Shell"></a>Shell</h2><h3 id="zsh"><a href="#zsh" class="headerlink" title="zsh"></a>zsh</h3><ul>
+<li><p>expansion</p>
 <ul>
-<li>printf使用示例: <ul>
+<li><p> history exp</p>
+</li>
+<li><p><code>!ls:$:a</code>：获取上一条以 <code>ls</code> 开头的命令的最后一个参数，并将其转换为完整路径。<br>冒号是用来分割Word Designators和event和Modifiers</p>
+</li>
+<li><p>Process Substitution  <code>&lt;(list)</code>, <code>&gt;(list)</code> or <code>=(list)</code> 都是进程补全, 用于将一个进程的输入或输出重定向到文件句柄中</p>
+</li>
+<li><p>Parameter Expansion 还有Expansion Flags可用(真的多)</p>
+<ul>
+<li><code>$&#123;name+word&#125;</code> <code>$&#123;name:+word&#125;</code>: 如果name设置为非空，或者第二种形式为非空，则用word代替; 否则用NULL代替</li>
+<li><code>$&#123;(@)$&#123;foo&#125;[1]&#125;</code>: 更安全的数组<strong>索引</strong>, 在元素中含有空格的时候也能准确取出整个元素. </li>
+</ul>
+</li>
+<li><p>command exp: <code>$(...)</code> </p>
+</li>
+<li><p>Arithmetic exp: <code>$[exp]</code> or <code>$((exp))</code> </p>
+</li>
+<li><p>brace exp: <code>foo&#123;xx,yy,zz&#125;bar</code> fooxxbar fooyybar <code>&#123;n1..n2..n3&#125;</code> </p>
+</li>
+<li><p>filename exp: <code>hash -d work=/Users/binjie09/Work</code> </p>
+</li>
+<li><p>Filename Gen: </p>
+<ul>
+<li><p>glob ops: <code>x##</code> <code>x#</code> <code>x~y</code> </p>
+</li>
+<li><p>glob flags: 用在<code>#</code>的后面, 用括号围起来: <code>ls (#i)*.txt</code> </p>
+<ol>
+<li><code>(#i)</code>：开启不区分大小写的匹配模式。</li>
+<li><code>(#m)</code>：<code>$&#123;arr//(#m)[aeiou]/$&#123;(U)MATCH&#125;&#125;</code> //全局匹配 (U)大写</li>
+<li><code>(#cN)</code>：设置最多匹配 N 个文件</li>
+<li><code>(#b)</code>: 数组下标从1开始. </li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">foo=&quot;a_string_with_a_message&quot;<br>if [[ $foo = (a|an)_(#b)(*) ]]; then<br>print $&#123;foo[$mbegin[1],$mend[1]]&#125;; fi<br></code></pre></div></td></tr></table></figure></li>
+<li><p>approximate match: <code>(#anum)</code> 不同字符 不同顺序 多了 少了 四种情况的匹配</p>
+</li>
+<li><p>Recursive Globbing: <code>ls **/bar</code> <code>ls **.c</code>=<code>ls **/*.c</code> </p>
+</li>
+<li><p>Glob Qualifiers: 在最后面一对括号中的flag. <strong>对文件的类型进行限制, 甚至执行代码</strong> </p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>built-in commands</p>
+<ul>
+<li><code>read</code> </li>
+<li><code>whence</code>: <code>whence -ca = where</code><br>对于每个名称，说明如果将其用作命令名将如何解释。<code>-f</code>:alias, builtin, command, function, hashed, reserved or none</li>
+<li><code>zcompile</code>: 预编译</li>
+</ul>
+</li>
+</ul>
+<h3 id="Shell-programming"><a href="#Shell-programming" class="headerlink" title="Shell programming"></a>Shell programming</h3><p>好多东西, 看了下感觉更会用shell了.</p>
+<ul>
+<li><p>printf使用示例: </p>
+<ul>
 <li><code>printf &#39;%d %d %d %d&#39; \&#39;a 3 4 \&#39;a</code> <code>printf &quot;\\$(printf %o 74)&quot;</code> <code>printf &quot;\\x$(printf %x 65)&quot;</code> </li>
 </ul>
 </li>
-<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/31255699">double-parenthesis</a> | <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/890262#answer-8339221">&#39;$1 : leading-quote</a> | <strong>condition expr</strong>(bash doc P98) | </li>
-<li>Shell Parameter Expansion有字符串下标索引.</li>
-<li><code>seq</code> 生成序列.</li>
-<li>dup2可用来实现shell的redirection. 还可以指定fd. 好像之前的一题又有新的解决方法了, 不过得用c来写.</li>
-<li>开启了extglob(zsh) | extglob(bash)之后, 可以使用<code>?*+@!(pattern-list)</code>这五种.<br>zsh还可以用<code>^</code>等等, <a target="_blank" rel="noopener" href="http://zsh.sourceforge.net/Doc/Release/Expansion.html#Glob-Operators">文档在这儿</a>.<br>知道这些之后就可以更好的filter file了<ul>
+<li><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/31255699">double-parenthesis</a> | <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/890262#answer-8339221">&#39;$1 : leading-quote</a> | <strong>condition expr</strong>(bash doc P98) | </p>
+</li>
+<li><p><code>seq</code> 生成序列.</p>
+</li>
+<li><p>dup2可用来实现shell的redirection. 还可以指定fd. 好像之前的一题又有新的解决方法了, 不过得用c来写.</p>
+</li>
+<li><p>开启了extglob(zsh) | extglob(bash)之后, 可以使用<code>?*+@!(pattern-list)</code>这五种.<br>zsh还可以用<code>^</code>等等, <a target="_blank" rel="noopener" href="http://zsh.sourceforge.net/Doc/Release/Expansion.html#Glob-Operators">文档在这儿</a>.<br>知道这些之后就可以更好的filter file了</p>
+<ul>
 <li><code>rm -r ^(sh|1_sh)</code> </li>
 <li><code>ll ^(|*sh)</code> 两个都加只能这样.</li>
 </ul>
 </li>
-<li><code>cp --preserve=links</code> 或者 <code>cp -av</code>就可以复制symlink了.<br><code>v</code>只是verbose的意思, <code>a</code>覆盖了一些选项, 用于完整的复制文件本身. </li>
-<li><code>while [ 1 ]</code>add spaces between <code>1</code>.</li>
-<li>判断子串: <ul>
+<li><p><code>cp --preserve=links</code> 或者 <code>cp -av</code>就可以复制symlink了.<br><code>v</code>只是verbose的意思, <code>a</code>覆盖了一些选项, 用于完整的复制文件本身. </p>
+</li>
+<li><p><code>while [ 1 ]</code>add spaces between <code>1</code>.</p>
+</li>
+<li><p>判断子串: </p>
+<ul>
 <li><code>$&#123;string##*cd*&#125;</code> 这个##会从string删除匹配字符串就挺神奇的. 得用<code>[ -z ... ]</code>来判断成功.</li>
 </ul>
 </li>
-<li>backtick在命令中相当于<code>$()</code>的作用.</li>
-<li></li>
+<li><p>cd’s special function in <mark>zsh</mark>: </p>
+</li>
 </ul>
-<h3 id="Shell-tips"><a href="#Shell-tips" class="headerlink" title="Shell tips"></a>Shell tips</h3><ul>
-<li>cd’s special function in <mark>zsh</mark>: </li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">cd [ -qsLP ] [ arg ]<br>cd [ -qsLP ] old new   #替换path中的字符串<br>cd [ -qsLP ] &#123;+|-&#125;n    #打开dirs输出的entry, +-表示顺序<br></code></pre></div></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">cd [ -qsLP ] [ arg ]   #change to arg<br>cd [ -qsLP ] old new   #替换path中的字符串<br>cd [ -qsLP ] &#123;+|-&#125;n    #打开dirs输出的entry, +-表示顺序<br></code></pre></div></td></tr></table></figure>
 
 <ul>
 <li>print:</li>
@@ -505,9 +564,9 @@
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">print [ -abcDilmnNoOpPrsSz ] [ -u n ] [ -f format ] [ -C cols ]<br>[ -v name ] [ -xX tabstop ] [ -R [ -en ]] [ arg ... ]<br></code></pre></div></td></tr></table></figure>
 
 <ul>
-<li><code>where</code> and <code>which</code> is the variants of <code>whence</code> </li>
-<li>automatically ls after cd: <code>chpwd() ls</code> – define a function in zsh which chpwd() is always called when there is pwd change. </li>
-<li>Patterns used for filename generation may <strong>end in a list of qualifiers enclosed in parentheses</strong> in zsh. </li>
+<li>declare 用于查看已声明符号的信息</li>
+<li>read命令的prompt尝试全部失败…但是在命令行中是可以的.</li>
+<li></li>
 </ul>
 <h2 id="Deamon"><a href="#Deamon" class="headerlink" title="Deamon"></a>Deamon</h2><ul>
 <li>pronounciation: /ˈdiːmən/</li>

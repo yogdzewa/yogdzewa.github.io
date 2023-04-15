@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.loli.net/2023/02/17/vapgX2rdiM5hObR.png">
 <meta property="article:published_time" content="2021-07-10T02:00:00.000Z">
-<meta property="article:modified_time" content="2023-03-30T02:53:47.634Z">
+<meta property="article:modified_time" content="2023-04-03T07:56:17.489Z">
 <meta property="article:author" content="Yogdzewa">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://s2.loli.net/2023/02/17/vapgX2rdiM5hObR.png">
@@ -210,7 +210,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      4.7k 字
+      5.1k 字
     </span>
   
 
@@ -219,7 +219,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      59 分钟
+      64 分钟
     </span>
   
 
@@ -260,7 +260,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2023年3月30日 上午
+                  不可视境界线最后变动于：2023年4月3日 下午
                 
               </p>
             
@@ -426,6 +426,13 @@
 </tbody></table>
 <h2 id="pwntools"><a href="#pwntools" class="headerlink" title="pwntools"></a>pwntools</h2><figure class="highlight python"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>ss = <span class="hljs-keyword">lambda</span> data :p.send(data)<br>sa = <span class="hljs-keyword">lambda</span> delim,data :p.sendafter(delim, data)<br>sl = <span class="hljs-keyword">lambda</span> data :p.sendline(data)<br>sla = <span class="hljs-keyword">lambda</span> delim,data :p.sendlineafter(delim, data)<br>rl = <span class="hljs-keyword">lambda</span> keep=<span class="hljs-literal">True</span>:p.recvline(keep)<br>rc = <span class="hljs-keyword">lambda</span> numb=<span class="hljs-number">4096</span> :p.recv(numb)<br>ru = <span class="hljs-keyword">lambda</span> delims, drop=<span class="hljs-literal">True</span> :p.recvuntil(delims, drop)<br>uu32 = <span class="hljs-keyword">lambda</span> data :u32(data.ljust(<span class="hljs-number">4</span>, <span class="hljs-string">b&#x27;\0&#x27;</span>))<br>uu64 = <span class="hljs-keyword">lambda</span> data :u64(data.ljust(<span class="hljs-number">8</span>, <span class="hljs-string">b&#x27;\0&#x27;</span>))<br>itt = <span class="hljs-keyword">lambda</span> :p.interactive()<br>lg = <span class="hljs-keyword">lambda</span> name,data : p.success(name + <span class="hljs-string">&#x27;: \033[1;36m 0x%x \033[0m&#x27;</span> % data)<br><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">debug</span>(<span class="hljs-params"><span class="hljs-built_in">breakpoint</span>=<span class="hljs-string">&#x27;&#x27;</span></span>):</span><br>    <span class="hljs-keyword">if</span> args.REMOTE <span class="hljs-keyword">or</span> (<span class="hljs-keyword">not</span> args.DBG): <span class="hljs-keyword">return</span><br>    glibc_dir = <span class="hljs-string">&#x27;/glibs/glibc-2.31/&#x27;</span><br>    gdbscript = <span class="hljs-string">&#x27;directory %smalloc/\n&#x27;</span> % glibc_dir<br>    gdbscript += <span class="hljs-string">&#x27;directory %sstdio-common/\n&#x27;</span> % glibc_dir<br>    gdbscript += <span class="hljs-string">&#x27;directory %sstdlib/\n&#x27;</span> % glibc_dir<br>    gdbscript += <span class="hljs-string">&#x27;directory %slibio/\n&#x27;</span> % glibc_dir<br>    gdbscript += <span class="hljs-string">&#x27;directory %self/\n&#x27;</span> % glibc_dir<br>    <span class="hljs-comment">#elf_base = int(os.popen(&#x27;pmap &#123;&#125;| awk \x27&#123;&#123;print\x241&#125;&#125;\x27&#x27;.format(p.pid)).readlines()[1], 16) if elf.pie else 0</span><br>    elf_base = <span class="hljs-number">0</span><br>    gdbscript += <span class="hljs-string">&#x27;b *&#123;:#x&#125;\n&#x27;</span>.<span class="hljs-built_in">format</span>(<span class="hljs-built_in">int</span>(<span class="hljs-built_in">breakpoint</span>) + elf_base) <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(<span class="hljs-built_in">breakpoint</span>, <span class="hljs-built_in">int</span>) <span class="hljs-keyword">else</span> <span class="hljs-built_in">breakpoint</span><br>    gdb.attach(p, gdbscript+<span class="hljs-string">&#x27;init-pwndbg\nni\n&#x27;</span>)<br>    time.sleep(<span class="hljs-number">1</span>)<br><br>path_libc = <span class="hljs-string">&#x27;./libc.so.6&#x27;</span> <span class="hljs-keyword">if</span> args.REMOTE <span class="hljs-keyword">else</span> <span class="hljs-string">&#x27;/glibs/2.31-0ubuntu9_amd64/libc-2.31.so&#x27;</span><br>libc = ELF(path_libc)<br>binary = <span class="hljs-string">&#x27;./pwn.elf64&#x27;</span><br>elf = ELF(binary)<br>p = process(binary, aslr=<span class="hljs-literal">False</span>) <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> args.REMOTE <span class="hljs-keyword">else</span> remote()<br>context(binary = elf ,log_level = <span class="hljs-string">&#x27;debug&#x27;</span>, terminal = [<span class="hljs-string">&#x27;tmux&#x27;</span>, <span class="hljs-string">&#x27;splitw&#x27;</span>,<span class="hljs-string">&#x27;-hp&#x27;</span>,<span class="hljs-string">&#x27;62&#x27;</span>])<br><span class="hljs-comment">#debug()</span><br><br><br></code></pre></div></td></tr></table></figure>
 
+
+
+
+
+
+
+<h2 id="ChatGPT"><a href="#ChatGPT" class="headerlink" title="ChatGPT"></a>ChatGPT</h2><h3 id="论文阅读"><a href="#论文阅读" class="headerlink" title="论文阅读"></a>论文阅读</h3><p>now I will give you some paragraphs in tech papers, you need answer my questions according to the content. when I say “change”, discard former contents, restart from the following new paragraphs.<br>when i ask question, i will put it in curly brace, {like this question}. when you find there is no curly brace or “change” command in my input, just ask me for later action. do not continue to write the paragraphs, just summarize</p>
 
             </div>
             <hr>

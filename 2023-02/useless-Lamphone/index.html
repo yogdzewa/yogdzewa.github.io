@@ -24,9 +24,10 @@
 <meta property="og:description" content="Lamphone相关: 什么是傅里叶变换. 还是得要从时域&amp;频域讲起能听懂, 看了几个讲公式的真费劲. 还有这个也行 DCT变换 :  什么是谱减法: 估计出噪声的能量谱, 用含噪能量减去噪声能量即可, 然后取平方根.   $$|X(\omega)|^2 &#x3D; |Y(\omega)|^2 - |N(\omega)|^2$$  什么是normalization.   nsf5检测论文: JPE">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.loli.net/2023/03/03/QwMqFvbgtTKhDVE.jpg">
+<meta property="og:image" content="https://s2.loli.net/2023/04/03/oMNiEZmyFWnUIhf.gif">
 <meta property="og:image" content="https://s2.loli.net/2023/03/07/UuCBKElehpYrwL1.gif">
 <meta property="article:published_time" content="2023-02-28T14:04:29.550Z">
-<meta property="article:modified_time" content="2023-03-18T16:08:56.156Z">
+<meta property="article:modified_time" content="2023-04-08T01:31:14.160Z">
 <meta property="article:author" content="Yogdzewa">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://s2.loli.net/2023/03/03/QwMqFvbgtTKhDVE.jpg">
@@ -211,7 +212,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.6k 字
+      4.8k 字
     </span>
   
 
@@ -220,7 +221,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      20 分钟
+      61 分钟
     </span>
   
 
@@ -261,7 +262,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2023年3月19日 凌晨
+                  不可视境界线最后变动于：2023年4月8日 上午
                 
               </p>
             
@@ -315,7 +316,45 @@
 <li>string是一个字符串数组. </li>
 <li>可以自定义regression layer中的损失函数, 默认是均方根误差. </li>
 </ul>
-<img src="https://s2.loli.net/2023/03/07/UuCBKElehpYrwL1.gif" srcset="/img/loading.gif" lazyload alt="img" style="zoom:50%;" />
+<p><img src="https://s2.loli.net/2023/04/03/oMNiEZmyFWnUIhf.gif" srcset="/img/loading.gif" lazyload alt="img"></p>
+<img src="https://s2.loli.net/2023/03/07/UuCBKElehpYrwL1.gif" srcset="/img/loading.gif" lazyload alt="img" style="zoom: 33%;" />
+
+<h2 id="论文"><a href="#论文" class="headerlink" title="论文"></a>论文</h2><p><a target="_blank" rel="noopener" href="https://typeset.io/library/untitled-collection-1evh7wnv/7-pimog-an-effective-screen-shooting-noise-layer-simulation-1v56sikb">https://typeset.io/library/untitled-collection-1evh7wnv/7-pimog-an-effective-screen-shooting-noise-layer-simulation-1v56sikb</a></p>
+<ul>
+<li>跳跃式连接可以促进网络的收敛，因为它可以使浅层的特征图直接与深层的特征图相连接，从而提高了网络的有效信息量</li>
+<li></li>
+</ul>
+<p>Sure, I can help you with that. Here is a general outline for your PPT presentation: </p>
+<blockquote>
+<p>\1. Introduction: Start with an introduction to digital watermarking technology and its importance in tracing leak sources. Explain the need for robustness in watermarking schemes and the traditional approach to digital watermarking. </p>
+</blockquote>
+<blockquote>
+<p>\2. Limitations of traditional watermarking: Discuss the limitations of traditional watermarking methods and the need for a new approach that considers screen-shooting distortions. </p>
+</blockquote>
+<blockquote>
+<p>\3. Proposed approach: Introduce the proposed approach of including the most influenced distortions in the screen-shooting noise layer to generate an effective noise layer with strong robustness. Explain the PIMoG noise layer and how it can effectively represent screen-shooting distortions. </p>
+</blockquote>
+<blockquote>
+<p>\4. Architecture of the proposed framework: Show the architecture of the proposed watermarking framework and explain the three main parts: the encoder, the decoder, and the watermark extractor. Explain how the PIMoG noise layer is added between the encoder and the decoder to simulate screen-shooting distortions. </p>
+</blockquote>
+<p>The highlighted text presents a mathematical equation that represents the proposed noise layer for screen-shooting robustness in a deep-learning-based watermarking framework. The equation consists of three terms: the first term represents the perspective distortion (PD) and illumination distortion (ID) of the screen-shooting process, which are the most influenced distortions and are multiplied by a weight factor δ1. The second term represents the moiré distortion (MD) and is multiplied by a weight factor δ2. The third term represents the Gaussian noise (GN) that approximates the rest of the distortions. The overall noise layer is represented by Ino, and it is a combination of these three terms.</p>
+<blockquote>
+<p>\5. Proposed loss functions: Introduce the gradient mask-guided image loss and the edge mask-guided image loss and explain how they improve the robustness and invisibility of the whole network. </p>
+</blockquote>
+<ul>
+<li><p>Gradient mask-guided image loss: This loss function is used to improve the robustness of the watermark against attacks that modify the gradient of the watermarked image. The gradient mask-guided image loss is calculated by comparing the gradient of the watermarked image with the gradient of the original host image. </p>
+<p>Giving a large weight to the edge region of the image when embedding the watermark signal is an effective way to improve the visual quality of the watermarked image. To automatically achievethis in deep-learning framework, we proposed a mask-guided image loss</p>
+</li>
+<li><p>Edge mask-guided image loss: This loss function is used to improve the invisibility of the watermark by minimizing the visual distortion caused by the watermark. The edge mask-guided image loss is calculated by comparing the edges of the watermarked image with the edges of the original host image. By minimizing the difference between the two edges, the watermarking framework can ensure that the watermark is invisible to the human eye.</p>
+</li>
+</ul>
+<blockquote>
+<p>\6. Experimental results: Show the experimental results and explain how the proposed watermarking framework outperforms the state-of-the-art watermarking method with at least 5% in extraction accuracy and achieves more than 97% accuracy in different screen-shooting conditions. </p>
+</blockquote>
+<blockquote>
+<p>\7. Conclusion: Summarize the contributions of the paper and conclude with the potential applications of the proposed watermarking framework. Remember to use storytelling techniques to make your presentation engaging and easy to follow. Use visuals and examples to illustrate your points and keep your audience engaged throughout the presentation.</p>
+</blockquote>
+
             </div>
             <hr>
             <div>
