@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yogdzewa.github.io/image/linux的使用/architecture.png">
 <meta property="article:published_time" content="2021-05-06T02:00:00.000Z">
-<meta property="article:modified_time" content="2023-04-18T11:04:45.650Z">
+<meta property="article:modified_time" content="2023-04-18T11:18:18.379Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary_large_image">
@@ -220,7 +220,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      140 分钟
+      141 分钟
     </span>
   
 
@@ -483,33 +483,37 @@
 </li>
 <li><p>Parameter Expansion 还有Expansion Flags可用(真的多)</p>
 <ul>
-<li><code>$&#123;name+word&#125;</code> <code>$&#123;name:+word&#125;</code>: 如果name设置为非空，或者第二种形式为非空，则用word代替; 否则用NULL代替</li>
-<li><code>$&#123;(@)$&#123;foo&#125;[1]&#125;</code>: 更安全的数组<strong>索引</strong>, 在元素中含有空格的时候也能准确取出整个元素. </li>
-<li><code>$&#123;(@)foo&#125;</code>: 形式为’[*]’或’[@]’的下标求值为数组的所有元素. 在parameters/array/array subscripts中.</li>
-<li><code>$#para</code>: 指代para的长度. 如果<code>POSIX_IDENTIFIERS</code>已设置则和bash一样, <code>$#</code>仅指代位置参数长度. </li>
-</ul>
+<li><p><code>$&#123;name+word&#125;</code> <code>$&#123;name:+word&#125;</code>: 如果name设置为非空，或者第二种形式为非空，则用word代替; 否则用NULL代替</p>
 </li>
-<li><p>command exp: <code>$(...)</code> </p>
+<li><p><code>$&#123;(@)$&#123;foo&#125;[1]&#125;</code>: 更安全的数组<strong>索引</strong>, 在元素中含有空格的时候也能准确取出整个元素. </p>
 </li>
-<li><p>Arithmetic exp: <code>$[exp]</code> or <code>$((exp))</code> </p>
+<li><p><code>$&#123;(@)foo&#125;</code>: 形式为’[*]’或’[@]’的下标求值为数组的所有元素. 在parameters/array/array subscripts中.</p>
 </li>
-<li><p>brace exp: <code>foo&#123;xx,yy,zz&#125;bar</code> fooxxbar fooyybar <code>&#123;n1..n2..n3&#125;</code> </p>
-</li>
-<li><p>filename exp: <code>hash -d work=/Users/binjie09/Work</code> </p>
-</li>
-<li><p>Filename Gen: </p>
-<ul>
-<li><p>glob ops: <code>x##</code> <code>x#</code> <code>x~y</code> </p>
-</li>
-<li><p>glob flags: 用在<code>#</code>的后面, 用括号围起来: <code>ls (#i)*.txt</code> </p>
-<ol>
-<li><code>(#i)</code>：开启不区分大小写的匹配模式。</li>
-<li><code>(#m)</code>：<code>$&#123;arr//(#m)[aeiou]/$&#123;(U)MATCH&#125;&#125;</code> //全局匹配 (U)大写</li>
+<li><p><code>$#para</code>: 指代para的长度. 如果<code>POSIX_IDENTIFIERS</code>已设置则和bash一样, <code>$#</code>仅指代位置参数长度. 在shell emulation中.<br>可用<code>$&#123;#para&#125;`来区分. 
+    - 
+
+  - command exp: `$(...)` 
+
+  - Arithmetic exp: `$[exp]` or `$((exp))` 
+
+  - brace exp: `foo&#123;xx,yy,zz&#125;bar` fooxxbar fooyybar `&#123;n1..n2..n3&#125;` 
+
+  - filename exp: `hash -d work=/Users/binjie09/Work` 
+
+  - Filename Gen: 
+
+    - glob ops: `x##` `x#` `x~y` 
+
+    - glob flags: 用在`#`的后面, 用括号围起来: `ls (#i)*.txt` 
+
+      1. `(#i)`：开启不区分大小写的匹配模式。
+      2. `(#m)`：`$&#123;arr//(#m)[aeiou]/$&#123;(U)MATCH&#125;&#125;</code> //全局匹配 (U)大写</p>
+<ol start="3">
 <li><code>(#cN)</code>：设置最多匹配 N 个文件</li>
 <li><code>(#b)</code>: 数组下标从1开始. </li>
 </ol>
-<figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs shell">foo=&quot;a_string_with_a_message&quot;<br>if [[ $foo = (a|an)_(#b)(*) ]]; then<br>print $&#123;foo[$mbegin[1],$mend[1]]&#125;; fi<br></code></pre></div></td></tr></table></figure></li>
-<li><p>approximate match: <code>(#anum)</code> 不同字符 不同顺序 多了 少了 四种情况的匹配</p>
+<figure class="highlight bash"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs bash">foo=<span class="hljs-string">&quot;a_string_with_a_message&quot;</span><br><span class="hljs-keyword">if</span> [[ <span class="hljs-variable">$foo</span> = (a|an)_(<span class="hljs-comment">#b)(*) ]]; then</span><br><span class="hljs-built_in">print</span> <span class="hljs-variable">$&#123;foo[$mbegin[1],$mend[1]]&#125;</span>; <span class="hljs-keyword">fi</span><br></code></pre></div></td></tr></table></figure></li>
+<li><p>approximate match: <code>(#anum)</code> 不同字符 不同顺序 多了 少了 四种情况的匹配. 用作前置flag, num指代数量. </p>
 </li>
 <li><p>Recursive Globbing: <code>ls **/bar</code> <code>ls **.c</code>=<code>ls **/*.c</code> </p>
 </li>
@@ -527,7 +531,7 @@
 </ul>
 </li>
 </ul>
-<h3 id="Shell-programming"><a href="#Shell-programming" class="headerlink" title="Shell programming"></a>Shell programming</h3><p>好多东西, 看了下感觉更会用shell了. <strong>注意, 我倾向于使用zsh, 但有部分bash内容</strong> </p>
+<h3 id="Shell-programming"><a href="#Shell-programming" class="headerlink" title="Shell programming"></a>Shell programming</h3><p>好多东西, 看了下感觉更会用shell了. <strong>注意, 我倾向于使用zsh, 但有部分bash内容</strong> <a target="_blank" rel="noopener" href="https://devhints.io/bash">bash小抄</a> </p>
 <ul>
 <li><p>printf使用示例: </p>
 <ul>
