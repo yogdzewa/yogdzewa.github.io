@@ -129,7 +129,7 @@
 <meta property="og:image" content="https://s2.loli.net/2023/02/06/JM26dSnHN1Wh9vy.png">
 <meta property="og:image" content="https://s2.loli.net/2023/02/06/NkURY6wPnh7yi8M.png">
 <meta property="article:published_time" content="2023-02-08T02:00:00.000Z">
-<meta property="article:modified_time" content="2023-04-02T14:07:10.694Z">
+<meta property="article:modified_time" content="2023-05-23T08:34:14.692Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -316,7 +316,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      136k 字
+      137k 字
     </span>
   
 
@@ -325,7 +325,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1707 分钟
+      1708 分钟
     </span>
   
 
@@ -366,7 +366,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2023年4月2日 晚上
+                  不可视境界线最后变动于：2023年5月23日 下午
                 
               </p>
             
@@ -428,7 +428,7 @@
 <ul>
 <li>slab（最初的版本，机制比较复杂，效率不高）</li>
 <li>slob（用于嵌入式等场景的极为简化版本）</li>
-<li>slub（优化后的版本，现在的通用版本</li>
+<li>slub（优化后的版本，现在的通用版本) </li>
 </ul>
 <p>对于以往的 slub 分配器而言，若是我们 kmalloc(8) 则通常会从 <code>kmalloc-8</code> 中取大小为 8 的 object；但是在 slab 源码中有如下定义：</p>
 <blockquote>
@@ -538,12 +538,12 @@
 <li>在栈上copy就检查是否在当前栈帧, </li>
 <li>在slab上的copy就检查是否在object范围内. </li>
 </ul>
-<p>而在4.16(2018年)之后又添加了 <code>useroffset</code> <code>usersize</code> 两个变量到 <code>keme_cache</code> 中, 用以标明object中用户可访问的区域. 而general cache都会被设置成offset=0 size=object size. </p>
+<p>而在4.16(2018年)之后又添加了 <code>useroffset</code> <code>usersize</code> 两个变量到 <code>kmem_cache</code> 中, 用以标明object中用户可访问的区域. 而general cache都会被设置成offset=0 size=object size. </p>
 <p>这样的副作用是当一个cache is user accessible, 这个cache不能和其他的cache合并, 即使<code>CONFIG_HARDENED_USERCOPY</code>是关闭的 ! 但还可以使用slab级的spray. 详见<a href="#fuck">这里</a> </p>
 <p>不过这种保护 <em>不适用于内核空间内的数据拷贝</em> ，这也是目前主流的绕过手段, 例如RCTF2022中game预期解, 利用modify_ldt的内核中<code>memcpy()</code>. </p>
 <h4 id="GFP-KERNEL-ACCOUNT"><a href="#GFP-KERNEL-ACCOUNT" class="headerlink" title="GFP_KERNEL_ACCOUNT"></a>GFP_KERNEL_ACCOUNT</h4><p>在5.9之前, 有两种kmem_caches, one for system-wide and <strong>non-accounted allocations</strong> and the second one shared by all <strong>accounted allocations</strong>. 这时使用<code>GFP_KERNEL_ACCOUNT</code>分配的cache会被当做独立的allocation. </p>
 <p>而5.9将两者合一, 只在需要的时候allocate obj_cgroup metadata, 这样无论obj是否被accounted都视作同样的cache. 这时无论<code>kmalloc</code>带有<code>GFP_KERNEL_ACCOUNT</code>或者<code>GFP_KERNEL</code>都可分配为同一个kmalloc-xxx. </p>
-<p>但是在5.14后又没法用了, 因为objcg pointer array可能就在要free的slab尾部, 导致递归free栈溢出, 于是将<code>kmalloc-&lt;n&gt; caches</code>分成两种, 一种只作为unaccounted, 另一种作为<code>kmalloc-cg-&lt;n&gt;</code>. 其他的cache仍然使用混合体. </p>
+<p>但是在5.14后又没法用了, 因为objcg pointer array可能就在要free的slab尾部, 导致递归free栈溢出, 于是将<code>kmalloc-&lt;n&gt; caches</code>分成两种, 一种只作为unaccounted, 另一种作为<code>kmalloc-cg-&lt;n&gt;</code>. 其他的cache仍然使用二者的混合体. </p>
 <h4 id="Hardened-freelist"><a href="#Hardened-freelist" class="headerlink" title="Hardened freelist"></a>Hardened freelist</h4><p>链接中没有, <a target="_blank" rel="noopener" href="https://rtfingc.github.io/slub-freelist-hardened">这里</a>是带源码的介绍. </p>
 <p>类似于 glibc 2.32 版本引入的保护，在开启这种保护之前，slub 中的 free object 的 next 指针直接存放着 next free object 的地址，攻击者可以通过读取 freelist 泄露出内核线性映射区的地址，在开启了该保护之后 free object 的 next 指针存放的是由以下三个值进行异或操作后的值：</p>
 <ul>
@@ -1187,6 +1187,7 @@
 <li>你有一个堆溢出，但是<strong>堆布局对你而言是不可知的</strong>（比如说开启了 <code>SLAB_FREELIST_RANDOM</code>（默认开启）），你可以预先喷射大量特定结构体，从而保证对其中某个结构体的溢出</li>
 <li>……</li>
 </ul>
+<p>新例题: <a target="_blank" rel="noopener" href="https://arttnba3.cn/2021/03/03/PWN-0X00-LINUX-KERNEL-PWN-PART-I/#0x06-Kernel-Heap-Heap-Spraying">https://arttnba3.cn/2021/03/03/PWN-0X00-LINUX-KERNEL-PWN-PART-I/#0x06-Kernel-Heap-Heap-Spraying</a></p>
 <h2 id="例题：强网杯2021线上赛-notebook"><a href="#例题：强网杯2021线上赛-notebook" class="headerlink" title="例题：强网杯2021线上赛 - notebook"></a><em>例题：强网杯2021线上赛 - notebook</em></h2><h3 id="简单分析"><a href="#简单分析" class="headerlink" title="简单分析"></a>简单分析</h3><p>首先看一下启动脚本（<del>写得很 tmd 乱，早该锤锤出题人了</del>）</p>
 <figure class="highlight shell"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs SHELL"><span class="hljs-meta">#</span><span class="bash">!/bin/sh</span><br>stty intr ^]<br>exec timeout 300 qemu-system-x86_64 -m 64M -kernel bzImage -initrd rootfs.cpio -append &quot;loglevel=3 console=ttyS0 oops=panic panic=1 kaslr&quot; -nographic -net user -net nic -device e1000 -smp cores=2,threads=2 -cpu kvm64,+smep,+smap -monitor /dev/null 2&gt;/dev/null -s<br></code></pre></div></td></tr></table></figure>
 
