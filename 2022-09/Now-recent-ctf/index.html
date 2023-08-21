@@ -37,7 +37,7 @@
 <meta property="og:image" content="https://yogdzewa.github.io/image/recent_ctf/image-20230129185730706.png">
 <meta property="og:image" content="https://s2.loli.net/2023/02/16/LJGcbS9DlR5IadH.jpg">
 <meta property="article:published_time" content="2022-09-08T02:00:00.000Z">
-<meta property="article:modified_time" content="2023-08-06T12:40:05.909Z">
+<meta property="article:modified_time" content="2023-08-15T07:36:31.513Z">
 <meta property="article:author" content="Yogdzewa">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="PWN">
@@ -224,7 +224,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      161k 字
+      163k 字
     </span>
   
 
@@ -233,7 +233,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      2011 分钟
+      2041 分钟
     </span>
   
 
@@ -274,7 +274,7 @@
             
               <p class="note note-info">
                 
-                  不可视境界线最后变动于：2023年8月6日 晚上
+                  不可视境界线最后变动于：2023年8月15日 下午
                 
               </p>
             
@@ -1966,19 +1966,75 @@
 </ul>
 </li>
 </ul>
-<p><a target="_blank" rel="noopener" href="https://ctftime.org/writeup/37392">https://ctftime.org/writeup/37392</a></p>
-<h2 id="Zapp-setuid-2"><a href="#Zapp-setuid-2" class="headerlink" title="Zapp setuid 2"></a>Zapp setuid 2</h2><ul>
+<p><a target="_blank" rel="noopener" href="https://ctftime.org/writeup/37392">https://ctftime.org/writeup/37392</a><br><a target="_blank" rel="noopener" href="https://nyancat0131.moe/post/ctf-writeups/uiu-ctf/2023/writeup/#zapping-a-setuid-2">https://nyancat0131.moe/post/ctf-writeups/uiu-ctf/2023/writeup/#zapping-a-setuid-2</a></p>
+<h2 id="Zapp-setuid-2"><a href="#Zapp-setuid-2" class="headerlink" title="Zapp setuid 2"></a><a target="_blank" rel="noopener" href="https://nyancat0131.moe/post/ctf-writeups/uiu-ctf/2023/writeup/#zapping-a-setuid-2">Zapp setuid 2</a></h2><ul>
 <li><p>related to open_tree, added in v5.2 along with other syscall that manipulate mnt namespace,<br>Six (or seven) new system calls for filesystem mounting <a target="_blank" rel="noopener" href="https://lwn.net/Articles/759499/">LWN.net</a> </p>
 <ul>
+<li><p><code>fsopen</code> create a fs context, returns a context fd. write command to the fd.</p>
+</li>
+<li><p><code>fsmount</code> ‘mount’ the filesystem, kernel recognizes it.</p>
+</li>
+<li><p><code>move_mount</code> placing the newly mounted filesystem to a location.</p>
+</li>
 <li><p>If the goal is to create a new mount of an <strong>existing filesystem</strong>, a more straightforward path is to use <code>open_tree()</code>:</p>
-<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">open_tree</span><span class="hljs-params">(<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> dfd, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *pathname, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> flags)</span></span>;<br></code></pre></div></td></tr></table></figure></li>
-<li><p>manpage patch for fsmount/fsinfo/open_tree and <strong>discussion record</strong>. <a target="_blank" rel="noopener" href="https://lwn.net/ml/linux-kernel/15449.1531263162@warthog.procyon.org.uk/">here</a> </p>
+<figure class="highlight c"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">open_tree</span><span class="hljs-params">(<span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> dfd, <span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *pathname, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> flags)</span></span>;<br></code></pre></div></td></tr></table></figure>
+
+<ul>
+<li><code>OPEN_TREE_CLONE</code> need <code>CAP_SYS_ADMIN</code>. It makes a copy of the filesystem mount, which then can be used to create a <strong>bind mount</strong>.</li>
+</ul>
+</li>
+<li><p><code>AT_RECURSIVE</code> clones the whole hierachy. </p>
 </li>
 </ul>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt">SharedSubtrees</a> – slave mount, used in mount flags. </p>
+<li><p>manpage patch for fsmount/fsinfo/open_tree and <strong>discussion record</strong>. <a target="_blank" rel="noopener" href="https://lwn.net/ml/linux-kernel/15449.1531263162@warthog.procyon.org.uk/">here</a> </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://lwn.net/Articles/689856/">SharedSubtrees</a> – slave mount, used in mount flags. <a target="_blank" rel="noopener" href="https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt">[kernel doc]</a> </li>
+</ul>
 </li>
-<li></li>
+</ul>
+<p>The GOAL of this challenge:</p>
+<p>let the zapp program which loads relative pathed library executes our crafted lib.so. So we need to <code>move</code> the <code>zapp/build/exe</code> to our home directory <code>/home/user</code>. </p>
+<p>In the previous level, we complete this by unprotected hardlink. This time, protection is on but serveral kernel patches give out the hint. </p>
+<ol>
+<li>allow gerneric loop back mount between different mount namespace. (unprivileged)</li>
+<li>allow unprivileged <code>OPEN_TREE_CLONE</code>. </li>
+<li>allow <code>setuid</code> behavior even though the tree is in another mount namespace. </li>
+</ol>
+<p>solving plan:</p>
+<ul>
+<li>Fork the process</li>
+<li>In the child process:<ul>
+<li>Call <code>unshare(CLONE_NEWUSER | CLONE_NEWNS)</code> to enter a new mount namespace and have <code>CAP_SYS_ADMIN</code> so we can modify the mount table</li>
+<li>Bind mount <code>/usr/lib/zapps</code> to <code>/home/user/home/user</code></li>
+<li>Call <code>SYS_open_tree(AT_FDCWD, &quot;/home/user&quot;, 0)</code> to open a tree <code>fd</code></li>
+<li>Start an infinite loop to keep the namespaces</li>
+</ul>
+</li>
+<li>In the original process:<ul>
+<li>Sleep to wait for the child to complete all mount operations</li>
+<li>Call <code>fd = SYS_open_tree(AT_FDCWD, &quot;/proc/&lt;child_pid&gt;/fd/3&quot;, OPEN_TREE_CLONE | AT_RECURSIVE)</code> to clone a detached tree of<br> <code>/home/user</code> in the child mount namespace (patch #2 allows <code>user</code> to do this)</li>
+<li>Call <code>SYS_execveat(fd, &quot;home/user/build/exe&quot;)</code> to launch the binary (patch #3 allows the <code>setuid</code> behavior even though the tree is in another mount namespace)</li>
+</ul>
+</li>
+</ul>
+<p><u>When the binary is executed, <code>/proc/self/exe</code> links to <code>/home/user/build/exe</code></u>. Copy <code>*so*</code> files from <code>/usr/lib/zapps/build/</code> to<br> <code>/home/user/build/</code>, patch <code>ld</code> and create a custom <code>lib.so</code> like previous challenge and we will get a root shell.</p>
+<p>worth to note:</p>
+<ul>
+<li>In detached state, the root of the tree will be at <code>/</code>. </li>
+</ul>
+<h3 id="Mount-namespaces-and-Shared-trees"><a href="#Mount-namespaces-and-Shared-trees" class="headerlink" title="Mount namespaces and Shared trees"></a>Mount namespaces and Shared trees</h3><ul>
+<li>Mount namespaces were the first namespace type added to Linux, appearing in 2002 in Linux 2.4.19. </li>
+<li>initial namespace -&gt; <code>unshare</code> a new one -&gt; copies the mount point list</li>
+<li>HOW to mount a disk in all mount namespace? Shared Subtrees. <ul>
+<li>the <a target="_blank" rel="noopener" href="https://lwn.net/Articles/159077/">shared subtrees feature</a> was added in Linux 2.6.15, allows automatic, controlled <strong>propagation</strong> of mount and unmount events between namespaces</li>
+<li><code>MS_SHARED</code> : share mounts with peer group. </li>
+<li><code>MS_PRIVATE</code> : isolated. </li>
+<li><code>MS_SLAVE</code> : master peer group <code>--control-&gt;</code> slave mount point. </li>
+<li><code>MS_UNBINDABLE</code> : Like private mount. In addition to can’t be a source for a bind mount. </li>
+<li>NOTE: The propagation type determines the propagation of mount and unmount events <em>immediately under</em> the mount point</li>
+</ul>
+</li>
 <li></li>
 </ul>
 
